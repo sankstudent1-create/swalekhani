@@ -2,7 +2,7 @@
 
 /* ── Full bar ──────────────────────────────────────────────── */
 .bar {
-  background: linear-gradient(90deg, #FF416C, #FF4B2B);
+  background: linear-gradient(90deg, #020270, #06038D, #030280);
   color: #fff;
   display: flex;
   align-items: center;

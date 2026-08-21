@@ -16,7 +16,7 @@ interface LetterPaperProps {
 }
 
 const FONT_MAP: Record<string, string> = {
-  '':    "var(--font-outfit), sans-serif",
+  '':    "var(--font-outfit), var(--font-poppins), sans-serif",
   fg:    "'EB Garamond', serif",
   fs:    "'Source Serif 4', serif",
   fd2:   "var(--font-poppins), 'Noto Serif Devanagari', serif",

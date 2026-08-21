@@ -27,12 +27,12 @@ export default function Navigation() {
                 <div className="absolute inset-0 bg-gradient-to-br from-brand-sky/20 to-brand-pink/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                 <img 
                   src="/icon-192.png" 
-                  alt="SW Tools Logo" 
+                  alt="Swalekhani Logo" 
                   className="w-6 h-6 object-contain relative z-10 transition-transform duration-300 group-hover:scale-105"
                 />
               </div>
               <span className="font-heading font-semibold text-2xl tracking-tight text-white flex items-center">
-                SW<span className="text-white/40 font-light ml-0.5">Tools</span>
+                Swa<span className="text-white/40 font-light ml-0.5">lekhani</span>
               </span>
             </Link>
 

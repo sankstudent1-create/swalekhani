@@ -155,13 +155,15 @@ export default function LetterpadGeneratorPage() {
 
           {/* Paper */}
           <div className={styles.paperWrap} id="print-area">
-            <LetterPaper
-              state={state}
-              onFormChange={handleFormChange}
-              onCopyChange={val => updateForm('copyTo', val)}
-              onLogoPos={handleLogoPos}
-              onLogoRemove={side => setLogo(side, null)}
-            />
+            <div className={styles.paperInner}>
+              <LetterPaper
+                state={state}
+                onFormChange={handleFormChange}
+                onCopyChange={val => updateForm('copyTo', val)}
+                onLogoPos={handleLogoPos}
+                onLogoRemove={side => setLogo(side, null)}
+              />
+            </div>
           </div>
         </main>
       </div>

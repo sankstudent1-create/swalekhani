@@ -336,12 +336,14 @@ export default function LetterPaper({ state, onFormChange, onCopyChange, onLogoP
       {/* Edit hint */}
       <div className={styles.editHint}>✏ Click any text to edit inline</div>
 
-      {state.officeType !== 'personal' && (
-        <>
-          {renderHeader()}
-          {renderDivider()}
-        </>
-      )}
+      {/* ── Group for Print Layout (display: table-row-group) ── */}
+      <div className={styles.contentWrap}>
+        {state.officeType !== 'personal' && (
+          <>
+            {renderHeader()}
+            {renderDivider()}
+          </>
+        )}
 
       {/* Meta row */}
       {(tpl === 'A' || tpl === 'E' || tpl === 'F') && (
@@ -500,6 +502,8 @@ export default function LetterPaper({ state, onFormChange, onCopyChange, onLogoP
           />
         </div>
       )}
+
+      </div> {/* end .contentWrap */}
 
       {/* Footer */}
       {state.officeType !== 'personal' && (

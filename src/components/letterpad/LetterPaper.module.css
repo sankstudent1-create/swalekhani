@@ -65,16 +65,21 @@ div.editable { display: block; }
 
 @media print {
   @page {
-    margin: 5mm; /* Tiny margin to prevent physical cropping */
+    margin: 0mm; /* Removed margin entirely for maximum width, paper naturally pads it */
   }
   .paper {
-    width: 794px !important;
-    max-width: 794px !important;
+    width: 100% !important; /* Will stretch to A4 width */
+    max-width: none !important;
     height: auto !important;
-    min-height: auto !important;
     box-shadow: none !important;
     margin: 0 auto !important;
     padding-top: 0 !important;
+    
+    /* CRITICAL: display table ensures the tfoot (footer) repeats across pages without overlapping body */
+    display: table !important; 
+  }
+  .contentWrap {
+    display: table-row-group !important;
   }
   .editable:empty::before {
     content: none !important;
@@ -290,11 +295,7 @@ div.editable { display: block; }
   border-bottom: 1px solid #ddd; padding-bottom: 3px; margin-bottom: 4px;
 }
 
-/* ── Footer — always pinned to bottom of A4 sheet ────────────
-   margin-top: auto pushes it down when content is short.
-   flex-shrink: 0 prevents it from collapsing.
-   No gradient — clean flat design.
-─────────────────────────────────────────────────────────────── */
+/* ── Footer — always pinned to bottom of A4 sheet ──────────── */
 .footer {
   margin-top: auto;
   padding: 9px 44px;
@@ -305,6 +306,13 @@ div.editable { display: block; }
   color: #555;
   font-family: 'DM Mono', monospace;
   flex-shrink: 0;
+}
+@media print {
+  .footer {
+    display: table-footer-group !important;
+    /* Reset margins/padding that might interfere with tfoot behavior */
+    margin-top: 0 !important; 
+  }
 }
 .footerAB { border-top: 2px solid #06038D; background: #f0eee6; }
 .footerC  { background: #06038D; color: rgba(255,255,255,.85); }

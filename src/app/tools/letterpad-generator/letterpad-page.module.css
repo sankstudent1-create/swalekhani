@@ -244,24 +244,30 @@
     position: static;
   }
 
-  /* Preview fills remaining space */
+  /* Preview pane: must NOT have overflow-x: hidden to prevent hard clipping on older iOS */
   .preview {
     min-height: calc(100vh - 100px);
     padding: 14px 10px 50px;
-  }
-
-  /* Paper scales to fit screen */
-  .paperWrap {
-    width: 100%;
     display: flex;
     justify-content: center;
-    overflow: hidden;
+    overflow-x: auto;
   }
-  .paperWrap > * {
-    transform: scale(var(--paper-scale, 0.7));
-    transform-origin: top center;
-    /* negative margin collapses the empty gap left by scaling */
-    margin-bottom: calc((var(--paper-scale, 0.7) - 1) * 1123px);
+
+  /* paperWrap: Just a flex container that naturally centers its content */
+  .paperWrap {
+    width: 100% !important;
+    display: flex;
+    justify-content: center;
+    margin: 0 auto;
+  }
+
+  /* paperInner: Scales natively. zoom actually reduces layout size! */
+  .paperInner {
+    width: 794px;
+    zoom: var(--paper-scale, 1);
+    /* For Firefox which supports zoom in v126, but just in case: */
+    -moz-transform: scale(var(--paper-scale, 1));
+    -moz-transform-origin: top center;
   }
 
   .previewLabel { display: none; }

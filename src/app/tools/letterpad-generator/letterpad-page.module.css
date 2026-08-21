@@ -179,6 +179,8 @@
     overflow: visible !important;
   }
   /* Also reset the child — in some layouts the child carries the scale */
+  .paperWrap > * {
+    transform: none !important;
     margin-bottom: 0 !important;
     width: 210mm !important;
   }

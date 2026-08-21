@@ -131,27 +131,27 @@ export default function LetterpadGeneratorPage() {
 
         {/* ── PREVIEW AREA ── */}
         <main className={`${styles.preview} ${isMobile && mobileTab !== 'preview' ? styles.hidden : ''}`}>
-          {/* Toolbar row — hidden on mobile (actions are in tab bar) */}
-          {!isMobile && (
-            <div className={styles.previewTop}>
+          {/* Toolbar row */}
+          <div className={`${styles.previewTop} ${isMobile ? styles.previewTopMobile : ''}`}>
+            {!isMobile && (
               <span className={styles.previewLabel}>
                 📄 A4 · Click paper to edit · AI fills all fields · Groq powered
                 {lastModel && <> · <span style={{color:'#4ade80'}}>⚡ {lastModel}</span></>}
               </span>
-              <EditToolbar
-                showEncl={state.showEncl}
-                showCopy={state.showCopy}
-                showEndorse={state.showEndorse}
-                onToggleEncl={toggleEncl}
-                onToggleCopy={toggleCopy}
-                onToggleEndorse={toggleEndorse}
-                isPersonal={state.officeType === 'personal'}
-                onTogglePersonal={() => applyOfficePreset(state.officeType === 'personal' ? 'custom' : 'personal')}
-                onPrint={doPrint}
-                onPDF={doPrint}
-              />
-            </div>
-          )}
+            )}
+            <EditToolbar
+              showEncl={state.showEncl}
+              showCopy={state.showCopy}
+              showEndorse={state.showEndorse}
+              onToggleEncl={toggleEncl}
+              onToggleCopy={toggleCopy}
+              onToggleEndorse={toggleEndorse}
+              isPersonal={state.officeType === 'personal'}
+              onTogglePersonal={() => applyOfficePreset(state.officeType === 'personal' ? 'custom' : 'personal')}
+              onPrint={doPrint}
+              onPDF={doPrint}
+            />
+          </div>
 
           {/* Paper */}
           <div className={styles.paperWrap} id="print-area">

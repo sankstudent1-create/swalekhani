@@ -15,8 +15,6 @@ import type { Metadata, Viewport } from "next";
 import { Outfit, Poppins, JetBrains_Mono, Yatra_One } from "next/font/google";
 import Script from "next/script";
 import AdSlot from "@/components/AdSlot";
-import Navigation from "@/components/Navigation";
-import Footer from "@/components/Footer";
 import PwaRegister from "@/components/PwaRegister";
 import "./globals.css";
 
@@ -149,11 +147,9 @@ export default function RootLayout({
           />
         ) : null}
         <PwaRegister />
-        <Navigation />
         {adsEnabled ? <AdSlot slotKey="global-top" label="Global Top Banner" /> : null}
         {children}
         {adsEnabled ? <AdSlot slotKey="global-bottom" label="Global Footer Banner" /> : null}
-        <Footer />
       </body>
     </html>
   );

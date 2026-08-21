@@ -107,6 +107,13 @@
   margin-right: auto;
 }
 
+.previewTopMobile {
+  padding: 8px 10px;
+  overflow-x: auto;
+  white-space: nowrap;
+  -webkit-overflow-scrolling: touch;
+}
+
 .clearBtn {
   padding: 5px 12px;
   background: rgba(255,255,255,.12);

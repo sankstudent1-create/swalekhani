@@ -103,7 +103,7 @@ function DraggableLogo({ src, side, pos, paperRef, onPos, onRemove }: DraggableL
   useEffect(() => {
     if (side === 'R' && !pos.placed && paperRef.current) {
       const pw = paperRef.current.offsetWidth;
-      onPos('R', { x: pw - pos.w - 44, y: 14, placed: true });
+      onPos('R', { x: pw - pos.w - 44, y: 36, placed: true });
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

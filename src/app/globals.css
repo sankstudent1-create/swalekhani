@@ -1,0 +1,565 @@
+@import "tailwindcss";
+
+:root {
+  --background: #07090f;
+  --foreground: #e5e9f6;
+  --brand-orange: #f29a4a;
+  --brand-pink: #f06a9b;
+  --brand-sky: #67a9ff;
+  --brand-orange-light: #3b2617;
+  --brand-pink-light: #3a1f31;
+  --brand-sky-light: #1b2d47;
+  --accent-warm: #f0b05d;
+  --accent-cool: #6ab0ff;
+  --surface-1: #0f131d;
+  --surface-2: #151a26;
+  --surface-3: #1c2332;
+  --border-soft: rgba(255, 255, 255, 0.1);
+  --site-combo-main: linear-gradient(96deg, var(--brand-orange) 0%, var(--brand-pink) 52%, var(--brand-sky) 100%);
+  --site-combo-warm: linear-gradient(120deg, #f4aa66, #f27ea9);
+  --site-combo-cool: linear-gradient(120deg, #7fb6ff, #c97bb7);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-brand-orange: var(--brand-orange);
+  --color-brand-pink: var(--brand-pink);
+  --color-brand-sky: var(--brand-sky);
+  --font-sans: var(--font-inter);
+}
+
+body {
+  background:
+    radial-gradient(circle at 14% -8%, rgba(242, 154, 74, 0.22), transparent 42%),
+    radial-gradient(circle at 90% 18%, rgba(103, 169, 255, 0.18), transparent 36%),
+    radial-gradient(circle at 50% 100%, rgba(240, 106, 155, 0.16), transparent 48%),
+    var(--background);
+  color: var(--foreground);
+  font-family: var(--font-inter), system-ui, -apple-system, sans-serif;
+  line-height: 1.6;
+  letter-spacing: -0.008em;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes floatY {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+@keyframes softPulse {
+  0%,
+  100% {
+    opacity: 0.38;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.7;
+    transform: scale(1.03);
+  }
+}
+
+@keyframes shimmerX {
+  0% {
+    transform: translateX(-120%);
+  }
+  100% {
+    transform: translateX(120%);
+  }
+}
+
+@keyframes popupIn {
+  0% {
+    opacity: 0;
+    transform: translateY(14px) scale(0.96);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes checkPop {
+  0% {
+    transform: scale(0.3);
+    opacity: 0;
+  }
+  70% {
+    transform: scale(1.12);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes confettiDrift {
+  0% {
+    transform: translateY(-12px) rotate(0deg);
+    opacity: 0;
+  }
+  15% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(54px) rotate(240deg);
+    opacity: 0;
+  }
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 0.58s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.ui-card {
+  position: relative;
+  border-radius: 1.25rem;
+  border: 1px solid var(--border-soft);
+  background: linear-gradient(160deg, #2f292a, #182234);
+  box-shadow: 
+    0 0 0 1px rgba(229, 233, 246, 0.04),
+    0 16px 38px rgba(7, 9, 15, 0.75);
+}
+
+.ui-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.ui-label {
+  font-size: 0.8125rem;
+  font-weight: 620;
+  opacity: 0.92;
+  text-transform: capitalize;
+}
+
+.ui-input {
+  border: 1px solid var(--border-soft);
+  border-radius: 0.7rem;
+  padding: 0.62rem 0.8rem;
+  background: #0e121c;
+  font-size: 0.9375rem;
+  transition: all 200ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.ui-input:focus {
+  outline: none;
+  border-color: rgba(242, 154, 74, 0.7);
+  box-shadow: 
+    0 0 0 3px rgba(242, 154, 74, 0.24),
+    0 0 0 1px rgba(242, 154, 74, 0.4);
+  background: #0e121b;
+}
+
+.ui-btn-primary,
+.ui-btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  border-radius: 0.75rem;
+  font-size: 0.875rem;
+  font-weight: 620;
+  padding: 0.62rem 1.1rem;
+  transition: all 200ms cubic-bezier(0.4, 0, 0.2, 1);
+  white-space: nowrap;
+}
+
+.ui-btn-primary {
+  border: none;
+  color: #111;
+  background: var(--site-combo-main);
+  box-shadow: 0 8px 24px rgba(240, 106, 155, 0.3);
+}
+
+.ui-btn-secondary {
+  border: 1px solid var(--border-soft);
+  background: #141924;
+}
+
+.ui-btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 30px rgba(242, 154, 74, 0.38);
+}
+
+.ui-btn-secondary:hover {
+  transform: translateY(-1px);
+  border-color: rgba(229, 233, 246, 0.32);
+  background: #17191f;
+}
+
+.ui-btn-primary:disabled {
+  opacity: 0.58;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Typography enhancements */
+body {
+  font-family: var(--font-outfit), system-ui, -apple-system, sans-serif;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-outfit), system-ui, sans-serif;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+}
+
+.font-heading {
+  font-family: var(--font-outfit), system-ui, sans-serif;
+}
+
+.font-hindi {
+  font-family: var(--font-poppins), "Noto Sans Devanagari", sans-serif;
+}
+
+.font-mono {
+  font-family: var(--font-jetbrains-mono), ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+.ui-modal-shell {
+  position: relative;
+  border-radius: 1.35rem;
+  border: 1px solid rgba(229, 233, 246, 0.14);
+  background: linear-gradient(170deg, #26202f, #141c2b);
+  box-shadow:
+    0 0 0 1px rgba(229, 233, 246, 0.04),
+    0 22px 50px rgba(0, 0, 0, 0.42);
+}
+
+.ui-workspace-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  border-radius: 999px;
+  border: 1px solid rgba(229, 233, 246, 0.16);
+  background: rgba(28, 35, 50, 0.88);
+  padding: 0.35rem 0.7rem;
+  font-size: 0.66rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(229, 233, 246, 0.86);
+}
+
+.ui-upload-dropzone {
+  position: relative;
+  overflow: hidden;
+  border-radius: 1rem;
+  border: 1px dashed rgba(229, 233, 246, 0.3);
+  background: linear-gradient(150deg, #202028, #121926);
+  transition: transform 220ms ease, border-color 220ms ease, box-shadow 220ms ease;
+}
+
+.ui-upload-dropzone::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(110deg, transparent 30%, rgba(229, 233, 246, 0.13), transparent 70%);
+  opacity: 0;
+  transition: opacity 220ms ease;
+}
+
+.ui-upload-dropzone:hover {
+  transform: translateY(-2px);
+  border-color: #aaa2a8;
+  box-shadow: 0 16px 32px rgba(0, 0, 0, 0.35);
+}
+
+.ui-upload-dropzone:hover::after {
+  opacity: 1;
+  animation: shimmerX 1.1s ease;
+}
+
+.ui-upload-dropzone[data-dragging="true"] {
+  transform: translateY(-2px) scale(1.01);
+  border-color: #afa1a1;
+  box-shadow:
+    0 20px 36px rgba(0, 0, 0, 0.35),
+    0 0 0 3px rgba(240, 106, 155, 0.22);
+}
+
+.ui-upload-dropzone[data-dragging="true"]::after {
+  opacity: 1;
+  animation: shimmerX 0.95s ease;
+}
+
+.ui-preview-card {
+  border-radius: 0.95rem;
+  border: 1px solid rgba(229, 233, 246, 0.14);
+  background: #0f141e;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+.ui-ambient-orb {
+  position: absolute;
+  pointer-events: none;
+  border-radius: 999px;
+  filter: blur(22px);
+  animation: softPulse 5s ease-in-out infinite;
+}
+
+.ui-floaty {
+  animation: floatY 5.2s ease-in-out infinite;
+}
+
+.ui-success-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 70;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  background: rgba(0, 0, 0, 0.72);
+  backdrop-filter: blur(8px);
+}
+
+.ui-success-popup {
+  position: relative;
+  width: min(32rem, 100%);
+  border-radius: 1.2rem;
+  border: 1px solid rgba(229, 233, 246, 0.15);
+  background: linear-gradient(165deg, #26202f, #182234);
+  box-shadow: 0 26px 60px rgba(0, 0, 0, 0.52);
+  animation: popupIn 240ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.ui-success-popup:focus-visible {
+  outline: 2px solid #8dbeff;
+  outline-offset: 2px;
+}
+
+.ui-success-badge {
+  position: relative;
+  display: inline-flex;
+  height: 4.25rem;
+  width: 4.25rem;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  background: var(--site-combo-main);
+  box-shadow: 0 12px 26px rgba(240, 106, 155, 0.4);
+}
+
+.ui-success-check {
+  animation: checkPop 420ms cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+.ui-success-confetti {
+  position: absolute;
+  top: -0.35rem;
+  left: 50%;
+  width: 0.4rem;
+  height: 0.8rem;
+  border-radius: 0.25rem;
+  animation: confettiDrift 900ms ease-out infinite;
+}
+
+.ui-success-confetti:nth-child(1) {
+  margin-left: -2rem;
+  background: var(--brand-orange);
+  animation-delay: 0ms;
+}
+
+.ui-success-confetti:nth-child(2) {
+  margin-left: -0.75rem;
+  background: var(--brand-pink);
+  animation-delay: 100ms;
+}
+
+.ui-success-confetti:nth-child(3) {
+  margin-left: 0.55rem;
+  background: var(--brand-sky);
+  animation-delay: 180ms;
+}
+
+.ui-success-confetti:nth-child(4) {
+  margin-left: 1.75rem;
+  background: var(--accent-warm);
+  animation-delay: 260ms;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ui-floaty,
+  .ui-ambient-orb,
+  .ui-success-check,
+  .ui-success-confetti,
+  .ui-success-popup,
+  .animate-fade-in-up {
+    animation: none !important;
+  }
+}
+
+p {
+  color: rgba(229, 233, 246, 0.92);
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(229, 233, 246, 0.06);
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(229, 233, 246, 0.28);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(229, 233, 246, 0.38);
+}
+
+@media print {
+  /* Hide all site chrome globally during print/PDF */
+  nav, header, footer,
+  [class*="Navbar"], [class*="navbar"],
+  [class*="Header"], [class*="SiteHeader"],
+  [class*="Footer"], [class*="SiteFooter"],
+  [class*="sidebar"], [class*="Sidebar"],
+  [class*="EditToolbar"], [class*="toolbar"] {
+    display: none !important;
+  }
+
+  /* No margins on html/body */
+  html, body {
+    margin: 0 !important;
+    padding: 0 !important;
+    background: #fff !important;
+  }
+}
+
+/* Notch & Safe Area Inset Support */
+header.fixed {
+  padding-top: env(safe-area-inset-top, 0px);
+}
+
+body {
+  padding-top: env(safe-area-inset-top, 0px);
+}
+
+/* --- Older Browser Fallbacks (Chrome <76, Android 9) --- */
+
+/* 1. Explicitly map Tailwind's backdrop-blur utility classes to include vendor prefixes */
+.backdrop-blur-sm {
+  -webkit-backdrop-filter: blur(4px);
+}
+.backdrop-blur {
+  -webkit-backdrop-filter: blur(8px);
+}
+.backdrop-blur-md {
+  -webkit-backdrop-filter: blur(12px);
+}
+.backdrop-blur-lg {
+  -webkit-backdrop-filter: blur(16px);
+}
+.backdrop-blur-xl {
+  -webkit-backdrop-filter: blur(24px);
+}
+.backdrop-blur-2xl {
+  -webkit-backdrop-filter: blur(40px);
+}
+.backdrop-blur-3xl {
+  -webkit-backdrop-filter: blur(64px);
+}
+
+/* 2. Fallbacks for browsers supporting NEITHER backdrop-filter NOR -webkit-backdrop-filter */
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  /* Global fallback for any class containing backdrop-blur to make background opaque */
+  [class*="backdrop-blur"] {
+    background-color: var(--surface-2) !important;
+    border-color: rgba(255, 255, 255, 0.15) !important;
+  }
+  
+  /* Fix header & nav overlays being fully transparent */
+  header[class*="backdrop-blur"],
+  nav[class*="backdrop-blur"] {
+    background-color: var(--background) !important;
+  }
+  
+  /* Ensure popups/drawers are fully visible */
+  .ui-success-overlay,
+  [class*="backdrop-blur"][class*="bg-black/70"] {
+    background-color: rgba(0, 0, 0, 0.95) !important;
+  }
+}
+
+/* 3. Class-based fallbacks for when JS detects no-backdrop-filter support (resolves false positives) */
+.no-backdrop-filter [class*="backdrop-blur"] {
+  background-color: var(--surface-2) !important;
+  border-color: rgba(255, 255, 255, 0.15) !important;
+}
+
+.no-backdrop-filter header[class*="backdrop-blur"],
+.no-backdrop-filter nav[class*="backdrop-blur"] {
+  background-color: var(--background) !important;
+}
+
+.no-backdrop-filter .ui-success-overlay,
+.no-backdrop-filter [class*="backdrop-blur"][class*="bg-black/70"] {
+  background-color: rgba(0, 0, 0, 0.95) !important;
+}
+
+/* --- Aspect Ratio Fallbacks for older browsers (Chrome <88, Android 9) --- */
+@supports not (aspect-ratio: 1/1) {
+  /* 1. Custom inline preview fallback using dynamic CSS variable */
+  .aspect-ratio-preview {
+    height: 0 !important;
+    padding-bottom: var(--aspect-padding) !important;
+    position: relative !important;
+  }
+  
+  /* 2. Custom Tailwind utilities fallback used in our codebase */
+  .aspect-\[1\/1\.4\],
+  .aspect-\[1\.414\],
+  .aspect-\[0\.707\] {
+    height: 0 !important;
+    position: relative !important;
+  }
+  
+  .aspect-\[1\/1\.4\] {
+    padding-bottom: 140% !important; /* 1.4 * 100% */
+  }
+  
+  .aspect-\[1\.414\] {
+    padding-bottom: 70.72% !important; /* (1 / 1.414) * 100% */
+  }
+  
+  .aspect-\[0\.707\] {
+    padding-bottom: 141.44% !important; /* (1 / 0.707) * 100% */
+  }
+  
+  /* Ensure children fill absolute container layout correctly */
+  .aspect-ratio-preview > *,
+  .aspect-\[1\/1\.4\] > *,
+  .aspect-\[1\.414\] > *,
+  .aspect-\[0\.707\] > * {
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+  }
+}

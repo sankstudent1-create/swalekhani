@@ -63,8 +63,8 @@ ${SPOKES_24}
 };
 
 export function svgToDataUri(key: string): string {
-  if (key === 'ip') return 'https://upload.wikimedia.org/wikipedia/commons/4/4b/India_Post_Logo.svg';
-  if (key === 'ashoka') return 'https://upload.wikimedia.org/wikipedia/commons/5/55/Emblem_of_India.svg';
+  if (key === 'ip') return 'https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgyE5GVmnBOyQiy0AveMpnPmeiJhLjLZld_-aEpgH9KpT_YSedoqnMagbtR3uP0KZvo0iiGqgESWSetBUgwwL1z-frzblwInOhqxyrcGUztjB4cB5k0dHbR_0pcj4JCX3Gzzs26LOfMFdyG1nuI7sWt4UbLCrVEhXvwX5uStq1r2PaofAqlM0a4tZ-aPhI/s2620/India%20Post%20Dak%20Sewa%20Jan%20Sewa%20New%20Logo%20Final.png';
+  if (key === 'ashoka') return 'https://tse1.mm.bing.net/th/id/OIP.x97Xgmmh0COrj_B4GWD9bQHaHa?r=0&rs=1&pid=ImgDetMain&o=7&rm=3';
   const svg = SVG_LOGOS[key];
   if (!svg) return '';
   return 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg);

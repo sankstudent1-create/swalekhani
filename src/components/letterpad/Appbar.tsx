@@ -3,6 +3,7 @@
 // ─────────────────────────────────────────────
 import React from 'react';
 import Link from 'next/link';
+import { PenTool } from 'lucide-react';
 import styles from './Appbar.module.css';
 
 interface AppbarProps {
@@ -22,7 +23,10 @@ export default function Appbar({ onPrint, onPDF, onToggleEndorse, onToggleCopy, 
   return (
     <header className={styles.bar}>
       <div className={styles.left}>
-        <div className={styles.logo}>S</div>
+        <div className={styles.logo}>
+          <PenTool size={16} strokeWidth={2.5} className="mr-1" />
+          <span>S</span>
+        </div>
         <div className={styles.brandText}>
           <div className={`${styles.name} ${styles.swalekhaniName}`}>Swalekhani</div>
           <div className={`${styles.name} ${styles.marathiName}`}>स्वलेखनी</div>

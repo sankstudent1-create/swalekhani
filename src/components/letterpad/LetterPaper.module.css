@@ -65,7 +65,7 @@ div.editable { display: block; }
 
 @media print {
   @page {
-    margin: 0; /* Remove default browser margins to prevent cropping */
+    margin: 8mm; /* Remove default browser margins to prevent cropping */
   }
   .paper {
     width: 100% !important;

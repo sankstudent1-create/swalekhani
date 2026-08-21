@@ -65,11 +65,11 @@ div.editable { display: block; }
 
 @media print {
   @page {
-    margin: 8mm; /* Remove default browser margins to prevent cropping */
+    margin: 5mm; /* Tiny margin to prevent physical cropping */
   }
   .paper {
-    width: 210mm !important;
-    max-width: 210mm !important;
+    width: 794px !important;
+    max-width: 794px !important;
     height: auto !important;
     min-height: auto !important;
     box-shadow: none !important;

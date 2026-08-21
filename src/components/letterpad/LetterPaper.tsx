@@ -331,7 +331,7 @@ export default function LetterPaper({ state, onFormChange, onCopyChange, onLogoP
 
   return (
     <div className={`${styles.paper} ${state.officeType === 'personal' ? styles.paperPersonal : ''}`} ref={paperRef} style={{ fontFamily }}>
-      {state.officeType !== 'personal' && <Tricolor />}
+      {/* Tricolor removed as per user request */}
 
       {/* Edit hint */}
       <div className={styles.editHint}>✏ Click any text to edit inline</div>

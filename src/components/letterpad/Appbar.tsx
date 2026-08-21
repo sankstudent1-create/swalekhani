@@ -24,8 +24,7 @@ export default function Appbar({ onPrint, onPDF, onToggleEndorse, onToggleCopy, 
     <header className={styles.bar}>
       <div className={styles.left}>
         <div className={styles.logo}>
-          <PenTool size={16} strokeWidth={2.5} className="mr-1" />
-          <span>S</span>
+          <PenTool size={16} strokeWidth={2.5} />
         </div>
         <div className={styles.brandText}>
           <div className={`${styles.name} ${styles.swalekhaniName}`}>Swalekhani</div>

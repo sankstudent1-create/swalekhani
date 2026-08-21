@@ -2,7 +2,7 @@
 
 /* ── Full bar ──────────────────────────────────────────────── */
 .bar {
-  background: linear-gradient(90deg, #020270, #06038D, #030280);
+  background: linear-gradient(90deg, #FF416C, #FF4B2B);
   color: #fff;
   display: flex;
   align-items: center;
@@ -24,24 +24,6 @@
   min-width: 0;        /* allow flex shrink */
   flex: 1;
 }
-.backBtn {
-  background: transparent;
-  color: rgba(255,255,255,.7);
-  border: 1px solid rgba(255,255,255,.15);
-  border-radius: 3px;
-  padding: 3px 7px;
-  font-size: 10px;
-  cursor: pointer;
-  font-family: 'DM Sans', sans-serif;
-  transition: all .12s;
-  text-decoration: none;
-  display: inline-flex;
-  align-items: center;
-  gap: 3px;
-  white-space: nowrap;
-  flex-shrink: 0;
-}
-.backBtn:hover { background: rgba(255,255,255,.08); color: #fff; }
 
 .logo {
   width: 28px; height: 28px;
@@ -52,9 +34,18 @@
   font-weight: 700; font-size: 12px; color: #fff;
   flex-shrink: 0;
 }
-.brandText { min-width: 0; }
-.name { font-family: 'Libre Baskerville', serif; font-size: 12px; font-weight: 700; line-height: 1.1; white-space: nowrap; }
-.sub  { font-size: 7.5px; color: rgba(255,255,255,.4); letter-spacing: .08em; text-transform: uppercase; white-space: nowrap; }
+.brandText { display: flex; align-items: baseline; gap: 8px; min-width: 0; }
+.name { font-size: 14px; font-weight: 700; line-height: 1.1; white-space: nowrap; }
+.swalekhaniName {
+  font-family: var(--font-outfit), sans-serif;
+  color: #fff;
+}
+.marathiName {
+  font-family: var(--font-yatra), serif;
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 16px;
+  transform: translateY(2px);
+}
 .tag  {
   background: rgba(255,255,255,.07);
   border: 1px solid rgba(255,255,255,.15);
@@ -115,18 +106,14 @@
 
 /* Tablet: hide "Back to Tools" text label, keep icon */
 @media (max-width: 900px) {
-  .backBtn { padding: 4px 6px; }
   .tag     { display: none; }
 }
 
 /* Mobile: collapsed bar */
 @media (max-width: 640px) {
   .bar { padding: 0 8px; height: 48px; gap: 6px; }
-  .backBtn { font-size: 0; padding: 5px 7px; }  /* icon-only */
-  .backBtn::before { content: '←'; font-size: 12px; }
   .logo { width: 24px; height: 24px; font-size: 10px; }
   .name { font-size: 11px; }
-  .sub  { display: none; }
   .modelBadge { max-width: 70px; font-size: 6.5px; padding: 2px 4px; border-radius: 2px; }
   .btn  { padding: 4px 8px; font-size: 10px; }
 
@@ -134,10 +121,4 @@
   .btnGhost { display: none; }
   /* But keep Print and PDF */
   .btnPrint, .btnSaffron { display: inline-flex !important; }
-}
-.swalekhaniName {
-  background: linear-gradient(90deg, #FF6600, #facc15);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  font-size: 14px;
 }

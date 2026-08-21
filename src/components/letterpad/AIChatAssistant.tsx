@@ -163,12 +163,18 @@ export default function AIChatAssistant({ state, onSetForm, onFillAI }: AIChatAs
       </div>
 
       <div className={styles.chatInputArea}>
-        <input 
+        <textarea 
           className={styles.chatInput}
+          rows={3}
           value={input}
           onChange={e => setInput(e.target.value)}
-          onKeyDown={e => e.key === 'Enter' && handleEdit()}
-          placeholder="Type instruction here..."
+          onKeyDown={e => {
+            if (e.key === 'Enter' && !e.shiftKey) {
+              e.preventDefault();
+              handleEdit();
+            }
+          }}
+          placeholder="Type instruction here... (Shift+Enter for new line)"
           disabled={isLoading}
         />
         <div className={styles.actionButtons}>

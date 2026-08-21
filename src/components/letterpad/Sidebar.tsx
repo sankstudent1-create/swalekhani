@@ -112,6 +112,65 @@ export default function Sidebar({
   return (
     <aside className={styles.sidebar}>
 
+      {/* ── AI GENERATOR (Groq-powered, no client key needed) ── */}
+      <div className={styles.aiSection}>
+        <div className={styles.aiHeader}>✨ AI — Complete Letter Generator</div>
+        <div className={styles.aiInfo}>
+          Powered by <strong>Groq AI (Llama 3.3)</strong> — fills <strong>every field automatically</strong>: ministry, dept, To, Subject, Ref, body paragraphs, Encl., Copy To, File No., and signatory.
+        </div>
+
+        <Field label="Letter Type">
+          <select className={styles.select} value={aiType} onChange={e => setAiType(e.target.value)}>
+            {AI_LETTER_TYPES.map(t => <option key={t.value} value={t.value}>{t.label}</option>)}
+          </select>
+        </Field>
+
+        <Field label="AI Generation Mode">
+          <select className={styles.select} value={aiMode} onChange={e => setAiMode(e.target.value as 'content'|'full')}>
+            <option value="content">Body & Content Only (Keep my Logo/Headers)</option>
+            <option value="full">Entire Letterhead (Fully AI, replaces headers & logos)</option>
+          </select>
+        </Field>
+
+        <Field label="Describe what you need">
+          <textarea
+            className={styles.textarea}
+            rows={4}
+            value={aiPrompt}
+            placeholder="e.g. Reminder to all postmasters in Nagpur region to submit monthly cash accounts by 5th. Mention penalty for delay. From PMG Nagpur."
+            onChange={e => setAiPrompt(e.target.value)}
+          />
+        </Field>
+
+        <Field label="Language">
+          <select className={styles.select} value={aiLang} onChange={e => setAiLang(e.target.value)}>
+            <option value="en">English</option>
+            <option value="hi">हिन्दी (Hindi)</option>
+            <option value="bi">Bilingual (EN + HI)</option>
+          </select>
+        </Field>
+
+        <button
+          className={styles.aiBtn}
+          disabled={aiLoading}
+          onClick={handleGenerate}
+        >
+          {aiLoading ? <span className={styles.spinner} /> : '✦'}
+          {aiLoading ? 'Generating complete letter…' : 'Generate Complete Letter'}
+        </button>
+
+        {aiStatus && (
+          <div className={`${styles.aiStatus} ${aiStatus.startsWith('✓') ? styles.aiStatusOk : aiStatus.startsWith('✗') ? styles.aiStatusErr : ''}`}>
+            {aiStatus}
+          </div>
+        )}
+
+        {/* Groq-powered badge — no API key input needed */}
+        <div className={styles.groqBadge}>
+          <strong>⚡ Groq AI</strong> — Server-side · No API key needed · <strong>Auto-fallback chain</strong>: Llama 3.3 70B → Llama 4 Scout → Llama 3.1 8B Instant
+        </div>
+      </div>
+
       {/* ── OFFICE TYPE ── */}
       <div className={styles.section}>
         <SectionTitle>Office / Authority</SectionTitle>
@@ -275,65 +334,6 @@ export default function Sidebar({
           <button className={`${styles.toggleBtn} ${state.showEncl ? styles.toggleBtnOn : ''}`} onClick={onToggleEncl}>📎 Enclosure</button>
           <button className={`${styles.toggleBtn} ${state.showCopy ? styles.toggleBtnOn : ''}`} onClick={onToggleCopy}>📋 Copy To</button>
           <button className={`${styles.toggleBtn} ${state.showEndorse ? styles.toggleBtnOn : ''}`} onClick={onToggleEndorse}>📝 Endorsement</button>
-        </div>
-      </div>
-
-      {/* ── AI GENERATOR (Groq-powered, no client key needed) ── */}
-      <div className={styles.aiSection}>
-        <div className={styles.aiHeader}>✨ AI — Complete Letter Generator</div>
-        <div className={styles.aiInfo}>
-          Powered by <strong>Groq AI (Llama 3.3)</strong> — fills <strong>every field automatically</strong>: ministry, dept, To, Subject, Ref, body paragraphs, Encl., Copy To, File No., and signatory.
-        </div>
-
-        <Field label="Letter Type">
-          <select className={styles.select} value={aiType} onChange={e => setAiType(e.target.value)}>
-            {AI_LETTER_TYPES.map(t => <option key={t.value} value={t.value}>{t.label}</option>)}
-          </select>
-        </Field>
-
-        <Field label="AI Generation Mode">
-          <select className={styles.select} value={aiMode} onChange={e => setAiMode(e.target.value as 'content'|'full')}>
-            <option value="content">Body & Content Only (Keep my Logo/Headers)</option>
-            <option value="full">Entire Letterhead (Fully AI, replaces headers & logos)</option>
-          </select>
-        </Field>
-
-        <Field label="Describe what you need">
-          <textarea
-            className={styles.textarea}
-            rows={4}
-            value={aiPrompt}
-            placeholder="e.g. Reminder to all postmasters in Nagpur region to submit monthly cash accounts by 5th. Mention penalty for delay. From PMG Nagpur."
-            onChange={e => setAiPrompt(e.target.value)}
-          />
-        </Field>
-
-        <Field label="Language">
-          <select className={styles.select} value={aiLang} onChange={e => setAiLang(e.target.value)}>
-            <option value="en">English</option>
-            <option value="hi">हिन्दी (Hindi)</option>
-            <option value="bi">Bilingual (EN + HI)</option>
-          </select>
-        </Field>
-
-        <button
-          className={styles.aiBtn}
-          disabled={aiLoading}
-          onClick={handleGenerate}
-        >
-          {aiLoading ? <span className={styles.spinner} /> : '✦'}
-          {aiLoading ? 'Generating complete letter…' : 'Generate Complete Letter'}
-        </button>
-
-        {aiStatus && (
-          <div className={`${styles.aiStatus} ${aiStatus.startsWith('✓') ? styles.aiStatusOk : aiStatus.startsWith('✗') ? styles.aiStatusErr : ''}`}>
-            {aiStatus}
-          </div>
-        )}
-
-        {/* Groq-powered badge — no API key input needed */}
-        <div className={styles.groqBadge}>
-          <strong>⚡ Groq AI</strong> — Server-side · No API key needed · <strong>Auto-fallback chain</strong>: Llama 3.3 70B → Llama 4 Scout → Llama 3.1 8B Instant
         </div>
       </div>
 

@@ -22,11 +22,10 @@ export default function Appbar({ onPrint, onPDF, onToggleEndorse, onToggleCopy, 
   return (
     <header className={styles.bar}>
       <div className={styles.left}>
-        <Link href="/tools" className={styles.backBtn}>← Back to Tools</Link>
         <div className={styles.logo}>S</div>
         <div className={styles.brandText}>
           <div className={`${styles.name} ${styles.swalekhaniName}`}>Swalekhani</div>
-          <div className={styles.sub}>By Sanket Wanve</div>
+          <div className={`${styles.name} ${styles.marathiName}`}>स्वलेखनी</div>
         </div>
         <div className={styles.tag}>🇮🇳 Gov Edition</div>
         {modelShort && (

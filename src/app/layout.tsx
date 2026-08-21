@@ -12,7 +12,7 @@ if (typeof Promise.withResolvers === 'undefined') {
 }
 
 import type { Metadata, Viewport } from "next";
-import { Outfit, Poppins, JetBrains_Mono } from "next/font/google";
+import { Outfit, Poppins, JetBrains_Mono, Yatra_One } from "next/font/google";
 import Script from "next/script";
 import AdSlot from "@/components/AdSlot";
 import Navigation from "@/components/Navigation";
@@ -38,6 +38,13 @@ const poppins = Poppins({
   variable: "--font-poppins",
   weight: ["400", "500", "600", "700"],
   subsets: ["latin", "devanagari"],
+  display: "swap",
+});
+
+const yatraOne = Yatra_One({
+  variable: "--font-yatra",
+  weight: "400",
+  subsets: ["devanagari"],
   display: "swap",
 });
 
@@ -136,7 +143,7 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body className={`${outfit.variable} ${poppins.variable} ${jetbrainsMono.variable} font-sans antialiased text-white bg-[#07090f]`}>
+      <body className={`${outfit.variable} ${poppins.variable} ${jetbrainsMono.variable} ${yatraOne.variable} font-sans antialiased text-white bg-[#07090f]`}>
         {adsEnabled && adClient ? (
           <Script
             id="adsense-script"

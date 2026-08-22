@@ -74,14 +74,14 @@ export default function LetterpadGeneratorPage() {
       const savedScale = document.documentElement.style.getPropertyValue('--paper-scale');
       document.documentElement.style.setProperty('--paper-scale', '1');
 
-      // Wait a tick for reflow
-      await new Promise(r => setTimeout(r, 100));
+      // Wait a bit longer for iOS Safari to finish layout reflow
+      await new Promise(r => setTimeout(r, 300));
 
-      // Capture at 2x for crisp text
+      // Capture at 1.5x for crisp text without hitting iOS canvas memory limits
       const canvas = await html2canvas(paperEl, {
-        scale: 2,
+        scale: 1.5,
         useCORS: true,
-        allowTaint: true,
+        allowTaint: false, // Must be false! true causes SecurityError on toDataURL in iOS Safari
         backgroundColor: '#ffffff',
         width: 794,
         windowWidth: 794,
@@ -136,9 +136,9 @@ export default function LetterpadGeneratorPage() {
 
       // Save — triggers download on iOS and desktop alike
       pdf.save('letter.pdf');
-    } catch (err) {
+    } catch (err: any) {
       console.error('PDF generation failed:', err);
-      alert('PDF generation failed. Falling back to browser print.');
+      alert('PDF generation failed: ' + (err?.message || String(err)) + '\nFalling back to browser print.');
       window.print();
     } finally {
       setPdfBusy(false);

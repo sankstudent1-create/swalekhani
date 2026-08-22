@@ -62,8 +62,8 @@ export default function LetterpadGeneratorPage() {
     setPdfBusy(true);
     try {
       // Dynamically import to keep bundle small
-      // @ts-ignore - html2canvas-pro does not have types
-      const html2canvas = (await import('html2canvas-pro')).default;
+      // @ts-ignore - types not strictly needed for this usage
+      const html2canvas = (await import('html2canvas')).default;
       const { jsPDF } = await import('jspdf');
 
       // Find the actual paper element via data attribute (reliable across CSS module builds)

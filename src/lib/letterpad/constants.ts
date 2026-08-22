@@ -63,6 +63,8 @@ ${SPOKES_24}
 };
 
 export function svgToDataUri(key: string): string {
+  if (key === 'ip') return '/logo-ip.png';
+  if (key === 'ashoka') return '/logo-ashoka.png';
   const svg = SVG_LOGOS[key];
   if (!svg) return '';
   return 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg);

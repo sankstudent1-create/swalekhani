@@ -66,6 +66,9 @@ export default function LetterpadGeneratorPage() {
       const html2canvas = (await import('html2canvas')).default;
       const { jsPDF } = await import('jspdf');
 
+      // Set body attribute so globals.css can hide UI artifacts
+      document.body.setAttribute('data-generating-pdf', 'true');
+
       // Find the actual paper element via data attribute (reliable across CSS module builds)
       const paperEl = document.querySelector('[data-paper="true"]') as HTMLElement;
       if (!paperEl) { alert('Could not find paper element'); return; }
@@ -101,10 +104,24 @@ export default function LetterpadGeneratorPage() {
       const imgWidth = A4_W;
       const imgHeight = (canvas.height * A4_W) / canvas.width;
 
+      const drawFooter = () => {
+        const footerY = A4_H - 12; // 12mm from bottom
+        pdf.setFillColor(255, 255, 255);
+        pdf.rect(0, footerY - 5, A4_W, 20, 'F');
+        pdf.setFontSize(9);
+        pdf.setTextColor(110, 110, 110);
+        const f1 = state.officeType === 'custom' ? form.dept : ((form.dept || 'Government of India') + ' · Government of India');
+        const f2 = form.city + (form.pin ? ' – ' + form.pin : '');
+        const f3 = form.wb;
+        const txt = [f1, f2, f3].filter(Boolean).join('   •   ');
+        pdf.text(txt, A4_W / 2, footerY, { align: 'center' });
+      };
+
       // If content fits in one page, just place it
       if (imgHeight <= A4_H) {
         const imgData = canvas.toDataURL('image/png');
         pdf.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
+        drawFooter();
       } else {
         // Multi-page: slice the canvas into A4-height chunks
         const pageHeightPx = (A4_H / A4_W) * canvas.width;
@@ -131,6 +148,7 @@ export default function LetterpadGeneratorPage() {
           const sliceData = sliceCanvas.toDataURL('image/png');
           const sliceMMHeight = (sliceH * A4_W) / canvas.width;
           pdf.addImage(sliceData, 'PNG', 0, 0, imgWidth, sliceMMHeight);
+          drawFooter();
         }
       }
 
@@ -141,6 +159,7 @@ export default function LetterpadGeneratorPage() {
       alert('PDF generation failed: ' + (err?.message || String(err)) + '\nFalling back to browser print.');
       window.print();
     } finally {
+      document.body.removeAttribute('data-generating-pdf');
       setPdfBusy(false);
     }
   }

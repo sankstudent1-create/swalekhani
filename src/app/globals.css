@@ -563,3 +563,33 @@ body {
     height: 100% !important;
   }
 }
+
+/* --- PDF Generation & Print Hiding Rules --- */
+body[data-generating-pdf="true"] [class*="logoPh"],
+body[data-generating-pdf="true"] [class*="resizeHandle"],
+body[data-generating-pdf="true"] [class*="delBtn"],
+body[data-generating-pdf="true"] [class*="editHint"],
+body[data-generating-pdf="true"] [class*="footer"] {
+  display: none !important;
+}
+body[data-generating-pdf="true"] [class*="dlogo"] {
+  border-color: transparent !important;
+}
+body[data-generating-pdf="true"] [class*="editable"] {
+  border-bottom: none !important;
+}
+
+@media print {
+  [class*="logoPh"],
+  [class*="resizeHandle"],
+  [class*="delBtn"],
+  [class*="editHint"] {
+    display: none !important;
+  }
+  [class*="dlogo"] {
+    border-color: transparent !important;
+  }
+  [class*="editable"] {
+    border-bottom: none !important;
+  }
+}

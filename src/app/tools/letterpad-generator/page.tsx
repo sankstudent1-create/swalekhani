@@ -62,6 +62,7 @@ export default function LetterpadGeneratorPage() {
     setPdfBusy(true);
     try {
       // Dynamically import to keep bundle small
+      // @ts-ignore - html2canvas-pro does not have types
       const html2canvas = (await import('html2canvas-pro')).default;
       const { jsPDF } = await import('jspdf');
 

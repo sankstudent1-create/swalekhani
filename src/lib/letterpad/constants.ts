@@ -15,7 +15,7 @@ const SPOKES_24 = Array.from({ length: 24 }, (_, i) => {
 }).join('');
 
 export const SVG_LOGOS: Record<string, string> = {
-  ashoka: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 135">
+  ashoka: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 135" width="100%" height="100%">
 <circle cx="60" cy="50" r="43" fill="none" stroke="#06038D" stroke-width="3"/>
 <circle cx="60" cy="50" r="35" fill="none" stroke="#06038D" stroke-width="1.5"/>
 <circle cx="60" cy="50" r="6" fill="#06038D"/>
@@ -30,7 +30,7 @@ ${SPOKES_24}
 <text x="60" y="128" text-anchor="middle" font-size="5.8" fill="#06038D" font-family="serif" letter-spacing="1">SATYAMEVA JAYATE</text>
 </svg>`,
 
-  ip: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  ip: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100%" height="100%">
 <rect width="100" height="100" rx="6" fill="#CC1111"/>
 <rect x="4" y="4" width="92" height="92" rx="4" fill="none" stroke="#fff" stroke-width="1.5"/>
 <text x="50" y="28" text-anchor="middle" font-size="9.5" fill="#fff" font-family="'Libre Baskerville',serif" font-weight="700" letter-spacing=".5">INDIA POST</text>
@@ -40,7 +40,7 @@ ${SPOKES_24}
 <text x="50" y="92" text-anchor="middle" font-size="6" fill="rgba(255,255,255,.6)" font-family="sans-serif">Government of India</text>
 </svg>`,
 
-  sansad: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 110 120">
+  sansad: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 110 120" width="100%" height="100%">
 <circle cx="55" cy="50" r="47" fill="none" stroke="#8B0000" stroke-width="3"/>
 <circle cx="55" cy="50" r="39" fill="none" stroke="#8B0000" stroke-width="1"/>
 <text x="55" y="38" text-anchor="middle" font-size="10.5" fill="#8B0000" font-family="'Noto Serif Devanagari',serif" font-weight="700">संसद</text>
@@ -51,7 +51,7 @@ ${SPOKES_24}
 <text x="55" y="108" text-anchor="middle" font-size="7" fill="#8B0000" font-family="'Noto Serif Devanagari',serif">भारत की संसद</text>
 </svg>`,
 
-  mh: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 110">
+  mh: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 110" width="100%" height="100%">
 <circle cx="50" cy="47" r="44" fill="none" stroke="#FF6600" stroke-width="2.5"/>
 <circle cx="50" cy="47" r="36" fill="none" stroke="#FF6600" stroke-width="1"/>
 <text x="50" y="33" text-anchor="middle" font-size="8.5" fill="#FF6600" font-family="'Noto Serif Devanagari',serif" font-weight="700">महाराष्ट्र सरकार</text>

@@ -97,6 +97,8 @@ export default function LetterpadGeneratorPage() {
       // A4 dimensions in mm
       const A4_W = 210;
       const A4_H = 297;
+      const FOOTER_H = 18; // 18mm reserved for footer
+      const CONTENT_H = A4_H - FOOTER_H; // 279mm height for content slice
 
       const pdf = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
 
@@ -117,15 +119,16 @@ export default function LetterpadGeneratorPage() {
         pdf.text(txt, A4_W / 2, footerY, { align: 'center' });
       };
 
-      // If content fits in one page, just place it
-      if (imgHeight <= A4_H) {
+      // If content fits in one page (leaving room for footer), just place it
+      if (imgHeight <= CONTENT_H) {
         const imgData = canvas.toDataURL('image/png');
         pdf.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
         drawFooter();
       } else {
-        // Multi-page: slice the canvas into A4-height chunks
-        const pageHeightPx = (A4_H / A4_W) * canvas.width;
-        const totalPages = Math.ceil(canvas.height / pageHeightPx);
+        // Multi-page: slice the canvas into CONTENT_H chunks instead of full A4_H chunks
+        // This ensures the slice never reaches the bottom 18mm where the footer goes!
+        const sliceHeightPx = (CONTENT_H / A4_W) * canvas.width;
+        const totalPages = Math.ceil(canvas.height / sliceHeightPx);
 
         for (let i = 0; i < totalPages; i++) {
           if (i > 0) pdf.addPage();
@@ -133,13 +136,13 @@ export default function LetterpadGeneratorPage() {
           // Create a slice canvas for this page
           const sliceCanvas = document.createElement('canvas');
           sliceCanvas.width = canvas.width;
-          const sliceH = Math.min(pageHeightPx, canvas.height - i * pageHeightPx);
+          const sliceH = Math.min(sliceHeightPx, canvas.height - i * sliceHeightPx);
           sliceCanvas.height = sliceH;
 
           const ctx = sliceCanvas.getContext('2d')!;
           ctx.drawImage(
             canvas,
-            0, i * pageHeightPx,           // source x, y
+            0, i * sliceHeightPx,           // source x, y
             canvas.width, sliceH,            // source w, h
             0, 0,                            // dest x, y
             canvas.width, sliceH             // dest w, h

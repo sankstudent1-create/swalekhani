@@ -11,10 +11,11 @@ interface AppbarProps {
   onPDF: () => void;
   onToggleEndorse: () => void;
   onToggleCopy: () => void;
-  lastModel?: string;   // e.g. "llama-3.3-70b-versatile"
+  lastModel?: string;
+  pdfBusy?: boolean;
 }
 
-export default function Appbar({ onPrint, onPDF, onToggleEndorse, onToggleCopy, lastModel }: AppbarProps) {
+export default function Appbar({ onPrint, onPDF, onToggleEndorse, onToggleCopy, lastModel, pdfBusy }: AppbarProps) {
   // Shorten the model name for display — e.g. "llama-3.3-70b"
   const modelShort = lastModel
     ? lastModel.replace(/-versatile|-instant|-it|-preview/gi, '').replace('llama-', 'L').replace('gemma', 'G')
@@ -42,7 +43,7 @@ export default function Appbar({ onPrint, onPDF, onToggleEndorse, onToggleCopy, 
         <button className={`${styles.btn} ${styles.btnGhost}`} onClick={onToggleEndorse}>+ Endorse</button>
         <button className={`${styles.btn} ${styles.btnGhost}`} onClick={onToggleCopy}>+ Copy To</button>
         <button className={`${styles.btn} ${styles.btnGhost} ${styles.btnPrint}`} onClick={onPrint}>🖨 Print</button>
-        <button className={`${styles.btn} ${styles.btnSaffron}`} onClick={onPDF}>⬇ PDF</button>
+        <button className={`${styles.btn} ${styles.btnSaffron}`} onClick={onPDF} disabled={pdfBusy}>{pdfBusy ? '⏳ Generating…' : '⬇ PDF'}</button>
       </div>
     </header>
   );

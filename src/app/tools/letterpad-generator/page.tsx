@@ -52,12 +52,102 @@ export default function LetterpadGeneratorPage() {
     return () => window.removeEventListener('resize', updateScale);
   }, []);
 
-  // ── Print / PDF — reset scale to 1 then print then restore ──
+  // ── PDF Generation — html2canvas + jsPDF for pixel-perfect output ──
+  // This bypasses the browser print engine entirely. What you see in
+  // preview is exactly what the PDF will contain — on ALL devices.
+  const [pdfBusy, setPdfBusy] = useState(false);
+
+  async function generatePDF() {
+    if (pdfBusy) return;
+    setPdfBusy(true);
+    try {
+      // Dynamically import to keep bundle small
+      const html2canvas = (await import('html2canvas-pro')).default;
+      const { jsPDF } = await import('jspdf');
+
+      // Find the actual paper element via data attribute (reliable across CSS module builds)
+      const paperEl = document.querySelector('[data-paper="true"]') as HTMLElement;
+      if (!paperEl) { alert('Could not find paper element'); return; }
+
+      // Temporarily reset scale so we capture at full 794px width
+      const savedScale = document.documentElement.style.getPropertyValue('--paper-scale');
+      document.documentElement.style.setProperty('--paper-scale', '1');
+
+      // Wait a tick for reflow
+      await new Promise(r => setTimeout(r, 100));
+
+      // Capture at 2x for crisp text
+      const canvas = await html2canvas(paperEl, {
+        scale: 2,
+        useCORS: true,
+        allowTaint: true,
+        backgroundColor: '#ffffff',
+        width: 794,
+        windowWidth: 794,
+        logging: false,
+      });
+
+      // Restore scale
+      document.documentElement.style.setProperty('--paper-scale', savedScale || '1');
+
+      // A4 dimensions in mm
+      const A4_W = 210;
+      const A4_H = 297;
+
+      const pdf = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
+
+      // Calculate how many A4 pages the content spans
+      const imgWidth = A4_W;
+      const imgHeight = (canvas.height * A4_W) / canvas.width;
+
+      // If content fits in one page, just place it
+      if (imgHeight <= A4_H) {
+        const imgData = canvas.toDataURL('image/png');
+        pdf.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
+      } else {
+        // Multi-page: slice the canvas into A4-height chunks
+        const pageHeightPx = (A4_H / A4_W) * canvas.width;
+        const totalPages = Math.ceil(canvas.height / pageHeightPx);
+
+        for (let i = 0; i < totalPages; i++) {
+          if (i > 0) pdf.addPage();
+
+          // Create a slice canvas for this page
+          const sliceCanvas = document.createElement('canvas');
+          sliceCanvas.width = canvas.width;
+          const sliceH = Math.min(pageHeightPx, canvas.height - i * pageHeightPx);
+          sliceCanvas.height = sliceH;
+
+          const ctx = sliceCanvas.getContext('2d')!;
+          ctx.drawImage(
+            canvas,
+            0, i * pageHeightPx,           // source x, y
+            canvas.width, sliceH,            // source w, h
+            0, 0,                            // dest x, y
+            canvas.width, sliceH             // dest w, h
+          );
+
+          const sliceData = sliceCanvas.toDataURL('image/png');
+          const sliceMMHeight = (sliceH * A4_W) / canvas.width;
+          pdf.addImage(sliceData, 'PNG', 0, 0, imgWidth, sliceMMHeight);
+        }
+      }
+
+      // Save — triggers download on iOS and desktop alike
+      pdf.save('letter.pdf');
+    } catch (err) {
+      console.error('PDF generation failed:', err);
+      alert('PDF generation failed. Falling back to browser print.');
+      window.print();
+    } finally {
+      setPdfBusy(false);
+    }
+  }
+
+  // Native print (still available for desktop users who prefer it)
   function doPrint() {
-    // Force scale=1 for print so paper renders at full A4 size
     document.documentElement.style.setProperty('--paper-scale', '1');
     window.print();
-    // Restore after print dialog closes (slight delay)
     setTimeout(() => {
       const vw = window.innerWidth;
       let scale = 1;
@@ -87,10 +177,11 @@ export default function LetterpadGeneratorPage() {
 
       <Appbar
         onPrint={doPrint}
-        onPDF={doPrint}
+        onPDF={generatePDF}
         onToggleEndorse={toggleEndorse}
         onToggleCopy={toggleCopy}
         lastModel={lastModel}
+        pdfBusy={pdfBusy}
       />
 
       {/* ── Mobile tab bar ── */}
@@ -149,7 +240,8 @@ export default function LetterpadGeneratorPage() {
               isPersonal={state.officeType === 'personal'}
               onTogglePersonal={() => applyOfficePreset(state.officeType === 'personal' ? 'custom' : 'personal')}
               onPrint={doPrint}
-              onPDF={doPrint}
+              onPDF={generatePDF}
+              pdfBusy={pdfBusy}
             />
           </div>
 

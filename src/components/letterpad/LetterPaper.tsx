@@ -330,7 +330,7 @@ export default function LetterPaper({ state, onFormChange, onCopyChange, onLogoP
                                     `${styles.footer} ${styles.footerAB}`;
 
   return (
-    <div className={`${styles.paper} ${state.officeType === 'personal' ? styles.paperPersonal : ''}`} ref={paperRef} style={{ fontFamily }}>
+    <div className={`${styles.paper} ${state.officeType === 'personal' ? styles.paperPersonal : ''}`} ref={paperRef} style={{ fontFamily }} data-paper="true">
       {/* Tricolor removed as per user request */}
 
       {/* Edit hint */}

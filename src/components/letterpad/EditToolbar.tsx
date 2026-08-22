@@ -16,12 +16,13 @@ interface EditToolbarProps {
   onPDF: () => void;
   isPersonal?: boolean;
   onTogglePersonal?: () => void;
+  pdfBusy?: boolean;
 }
 
 export default function EditToolbar({
   showEncl, showCopy, showEndorse,
   onToggleEncl, onToggleCopy, onToggleEndorse,
-  onPrint, onPDF, isPersonal, onTogglePersonal,
+  onPrint, onPDF, isPersonal, onTogglePersonal, pdfBusy,
 }: EditToolbarProps) {
   function cmd(command: string, value?: string) {
     document.execCommand(command, false, value);
@@ -81,7 +82,7 @@ export default function EditToolbar({
       )}
       <div className={styles.sep} />
       <button className={styles.btn} onClick={onPrint}>🖨</button>
-      <button className={`${styles.btn} ${styles.btnPDF}`} onClick={onPDF}>⬇ PDF</button>
+      <button className={`${styles.btn} ${styles.btnPDF}`} onClick={onPDF} disabled={pdfBusy}>{pdfBusy ? '⏳' : '⬇ PDF'}</button>
     </div>
   );
 }

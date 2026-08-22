@@ -110,9 +110,9 @@ export default function LetterpadGeneratorPage() {
         pdf.rect(0, footerY - 5, A4_W, 20, 'F');
         pdf.setFontSize(9);
         pdf.setTextColor(110, 110, 110);
-        const f1 = state.officeType === 'custom' ? form.dept : ((form.dept || 'Government of India') + ' · Government of India');
-        const f2 = form.city + (form.pin ? ' – ' + form.pin : '');
-        const f3 = form.wb;
+        const f1 = state.officeType === 'custom' ? state.form.dept : ((state.form.dept || 'Government of India') + ' · Government of India');
+        const f2 = state.form.city + (state.form.pin ? ' – ' + state.form.pin : '');
+        const f3 = state.form.wb;
         const txt = [f1, f2, f3].filter(Boolean).join('   •   ');
         pdf.text(txt, A4_W / 2, footerY, { align: 'center' });
       };

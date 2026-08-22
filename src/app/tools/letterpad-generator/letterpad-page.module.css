@@ -244,30 +244,28 @@
     position: static;
   }
 
-  /* Preview pane: must NOT have overflow-x: hidden to prevent hard clipping on older iOS */
+  /* Preview pane: hide horizontal overflow to ensure no phantom scrolling */
   .preview {
     min-height: calc(100vh - 100px);
-    padding: 14px 10px 50px;
-    display: flex;
-    justify-content: center;
-    overflow-x: auto;
+    padding: 14px 0px 50px; /* Removed side padding to maximize screen usage */
+    overflow-x: hidden;
   }
 
-  /* paperWrap: Just a flex container that naturally centers its content */
+  /* paperWrap: The holy grail for scaling. Set layout size to exactly the scaled dimensions. */
   .paperWrap {
-    width: 100% !important;
-    display: flex;
-    justify-content: center;
-    margin: 0 auto;
+    width: calc(794px * var(--paper-scale, 1)) !important;
+    margin: 0 auto !important; /* Perfectly center the correctly-sized wrapper */
+    position: relative;
+    overflow: hidden; /* Clips any subpixel overdraw from the unscaled box */
+    /* Collapse the vertical gap left behind by the transform */
+    margin-bottom: calc(-1123px * (1 - var(--paper-scale, 1)));
   }
 
-  /* paperInner: Scales natively. zoom actually reduces layout size! */
+  /* paperInner: standard transform, scales perfectly inside the tight wrapper */
   .paperInner {
     width: 794px;
-    zoom: var(--paper-scale, 1);
-    /* For Firefox which supports zoom in v126, but just in case: */
-    -moz-transform: scale(var(--paper-scale, 1));
-    -moz-transform-origin: top center;
+    transform: scale(var(--paper-scale, 1));
+    transform-origin: top left;
   }
 
   .previewLabel { display: none; }

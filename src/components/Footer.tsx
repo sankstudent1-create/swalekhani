@@ -2,10 +2,6 @@
 import Link from 'next/link';
 import { Layers } from 'lucide-react';
 export default function Footer() {
-  const pathname = typeof window !== 'undefined' ? window.location.pathname : '';
-  const FULLSCREEN_TOOLS = ['/tools/letterpad-generator', '/tools/gds-leave', '/tools/td-commission'];
-  const isFullscreen = FULLSCREEN_TOOLS.some(p => pathname.startsWith(p));
-  if (isFullscreen) return null;
 
   return (
     <footer className="relative z-10 border-t border-white/[0.05] bg-white/[0.01] backdrop-blur-lg">

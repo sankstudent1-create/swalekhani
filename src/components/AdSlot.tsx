@@ -39,6 +39,7 @@ export default function AdSlot({ slotKey, label, variant = "banner" }: AdSlotPro
   }, [adsEnabled, client, slot]);
 
   if (!adsEnabled) return null;
+  if (!slot) return null;
 
   const minHeight = variant === "banner" ? "min-h-[110px]" : "min-h-[260px]";
 
@@ -59,11 +60,7 @@ export default function AdSlot({ slotKey, label, variant = "banner" }: AdSlotPro
             data-ad-format="auto"
             data-full-width-responsive="true"
           />
-        ) : (
-          <div className="flex h-full min-h-[72px] items-center justify-center rounded-xl border border-dashed border-white/10 bg-black/15 px-4 text-center text-sm text-foreground/55">
-            Reserved ad inventory for {label}. Set NEXT_PUBLIC_ADSENSE_CLIENT and the matching NEXT_PUBLIC_AD_SLOT_* variable to activate live ads.
-          </div>
-        )}
+        ) : null}
       </div>
     </section>
   );

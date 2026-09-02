@@ -101,6 +101,9 @@ export const metadata: Metadata = {
     description: "Image, PDF, signature, and document formatting utilities in one place.",
     images: ["/brand/hero-ai-grid.svg"],
   },
+  other: {
+    "google-adsense-account": "ca-pub-4364061213343174",
+  },
 };
 
 export default function RootLayout({

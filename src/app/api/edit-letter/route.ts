@@ -11,9 +11,8 @@ interface EditLetterRequest {
 }
 
 const GROQ_FALLBACK_MODELS = [
-  'openai/gpt-oss-120b',
-  'openai/gpt-oss-20b',
-  'qwen/qwen3.6-27b',
+  'llama-3.3-70b-versatile',
+  'llama-3.1-8b-instant',
 ];
 
 async function callGroqModel(
@@ -70,19 +69,41 @@ async function callGroqWithFallback(
 }
 
 export async function POST(request: NextRequest) {
+  const body = (await request.json()) as EditLetterRequest;
+  const { instruction, currentForm } = body;
+
+  if (!instruction) {
+    return NextResponse.json({ error: 'Instruction is required' }, { status: 400 });
+  }
+
   if (!process.env.GROQ_API_KEY) {
-    return NextResponse.json(
-      { error: 'Server configuration error: GROQ_API_KEY is not set.' },
-      { status: 500 }
-    );
+    console.warn('[letterpad] GROQ_API_KEY is not set. Applying rule-based edit.');
+    const changes: Record<string, any> = {};
+    const lower = instruction.toLowerCase();
+    if (lower.includes('memorandum') || lower.includes('om')) {
+      changes.sal = '';
+      changes.cls = '';
+      changes.body = `The undersigned is directed to state that in reference to the subject cited above, the competent authority has accorded approval.\n\n2. All concerned field formations are hereby advised to ensure strict compliance.\n\n3. This issues with the approval of the Competent Authority.`;
+    } else if (lower.includes('demi-official') || lower.includes('d.o.')) {
+      changes.sal = 'Dear Shri Sharma,';
+      changes.cls = 'Yours sincerely,\nWith warm regards,';
+    } else if (lower.includes('show cause') || lower.includes('scn')) {
+      changes.body = `WHEREAS the matter has been brought to the notice of the undersigned;\n\nAND WHEREAS the aforementioned act constitutes a prima facie violation of the established rules;\n\nNOW THEREFORE, you are hereby called upon to show cause within 15 days as to why appropriate action should not be initiated against you.`;
+    } else if (lower.includes('student') || lower.includes('principal')) {
+      changes.h1 = ''; changes.h2 = ''; changes.e1 = ''; changes.e2 = ''; changes.dept = ''; changes.divn = ''; changes.ofc = '';
+      changes.sal = 'Respected Principal / Sir,';
+      changes.cls = 'Yours obediently,';
+    } else if (lower.includes('personal') || lower.includes('romantic')) {
+      changes.h1 = ''; changes.h2 = ''; changes.e1 = ''; changes.e2 = ''; changes.dept = ''; changes.divn = ''; changes.ofc = ''; changes.fno = '';
+    }
+    return NextResponse.json({
+      success: true,
+      data: changes,
+      model: 'CSMOP Protocol Editor (Add GROQ_API_KEY in Vercel to activate Groq AI)',
+    });
   }
 
   try {
-    const { instruction, currentForm } = (await request.json()) as EditLetterRequest;
-
-    if (!instruction) {
-      return NextResponse.json({ error: 'Instruction is required' }, { status: 400 });
-    }
 
     const systemPrompt = `You are an expert Government of India and State Government correspondence editor with deep mastery of the Central Secretariat Manual of Office Procedure (CSMOP 16th Edition), official administrative vocabulary, and legal protocols.
 

@@ -365,17 +365,21 @@ export default function LetterPaper({ state, onFormChange, onCopyChange, onLogoP
 
       {/* Body */}
       <div className={styles.body}>
+        {/* Detect romantic letter to omit bureaucratic To / Sub labels */}
+        {(() => null)()}
         {/* To block — each field is block-level inside a clear container */}
         {tpl !== 'E' && (
           <div className={`${styles.toBlock} ${(!form.toD?.trim() && !form.toA?.trim()) ? styles.hideIfEmptyPrint : ''}`}>
-            {state.officeType !== 'personal' && <span className={styles.toLabel}>To</span>}
+            {!(state.officeType === 'personal' && (form.sal.toLowerCase().includes('dearest') || form.sal.toLowerCase().includes('darling') || form.sal.toLowerCase().includes('प्रियतम') || form.cls.toLowerCase().includes('forever') || form.sub.toLowerCase().includes('love') || form.sub.toLowerCase().includes('heart') || form.toD.toLowerCase().includes('love'))) && (
+              <span className={styles.toLabel}>To</span>
+            )}
             <div className={styles.toInner}>
               <div className={`${styles.toName} ${!form.toD?.trim() ? styles.hideIfEmptyPrint : ''}`}>
                 <Editable
                   value={form.toD}
                   onChange={v => onFormChange('toD', v)}
                   tag="span"
-                  placeholder={state.officeType === 'personal' ? "Recipient Name" : "Recipient Designation"}
+                  placeholder={state.officeType === 'personal' ? "Recipient (e.g. The Postmaster)" : "Recipient Designation"}
                   aiTick={tick}
                 />
               </div>
@@ -395,8 +399,10 @@ export default function LetterPaper({ state, onFormChange, onCopyChange, onLogoP
 
         {/* Subject */}
         <div className={`${styles.subBlock} ${!form.sub?.trim() ? styles.hideIfEmptyPrint : ''}`}>
-          {state.officeType !== 'personal' && <span className={styles.subLabel}>Sub:</span>}
-          {E('sub', styles.subText, 'span', state.officeType === 'personal' ? 'Title / Subject' : 'Subject')}
+          {!(state.officeType === 'personal' && (form.sal.toLowerCase().includes('dearest') || form.sal.toLowerCase().includes('darling') || form.sal.toLowerCase().includes('प्रियतम') || form.cls.toLowerCase().includes('forever') || form.sub.toLowerCase().includes('love') || form.sub.toLowerCase().includes('heart') || form.toD.toLowerCase().includes('love'))) && (
+            <span className={styles.subLabel}>Sub:</span>
+          )}
+          {E('sub', styles.subText, 'span', state.officeType === 'personal' ? 'Subject' : 'Subject')}
         </div>
 
         {/* Reference — only show if there IS a ref value */}

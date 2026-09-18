@@ -150,7 +150,32 @@ function detectLetterIntent(description: string, passedType?: string): { type: s
     return { type: 'student_app', isPersonal: true };
   }
 
-  // 4. NOC (No Objection Certificate)
+  // 4. Citizen Application to Authority (Postmaster, Bank Manager, Collector, Police, etc.)
+  // When an individual/citizen/resident/customer writes TO an authority (not from the authority)
+  const isWritingToAuthority = 
+    text.includes('to postmaster') || text.includes('to post master') ||
+    text.includes('to branch manager') || text.includes('to bank') ||
+    text.includes('to collector') || text.includes('to tehsildar') || text.includes('to commissioner') ||
+    text.includes('to the postmaster') || text.includes('to the manager') ||
+    text.includes('to the collector') || text.includes('to principal') ||
+    text.includes('to officer') || text.includes('to sdo') || text.includes('to bdo') ||
+    text.includes('resident of') || text.includes('account holder') ||
+    text.includes('खातेदार') || text.includes('नागरिक अर्ज') || text.includes('विनंती अर्ज') ||
+    (text.includes('letter by') && text.includes('to')) ||
+    (text.includes('write letter by') && text.includes('to')) ||
+    (text.includes('by ') && text.includes('to ') && (text.includes('post office') || text.includes('bank') || text.includes('office')));
+
+  const hasCitizenContext =
+    text.includes('time deposit') || text.includes('savings account') || text.includes('saving ac') ||
+    text.includes('sb account') || text.includes('sb ac') || text.includes('passbook') ||
+    text.includes('interest credit') || text.includes('pension') || text.includes('complaint') ||
+    text.includes('application') || text.includes('request') || text.includes('credit all my');
+
+  if (isWritingToAuthority || (hasCitizenContext && (text.includes('to ') || text.includes('postmaster') || text.includes('manager')))) {
+    return { type: 'citizen_app', isPersonal: true };
+  }
+
+  // 5. NOC (No Objection Certificate)
   if (
     text.includes('noc') || text.includes('no objection') || text.includes('अनापत्ति') ||
     text.includes('ना-हरकत') || text.includes('ना हरकत')
@@ -158,17 +183,17 @@ function detectLetterIntent(description: string, passedType?: string): { type: s
     return { type: 'noc', isPersonal: false };
   }
 
-  // 5. Circular
+  // 6. Circular
   if (text.includes('circular') || text.includes('परिपत्रक') || text.includes('परिपत्र')) {
     return { type: 'circular', isPersonal: false };
   }
 
-  // 6. Notification / Gazette
+  // 7. Notification / Gazette
   if (text.includes('notification') || text.includes('gazette') || text.includes('अधिसूचना') || text.includes('राजपत्र')) {
     return { type: 'notification', isPersonal: false };
   }
 
-  // 7. Show Cause Notice
+  // 8. Show Cause Notice
   if (
     text.includes('show cause') || text.includes('कारणे दाखवा') || text.includes('कारण बताओ') ||
     text.includes('scn') || text.includes('explanation notice')
@@ -176,12 +201,12 @@ function detectLetterIntent(description: string, passedType?: string): { type: s
     return { type: 'scn', isPersonal: false };
   }
 
-  // 8. Reminder Letter
+  // 9. Reminder Letter
   if (text.includes('reminder') || text.includes('स्मरणपत्र') || text.includes('तात्कालिक स्मरण')) {
     return { type: 'reminder', isPersonal: false };
   }
 
-  // 9. Demi-Official (D.O.)
+  // 10. Demi-Official (D.O.)
   if (
     text.includes('d.o.') || text.includes('do letter') || text.includes('demi official') ||
     text.includes('अर्ध-शासकीय') || text.includes('अर्ध सरकारी')
@@ -189,7 +214,7 @@ function detectLetterIntent(description: string, passedType?: string): { type: s
     return { type: 'do', isPersonal: false };
   }
 
-  // 10. Office Memorandum (OM)
+  // 11. Office Memorandum (OM)
   if (
     text.includes('memorandum') || text.includes('office memo') || text.includes('o.m.') ||
     text.includes(' om ') || text.includes('ज्ञापक') || text.includes('ज्ञापन')
@@ -197,17 +222,17 @@ function detectLetterIntent(description: string, passedType?: string): { type: s
     return { type: 'om', isPersonal: false };
   }
 
-  // 11. Appreciation
+  // 12. Appreciation
   if (text.includes('appreciation') || text.includes('commendation') || text.includes('प्रशंसा')) {
     return { type: 'appreciation', isPersonal: false };
   }
 
-  // 12. Advisory
+  // 13. Advisory
   if (text.includes('advisory') || text.includes('सल्ला')) {
     return { type: 'advisory', isPersonal: false };
   }
 
-  // 13. General personal
+  // 14. General personal
   if (text.includes('personal') || text.includes('friend') || text.includes('landlord')) {
     return { type: 'personal', isPersonal: true };
   }
@@ -337,13 +362,26 @@ CORRESPONDENCE PROTOCOLS & STATUTORY STANDARDS:
 8. STUDENT APPLICATION TO PRINCIPAL:
    - detected_type: "student_app", is_personal: true.
    - Leave ALL government headers (h1, h2, e1, e2, dept, divn, ofc, fno) EMPTY "".
-   - Recipient: "To,\\nThe Principal,\\n[School / College Name],\\n[City]"
+   - Recipient: "To,\nThe Principal,\n[School / College Name],\n[City]"
    - Salutation: "Respected Sir/Madam,"
    - Closing: "Yours obediently,"
    - Body: Humble academic leave or fee concession request with Class, Section, and Roll No.
 
+9. CITIZEN / CUSTOMER APPLICATION TO AUTHORITY:
+   - detected_type: "citizen_app", is_personal: true.
+   - SENDER: The individual, resident, customer, or account holder (e.g. Mrs. Radha Dharpade).
+   - RECIPIENT (toD, toA): The official authority and office address (e.g. toD: "The Postmaster", toA: "Gangamasla Post Office,\nGangamasla - 431131").
+   - CRITICAL STATUTORY RULE: The citizen is NOT the government or department! Private citizens do not issue orders or file numbers and MUST NOT use State Emblems or Government mastheads (State Emblem of India Act 2005).
+   - LEAVE ALL GOVERNMENT HEADERS EMPTY (h1: "", h2: "", e1: "", e2: "", dept: "", divn: "", ofc: "", fno: "", ref: "").
+   - Subject (sub): Clear formal subject starting with 'Subject: ' or 'विषय: ' (e.g. "Subject: Application for credit of pending interest of closed Time Deposit accounts into Savings Account No. ... - regarding.").
+   - Salutation (sal): "Respected Sir / महोदय," or "Sir,".
+   - Body: Formal, respectful, detailed citizen application describing all account numbers, maturity dates, interest amounts, closure dates, explaining any pending credits, and polite request for administrative action.
+   - Closing (cls): "Yours faithfully," / "आपली नम्र," / "भवदीय,".
+   - Signatory (sn): Name of the applicant (e.g. "Mrs. Radha Dharpade\nResident of At Post Gangamasla").
+   - Signatory Designation (sd): "Account Holder / Depositor" or empty.
+
 STATE EMBLEM ACT (2005) COMPLIANCE:
-- Personal, academic, student, and romantic letters MUST NOT have government headers or state emblems.
+- Personal, academic, student, citizen, and romantic letters MUST NOT have government headers or state emblems.
 - For official government correspondence, derive authentic Ministry, Department, and National/State context.
 
 RESPOND WITH ONLY THE JSON OBJECT. NO OTHER TEXT.`;
@@ -361,6 +399,7 @@ RESPOND WITH ONLY THE JSON OBJECT. NO OTHER TEXT.`;
       notification:      'Public Notification (Gazette Format)',
       advisory:          'Advisory / Policy Guidelines',
       student_app:       'Student Application to Principal',
+      citizen_app:       'Citizen Application to Authority (Postmaster / Bank / Officer)',
       heritage_personal: 'Heritage / Traditional Family Letter',
       romantic:          'Romantic / Heartfelt Love Letter',
       tour:              'Tour Programme',
@@ -382,10 +421,12 @@ User Description: "${description}"
 Detected Type: ${targetType} (isPersonal: ${isPersonal})
 
 ${isPersonal
-  ? `PERSONAL / ACADEMIC / ROMANTIC MODE:
+  ? `PERSONAL / CITIZEN / ACADEMIC / ROMANTIC MODE:
+- The SENDER is an individual / citizen / resident / customer / student (NOT a government department or post office).
 - DO NOT add Government headers (leave h1, h2, e1, e2, dept, divn, ofc, fno, ref empty "").
-- The recipient (toD, toA) must match who the user is writing to.
-- Use natural, authentic, respectful, or deeply affectionate body corresponding to the letter style.`
+- DO NOT generate file numbers.
+- The recipient (toD, toA) must be the office or authority addressed (e.g. The Postmaster, The Branch Manager).
+- Formatted as an authentic application to the authority.`
   : `${isFull
       ? `OFFICIAL FULL AI MODE: Determine ALL fields — ministry, department, office, signatory, city, contacts — 100% from the user description.
 DO NOT default to India Post or Dept of Posts unless explicitly requested.

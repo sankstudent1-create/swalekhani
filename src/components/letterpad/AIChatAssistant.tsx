@@ -16,6 +16,7 @@ interface AIChatAssistantProps {
 
 const QUICK_CHIPS = [
   { label: '🏛️ Formal CSMOP', text: 'Polite and strict official Government of India CSMOP administrative tone' },
+  { label: '📝 Citizen Application', text: 'Write a formal citizen application to an authority (e.g. Postmaster, Bank Manager, Municipal Officer, Collector)' },
   { label: '📜 Employee NOC', text: 'Issue an official No Objection Certificate (NOC) for employee applying for passport or higher education' },
   { label: '💌 Romantic Love Letter', text: 'Write a deeply romantic, emotional love letter for my sweetheart (remove all govt headers)' },
   { label: '📢 Administrative Circular', text: 'Issue an administrative circular regarding office attendance and compliance to all HODs' },
@@ -136,6 +137,7 @@ export default function AIChatAssistant({ state, onSetForm, onFillAI }: AIChatAs
       if (json.data) {
         onFillAI(json.data, true, json.model);
         const typeNameMap: Record<string, string> = {
+          citizen_app: 'Citizen Application to Authority (Formal Request)',
           noc: 'No Objection Certificate (NOC)',
           circular: 'Administrative Circular',
           notification: 'Statutory Gazette Notification',

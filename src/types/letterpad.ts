@@ -13,8 +13,8 @@ export type AILetterType =
   | 'office_order' | 'om' | 'do' | 'circular' | 'reminder'
   | 'forwarding' | 'scn' | 'noc' | 'appreciation' | 'tour'
   | 'notice' | 'advisory' | 'notification' | 'student_app'
-  | 'heritage_personal' | 'romantic' | 'personal'
-  | 'pm_do' | 'mp_letter' | 'custom';
+  | 'heritage_personal' | 'romantic' | 'citizen_app' | 'personal'
+  | 'pm_do' | 'mp_letter' | 'custom' | 'auto';
 export type AILanguage = 'en' | 'hi' | 'bi';
 
 // ── Letter form state (all sidebar fields) ──────────────

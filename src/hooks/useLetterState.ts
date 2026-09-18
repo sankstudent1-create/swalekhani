@@ -110,7 +110,7 @@ export function useLetterState() {
     setState(s => {
       const detectedType = (data.detected_type || data.letter_type || '').toLowerCase();
       const isPersonal = data.is_personal === true || 
-        ['personal', 'romantic', 'student_app', 'heritage_personal'].includes(detectedType);
+        ['personal', 'romantic', 'student_app', 'heritage_personal', 'citizen_app'].includes(detectedType);
 
       let newLogoL = isFull ? null : s.logoL;
       let newLogoR = isFull ? null : s.logoR;

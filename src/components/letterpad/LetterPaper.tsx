@@ -347,10 +347,19 @@ export default function LetterPaper({ state, onFormChange, onCopyChange, onLogoP
 
       {/* Meta row */}
       {(tpl === 'A' || tpl === 'E' || tpl === 'F') && (
-        <div className={styles.meta}>
-          {E('fno', '', 'span', 'F.No.')}
-          <span>{addr}</span>
-          <span>Dated: {E('dt', '', 'span', 'Date')}</span>
+        <div className={`${styles.meta} ${state.officeType === 'personal' ? styles.metaPersonal : ''}`}>
+          {state.officeType !== 'personal' && (
+            <>
+              <span className={!form.fno?.trim() ? styles.hideIfEmptyPrint : ''}>
+                {E('fno', '', 'span', 'F.No.')}
+              </span>
+              <span className={!addr?.trim() ? styles.hideIfEmptyPrint : ''}>{addr}</span>
+            </>
+          )}
+          <span className={!form.dt?.trim() ? styles.hideIfEmptyPrint : ''}>
+            {state.officeType === 'personal' ? '' : 'Dated: '}
+            {E('dt', '', 'span', 'Date')}
+          </span>
         </div>
       )}
 
@@ -358,19 +367,19 @@ export default function LetterPaper({ state, onFormChange, onCopyChange, onLogoP
       <div className={styles.body}>
         {/* To block — each field is block-level inside a clear container */}
         {tpl !== 'E' && (
-          <div className={styles.toBlock}>
-            <span className={styles.toLabel}>To</span>
+          <div className={`${styles.toBlock} ${(!form.toD?.trim() && !form.toA?.trim()) ? styles.hideIfEmptyPrint : ''}`}>
+            {state.officeType !== 'personal' && <span className={styles.toLabel}>To</span>}
             <div className={styles.toInner}>
-              <div className={styles.toName}>
+              <div className={`${styles.toName} ${!form.toD?.trim() ? styles.hideIfEmptyPrint : ''}`}>
                 <Editable
                   value={form.toD}
                   onChange={v => onFormChange('toD', v)}
                   tag="span"
-                  placeholder="Recipient Designation"
+                  placeholder={state.officeType === 'personal' ? "Recipient Name" : "Recipient Designation"}
                   aiTick={tick}
                 />
               </div>
-              <div className={styles.toAddr}>
+              <div className={`${styles.toAddr} ${!form.toA?.trim() ? styles.hideIfEmptyPrint : ''}`}>
                 <Editable
                   value={form.toA}
                   onChange={v => onFormChange('toA', v)}
@@ -385,13 +394,13 @@ export default function LetterPaper({ state, onFormChange, onCopyChange, onLogoP
         )}
 
         {/* Subject */}
-        <div className={styles.subBlock}>
-          <span className={styles.subLabel}>Sub:</span>
-          {E('sub', styles.subText, 'span', 'Subject')}
+        <div className={`${styles.subBlock} ${!form.sub?.trim() ? styles.hideIfEmptyPrint : ''}`}>
+          {state.officeType !== 'personal' && <span className={styles.subLabel}>Sub:</span>}
+          {E('sub', styles.subText, 'span', state.officeType === 'personal' ? 'Title / Subject' : 'Subject')}
         </div>
 
         {/* Reference — only show if there IS a ref value */}
-        {form.ref && (
+        {form.ref?.trim() && (
           <div className={styles.refBlock}>
             <strong>Ref:</strong>{' '}
             <Editable
@@ -406,8 +415,9 @@ export default function LetterPaper({ state, onFormChange, onCopyChange, onLogoP
 
         {/* Salutation */}
         {tpl !== 'E' && (
-          <div className={styles.salBlock}>
-            {E('sal', '', 'span', 'Sir/Madam')},
+          <div className={`${styles.salBlock} ${!form.sal?.trim() ? styles.hideIfEmptyPrint : ''}`}>
+            {E('sal', '', 'span', state.officeType === 'personal' ? 'My Dearest' : 'Sir/Madam')}
+            {form.sal?.trim() ? ',' : ''}
           </div>
         )}
 
@@ -424,24 +434,28 @@ export default function LetterPaper({ state, onFormChange, onCopyChange, onLogoP
 
         {/* Closing + Signature — right-aligned per GoI format */}
         <div className={styles.closingAndSig}>
-          <div className={styles.closingBlock}>
+          <div className={`${styles.closingBlock} ${!form.cls?.trim() ? styles.hideIfEmptyPrint : ''}`}>
             <Editable
               value={form.cls}
               onChange={v => onFormChange('cls', v)}
               tag="span"
-              placeholder="Yours faithfully"
+              placeholder={state.officeType === 'personal' ? "Forever yours" : "Yours faithfully"}
               aiTick={tick}
             />
-            ,
+            {form.cls?.trim() ? ',' : ''}
           </div>
           <div className={styles.sigWrap}>
             <div className={styles.sigSpace}>
               {sigUrl && <img src={sigUrl} className={styles.sigImg} alt="signature" />}
             </div>
-            <Editable value={form.sn}   onChange={v => onFormChange('sn', v)}   tag="div" className={styles.sigName}   placeholder="(Signatory Name)" aiTick={tick} />
-            <Editable value={form.sd}   onChange={v => onFormChange('sd', v)}   tag="div" className={styles.sigDesig} placeholder="Designation" aiTick={tick} />
-            <Editable value={form.dept} onChange={v => onFormChange('dept', v)} tag="div" className={styles.sigDept}  placeholder="Department" aiTick={tick} />
-            {(form.sp?.trim() || form.em?.trim()) && (
+            <Editable value={form.sn}   onChange={v => onFormChange('sn', v)}   tag="div" className={`${styles.sigName} ${!form.sn?.trim() ? styles.hideIfEmptyPrint : ''}`}   placeholder={state.officeType === 'personal' ? "Your Name" : "(Signatory Name)"} aiTick={tick} />
+            {state.officeType !== 'personal' && (
+              <>
+                <Editable value={form.sd}   onChange={v => onFormChange('sd', v)}   tag="div" className={`${styles.sigDesig} ${!form.sd?.trim() ? styles.hideIfEmptyPrint : ''}`} placeholder="Designation" aiTick={tick} />
+                <Editable value={form.dept} onChange={v => onFormChange('dept', v)} tag="div" className={`${styles.sigDept} ${!form.dept?.trim() ? styles.hideIfEmptyPrint : ''}`}  placeholder="Department" aiTick={tick} />
+              </>
+            )}
+            {(form.sp?.trim() || form.em?.trim()) && state.officeType !== 'personal' && (
               <div className={styles.sigContact}>
                 {form.sp?.trim() && <Editable value={form.sp} onChange={v => onFormChange('sp', v)} tag="span" placeholder="Phone/Extn" aiTick={tick} />}
                 {form.sp?.trim() && form.em?.trim() ? '  |  ' : ''}

@@ -83,10 +83,39 @@ div.editable { display: block; }
   }
   .editable:empty::before {
     content: none !important;
+    display: none !important;
+    color: transparent !important;
+  }
+  .editable:empty {
+    display: none !important;
+  }
+  .hideIfEmptyPrint {
+    display: none !important;
   }
   .hideIfEmptyPrint:has(.editable:empty) {
     display: none !important;
   }
+}
+
+:global(body[data-generating-pdf="true"]) .editable:empty::before,
+:global(body[data-generating-pdf="true"]) [data-empty="true"]::before {
+  content: none !important;
+  display: none !important;
+  color: transparent !important;
+}
+
+:global(body[data-generating-pdf="true"]) .editable:empty,
+:global(body[data-generating-pdf="true"]) [data-empty="true"] {
+  display: none !important;
+}
+
+:global(body[data-generating-pdf="true"]) .hideIfEmptyPrint {
+  display: none !important;
+}
+
+:global(body[data-generating-pdf="true"]) .hideIfEmptyPrint:has(.editable:empty),
+:global(body[data-generating-pdf="true"]) .hideIfEmptyPrint:has([data-empty="true"]) {
+  display: none !important;
 }
 
 /* ── Draggable Logo ──────────────────────────── */
@@ -179,6 +208,15 @@ div.editable { display: block; }
   display: flex; justify-content: space-between; padding: 7px 44px 5px;
   font-family: 'DM Mono', monospace; font-size: 11.5px; color: #333;
   border-bottom: 1px solid #ddd; background: #FAFAF5; flex-shrink: 0;
+}
+.metaPersonal {
+  background: transparent;
+  border-bottom: none;
+  justify-content: flex-end;
+  padding: 0 46px 12px;
+  font-family: inherit;
+  font-size: 13px;
+  color: #555;
 }
 
 /* ── Body — fills remaining space so footer stays at bottom ── */

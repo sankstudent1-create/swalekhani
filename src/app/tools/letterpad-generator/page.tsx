@@ -73,11 +73,22 @@ export default function LetterpadGeneratorPage() {
       const paperEl = document.querySelector('[data-paper="true"]') as HTMLElement;
       if (!paperEl) { alert('Could not find paper element'); return; }
 
+      // Mark empty editables so html2canvas NEVER captures grey placeholder text
+      const emptyNodes = paperEl.querySelectorAll('[class*="editable"]');
+      const markedNodes: HTMLElement[] = [];
+      emptyNodes.forEach(node => {
+        const el = node as HTMLElement;
+        if (!el.textContent || !el.textContent.trim()) {
+          el.setAttribute('data-empty', 'true');
+          markedNodes.push(el);
+        }
+      });
+
       // Temporarily reset scale so we capture at full 794px width
       const savedScale = document.documentElement.style.getPropertyValue('--paper-scale');
       document.documentElement.style.setProperty('--paper-scale', '1');
 
-      // Wait a bit longer for iOS Safari to finish layout reflow
+      // Wait a bit for layout reflow
       await new Promise(r => setTimeout(r, 300));
 
       // Capture at 1.5x for crisp text without hitting iOS canvas memory limits
@@ -91,14 +102,17 @@ export default function LetterpadGeneratorPage() {
         logging: false,
       });
 
-      // Restore scale
+      // Restore scale and remove marked attributes immediately after capture
       document.documentElement.style.setProperty('--paper-scale', savedScale || '1');
+      markedNodes.forEach(el => el.removeAttribute('data-empty'));
 
       // A4 dimensions in mm
       const A4_W = 210;
       const A4_H = 297;
-      const FOOTER_H = 18; // 18mm reserved for footer
-      const CONTENT_H = A4_H - FOOTER_H; // 279mm height for content slice
+      // For personal letters (love letters, informal notes), do NOT reserve footer height or draw footer!
+      const hasFooter = state.officeType !== 'personal';
+      const FOOTER_H = hasFooter ? 18 : 0;
+      const CONTENT_H = A4_H - FOOTER_H;
 
       const pdf = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
 
@@ -107,15 +121,28 @@ export default function LetterpadGeneratorPage() {
       const imgHeight = (canvas.height * A4_W) / canvas.width;
 
       const drawFooter = () => {
+        if (!hasFooter) return; // Completely skip footer for personal/love letters
+
         const footerY = A4_H - 12; // 12mm from bottom
         pdf.setFillColor(255, 255, 255);
         pdf.rect(0, footerY - 5, A4_W, 20, 'F');
         pdf.setFontSize(9);
         pdf.setTextColor(110, 110, 110);
-        const f1 = state.officeType === 'custom' ? state.form.dept : ((state.form.dept || 'Government of India') + ' · Government of India');
+
+        let f1 = '';
+        if (state.officeType === 'custom') {
+          f1 = state.form.dept || '';
+        } else {
+          const dept = state.form.dept || '';
+          const isCentral = state.officeType === 'dop' || state.officeType === 'pm' || state.officeType === 'minister' || dept.toLowerCase().includes('india');
+          f1 = dept ? (isCentral && !dept.toLowerCase().includes('government of india') ? `${dept} · Government of India` : dept) : (isCentral ? 'Government of India' : '');
+        }
+
         const f2 = state.form.city + (state.form.pin ? ' – ' + state.form.pin : '');
         const f3 = state.form.wb;
         const txt = [f1, f2, f3].filter(Boolean).join('   •   ');
+        if (!txt.trim()) return;
+
         pdf.text(txt, A4_W / 2, footerY, { align: 'center' });
       };
 
@@ -163,6 +190,8 @@ export default function LetterpadGeneratorPage() {
       window.print();
     } finally {
       document.body.removeAttribute('data-generating-pdf');
+      const leftovers = document.querySelectorAll('[data-empty="true"]');
+      leftovers.forEach(el => el.removeAttribute('data-empty'));
       setPdfBusy(false);
     }
   }

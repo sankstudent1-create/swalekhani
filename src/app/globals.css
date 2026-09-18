@@ -577,6 +577,29 @@ body[data-generating-pdf="true"] [class*="dlogo"] {
 }
 body[data-generating-pdf="true"] [class*="editable"] {
   border-bottom: none !important;
+  background: transparent !important;
+}
+body[data-generating-pdf="true"] [class*="editable"]:empty::before,
+body[data-generating-pdf="true"] .editable:empty::before,
+body[data-generating-pdf="true"] [data-empty="true"]::before {
+  content: none !important;
+  display: none !important;
+  color: transparent !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+}
+body[data-generating-pdf="true"] [class*="editable"]:empty,
+body[data-generating-pdf="true"] .editable:empty,
+body[data-generating-pdf="true"] [data-empty="true"] {
+  display: none !important;
+}
+body[data-generating-pdf="true"] [class*="hideIfEmptyPrint"],
+body[data-generating-pdf="true"] .hideIfEmptyPrint {
+  display: none !important;
+}
+body[data-generating-pdf="true"] [class*="hideIfEmptyPrint"]:has([class*="editable"]:empty),
+body[data-generating-pdf="true"] [class*="hideIfEmptyPrint"]:has([data-empty="true"]) {
+  display: none !important;
 }
 
 @media print {
@@ -591,5 +614,25 @@ body[data-generating-pdf="true"] [class*="editable"] {
   }
   [class*="editable"] {
     border-bottom: none !important;
+    background: transparent !important;
+  }
+  [class*="editable"]:empty::before,
+  .editable:empty::before {
+    content: none !important;
+    display: none !important;
+    color: transparent !important;
+    opacity: 0 !important;
+  }
+  [class*="editable"]:empty,
+  .editable:empty {
+    display: none !important;
+  }
+  [class*="hideIfEmptyPrint"],
+  .hideIfEmptyPrint {
+    display: none !important;
+  }
+  [class*="hideIfEmptyPrint"]:has([class*="editable"]:empty),
+  .hideIfEmptyPrint:has(.editable:empty) {
+    display: none !important;
   }
 }

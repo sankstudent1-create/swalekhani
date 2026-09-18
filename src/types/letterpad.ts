@@ -83,30 +83,54 @@ export interface AppState {
 
 // ── AI response JSON shape ──────────────────────────────
 export interface AILetterData {
-  file_no: string;
-  dept_hindi_1: string;
-  dept_hindi_2: string;
-  dept_english_1: string;
-  dept_english_2: string;
-  department: string;
-  division: string;
-  office: string;
-  city: string;
-  pin: string;
-  phone: string;
-  email: string;
-  website: string;
-  to_designation: string;
-  to_address: string;
-  subject: string;
-  reference: string;
-  salutation: string;
+  detected_type?: string;
+  letter_type?: string;
+  is_personal?: boolean;
+  file_no?: string;
+  fno?: string;
+  dept_hindi_1?: string;
+  h1?: string;
+  dept_hindi_2?: string;
+  h2?: string;
+  dept_english_1?: string;
+  e1?: string;
+  dept_english_2?: string;
+  e2?: string;
+  department?: string;
+  dept?: string;
+  division?: string;
+  divn?: string;
+  office?: string;
+  ofc?: string;
+  city?: string;
+  pin?: string;
+  phone?: string;
+  ph?: string;
+  email?: string;
+  em?: string;
+  website?: string;
+  wb?: string;
+  to_designation?: string;
+  toD?: string;
+  to_address?: string;
+  toA?: string;
+  subject?: string;
+  sub?: string;
+  reference?: string;
+  ref?: string;
+  salutation?: string;
+  sal?: string;
   body: string;
-  closing: string;
-  signatory_name: string;
-  signatory_designation: string;
-  encl: string;
-  copy_to: string[];
+  closing?: string;
+  cls?: string;
+  signatory_name?: string;
+  sn?: string;
+  signatory_designation?: string;
+  sd?: string;
+  encl?: string;
+  enclList?: string[];
+  copy_to?: string[];
+  copyList?: string[];
 }
 
 // ── Office preset data ──────────────────────────────────

@@ -108,66 +108,95 @@ export function useLetterState() {
     if (model) setLastModel(model);
 
     setState(s => {
+      const detectedType = (data.detected_type || data.letter_type || '').toLowerCase();
+      const isPersonal = data.is_personal === true || 
+        ['personal', 'romantic', 'student_app', 'heritage_personal'].includes(detectedType);
+
       let newLogoL = isFull ? null : s.logoL;
       let newLogoR = isFull ? null : s.logoR;
-      
-      if (isFull) {
-        const fullDeptStr = [data.department, data.dept_english_1, data.dept_english_2].join(' ').toLowerCase();
-        if (fullDeptStr.includes('post') || fullDeptStr.includes('dak') || fullDeptStr.includes('mail')) {
-          newLogoL = svgToDataUri('ip');
-          newLogoR = svgToDataUri('ashoka');
-        } else if (fullDeptStr.includes('prime minister') || fullDeptStr.includes('pm ')) {
-          newLogoL = svgToDataUri('ashoka');
-          newLogoR = null;
-        } else if (fullDeptStr.includes('parliament') || fullDeptStr.includes('sansad')) {
-          newLogoL = svgToDataUri('sansad');
-          newLogoR = svgToDataUri('ashoka');
-        } else if (fullDeptStr.includes('maharashtra')) {
-          newLogoL = svgToDataUri('mh');
-          newLogoR = null;
-        } else if (fullDeptStr.includes('government of india') || fullDeptStr.includes('ministry')) {
+      let targetTpl = s.tpl;
+
+      if (isPersonal) {
+        newLogoL = null;
+        newLogoR = null;
+        targetTpl = 'A';
+      } else if (isFull) {
+        if (detectedType === 'om') {
+          targetTpl = 'E'; // CSMOP Office Memorandum layout
           newLogoL = null;
           newLogoR = svgToDataUri('ashoka');
+        } else if (detectedType === 'do') {
+          targetTpl = 'B'; // Demi-Official layout
+          newLogoL = svgToDataUri('ashoka');
+          newLogoR = null;
+        } else {
+          const fullDeptStr = [
+            data.department, data.dept,
+            data.dept_english_1, data.e1,
+            data.dept_english_2, data.e2
+          ].filter(Boolean).join(' ').toLowerCase();
+
+          if (fullDeptStr.includes('post') || fullDeptStr.includes('dak') || fullDeptStr.includes('mail')) {
+            newLogoL = svgToDataUri('ip');
+            newLogoR = svgToDataUri('ashoka');
+          } else if (fullDeptStr.includes('prime minister') || fullDeptStr.includes('pm ')) {
+            newLogoL = svgToDataUri('ashoka');
+            newLogoR = null;
+          } else if (fullDeptStr.includes('parliament') || fullDeptStr.includes('sansad')) {
+            newLogoL = svgToDataUri('sansad');
+            newLogoR = svgToDataUri('ashoka');
+          } else if (fullDeptStr.includes('maharashtra')) {
+            newLogoL = svgToDataUri('mh');
+            newLogoR = null;
+          } else if (fullDeptStr.includes('government of india') || fullDeptStr.includes('ministry') || fullDeptStr.includes('department')) {
+            newLogoL = null;
+            newLogoR = svgToDataUri('ashoka');
+          }
         }
       }
 
+      const enclVal = data.encl ?? (Array.isArray(data.enclList) ? data.enclList.join(', ') : '');
+      const copyVal = (data.copyList && data.copyList.length ? data.copyList : (data.copy_to && data.copy_to.length ? data.copy_to : []));
+
       return {
-      ...s,
-      officeType: isFull ? 'custom' : s.officeType,
-      logoL: newLogoL,
-      logoR: newLogoR,
-      showEncl: !!(data.encl?.trim()),
-      showCopy: !!(data.copy_to?.length),
-      form: {
-        ...s.form,
-        h1: isFull ? data.dept_hindi_1 : s.form.h1,
-        h2: isFull ? data.dept_hindi_2 : s.form.h2,
-        e1: isFull ? data.dept_english_1 : s.form.e1,
-        e2: isFull ? data.dept_english_2 : s.form.e2,
-        dept: isFull ? data.department : s.form.dept,
-        divn: isFull ? data.division : s.form.divn,
-        ofc:  isFull ? data.office : s.form.ofc,
-        city: isFull ? data.city : s.form.city,
-        pin:  isFull ? data.pin : s.form.pin,
-        ph:   isFull ? data.phone : s.form.ph,
-        em:   isFull ? data.email : s.form.em,
-        wb:   isFull ? data.website : s.form.wb,
-        fno:  data.file_no      || (isFull ? '' : s.form.fno),
-        toD:  data.to_designation || (isFull ? '' : s.form.toD),
-        toA:  data.to_address   || (isFull ? '' : s.form.toA),
-        sub:  data.subject      || (isFull ? '' : s.form.sub),
-        ref:  data.reference    || (isFull ? '' : s.form.ref),
-        sal:  data.salutation   || (isFull ? '' : s.form.sal),
-        cls:  data.closing      || (isFull ? '' : s.form.cls),
-        sn:   data.signatory_name || (isFull ? '' : s.form.sn),
-        sd:   data.signatory_designation || (isFull ? '' : s.form.sd),
-        body: data.body         || (isFull ? '' : s.form.body),
-        encl: data.encl         || (isFull ? '' : s.form.encl),
-        copyTo: data.copy_to?.length ? data.copy_to : (isFull ? [] : s.form.copyTo),
-      },
-      aiTick: (s.aiTick || 0) + 1,
-    };
-  });
+        ...s,
+        tpl: targetTpl,
+        officeType: isPersonal ? 'personal' : (isFull ? 'custom' : s.officeType),
+        logoL: newLogoL,
+        logoR: newLogoR,
+        showEncl: isPersonal ? false : (enclVal.trim().length > 0),
+        showCopy: isPersonal ? false : (copyVal.length > 0),
+        showEndorse: false,
+        form: {
+          ...s.form,
+          h1: isPersonal ? '' : (isFull ? (data.h1 ?? data.dept_hindi_1 ?? '') : (data.h1 ?? data.dept_hindi_1 ?? s.form.h1)),
+          h2: isPersonal ? '' : (isFull ? (data.h2 ?? data.dept_hindi_2 ?? '') : (data.h2 ?? data.dept_hindi_2 ?? s.form.h2)),
+          e1: isPersonal ? '' : (isFull ? (data.e1 ?? data.dept_english_1 ?? '') : (data.e1 ?? data.dept_english_1 ?? s.form.e1)),
+          e2: isPersonal ? '' : (isFull ? (data.e2 ?? data.dept_english_2 ?? '') : (data.e2 ?? data.dept_english_2 ?? s.form.e2)),
+          dept: isPersonal ? '' : (isFull ? (data.dept ?? data.department ?? '') : (data.dept ?? data.department ?? s.form.dept)),
+          divn: isPersonal ? '' : (isFull ? (data.divn ?? data.division ?? '') : (data.divn ?? data.division ?? s.form.divn)),
+          ofc:  isPersonal ? '' : (isFull ? (data.ofc ?? data.office ?? '') : (data.ofc ?? data.office ?? s.form.ofc)),
+          city: data.city !== undefined ? data.city : (isPersonal ? '' : (isFull ? '' : s.form.city)),
+          pin:  data.pin !== undefined ? data.pin : (isPersonal ? '' : (isFull ? '' : s.form.pin)),
+          ph:   isPersonal ? '' : (data.ph ?? data.phone ?? (isFull ? '' : s.form.ph)),
+          em:   isPersonal ? '' : (data.em ?? data.email ?? (isFull ? '' : s.form.em)),
+          wb:   isPersonal ? '' : (data.wb ?? data.website ?? (isFull ? '' : s.form.wb)),
+          fno:  isPersonal ? '' : (data.fno ?? data.file_no ?? (isFull ? '' : s.form.fno)),
+          toD:  data.toD ?? data.to_designation ?? (isFull ? '' : s.form.toD),
+          toA:  data.toA ?? data.to_address ?? (isFull ? '' : s.form.toA),
+          sub:  data.sub ?? data.subject ?? (isFull ? '' : s.form.sub),
+          ref:  isPersonal ? '' : (data.ref ?? data.reference ?? (isFull ? '' : s.form.ref)),
+          sal:  data.sal ?? data.salutation ?? '',
+          cls:  data.cls ?? data.closing ?? '',
+          sn:   data.sn ?? data.signatory_name ?? (isFull ? '' : s.form.sn),
+          sd:   isPersonal ? '' : (data.sd ?? data.signatory_designation ?? (isFull ? '' : s.form.sd)),
+          body: data.body ?? (isFull ? '' : s.form.body),
+          encl: isPersonal ? '' : (enclVal || (isFull ? '' : s.form.encl)),
+          copyTo: isPersonal ? [] : (copyVal.length > 0 ? copyVal : (isFull ? [] : s.form.copyTo)),
+        },
+        aiTick: (s.aiTick || 0) + 1,
+      };
+    });
   }, []);
 
   return {

@@ -111,6 +111,110 @@ async function callGroqWithFallback(
 }
 
 
+function detectLetterIntent(description: string, passedType?: string): { type: string; isPersonal: boolean } {
+  if (passedType && passedType !== 'custom' && passedType !== 'auto') {
+    const isPers = ['personal', 'student_app', 'heritage_personal', 'romantic'].includes(passedType);
+    return { type: passedType, isPersonal: isPers };
+  }
+
+  const text = (description || '').toLowerCase();
+
+  // 1. Romantic / Love Letter
+  if (
+    text.includes('love') || text.includes('romantic') || text.includes('girlfriend') ||
+    text.includes('boyfriend') || text.includes('wife') || text.includes('husband') ||
+    text.includes('crush') || text.includes('darling') || text.includes('sweetheart') ||
+    text.includes('प्रेम') || text.includes('प्रेमपत्र') || text.includes('प्रिया') ||
+    text.includes('प्रियकर') || text.includes('प्रेमिका')
+  ) {
+    return { type: 'romantic', isPersonal: true };
+  }
+
+  // 2. Heritage / Traditional Family
+  if (
+    text.includes('father') || text.includes('mother') || text.includes('parents') ||
+    text.includes('family letter') || text.includes('वडिलां') || text.includes('आईस') ||
+    text.includes('पिताजी') || text.includes('माताजी') || text.includes('चरण स्पर्श') ||
+    text.includes('साष्टांग')
+  ) {
+    return { type: 'heritage_personal', isPersonal: true };
+  }
+
+  // 3. Student Application to Principal / Headmaster
+  if (
+    text.includes('principal') || text.includes('headmaster') || text.includes('school') ||
+    text.includes('college') || text.includes('leave application') || text.includes('fee concession') ||
+    text.includes('student') || text.includes('bonafide') || text.includes('मुख्याध्यापक') ||
+    text.includes('प्राचार्य') || text.includes('रजेचा अर्ज')
+  ) {
+    return { type: 'student_app', isPersonal: true };
+  }
+
+  // 4. NOC (No Objection Certificate)
+  if (
+    text.includes('noc') || text.includes('no objection') || text.includes('अनापत्ति') ||
+    text.includes('ना-हरकत') || text.includes('ना हरकत')
+  ) {
+    return { type: 'noc', isPersonal: false };
+  }
+
+  // 5. Circular
+  if (text.includes('circular') || text.includes('परिपत्रक') || text.includes('परिपत्र')) {
+    return { type: 'circular', isPersonal: false };
+  }
+
+  // 6. Notification / Gazette
+  if (text.includes('notification') || text.includes('gazette') || text.includes('अधिसूचना') || text.includes('राजपत्र')) {
+    return { type: 'notification', isPersonal: false };
+  }
+
+  // 7. Show Cause Notice
+  if (
+    text.includes('show cause') || text.includes('कारणे दाखवा') || text.includes('कारण बताओ') ||
+    text.includes('scn') || text.includes('explanation notice')
+  ) {
+    return { type: 'scn', isPersonal: false };
+  }
+
+  // 8. Reminder Letter
+  if (text.includes('reminder') || text.includes('स्मरणपत्र') || text.includes('तात्कालिक स्मरण')) {
+    return { type: 'reminder', isPersonal: false };
+  }
+
+  // 9. Demi-Official (D.O.)
+  if (
+    text.includes('d.o.') || text.includes('do letter') || text.includes('demi official') ||
+    text.includes('अर्ध-शासकीय') || text.includes('अर्ध सरकारी')
+  ) {
+    return { type: 'do', isPersonal: false };
+  }
+
+  // 10. Office Memorandum (OM)
+  if (
+    text.includes('memorandum') || text.includes('office memo') || text.includes('o.m.') ||
+    text.includes(' om ') || text.includes('ज्ञापक') || text.includes('ज्ञापन')
+  ) {
+    return { type: 'om', isPersonal: false };
+  }
+
+  // 11. Appreciation
+  if (text.includes('appreciation') || text.includes('commendation') || text.includes('प्रशंसा')) {
+    return { type: 'appreciation', isPersonal: false };
+  }
+
+  // 12. Advisory
+  if (text.includes('advisory') || text.includes('सल्ला')) {
+    return { type: 'advisory', isPersonal: false };
+  }
+
+  // 13. General personal
+  if (text.includes('personal') || text.includes('friend') || text.includes('landlord')) {
+    return { type: 'personal', isPersonal: true };
+  }
+
+  return { type: 'office_order', isPersonal: false };
+}
+
 export async function POST(request: NextRequest) {
   try {
     const body = (await request.json()) as LetterGenerationRequest;
@@ -131,36 +235,43 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Auto-detect intent if custom or auto
+    const detectedIntent = detectLetterIntent(description, letterType);
+    const targetType = detectedIntent.type;
+    const isPersonal = detectedIntent.isPersonal;
+
     const systemPrompt = `You are an expert Government of India and State Government official correspondence specialist with exhaustive knowledge of the Central Secretariat Manual of Office Procedure (CSMOP 16th Edition), State Emblem of India (Prohibition of Improper Use) Act 2005, and Indian administrative protocols.
 
-Your task is to generate COMPLETE, AUTHENTIC, and FLAWLESS letters matching official Indian administrative and correspondence standards. You must DETERMINE the correct ministry, department, office, and signatory FROM THE USER'S DESCRIPTION.
+Your task is to generate COMPLETE, AUTHENTIC, and FLAWLESS letters matching official Indian administrative, academic, or personal correspondence standards. You must determine the correct ministry, department, office, signatory, and structure from the user's description.
 
 CRITICAL: Respond with ONLY a valid JSON object — no markdown, no code fences, no explanations.
 
 The JSON must have exactly these fields:
 {
-  "h1": "Hindi Line 1 derived from sender context (e.g. भारत सरकार or महाराष्ट्र शासन, or empty for personal)",
-  "h2": "Hindi Line 2 — ministry/department in Hindi (or empty for personal)",
-  "e1": "English Line 1 (e.g. Government of India or Government of Maharashtra, or empty for personal)",
-  "e2": "English Line 2 — ministry/department in English (or empty for personal)",
-  "dept": "Full department name derived from user description (or empty for personal)",
-  "divn": "Division/Section appropriate to context (e.g. (Establishment Division))",
-  "ofc": "Office or building name appropriate to sender",
-  "city": "City of sender office",
-  "pin": "PIN Code of sender office",
-  "ph": "Realistic official phone number",
-  "em": "Official email (@gov.in, @nic.in, or institution email)",
-  "wb": "Official website",
-  "fno": "File Number (e.g. F.No.12-04/2026-Estt(Pay-I) or empty for personal)",
-  "toD": "Recipient Designation/Title",
-  "toA": "Recipient Office Address (use \\n for line breaks)",
-  "sub": "Subject Line — concise, professional, starting with 'Subject: ' or 'विषय: '",
+  "detected_type": "canonical type: romantic | noc | circular | notification | student_app | heritage_personal | scn | om | do | reminder | office_order | personal",
+  "is_personal": true or false,
+  "h1": "Hindi Line 1 derived from sender context (e.g. भारत सरकार or महाराष्ट्र शासन, or empty for personal/romantic/student)",
+  "h2": "Hindi Line 2 — ministry/department in Hindi (or empty for personal/romantic/student)",
+  "e1": "English Line 1 (e.g. Government of India or Government of Maharashtra, or empty for personal/romantic/student)",
+  "e2": "English Line 2 — ministry/department in English (or empty for personal/romantic/student)",
+  "dept": "Full department name derived from user description (or empty for personal/romantic/student)",
+  "divn": "Division/Section appropriate to context (or empty for personal)",
+  "ofc": "Office or building name appropriate to sender (or empty for personal)",
+  "city": "City of sender office (or empty for romantic/personal)",
+  "pin": "PIN Code of sender office (or empty for romantic/personal)",
+  "ph": "Official phone number (or empty for personal)",
+  "em": "Official email (@gov.in, @nic.in, or institution email, or empty for personal)",
+  "wb": "Official website (or empty for personal)",
+  "fno": "File Number (e.g. F.No.12-04/2026-Estt or empty for personal/romantic/student)",
+  "toD": "Recipient Designation/Title or Recipient Name for personal/romantic",
+  "toA": "Recipient Address (use \\n for line breaks, or empty for romantic)",
+  "sub": "Subject Line (e.g. 'NO OBJECTION CERTIFICATE', 'CIRCULAR', or romantic title like 'Forever in My Heart')",
   "ref": "Reference to previous correspondence or empty string",
-  "sal": "Salutation ('Sir / Madam', 'Dear Shri [Surname]', 'Respected Principal', 'आदरणीय पिताजी', etc.)",
-  "body": "Complete letter body with proper formal paragraphs. Use \\n\\n for paragraph breaks.",
-  "cls": "Closing phrase ('Yours faithfully', 'Yours sincerely', 'Yours obediently', 'With warm regards', 'आपका आज्ञाकारी')",
-  "sn": "Signatory Name",
-  "sd": "Signatory Designation",
+  "sal": "Salutation ('Sir / Madam', 'Dear Shri [Surname]', 'Respected Principal', 'My Dearest [Name],', 'आदरणीय पिताजी', etc.)",
+  "body": "Complete letter body with authentic paragraphs. Use \\n\\n for paragraph breaks.",
+  "cls": "Closing phrase ('Yours faithfully', 'Yours sincerely', 'Yours obediently', 'Forever yours,', 'With all my love,', 'आपका आज्ञाकारी')",
+  "sn": "Signatory Name / Sender Name",
+  "sd": "Signatory Designation (leave empty for romantic/personal/student)",
   "sp2": "Direct Phone/Extension (optional)",
   "sh": "Hindi/Regional Name of signatory (optional)",
   "sc": "Constituency/Circle (optional)",
@@ -168,51 +279,68 @@ The JSON must have exactly these fields:
   "copyList": ["Copy recipient 1", "Copy recipient 2"] or []
 }
 
-CORRESPONDENCE PROTOCOLS (CSMOP 16th Edition & Statutory Standards):
-1. OFFICE MEMORANDUM (OM):
-   - Strictly written in the 3rd person: "The undersigned is directed to state/convey..."
-   - NO salutation (leave sal empty).
-   - NO subscription/closing like "Yours faithfully" (leave cls empty).
-   - Recipient (To) is typically placed at the bottom-left or addressed to all Ministries/Departments.
+CORRESPONDENCE PROTOCOLS & STATUTORY STANDARDS:
+1. LOVE / ROMANTIC LETTER:
+   - detected_type: "romantic", is_personal: true.
+   - ABSOLUTE RULE: DO NOT use any government header or ministry (h1, h2, e1, e2, dept, divn, ofc, fno, ref MUST BE "").
+   - NO official enclosures or copy-to lists (enclList: [], copyList: []).
+   - Recipient (toD): Name of partner / sweetheart (e.g. "To My Love, [Name]" or "[Name]").
+   - Subject (sub): Romantic title (e.g. "To My Beloved", "A Letter From My Heart", "माझ्या लाडक्या [नाव]स...").
+   - Salutation (sal): Deeply affectionate ("My Dearest [Name],", "My Darling,", "माझ्या प्रिय [नाव],", "मेरी प्रिय [नाम],").
+   - Body: Heartfelt, poetic, emotional, romantic paragraphs.
+   - Closing (cls): Passionate closing ("Forever yours,", "With all my love and devotion,", "तुझाच / तुझीच", "तुम्हारा अपना").
+   - Signatory (sn): Sender's name. Designation (sd) MUST BE "".
 
-2. DEMI-OFFICIAL (D.O.) LETTER:
-   - Written by an officer to an officer of equivalent or near-equivalent rank.
-   - Salutation must be personal formal: "Dear Shri [Last Name]" or "Dear Dr. [Last Name]".
-   - Subscription must be "Yours sincerely" or "With warm regards".
-   - Warm, personal yet formal tone; NO rigid numbered bureaucratic paragraphs.
+2. EMPLOYEE NOC (NO OBJECTION CERTIFICATE):
+   - detected_type: "noc", is_personal: false.
+   - Government or Organization masthead (e.g. Department of Personnel, Ministry of Railways, Bank, or State Dept).
+   - Official File No (e.g. "F.No. 11012/03/2026-Estt(NOC)").
+   - Recipient (toD): "TO WHOMSOEVER IT MAY CONCERN" or specific authority (e.g. "The Regional Passport Officer").
+   - Subject (sub): "NO OBJECTION CERTIFICATE (NOC) FOR [PASSPORT / HIGHER STUDIES / EXAM] - REGARDING".
+   - Body: Formal certification that [Employee Name], [Designation] is a regular employee. State that this Department has NO OBJECTION to his/her application. Explicitly certify vigilance clearance: "It is further certified that no vigilance / disciplinary proceeding is either pending or contemplated against him/her."
+   - Salutation (sal): "" or "To Whomsoever It May Concern,".
+   - Closing (cls): "Yours faithfully," or direct Signatory block.
 
-3. SHOW CAUSE NOTICE (SCN):
-   - Statutory quasi-judicial structure:
-     "WHEREAS..." (states the allegation or breach of rule)
-     "AND WHEREAS..." (states evidence or preliminary findings)
-     "NOW THEREFORE, the undersigned hereby calls upon you to show cause within [X] days..."
-   - Warning of ex-parte decision if reply is not received in time.
+3. ADMINISTRATIVE CIRCULAR:
+   - detected_type: "circular", is_personal: false.
+   - Subject (sub): "CIRCULAR" or "कार्यालयीन परिपत्रक".
+   - Recipient (toD): "1. All Heads of Departments / Circle Heads.\\n2. All Divisional Officers."
+   - Salutation (sal): "" (Strict CSMOP rule: No salutation in circulars).
+   - Closing (cls): "" (Strict CSMOP rule: No complimentary close in circulars).
+   - Body: "Instances have come to notice that... It is reiterated that... Therefore, all concerned are hereby directed to..."
+   - Copy To (copyList): All Division Heads, Notice Board, IT Cell for website upload.
 
-4. REMINDER LETTER / LETTER OF URGENCY:
-   - Refers specifically to previous unanswered communications: "Please refer to this Ministry's communication of even number dated [Date] regarding [Subject]."
-   - Body states: "A reply in this regard is still awaited. It is requested that the requisite report/comments may kindly be expedited."
+4. STATUTORY NOTIFICATION (GAZETTE FORMAT):
+   - detected_type: "notification", is_personal: false.
+   - Header (h1/e1): "भारत का राजपत्र / THE GAZETTE OF INDIA" (or State Gazette).
+   - Subject (sub): "NOTIFICATION" or "अधिसूचना".
+   - Salutation: "", Closing: "".
+   - Body: "In exercise of the powers conferred by Section [X] of the [Act Name], the Central Government hereby notifies..."
 
-5. EMPLOYEE NOC (NO OBJECTION CERTIFICATE):
-   - Certifies employee's designation, department, length of service, and confirms that the department has "NO OBJECTION" to their passport application / examination / higher studies.
-   - States vigilance clearance status.
+5. SHOW CAUSE NOTICE (SCN):
+   - detected_type: "scn", is_personal: false.
+   - Subject (sub): "SHOW CAUSE NOTICE" or "कारणे दाखवा नोटीस".
+   - Salutation: "", Closing: "".
+   - Body: "WHEREAS... AND WHEREAS... NOW THEREFORE, you are hereby directed to show cause within [X] days why disciplinary action should not be initiated against you..."
 
-6. STUDENT APPLICATION TO PRINCIPAL:
-   - Respectful, humble academic letter.
-   - Salutation: "Respected Principal / Sir".
-   - Subscription: "Yours obediently".
-   - States student's Class, Roll Number, and clear reason (leave, fee concession, bonafide).
-   - LEAVE ALL GOVERNMENT HEADERS EMPTY (h1, h2, e1, e2, dept, divn, ofc).
+6. OFFICE MEMORANDUM (OM):
+   - detected_type: "om", is_personal: false.
+   - Subject (sub): Ends with "- regarding." or "- बाबत."
+   - Salutation: "", Closing: "".
+   - Body: Strictly 3rd person: "The undersigned is directed to state that... This issues with the approval of the Competent Authority."
 
-7. TRADITIONAL / HERITAGE FAMILY LETTER:
-   - Deeply cultured, respectful Indian family letter.
-   - Traditional salutation: "आदरणीय पिताजी", "पूज्य माताजी", "सादर चरण स्पर्श".
-   - Closing: "आपका आज्ञाकारी पुत्र", "आपकी स्नेहमयी पुत्री".
-   - Warm inquiries into health and family wellbeing. NO govt headers.
+7. DEMI-OFFICIAL (D.O.) LETTER:
+   - detected_type: "do", is_personal: false.
+   - Salutation: "Dear Shri [Surname]," or "Dear Dr. [Surname],".
+   - Closing: "Yours sincerely," or "With warm regards,".
 
-8. ROMANTIC / HEARTFELT PERSONAL LETTER:
-   - Deeply affectionate, expressive, poetic personal letter.
-   - Warm intimate salutation (e.g. "My Dearest...", "प्रियतम...").
-   - Emotional, sincere expression. Completely free of administrative headers.
+8. STUDENT APPLICATION TO PRINCIPAL:
+   - detected_type: "student_app", is_personal: true.
+   - Leave ALL government headers (h1, h2, e1, e2, dept, divn, ofc, fno) EMPTY "".
+   - Recipient: "To,\\nThe Principal,\\n[School / College Name],\\n[City]"
+   - Salutation: "Respected Sir/Madam,"
+   - Closing: "Yours obediently,"
+   - Body: Humble academic leave or fee concession request with Class, Section, and Roll No.
 
 STATE EMBLEM ACT (2005) COMPLIANCE:
 - Personal, academic, student, and romantic letters MUST NOT have government headers or state emblems.
@@ -234,7 +362,7 @@ RESPOND WITH ONLY THE JSON OBJECT. NO OTHER TEXT.`;
       advisory:          'Advisory / Policy Guidelines',
       student_app:       'Student Application to Principal',
       heritage_personal: 'Heritage / Traditional Family Letter',
-      romantic:          'Romantic / Heartfelt Personal Letter',
+      romantic:          'Romantic / Heartfelt Love Letter',
       tour:              'Tour Programme',
       pm_do:             'PM Personal D.O. Letter',
       mp_letter:         'MP Constituency Letter',
@@ -246,18 +374,18 @@ RESPOND WITH ONLY THE JSON OBJECT. NO OTHER TEXT.`;
                      language === 'bi' ? 'Write in Bilingual - alternating English and Hindi paragraphs.' :
                      'Write in formal English matching official Government of India style.';
 
-    const isPersonal = ['personal', 'student_app', 'heritage_personal', 'romantic'].includes(letterType);
     const isFull = !currentContext.department && !currentContext.office;
 
-    const userPrompt = `Generate a complete ${letterTypeMap[letterType as keyof typeof letterTypeMap] || 'Government Letter'}.
+    const userPrompt = `Generate a complete ${letterTypeMap[targetType as keyof typeof letterTypeMap] || 'Letter'}.
 
 User Description: "${description}"
+Detected Type: ${targetType} (isPersonal: ${isPersonal})
 
 ${isPersonal
-  ? `PERSONAL / ACADEMIC MODE:
-- DO NOT add Government headers (leave h1, h2, e1, e2, dept, divn, ofc empty).
+  ? `PERSONAL / ACADEMIC / ROMANTIC MODE:
+- DO NOT add Government headers (leave h1, h2, e1, e2, dept, divn, ofc, fno, ref empty "").
 - The recipient (toD, toA) must match who the user is writing to.
-- Use natural, authentic, respectful, or affectionate body corresponding to the letter style.`
+- Use natural, authentic, respectful, or deeply affectionate body corresponding to the letter style.`
   : `${isFull
       ? `OFFICIAL FULL AI MODE: Determine ALL fields — ministry, department, office, signatory, city, contacts — 100% from the user description.
 DO NOT default to India Post or Dept of Posts unless explicitly requested.
@@ -267,7 +395,7 @@ Derive the correct Ministry (e.g. Railways, Finance, Defence, Home Affairs, Heal
 - Office: ${currentContext.office}
 - City: ${currentContext.city}`
     }
-- Follow strict CSMOP 16th Edition protocol for ${letterTypeMap[letterType as keyof typeof letterTypeMap] || 'Official Letter'}.`
+- Follow strict CSMOP 16th Edition / Statutory protocol for ${letterTypeMap[targetType as keyof typeof letterTypeMap] || 'Official Letter'}.`
 }
 - Language: ${langNote}
 
@@ -297,9 +425,65 @@ RESPOND WITH ONLY THE JSON OBJECT.`;
 
     const letterData = JSON.parse(cleanedResponse.trim());
 
+    const detected = letterData.detected_type || targetType;
+    const isPersonalResult = letterData.is_personal === true || isPersonal;
+
+    // Normalize both short and long keys so any consumer gets 100% complete data
+    const normalizedData = {
+      ...letterData,
+      detected_type: detected,
+      letter_type: detected,
+      is_personal: isPersonalResult,
+      // short keys
+      h1: isPersonalResult ? '' : (letterData.h1 || letterData.dept_hindi_1 || ''),
+      h2: isPersonalResult ? '' : (letterData.h2 || letterData.dept_hindi_2 || ''),
+      e1: isPersonalResult ? '' : (letterData.e1 || letterData.dept_english_1 || ''),
+      e2: isPersonalResult ? '' : (letterData.e2 || letterData.dept_english_2 || ''),
+      dept: isPersonalResult ? '' : (letterData.dept || letterData.department || ''),
+      divn: isPersonalResult ? '' : (letterData.divn || letterData.division || ''),
+      ofc: isPersonalResult ? '' : (letterData.ofc || letterData.office || ''),
+      city: letterData.city || '',
+      pin: letterData.pin || '',
+      ph: isPersonalResult ? '' : (letterData.ph || letterData.phone || ''),
+      em: isPersonalResult ? '' : (letterData.em || letterData.email || ''),
+      wb: isPersonalResult ? '' : (letterData.wb || letterData.website || ''),
+      fno: isPersonalResult ? '' : (letterData.fno || letterData.file_no || ''),
+      toD: letterData.toD || letterData.to_designation || '',
+      toA: letterData.toA || letterData.to_address || '',
+      sub: letterData.sub || letterData.subject || '',
+      ref: isPersonalResult ? '' : (letterData.ref || letterData.reference || ''),
+      sal: letterData.sal || letterData.salutation || '',
+      cls: letterData.cls || letterData.closing || '',
+      sn: letterData.sn || letterData.signatory_name || '',
+      sd: isPersonalResult ? '' : (letterData.sd || letterData.signatory_designation || ''),
+      body: letterData.body || '',
+      encl: isPersonalResult ? '' : (letterData.encl || (Array.isArray(letterData.enclList) ? letterData.enclList.join(', ') : '')),
+      copy_to: isPersonalResult ? [] : (letterData.copyList && letterData.copyList.length ? letterData.copyList : (letterData.copy_to || [])),
+      // long keys for backward compatibility
+      dept_hindi_1: isPersonalResult ? '' : (letterData.h1 || letterData.dept_hindi_1 || ''),
+      dept_hindi_2: isPersonalResult ? '' : (letterData.h2 || letterData.dept_hindi_2 || ''),
+      dept_english_1: isPersonalResult ? '' : (letterData.e1 || letterData.dept_english_1 || ''),
+      dept_english_2: isPersonalResult ? '' : (letterData.e2 || letterData.dept_english_2 || ''),
+      department: isPersonalResult ? '' : (letterData.dept || letterData.department || ''),
+      division: isPersonalResult ? '' : (letterData.divn || letterData.division || ''),
+      office: isPersonalResult ? '' : (letterData.ofc || letterData.office || ''),
+      phone: isPersonalResult ? '' : (letterData.ph || letterData.phone || ''),
+      email: isPersonalResult ? '' : (letterData.em || letterData.email || ''),
+      website: isPersonalResult ? '' : (letterData.wb || letterData.website || ''),
+      file_no: isPersonalResult ? '' : (letterData.fno || letterData.file_no || ''),
+      to_designation: letterData.toD || letterData.to_designation || '',
+      to_address: letterData.toA || letterData.to_address || '',
+      subject: letterData.sub || letterData.subject || '',
+      reference: isPersonalResult ? '' : (letterData.ref || letterData.reference || ''),
+      salutation: letterData.sal || letterData.salutation || '',
+      closing: letterData.cls || letterData.closing || '',
+      signatory_name: letterData.sn || letterData.signatory_name || '',
+      signatory_designation: isPersonalResult ? '' : (letterData.sd || letterData.signatory_designation || ''),
+    };
+
     return NextResponse.json({
       success: true,
-      data: letterData,
+      data: normalizedData,
       model: result.model,   // tells the UI which fallback model was actually used
     });
   } catch (error) {

@@ -11,11 +11,14 @@ interface Message {
 interface AIChatAssistantProps {
   state: AppState;
   onSetForm: (form: Partial<LetterForm>, bumpTick?: boolean) => void;
-  onFillAI: (data: AILetterData, isFull: boolean) => void;
+  onFillAI: (data: AILetterData, isFull: boolean, model?: string) => void;
 }
 
 const QUICK_CHIPS = [
   { label: '🏛️ Formal CSMOP', text: 'Polite and strict official Government of India CSMOP administrative tone' },
+  { label: '📜 Employee NOC', text: 'Issue an official No Objection Certificate (NOC) for employee applying for passport or higher education' },
+  { label: '💌 Romantic Love Letter', text: 'Write a deeply romantic, emotional love letter for my sweetheart (remove all govt headers)' },
+  { label: '📢 Administrative Circular', text: 'Issue an administrative circular regarding office attendance and compliance to all HODs' },
   { label: '📋 Convert to OM', text: 'Convert this to Office Memorandum style: 3rd person ("The undersigned is directed to..."), no salutation, no closing' },
   { label: '🤝 D.O. Letter', text: 'Convert to Demi-Official (D.O.) format with personal salutation ("Dear Shri...") and subscription ("Yours sincerely")' },
   { label: '⚠️ Show Cause Notice', text: 'Restructure into a statutory Show Cause Notice with WHEREAS and NOW THEREFORE clauses' },
@@ -26,7 +29,7 @@ const QUICK_CHIPS = [
 export default function AIChatAssistant({ state, onSetForm, onFillAI }: AIChatAssistantProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([
-    { role: 'assistant', text: 'Hi! I can help you edit this letter or write a completely new one. Type your request below and click the corresponding button.' }
+    { role: 'assistant', text: 'Hi! I can help you edit this letter or write a completely new one. Type your request below (e.g. NOC, Circular, Love Letter, Show Cause, Student Leave) and click the button.' }
   ]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -74,6 +77,20 @@ export default function AIChatAssistant({ state, onSetForm, onFillAI }: AIChatAs
         if (changedCount > 0) {
           onSetForm(changes, true); // true = bump aiTick so UI updates
         }
+
+        // If user asked to remove headers or make it personal/love letter, reflect in whole state
+        const lower = userText.toLowerCase();
+        if (lower.includes('love') || lower.includes('personal') || lower.includes('remove header') || lower.includes('no header')) {
+          onFillAI({
+            ...json.data,
+            detected_type: lower.includes('love') ? 'romantic' : 'personal',
+            is_personal: true,
+            body: json.data.body || state.form.body,
+            salutation: json.data.sal || state.form.sal,
+            closing: json.data.cls || state.form.cls,
+            signatory_name: json.data.sn || state.form.sn,
+          }, true);
+        }
         
         setMessages(prev => [...prev, { 
           role: 'assistant', 
@@ -99,18 +116,13 @@ export default function AIChatAssistant({ state, onSetForm, onFillAI }: AIChatAs
     setMessages(prev => [...prev, { role: 'user', text: userText }]);
     setIsLoading(true);
 
-    onSetForm({ 
-      sub: '', body: 'Generating completely new letter...', toD: '', toA: '', 
-      sal: '', cls: '', ref: '', encl: '', endorsement: '' 
-    }, true);
-
     try {
       const res = await fetch('/api/generate-letter', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           description: userText,
-          letterType: 'custom', // Use custom for natural letters without strict GoI formatting
+          letterType: 'auto', // Auto-detect NOC, Love Letter, Circular, OM, DO, Student App, etc.
           currentContext: {} // Start fresh
         })
       });
@@ -122,10 +134,25 @@ export default function AIChatAssistant({ state, onSetForm, onFillAI }: AIChatAs
       }
 
       if (json.data) {
-        onFillAI(json.data, true);
+        onFillAI(json.data, true, json.model);
+        const typeNameMap: Record<string, string> = {
+          noc: 'No Objection Certificate (NOC)',
+          circular: 'Administrative Circular',
+          notification: 'Statutory Gazette Notification',
+          romantic: 'Heartfelt Love Letter (Headers removed)',
+          student_app: 'Student Application to Principal',
+          heritage_personal: 'Traditional Family Letter',
+          scn: 'Show Cause Notice (Quasi-Judicial Format)',
+          om: 'Office Memorandum (3rd Person CSMOP Format)',
+          do: 'Demi-Official (D.O.) Letter',
+          reminder: 'Urgent Reminder Letter',
+          appreciation: 'Letter of Appreciation',
+          office_order: 'Official Order'
+        };
+        const label = typeNameMap[json.data.detected_type] || 'complete letter';
         setMessages(prev => [...prev, { 
           role: 'assistant', 
-          text: 'I have generated a completely new letter for you!'
+          text: `✨ I have generated a complete ${label} with all necessary sections and authentic formatting!`
         }]);
       } else {
         throw new Error('No data returned from AI');

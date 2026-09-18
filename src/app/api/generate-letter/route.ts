@@ -17,216 +17,14 @@ interface LetterGenerationRequest {
 }
 
 // ── Groq model fallback chain ─────────────────────────────────
-// Ordered by quality → speed. Official Groq models.
+// Ordered by quality → speed. Falls back automatically on rate-limit (429).
 const GROQ_FALLBACK_MODELS = [
-  'llama-3.3-70b-versatile',          // Best quality official Groq model
-  'llama-3.1-8b-instant',             // Ultra-fast official fallback
+  'openai/gpt-oss-120b',              // Best quality — try first
+  'openai/gpt-oss-20b',               // Fast fallback
+  'qwen/qwen3.6-27b',                 // Secondary fallback
+  'llama-3.3-70b-versatile',
+  'llama-3.1-8b-instant',
 ];
-
-function generateFallbackLetter(description: string, letterType: string = 'office_order', language: string = 'en'): Record<string, any> {
-  const isPersonal = ['personal', 'student_app', 'heritage_personal', 'romantic'].includes(letterType);
-  const now = new Date();
-  const dateStr = now.toLocaleDateString('en-IN', { day: '2-digit', month: '2-digit', year: 'numeric' }).replace(/\//g, '.');
-  const year = now.getFullYear();
-
-  if (letterType === 'student_app') {
-    return {
-      h1: '', h2: '', e1: '', e2: '', dept: '', divn: '', ofc: '', city: '', pin: '', ph: '', em: '', wb: '',
-      fno: '',
-      toD: 'The Principal',
-      toA: 'School / College of Excellence\nCity, State',
-      sub: `Application regarding ${description.slice(0, 50)}`,
-      ref: '',
-      sal: 'Respected Sir / Madam',
-      body: `I am a student of your esteemed institution enrolled in Class XII (Roll No. 21).\n\n2. I am submitting this application to respectfully state that ${description}.\n\n3. In light of the circumstances mentioned above, I humbly request your favorable consideration and kind approval. I shall remain sincerely grateful.`,
-      cls: 'Yours obediently',
-      sn: 'Student Name',
-      sd: 'Class XII (Roll No. 21)',
-      enclList: [],
-      copyList: []
-    };
-  }
-
-  if (letterType === 'romantic') {
-    return {
-      h1: '', h2: '', e1: '', e2: '', dept: '', divn: '', ofc: '', city: '', pin: '', ph: '', em: '', wb: '',
-      fno: '',
-      toD: '',
-      toA: '',
-      sub: '',
-      ref: '',
-      sal: 'My Dearest,',
-      body: `Every quiet moment reminds me of you and the joy you bring into my life.\n\n${description}\n\nYou are my steady peace, my constant inspiration, and the person I am most grateful for every single day. Always thinking of you.`,
-      cls: 'With all my heart,\nYours forever',
-      sn: 'Yours affectionately',
-      sd: '',
-      enclList: [],
-      copyList: []
-    };
-  }
-
-  if (letterType === 'heritage_personal') {
-    return {
-      h1: '', h2: '', e1: '', e2: '', dept: '', divn: '', ofc: '', city: '', pin: '', ph: '', em: '', wb: '',
-      fno: '',
-      toD: '',
-      toA: '',
-      sub: '',
-      ref: '',
-      sal: 'आदरणीय पिताजी, सादर चरण स्पर्श।',
-      body: `आशा है कि आप सभी घर पर सकुशल और प्रसन्न होंगे। यहाँ सब कुछ ठीक चल रहा है।\n\nविशेष रूप से यह पत्र मैं इसलिए लिख रहा हूँ कि ${description}।\n\nमाताजी को प्रणाम और छोटों को स्नेह। आपके आशीर्वाद की सदैव प्रतीक्षा रहेगी।`,
-      cls: 'आपका आज्ञाकारी पुत्र,',
-      sn: 'सकेत',
-      sd: '',
-      enclList: [],
-      copyList: []
-    };
-  }
-
-  if (letterType === 'om') {
-    return {
-      h1: 'भारत सरकार',
-      h2: 'कार्मिक, लोक शिकायत तथा पेंशन मंत्रालय',
-      e1: 'Government of India',
-      e2: 'Ministry of Personnel, Public Grievances and Pensions',
-      dept: 'Department of Personnel and Training',
-      divn: '(Establishment Division)',
-      ofc: 'North Block',
-      city: 'New Delhi',
-      pin: '110 001',
-      ph: '011-23092471',
-      em: 'us-estt@nic.in',
-      wb: 'www.persmin.gov.in',
-      fno: `F.No. 12/04/${year}-Estt.(Pay-I)`,
-      toD: 'All Ministries / Departments of the Government of India',
-      toA: 'New Delhi',
-      sub: `OFFICE MEMORANDUM — ${description.slice(0, 60)}`,
-      ref: '',
-      sal: '',
-      body: `The undersigned is directed to invite reference to the subject cited above and to state that ${description}.\n\n2. The matter has been carefully considered in consultation with the relevant administrative authorities. All subordinate offices are hereby instructed to ensure strict compliance with these directions.\n\n3. This issues with the approval of the Competent Authority.`,
-      cls: '',
-      sn: '(R. K. Sharma)',
-      sd: 'Under Secretary to the Government of India',
-      enclList: [],
-      copyList: ['Comptroller and Auditor General of India', 'All Attached/Subordinate Offices', 'Guard File']
-    };
-  }
-
-  if (letterType === 'do') {
-    return {
-      h1: 'भारत सरकार',
-      h2: 'गृह मंत्रालय',
-      e1: 'Government of India',
-      e2: 'Ministry of Home Affairs',
-      dept: 'Department of Internal Security',
-      divn: '',
-      ofc: 'North Block',
-      city: 'New Delhi',
-      pin: '110 001',
-      ph: '011-23092011',
-      em: 'secy-mha@nic.in',
-      wb: 'www.mha.gov.in',
-      fno: `D.O. No. 11013/02/${year}-IS.I`,
-      toD: 'Shri Rajesh Kumar, IAS',
-      toA: 'Chief Secretary\nGovernment of Maharashtra\nMantralaya, Mumbai - 400 032',
-      sub: `Consultation regarding ${description.slice(0, 55)}`,
-      ref: '',
-      sal: 'Dear Shri Rajesh,',
-      body: `I am writing to you regarding ${description}.\n\nAs you are aware, coordinated administrative action is essential for the effective execution of this initiative. I would deeply appreciate it if you could personally review the progress and issue suitable directions to expedite the matter.\n\nWith warm personal regards.`,
-      cls: 'Yours sincerely,',
-      sn: '(Vikram Malhotra)',
-      sd: 'Secretary to the Government of India',
-      enclList: [],
-      copyList: []
-    };
-  }
-
-  if (letterType === 'scn') {
-    return {
-      h1: 'भारत सरकार',
-      h2: 'संचार मंत्रालय',
-      e1: 'Government of India',
-      e2: 'Ministry of Communications',
-      dept: 'Department of Posts',
-      divn: '(Vigilance Division)',
-      ofc: 'Dak Bhavan, Sansad Marg',
-      city: 'New Delhi',
-      pin: '110 001',
-      ph: '011-23096000',
-      em: 'adg-vig@indiapost.gov.in',
-      wb: 'www.indiapost.gov.in',
-      fno: `F.No. Vig-14/${year}-SCN`,
-      toD: 'The Official Concerned / Agency',
-      toA: 'Postal Directorate\nNew Delhi',
-      sub: `SHOW CAUSE NOTICE under applicable service rules regarding ${description.slice(0, 50)}`,
-      ref: '',
-      sal: 'Sir / Madam',
-      body: `WHEREAS it has been observed that ${description};\n\nAND WHEREAS the aforementioned act/omission constitutes a prima facie violation of the prescribed conduct rules and official instructions;\n\nNOW THEREFORE, you are hereby called upon to SHOW CAUSE in writing within 15 (fifteen) days from the receipt of this notice as to why disciplinary action should not be initiated against you.\n\nPlease note that in case no reply is received within the stipulated period, it will be presumed that you have no explanation to offer and the matter will be decided ex-parte.`,
-      cls: 'Yours faithfully,',
-      sn: '(A. K. Srivastava)',
-      sd: 'Director (Vigilance) & Competent Authority',
-      enclList: ['Inspection findings / Annexure-I'],
-      copyList: ['Confidential Record Cell', 'Guard File']
-    };
-  }
-
-  if (letterType === 'reminder') {
-    return {
-      h1: 'भारत सरकार',
-      h2: 'संचार मंत्रालय',
-      e1: 'Government of India',
-      e2: 'Ministry of Communications',
-      dept: 'Department of Posts',
-      divn: '(Establishment Division)',
-      ofc: 'Dak Bhavan, Sansad Marg',
-      city: 'New Delhi',
-      pin: '110 001',
-      ph: '011-23096000',
-      em: 'adg-estt@indiapost.gov.in',
-      wb: 'www.indiapost.gov.in',
-      fno: `F.No. 4-12/${year}-Estt (REMINDER-I)`,
-      toD: 'The Chief Postmaster General',
-      toA: 'All Postal Circles',
-      sub: `REMINDER — Expeditious submission of report regarding ${description.slice(0, 50)}`,
-      ref: `This Ministry's letter of even number dated 15.${String(now.getMonth() + 1).padStart(2, '0')}.${year}`,
-      sal: 'Sir / Madam',
-      body: `I am directed to invite your kind attention to this Ministry's communication of even number cited under reference on the subject mentioned above.\n\n2. In this connection, it is intimated that the required report / information concerning ${description} is still awaited despite the lapse of the prescribed period.\n\n3. Since this matter is under time-bound review, it is requested that the pending report may kindly be expedited and transmitted within 3 (three) working days.`,
-      cls: 'Yours faithfully,',
-      sn: '(P. N. Deshmukh)',
-      sd: 'Assistant Director General (Estt.)',
-      enclList: [],
-      copyList: ['PPS to Secretary (Posts)', 'Guard File']
-    };
-  }
-
-  // Default Official Letter
-  return {
-    h1: isPersonal ? '' : 'भारत सरकार',
-    h2: isPersonal ? '' : 'संचार मंत्रालय',
-    e1: isPersonal ? '' : 'Government of India',
-    e2: isPersonal ? '' : 'Ministry of Communications',
-    dept: isPersonal ? '' : 'Department of Posts',
-    divn: isPersonal ? '' : '(Establishment Section)',
-    ofc: isPersonal ? '' : 'Dak Bhavan',
-    city: isPersonal ? '' : 'New Delhi',
-    pin: isPersonal ? '' : '110 001',
-    ph: isPersonal ? '' : '011-23096000',
-    em: isPersonal ? '' : 'contact@gov.in',
-    wb: isPersonal ? '' : 'www.india.gov.in',
-    fno: isPersonal ? '' : `F.No. 22-08/${year}-Admin`,
-    toD: 'The Concerned Authority / Officer',
-    toA: 'Government Complex\nNew Delhi',
-    sub: `Communication regarding ${description.slice(0, 55)}`,
-    ref: '',
-    sal: 'Sir / Madam',
-    body: `I am directed to convey the administrative decision regarding ${description}.\n\n2. The matter has been duly examined in accordance with the established government rules and procedures. Necessary administrative measures have been sanctioned for immediate implementation.\n\n3. This issues with the approval of the Competent Authority.`,
-    cls: 'Yours faithfully,',
-    sn: '(Authorized Officer)',
-    sd: 'Under Secretary to the Government of India',
-    enclList: ['As above'],
-    copyList: ['Office of the Joint Secretary', 'Guard File']
-  };
-}
 
 async function callGroqModel(
   messages: GroqMessage[],
@@ -325,15 +123,12 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // If GROQ_API_KEY is not configured, gracefully use the CSMOP Protocol Engine
     if (!process.env.GROQ_API_KEY) {
-      console.warn('[letterpad] GROQ_API_KEY not set. Using CSMOP Protocol Engine fallback.');
-      const fallbackData = generateFallbackLetter(description, letterType, language);
-      return NextResponse.json({
-        success: true,
-        data: fallbackData,
-        model: 'CSMOP Protocol Engine (Add GROQ_API_KEY in Vercel to activate Groq AI)',
-      });
+      console.error('[letterpad] GROQ_API_KEY is not set in environment variables');
+      return NextResponse.json(
+        { error: 'Server configuration error: GROQ_API_KEY is not set. Please add it to your Vercel environment variables.' },
+        { status: 500 }
+      );
     }
 
     const systemPrompt = `You are an expert Government of India and State Government official correspondence specialist with exhaustive knowledge of the Central Secretariat Manual of Office Procedure (CSMOP 16th Edition), State Emblem of India (Prohibition of Improper Use) Act 2005, and Indian administrative protocols.
@@ -510,23 +305,16 @@ RESPOND WITH ONLY THE JSON OBJECT.`;
   } catch (error) {
     console.error('Letter generation error:', error);
 
-    // Graceful fallback to CSMOP engine if Groq AI fails or rate limits
-    try {
-      const fallbackData = generateFallbackLetter(
-        (request as any)?._body?.description || 'Official Letter',
-        (request as any)?._body?.letterType || 'office_order',
-        (request as any)?._body?.language || 'en'
-      );
-      return NextResponse.json({
-        success: true,
-        data: fallbackData,
-        model: 'CSMOP Protocol Engine (Fallback)',
-      });
-    } catch {
+    if (error instanceof SyntaxError) {
       return NextResponse.json(
-        { error: error instanceof Error ? error.message : 'Failed to generate letter' },
+        { error: 'Failed to parse AI response. The AI response was not valid JSON. Please try again with a different description.' },
         { status: 500 }
       );
     }
+
+    return NextResponse.json(
+      { error: error instanceof Error ? error.message : 'Failed to generate letter' },
+      { status: 500 }
+    );
   }
 }

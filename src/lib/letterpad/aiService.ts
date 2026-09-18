@@ -14,20 +14,25 @@ export function buildPrompt(
   tpl: TemplateType
 ): string {
   const tMap: Record<string, string> = {
-    office_order: 'Office Order',
-    om:           'Office Memorandum (OM)',
-    do:           'Demi-Official (D.O.) Letter',
-    circular:     'Circular',
-    reminder:     'Reminder Letter',
-    forwarding:   'Forwarding / Endorsement Note',
-    scn:          'Show Cause Notice',
-    noc:          'No Objection Certificate',
-    appreciation: 'Letter of Appreciation',
-    tour:         'Tour Programme Communication',
-    pm_do:        'Prime Ministerial personal DO letter',
-    mp_letter:    'MP Constituency Letter',
-    personal:     'Personal / School / Unofficial Letter',
-    custom:       'Letter',
+    office_order:      'Office Order (ACC / Departmental)',
+    om:                'Office Memorandum (OM)',
+    do:                'Demi-Official (D.O.) Letter',
+    circular:          'Circular / Standing Directive',
+    reminder:          'Reminder Letter',
+    forwarding:        'Forwarding / Endorsement Note',
+    scn:               'Show Cause Notice',
+    noc:               'No Objection Certificate (NOC)',
+    appreciation:      'Letter of Appreciation',
+    tour:              'Tour Programme Communication',
+    notification:      'Public Notification (Gazette Format)',
+    advisory:          'Advisory / Policy Guideline',
+    student_app:       'Student Application to Principal',
+    heritage_personal: 'Heritage / Traditional Family Letter',
+    romantic:          'Romantic / Heartfelt Personal Letter',
+    pm_do:             'Prime Ministerial personal DO letter',
+    mp_letter:         'MP Constituency Letter',
+    personal:          'Personal / Unofficial Letter',
+    custom:            'Official Government Letter',
   };
 
   const langNote =
@@ -35,28 +40,44 @@ export function buildPrompt(
     lang === 'bi' ? 'Write body in bilingual format (English paragraph then Hindi equivalent).' :
     'Write in English.';
 
-  const isOfficial = type !== 'custom' && type !== 'appreciation' && type !== 'personal';
+  const isPersonalType = ['personal', 'student_app', 'heritage_personal', 'romantic'].includes(type);
+  const isOfficial = !isPersonalType && type !== 'custom';
   
-  const styleNote =
-    (type === 'personal')                 ? 'Personal or school letter. Natural format. Do NOT use strict government headers or numbered paragraphs.' :
-    (tpl === 'B' || type === 'pm_do')     ? 'Warm formal DO letter — no numbered paragraphs.' :
-    (tpl === 'C' || type === 'mp_letter') ? 'MP letter — formal but personal.' :
-    (tpl === 'E' || type === 'om')        ? 'Office Memorandum — body starts "The undersigned is directed to inform..."' :
-    isOfficial                            ? 'Standard formal letter with numbered paragraphs for clarity.' :
-                                            'Natural letter format. DO NOT use numbered paragraphs unless explicitly requested.';
+  let styleNote = 'Standard formal letter with numbered paragraphs for clarity.';
+  if (type === 'om') {
+    styleNote = 'Strict CSMOP Office Memorandum: Written strictly in the third person starting "The undersigned is directed to convey...". NO salutation ("Sir/Madam") and NO subscription ("Yours faithfully").';
+  } else if (type === 'do' || type === 'pm_do' || tpl === 'B') {
+    styleNote = 'Strict CSMOP Demi-Official (D.O.) Letter: Peer-to-peer correspondence between officers of equivalent rank. Salutation must be "Dear Shri [Last Name]" or "Dear Dr. [Last Name]". Subscription must be "Yours sincerely" or "With warm regards". Do NOT use rigid numbered paragraphs.';
+  } else if (type === 'scn') {
+    styleNote = 'Strict Show Cause Notice (SCN): Structured with legal preamble "WHEREAS...", "AND WHEREAS...", and operative command "NOW THEREFORE, the undersigned hereby calls upon... to show cause within [X] days...".';
+  } else if (type === 'reminder') {
+    styleNote = 'Official Reminder Letter: Must specifically cite previous unanswered communication number and date. Starts "I am directed to invite your attention to this Ministry\'s communication of even number dated... A reply in this regard is still awaited."';
+  } else if (type === 'student_app') {
+    styleNote = 'Academic Student Application: Respectful, humble tone addressed to Principal/Dean. Salutation: "Respected Sir / Madam" or "Respected Principal". Closing: "Yours obediently". Mention Class, Roll No., and reason clearly. DO NOT use govt headers.';
+  } else if (type === 'heritage_personal') {
+    styleNote = 'Traditional Indian Family Letter: Cultured, affectionate, respectful tone. Traditional salutation (e.g. "आदरणीय पिताजी / पूज्य माताजी", "सादर चरण स्पर्श"). Closing: "आपका आज्ञाकारी पुत्र / स्नेही". Inquire about family wellbeing. DO NOT use govt headers.';
+  } else if (type === 'romantic') {
+    styleNote = 'Romantic & Heartfelt Personal Letter: Emotionally rich, expressive, poetic personal letter between intimate partners. Completely free of any bureaucratic headers, file numbers, or administrative jargon.';
+  } else if (type === 'noc') {
+    styleNote = 'Official No Objection Certificate (NOC): Formal certification stating the office has no objection to the employee applying for passport / exam / higher studies, confirming vigilance clearance.';
+  } else if (type === 'notification') {
+    styleNote = 'Official Public Notification: Statutory format published in Gazette of India / State Gazette under relevant act provisions.';
+  } else if (type === 'appreciation') {
+    styleNote = 'Ministerial / Government Letter of Appreciation: High statecraft tone conveying commendation for exceptional public service.';
+  }
 
   return `Generate a complete ${isOfficial ? 'Government of India ' : ''}${tMap[type] ?? 'letter'} with all fields based ONLY on this brief.
 
 User Brief: "${brief || 'Generate a complete realistic example letter'}"
 
-Letter Style: ${styleNote}
+Letter Style & Protocol: ${styleNote}
 Language: ${langNote}
 
-CRITICAL RULES:
-1. Do NOT invent unrelated Government Ministries/Departments for personal letters or custom letters unless requested in the brief. 
-2. If the user brief is personal (e.g. a love letter, letter to a friend), keep the tone and headers personal. Leave department fields empty if they do not make sense.
-3. Body: Write a natural letter. Only use numbered paragraphs if it is a strict official order, OM, or circular.
-${isOfficial ? '4. copy_to: 2-3 realistic recipients if applicable. encl: 1-2 realistic enclosures if applicable.' : '4. DO NOT add "copy_to" or "encl" fields unless the brief specifically asks for them.'}
+CRITICAL RULES & STATE EMBLEM ACT (2005) COMPLIANCE:
+1. ${isPersonalType ? 'LEAVE ALL GOVERNMENT HEADERS EMPTY (h1, h2, e1, e2, dept, divn, ofc). Private citizens, students, and romantic letters MUST NOT display State Emblems or Government mastheads.' : 'Derive realistic Ministry/Department and Office matching the sender context.'}
+2. Recipient fields (toD, toA): Must logically correspond to the recipient in the brief.
+3. Body: Must strictly follow the specified correspondence protocol above.
+4. ${isOfficial ? 'copy_to: 2-3 realistic recipients if applicable. encl: 1-2 realistic enclosures if applicable.' : 'DO NOT add "copy_to" or "encl" fields unless specifically relevant.'}
 
 RESPOND WITH ONLY THE JSON OBJECT.`;
 }

@@ -14,6 +14,15 @@ interface AIChatAssistantProps {
   onFillAI: (data: AILetterData, isFull: boolean) => void;
 }
 
+const QUICK_CHIPS = [
+  { label: '🏛️ Formal CSMOP', text: 'Polite and strict official Government of India CSMOP administrative tone' },
+  { label: '📋 Convert to OM', text: 'Convert this to Office Memorandum style: 3rd person ("The undersigned is directed to..."), no salutation, no closing' },
+  { label: '🤝 D.O. Letter', text: 'Convert to Demi-Official (D.O.) format with personal salutation ("Dear Shri...") and subscription ("Yours sincerely")' },
+  { label: '⚠️ Show Cause Notice', text: 'Restructure into a statutory Show Cause Notice with WHEREAS and NOW THEREFORE clauses' },
+  { label: '⏳ Urgent Reminder', text: 'Add an expedited reminder paragraph referencing previous communication awaiting reply' },
+  { label: '🎓 Student Application', text: 'Format as respectful student application to Principal with Class, Roll No., and "Yours obediently"' },
+];
+
 export default function AIChatAssistant({ state, onSetForm, onFillAI }: AIChatAssistantProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([
@@ -163,6 +172,19 @@ export default function AIChatAssistant({ state, onSetForm, onFillAI }: AIChatAs
       </div>
 
       <div className={styles.chatInputArea}>
+        <div className={styles.chipsBar}>
+          {QUICK_CHIPS.map((chip, idx) => (
+            <button
+              key={idx}
+              type="button"
+              className={styles.chip}
+              onClick={() => setInput(chip.text)}
+              title={chip.text}
+            >
+              {chip.label}
+            </button>
+          ))}
+        </div>
         <textarea 
           className={styles.chatInput}
           rows={3}

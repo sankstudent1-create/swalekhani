@@ -130,118 +130,145 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const systemPrompt = `You are an expert Government of India official correspondence specialist with deep knowledge of the DOPT Manual of Office Procedure, all central ministries, state governments, railways, municipalities, and formal letter formats.
+    const systemPrompt = `You are an expert Government of India and State Government official correspondence specialist with exhaustive knowledge of the Central Secretariat Manual of Office Procedure (CSMOP 16th Edition), State Emblem of India (Prohibition of Improper Use) Act 2005, and Indian administrative protocols.
 
-Your task is to generate COMPLETE professional government letters. You must DETERMINE the correct ministry, department, office, and signatory FROM THE USER'S DESCRIPTION — do not default to Department of Posts or any other preset department unless explicitly mentioned.
+Your task is to generate COMPLETE, AUTHENTIC, and FLAWLESS letters matching official Indian administrative and correspondence standards. You must DETERMINE the correct ministry, department, office, and signatory FROM THE USER'S DESCRIPTION.
 
 CRITICAL: Respond with ONLY a valid JSON object — no markdown, no code fences, no explanations.
 
 The JSON must have exactly these fields:
 {
-  "h1": "Hindi Line 1 derived from the sender context (e.g., भारत सरकार or राज्य सरकार)",
-  "h2": "Hindi Line 2 — the ministry/department in Hindi",
-  "e1": "English Line 1 (e.g., Government of India or Government of Maharashtra)",
-  "e2": "English Line 2 — the ministry/department in English",
-  "dept": "Full department name derived from user description",
-  "divn": "Division/Section appropriate to the context",
-  "ofc": "Office or building name appropriate to the sender",
-  "city": "City of the sender office",
-  "pin": "PIN Code of that city/office",
-  "ph": "Realistic phone number for that office",
-  "em": "Official email for that office/department",
+  "h1": "Hindi Line 1 derived from sender context (e.g. भारत सरकार or महाराष्ट्र शासन, or empty for personal)",
+  "h2": "Hindi Line 2 — ministry/department in Hindi (or empty for personal)",
+  "e1": "English Line 1 (e.g. Government of India or Government of Maharashtra, or empty for personal)",
+  "e2": "English Line 2 — ministry/department in English (or empty for personal)",
+  "dept": "Full department name derived from user description (or empty for personal)",
+  "divn": "Division/Section appropriate to context (e.g. (Establishment Division))",
+  "ofc": "Office or building name appropriate to sender",
+  "city": "City of sender office",
+  "pin": "PIN Code of sender office",
+  "ph": "Realistic official phone number",
+  "em": "Official email (@gov.in, @nic.in, or institution email)",
   "wb": "Official website",
-  "fno": "File Number (Format: F.No.XX-XX/XXXX-XX)",
-  "toD": "Recipient's Designation/Title derived from user description",
-  "toA": "Recipient's Office Address (use \\n for line breaks)",
-  "sub": "Subject Line — concise, professional, relevant to the complaint/request",
+  "fno": "File Number (e.g. F.No.12-04/2026-Estt(Pay-I) or empty for personal)",
+  "toD": "Recipient Designation/Title",
+  "toA": "Recipient Office Address (use \\n for line breaks)",
+  "sub": "Subject Line — concise, professional, starting with 'Subject: ' or 'विषय: '",
   "ref": "Reference to previous correspondence or empty string",
-  "sal": "Salutation (Sir / Madam / Sir/Madam)",
-  "body": "Complete letter body — 3-5 numbered paragraphs in authentic GoI style, fully addressing the user's described issue with proper formal language. Use \\n\\n for paragraph breaks.",
-  "cls": "Closing phrase (Yours faithfully / Yours sincerely)",
-  "sn": "Signatory Name — appropriate to the sender's role",
-  "sd": "Signatory Designation — appropriate to the sender's role",
+  "sal": "Salutation ('Sir / Madam', 'Dear Shri [Surname]', 'Respected Principal', 'आदरणीय पिताजी', etc.)",
+  "body": "Complete letter body with proper formal paragraphs. Use \\n\\n for paragraph breaks.",
+  "cls": "Closing phrase ('Yours faithfully', 'Yours sincerely', 'Yours obediently', 'With warm regards', 'आपका आज्ञाकारी')",
+  "sn": "Signatory Name",
+  "sd": "Signatory Designation",
   "sp2": "Direct Phone/Extension (optional)",
   "sh": "Hindi/Regional Name of signatory (optional)",
   "sc": "Constituency/Circle (optional)",
-  "enclList": ["Relevant enclosure 1", "Relevant enclosure 2"] or [],
-  "copyList": ["Relevant copy recipient 1", "Relevant copy recipient 2", "Relevant copy recipient 3"] or []
+  "enclList": ["Enclosure 1", "Enclosure 2"] or [],
+  "copyList": ["Copy recipient 1", "Copy recipient 2"] or []
 }
 
-EXAMPLES of correctly determining sender from description:
-- "Station Master at Majalgaon Railway Station" → Ministry of Railways, Railway Station Master's Office
-- "Citizen complaint to Prime Minister about cleanliness" → Citizen letter, no GoI header, addressed to PM
-- "MP writing to municipal corporation" → Lok Sabha letterhead for the MP
-- "Collector writing to state government" → District Collectorate letterhead
-- "Nagar Palika Commissioner" → Municipal Corporation / Nagar Parishad letterhead
+CORRESPONDENCE PROTOCOLS (CSMOP 16th Edition & Statutory Standards):
+1. OFFICE MEMORANDUM (OM):
+   - Strictly written in the 3rd person: "The undersigned is directed to state/convey..."
+   - NO salutation (leave sal empty).
+   - NO subscription/closing like "Yours faithfully" (leave cls empty).
+   - Recipient (To) is typically placed at the bottom-left or addressed to all Ministries/Departments.
 
-AUTHENTIC GoI LETTER PHRASES:
-- "I am directed to forward herewith..."
-- "It is requested that..."
-- "Necessary action may be taken accordingly."
-- "This issues with the approval of the competent authority."
-- "In this connection, it is intimated that..."
-- "Please refer to the office order dated..."
+2. DEMI-OFFICIAL (D.O.) LETTER:
+   - Written by an officer to an officer of equivalent or near-equivalent rank.
+   - Salutation must be personal formal: "Dear Shri [Last Name]" or "Dear Dr. [Last Name]".
+   - Subscription must be "Yours sincerely" or "With warm regards".
+   - Warm, personal yet formal tone; NO rigid numbered bureaucratic paragraphs.
 
-FILE NUMBER FORMAT: F.No.[Section]/[Year]-[Abbreviation]
+3. SHOW CAUSE NOTICE (SCN):
+   - Statutory quasi-judicial structure:
+     "WHEREAS..." (states the allegation or breach of rule)
+     "AND WHEREAS..." (states evidence or preliminary findings)
+     "NOW THEREFORE, the undersigned hereby calls upon you to show cause within [X] days..."
+   - Warning of ex-parte decision if reply is not received in time.
 
-CRITICAL RULES:
-- NEVER default to Department of Posts / India Post unless the user explicitly asks for it
-- ALWAYS derive ministry, department, office from the user's description
-- Fill EVERY field with appropriate, realistic, professional content
-- Body must be complete with 3-4 numbered paragraphs
-- copyList: 3-4 realistic recipients relevant to the subject matter
-- enclList: 1-2 relevant enclosures if applicable
+4. REMINDER LETTER / LETTER OF URGENCY:
+   - Refers specifically to previous unanswered communications: "Please refer to this Ministry's communication of even number dated [Date] regarding [Subject]."
+   - Body states: "A reply in this regard is still awaited. It is requested that the requisite report/comments may kindly be expedited."
+
+5. EMPLOYEE NOC (NO OBJECTION CERTIFICATE):
+   - Certifies employee's designation, department, length of service, and confirms that the department has "NO OBJECTION" to their passport application / examination / higher studies.
+   - States vigilance clearance status.
+
+6. STUDENT APPLICATION TO PRINCIPAL:
+   - Respectful, humble academic letter.
+   - Salutation: "Respected Principal / Sir".
+   - Subscription: "Yours obediently".
+   - States student's Class, Roll Number, and clear reason (leave, fee concession, bonafide).
+   - LEAVE ALL GOVERNMENT HEADERS EMPTY (h1, h2, e1, e2, dept, divn, ofc).
+
+7. TRADITIONAL / HERITAGE FAMILY LETTER:
+   - Deeply cultured, respectful Indian family letter.
+   - Traditional salutation: "आदरणीय पिताजी", "पूज्य माताजी", "सादर चरण स्पर्श".
+   - Closing: "आपका आज्ञाकारी पुत्र", "आपकी स्नेहमयी पुत्री".
+   - Warm inquiries into health and family wellbeing. NO govt headers.
+
+8. ROMANTIC / HEARTFELT PERSONAL LETTER:
+   - Deeply affectionate, expressive, poetic personal letter.
+   - Warm intimate salutation (e.g. "My Dearest...", "प्रियतम...").
+   - Emotional, sincere expression. Completely free of administrative headers.
+
+STATE EMBLEM ACT (2005) COMPLIANCE:
+- Personal, academic, student, and romantic letters MUST NOT have government headers or state emblems.
+- For official government correspondence, derive authentic Ministry, Department, and National/State context.
 
 RESPOND WITH ONLY THE JSON OBJECT. NO OTHER TEXT.`;
 
     const letterTypeMap = {
-      office_order: 'Office Order',
-      om: 'Office Memorandum (OM)',
-      do: 'Demi-Official (D.O.) Letter',
-      circular: 'Circular/General Order',
-      reminder: 'Reminder Letter',
-      forwarding: 'Forwarding/Endorsement Note',
-      scn: 'Show Cause Notice',
-      noc: 'No Objection Certificate',
-      appreciation: 'Letter of Appreciation',
-      tour: 'Tour Programme',
-      pm_do: 'PM Personal D.O. Letter',
-      mp_letter: 'MP Constituency Letter',
-      personal: 'Personal / School / Unofficial Letter',
-      custom: 'Official Government Letter'
+      office_order:      'Office Order (ACC / Departmental)',
+      om:                'Office Memorandum (OM)',
+      do:                'Demi-Official (D.O.) Letter',
+      circular:          'Circular / Standing Directive',
+      reminder:          'Reminder Letter (Urgent / Pending)',
+      forwarding:        'Forwarding / Endorsement Note',
+      scn:               'Show Cause Notice (Statutory / Disciplinary)',
+      noc:               'No Objection Certificate (NOC)',
+      appreciation:      'Letter of Appreciation (Minister / Gov)',
+      notification:      'Public Notification (Gazette Format)',
+      advisory:          'Advisory / Policy Guidelines',
+      student_app:       'Student Application to Principal',
+      heritage_personal: 'Heritage / Traditional Family Letter',
+      romantic:          'Romantic / Heartfelt Personal Letter',
+      tour:              'Tour Programme',
+      pm_do:             'PM Personal D.O. Letter',
+      mp_letter:         'MP Constituency Letter',
+      personal:          'Personal / School / Unofficial Letter',
+      custom:            'Official Government Letter'
     };
 
     const langNote = language === 'hi' ? 'Write body and relevant fields in formal Hindi (Devanagari).' :
                      language === 'bi' ? 'Write in Bilingual - alternating English and Hindi paragraphs.' :
-                     'Write in formal English matching Government of India style.';
+                     'Write in formal English matching official Government of India style.';
 
+    const isPersonal = ['personal', 'student_app', 'heritage_personal', 'romantic'].includes(letterType);
     const isFull = !currentContext.department && !currentContext.office;
 
     const userPrompt = `Generate a complete ${letterTypeMap[letterType as keyof typeof letterTypeMap] || 'Government Letter'}.
 
 User Description: "${description}"
 
-${isFull
-  ? `FULLY AI MODE: Determine ALL fields — ministry, department, office, signatory, city, contacts — 100% from the user description above.
-DO NOT use Department of Posts, India Post, or any default preset unless explicitly mentioned.
-The sender identity must logically match who the user says they are.`
-  : `Current Sender Context:
+${isPersonal
+  ? `PERSONAL / ACADEMIC MODE:
+- DO NOT add Government headers (leave h1, h2, e1, e2, dept, divn, ofc empty).
+- The recipient (toD, toA) must match who the user is writing to.
+- Use natural, authentic, respectful, or affectionate body corresponding to the letter style.`
+  : `${isFull
+      ? `OFFICIAL FULL AI MODE: Determine ALL fields — ministry, department, office, signatory, city, contacts — 100% from the user description.
+DO NOT default to India Post or Dept of Posts unless explicitly requested.
+Derive the correct Ministry (e.g. Railways, Finance, Defence, Home Affairs, Health, State Gov) from the context.`
+      : `Current Sender Context:
 - Department: ${currentContext.department}
 - Office: ${currentContext.office}
 - City: ${currentContext.city}`
+    }
+- Follow strict CSMOP 16th Edition protocol for ${letterTypeMap[letterType as keyof typeof letterTypeMap] || 'Official Letter'}.`
 }
 - Language: ${langNote}
-
-IMPORTANT RULES:
-${letterType === 'personal' 
-  ? `1. This is a personal/school/unofficial letter. Do NOT add Government of India headers (leave h1, h2, e1, e2, dept empty unless specifically requested).
-2. The recipient (toD, toA) must match WHO the user is writing TO.
-3. Write a natural, personal or school-appropriate body. Do not use strict numbered paragraphs.`
-  : `1. Derive the sender's ministry/department/office from WHO the user says they are
-2. The recipient (toD, toA) must match WHO the user is writing TO
-3. Body must address the ACTUAL issue described — do not write a generic salary/circular letter
-4. copyList must include offices/persons logically relevant to this specific matter`}
-5. All fields must be filled with realistic, accurate content
 
 RESPOND WITH ONLY THE JSON OBJECT.`;
 

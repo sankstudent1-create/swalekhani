@@ -12,6 +12,8 @@ export type LogoSide = 'L' | 'R';
 export type AILetterType =
   | 'office_order' | 'om' | 'do' | 'circular' | 'reminder'
   | 'forwarding' | 'scn' | 'noc' | 'appreciation' | 'tour'
+  | 'notice' | 'advisory' | 'notification' | 'student_app'
+  | 'heritage_personal' | 'romantic' | 'personal'
   | 'pm_do' | 'mp_letter' | 'custom';
 export type AILanguage = 'en' | 'hi' | 'bi';
 

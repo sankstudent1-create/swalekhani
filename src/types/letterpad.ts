@@ -63,6 +63,8 @@ export interface LogoPos {
   placed: boolean;
 }
 
+export type FooterDesign = 'classic' | 'modern' | 'minimal' | 'tricolor' | 'executive';
+
 // ── Full app state ──────────────────────────────────────
 export interface AppState {
   tpl: TemplateType;
@@ -77,6 +79,8 @@ export interface AppState {
   showEncl: boolean;
   showCopy: boolean;
   showEndorse: boolean;
+  showFooter?: boolean;
+  footerDesign?: FooterDesign;
   form: LetterForm;
   aiTick?: number;
 }

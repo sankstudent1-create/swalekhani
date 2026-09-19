@@ -19,6 +19,8 @@ const INITIAL_STATE: AppState = {
   showEncl: false,
   showCopy: false,
   showEndorse: false,
+  showFooter: true,
+  footerDesign: 'classic',
   form: { ...DEFAULT_FORM },
 };
 
@@ -67,6 +69,7 @@ export function useLetterState() {
       logoL,
       logoR,
       posR: { ...s.posR, placed: false }, // trigger auto-placement
+      showFooter: type !== 'personal',
       form: {
         ...s.form,
         h1: preset.h1, h2: preset.h2,
@@ -102,6 +105,13 @@ export function useLetterState() {
   const toggleEncl    = useCallback(() => setState(s => ({ ...s, showEncl:    !s.showEncl })), []);
   const toggleCopy    = useCallback(() => setState(s => ({ ...s, showCopy:    !s.showCopy })), []);
   const toggleEndorse = useCallback(() => setState(s => ({ ...s, showEndorse: !s.showEndorse })), []);
+  const toggleFooter  = useCallback(() => setState(s => {
+    const current = s.showFooter !== undefined ? s.showFooter : s.officeType !== 'personal';
+    return { ...s, showFooter: !current };
+  }), []);
+  const setFooterDesign = useCallback((footerDesign: AppState['footerDesign']) => {
+    setState(s => ({ ...s, footerDesign }));
+  }, []);
 
   // ── AI fill — populates fields from AI response ───
   const fillFromAI = useCallback((data: AILetterData, isFull: boolean = false, model?: string) => {
@@ -167,6 +177,7 @@ export function useLetterState() {
         showEncl: isPersonal ? false : (enclVal.trim().length > 0),
         showCopy: isPersonal ? false : (copyVal.length > 0),
         showEndorse: false,
+        showFooter: !isPersonal,
         form: {
           ...s.form,
           h1: isPersonal ? '' : (isFull ? (data.h1 ?? data.dept_hindi_1 ?? '') : (data.h1 ?? data.dept_hindi_1 ?? s.form.h1)),
@@ -214,6 +225,8 @@ export function useLetterState() {
     toggleEncl,
     toggleCopy,
     toggleEndorse,
+    toggleFooter,
+    setFooterDesign,
     fillFromAI,
   };
 }

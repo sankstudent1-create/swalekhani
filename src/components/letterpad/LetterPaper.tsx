@@ -13,6 +13,8 @@ interface LetterPaperProps {
   onCopyChange: (val: string[]) => void;
   onLogoPos: (side: LogoSide, pos: { x?: number; y?: number; w?: number; placed?: boolean }) => void;
   onLogoRemove?: (side: LogoSide) => void;
+  onToggleFooter?: () => void;
+  onFooterDesign?: (design: AppState['footerDesign']) => void;
 }
 
 const FONT_MAP: Record<string, string> = {
@@ -194,7 +196,15 @@ function Tricolor() {
 }
 
 // ── Main Paper ───────────────────────────────
-export default function LetterPaper({ state, onFormChange, onCopyChange, onLogoPos, onLogoRemove }: LetterPaperProps) {
+export default function LetterPaper({ 
+  state, 
+  onFormChange, 
+  onCopyChange, 
+  onLogoPos, 
+  onLogoRemove,
+  onToggleFooter,
+  onFooterDesign,
+}: LetterPaperProps) {
   const { form, tpl, font, logoL, logoR, posL, posR, sigUrl, showEncl, showCopy, showEndorse } = state;
   const paperRef = useRef<HTMLDivElement>(null);
   const tick     = state.aiTick;
@@ -325,9 +335,17 @@ export default function LetterPaper({ state, onFormChange, onCopyChange, onLogoP
     }
   }
 
-  const footerClass = tpl === 'C' ? `${styles.footer} ${styles.footerC}` :
-                      tpl === 'D' ? `${styles.footer} ${styles.footerD}` :
-                                    `${styles.footer} ${styles.footerAB}`;
+  const isFooterVisible = state.showFooter !== undefined 
+    ? state.showFooter 
+    : state.officeType !== 'personal';
+
+  const footerDesign = state.footerDesign || (tpl === 'D' ? 'minimal' : tpl === 'C' ? 'classic' : 'classic');
+
+  const footerClass = footerDesign === 'modern' ? `${styles.footer} ${styles.footerModern}` :
+                      footerDesign === 'minimal' ? `${styles.footer} ${styles.footerMinimal}` :
+                      footerDesign === 'tricolor' ? `${styles.footer} ${styles.footerTricolor}` :
+                      footerDesign === 'executive' ? `${styles.footer} ${styles.footerExecutive}` :
+                      `${styles.footer} ${styles.footerClassic}`;
 
   return (
     <div className={`${styles.paper} ${state.officeType === 'personal' ? styles.paperPersonal : ''}`} ref={paperRef} style={{ fontFamily }} data-paper="true">
@@ -526,15 +544,80 @@ export default function LetterPaper({ state, onFormChange, onCopyChange, onLogoP
       </div> {/* end .contentWrap */}
 
       {/* Footer */}
-      {state.officeType !== 'personal' && (
-        <div className={footerClass}>
-          {state.officeType === 'custom' ? (
-            <span>{form.dept || ''}</span>
+      {isFooterVisible && (
+        <div className={footerClass} style={{ fontFamily }}>
+          {/* Quick action bar on hover (screen only) */}
+          <div className={styles.footerHoverBar}>
+            <span style={{ fontSize: 10, opacity: 0.85 }}>Footer:</span>
+            {onToggleFooter && (
+              <button 
+                type="button"
+                className={styles.footerHoverBtn}
+                onClick={(e) => { e.stopPropagation(); onToggleFooter(); }}
+                title="Remove footer from letter"
+              >
+                ✕ Remove
+              </button>
+            )}
+            {onFooterDesign && (
+              <select
+                className={styles.footerHoverSelect}
+                value={state.footerDesign || 'classic'}
+                onClick={(e) => e.stopPropagation()}
+                onChange={(e) => onFooterDesign(e.target.value as any)}
+              >
+                <option value="classic">Classic Bar</option>
+                <option value="tricolor">🇮🇳 Tricolor</option>
+                <option value="modern">Modern Minimal</option>
+                <option value="executive">Executive</option>
+              </select>
+            )}
+          </div>
+
+          {footerDesign === 'executive' ? (
+            <div className={styles.footerExecInner}>
+              <div className={styles.footerExecTop}>
+                <span className={styles.footerDeptBold}>
+                  {state.officeType === 'custom' 
+                    ? (form.dept || '') 
+                    : (form.dept ? (form.dept.toLowerCase().includes('government of india') ? form.dept : `${form.dept} · Government of India`) : 'Government of India')}
+                </span>
+                <span className={styles.footerLoc}>
+                  {[form.city, form.pin ? `PIN: ${form.pin}` : ''].filter(Boolean).join(' – ')}
+                </span>
+              </div>
+              <div className={styles.footerExecBottom}>
+                <span>{[form.ph ? `Tel: ${form.ph}` : '', form.em].filter(Boolean).join(' · ')}</span>
+                <span>{form.wb || ''}</span>
+              </div>
+            </div>
+          ) : footerDesign === 'minimal' ? (
+            <div className={styles.footerMinimalInner}>
+              <span>
+                {[
+                  state.officeType === 'custom' ? form.dept : (form.dept ? (form.dept.toLowerCase().includes('government of india') ? form.dept : `${form.dept} · Government of India`) : 'Government of India'),
+                  [form.city, form.pin ? `PIN: ${form.pin}` : ''].filter(Boolean).join(' – '),
+                  [form.ph ? `Tel: ${form.ph}` : '', form.em, form.wb].filter(Boolean).join(' · ')
+                ].filter(Boolean).join('   •   ')}
+              </span>
+            </div>
           ) : (
-            <span>{(form.dept || 'Government of India') + ' · Government of India'}</span>
+            <>
+              <span className={styles.footerDept}>
+                {state.officeType === 'custom' ? (
+                  form.dept || ''
+                ) : (
+                  (form.dept || 'Government of India') + (form.dept && !form.dept.toLowerCase().includes('government of india') ? ' · Government of India' : '')
+                )}
+              </span>
+              <span className={styles.footerLoc}>
+                {[form.city, form.pin ? `PIN: ${form.pin}` : ''].filter(Boolean).join(' – ')}
+              </span>
+              <span className={styles.footerContact}>
+                {[form.ph ? `Tel: ${form.ph}` : '', form.em, form.wb].filter(Boolean).join(' · ') || form.wb}
+              </span>
+            </>
           )}
-          <span>{form.city}{form.pin ? ' – ' + form.pin : ''}</span>
-          <span>{form.wb}</span>
         </div>
       )}
 

@@ -335,27 +335,184 @@ div.editable { display: block; }
 
 /* ── Footer — always pinned to bottom of A4 sheet ──────────── */
 .footer {
+  position: relative;
   margin-top: auto;
-  padding: 9px 44px;
+  padding: 10px 44px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-size: 10px;
-  color: #555;
-  font-family: 'DM Mono', monospace;
+  font-size: 9.5px;
+  color: #475569;
+  font-family: inherit !important; /* Matches letter font exactly! */
   flex-shrink: 0;
+  transition: all 0.2s ease;
+  line-height: 1.4;
 }
+
 @media print {
   .footer {
     display: table-footer-group !important;
-    /* Reset margins/padding that might interfere with tfoot behavior */
     margin-top: 0 !important; 
   }
+  .footerHoverBar {
+    display: none !important;
+  }
 }
-.footerAB { border-top: 2px solid #06038D; background: #f0eee6; }
-.footerC  { background: #06038D; color: rgba(255,255,255,.85); }
-.footerD  { border-top: 3px solid #FF6600; background: #fff8f2; }
+
+/* ── Footer Design Presets ── */
+.footerClassic {
+  border-top: 2px solid #002147;
+  background: #f8f9fa;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.8);
+}
+.footerClassic::before {
+  content: '';
+  position: absolute;
+  top: 1px;
+  left: 44px;
+  right: 44px;
+  height: 0.5px;
+  background: rgba(0, 33, 71, 0.2);
+}
+
+.footerModern {
+  border-top: 1px solid #e2e8f0;
+  background: transparent;
+  padding-top: 12px;
+  letter-spacing: 0.03em;
+  color: #64748b;
+}
+
+.footerMinimal {
+  border-top: 1px solid rgba(0, 0, 0, 0.08);
+  background: transparent;
+  justify-content: center;
+  text-align: center;
+  color: #64748b;
+}
+
+.footerTricolor {
+  position: relative;
+  border-top: 2.5px solid #FF671F;
+  background: #ffffff;
+  padding-top: 11px;
+  color: #334155;
+}
+.footerTricolor::after {
+  content: '';
+  position: absolute;
+  top: 2.5px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: #046A38;
+}
+
+.footerExecutive {
+  border-top: 2px solid #1e293b;
+  background: #f8fafc;
+  display: block;
+  padding: 8px 44px 10px;
+}
+.footerExecInner {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  width: 100%;
+}
+.footerExecTop {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 0.5px solid #e2e8f0;
+  padding-bottom: 3px;
+}
+.footerExecBottom {
+  display: flex;
+  justify-content: space-between;
+  font-size: 8.5px;
+  color: #64748b;
+}
+.footerDeptBold {
+  font-weight: 700;
+  color: #0f172a;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.footerMinimalInner {
+  width: 100%;
+  text-align: center;
+}
+
+.footerDept {
+  font-weight: 600;
+  color: #1e293b;
+}
+.footerLoc {
+  color: #475569;
+  text-align: center;
+}
+.footerContact {
+  color: #64748b;
+  text-align: right;
+}
+
+/* ── Hover Controls on Screen ── */
+.footerHoverBar {
+  position: absolute;
+  top: -30px;
+  right: 20px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: #0f172a;
+  color: #f8fafc;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.18);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.18s ease, transform 0.18s ease;
+  transform: translateY(4px);
+  z-index: 50;
+}
+.footer:hover .footerHoverBar {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
+}
+.footerHoverBtn {
+  background: #ef4444;
+  color: #ffffff;
+  border: none;
+  border-radius: 4px;
+  padding: 2px 7px;
+  font-size: 10px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+.footerHoverBtn:hover {
+  background: #dc2626;
+}
+.footerHoverSelect {
+  background: #1e293b;
+  color: #f1f5f9;
+  border: 1px solid #334155;
+  border-radius: 4px;
+  padding: 2px 5px;
+  font-size: 10px;
+  cursor: pointer;
+  outline: none;
+}
+.footerHoverSelect:focus {
+  border-color: #38bdf8;
+}
 
 .paperPersonal {
   padding-top: 40px;
 }
+

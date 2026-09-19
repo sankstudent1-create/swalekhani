@@ -9,9 +9,11 @@ interface EditToolbarProps {
   showEncl: boolean;
   showCopy: boolean;
   showEndorse: boolean;
+  showFooter?: boolean;
   onToggleEncl: () => void;
   onToggleCopy: () => void;
   onToggleEndorse: () => void;
+  onToggleFooter?: () => void;
   onPrint: () => void;
   onPDF: () => void;
   isPersonal?: boolean;
@@ -20,8 +22,8 @@ interface EditToolbarProps {
 }
 
 export default function EditToolbar({
-  showEncl, showCopy, showEndorse,
-  onToggleEncl, onToggleCopy, onToggleEndorse,
+  showEncl, showCopy, showEndorse, showFooter,
+  onToggleEncl, onToggleCopy, onToggleEndorse, onToggleFooter,
   onPrint, onPDF, isPersonal, onTogglePersonal, pdfBusy,
 }: EditToolbarProps) {
   function cmd(command: string, value?: string) {
@@ -78,6 +80,15 @@ export default function EditToolbar({
       {onTogglePersonal && (
         <button className={`${styles.btn} ${isPersonal ? styles.btnOn : ''}`} onClick={onTogglePersonal} title="Hide Official Header">
           🚫 Header
+        </button>
+      )}
+      {onToggleFooter && (
+        <button 
+          className={`${styles.btn} ${showFooter !== false ? styles.btnOn : ''}`} 
+          onClick={onToggleFooter} 
+          title={showFooter !== false ? "Remove Footer" : "Show Footer"}
+        >
+          {showFooter !== false ? '📄 Footer' : '🚫 Footer'}
         </button>
       )}
       <div className={styles.sep} />

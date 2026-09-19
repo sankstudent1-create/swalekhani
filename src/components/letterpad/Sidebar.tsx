@@ -25,6 +25,8 @@ interface SidebarProps {
   onToggleEncl: () => void;
   onToggleCopy: () => void;
   onToggleEndorse: () => void;
+  onToggleFooter?: () => void;
+  onFooterDesign?: (design: AppState['footerDesign']) => void;
 }
 
 const SectionTitle: React.FC<{ children: React.ReactNode }> = ({ children }) => (
@@ -40,7 +42,7 @@ const Field: React.FC<{ label: string; children: React.ReactNode; half?: boolean
 
 export default function Sidebar({
   state, onUpdateForm, onTemplate, onFont, onOffice, onLogo, onSigApply,
-  onFillAI, onToggleEncl, onToggleCopy, onToggleEndorse,
+  onFillAI, onToggleEncl, onToggleCopy, onToggleEndorse, onToggleFooter, onFooterDesign,
 }: SidebarProps) {
   const { form, tpl, font, officeType, logoL, logoR } = state;
 
@@ -335,6 +337,40 @@ export default function Sidebar({
           <button className={`${styles.toggleBtn} ${state.showCopy ? styles.toggleBtnOn : ''}`} onClick={onToggleCopy}>📋 Copy To</button>
           <button className={`${styles.toggleBtn} ${state.showEndorse ? styles.toggleBtnOn : ''}`} onClick={onToggleEndorse}>📝 Endorsement</button>
         </div>
+      </div>
+
+      {/* ── FOOTER SETTINGS ── */}
+      <div className={styles.section}>
+        <SectionTitle>Footer & Bottom Design</SectionTitle>
+        <div className={styles.sectionToggles}>
+          <button 
+            className={`${styles.toggleBtn} ${state.showFooter !== false ? styles.toggleBtnOn : ''}`} 
+            onClick={onToggleFooter}
+          >
+            {state.showFooter !== false ? '✓ Footer Active' : '✕ Footer Removed'}
+          </button>
+        </div>
+        {state.showFooter !== false && onFooterDesign && (
+          <div style={{ marginTop: 10 }}>
+            <label className={styles.label}>Design Style</label>
+            <div className={styles.fontGrid}>
+              {[
+                { key: 'classic',   label: 'Classic Bar' },
+                { key: 'tricolor',  label: '🇮🇳 Tricolor' },
+                { key: 'modern',    label: 'Modern Minimal' },
+                { key: 'executive', label: 'Executive' },
+              ].map(d => (
+                <button
+                  key={d.key}
+                  className={`${styles.fontChip} ${(state.footerDesign || 'classic') === d.key ? styles.fontChipActive : ''}`}
+                  onClick={() => onFooterDesign(d.key as any)}
+                >
+                  {d.label}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
 
     </aside>

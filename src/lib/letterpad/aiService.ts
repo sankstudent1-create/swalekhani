@@ -166,8 +166,14 @@ export async function generateLetterWithAI(
     cls:                   (d.cls  || d.closing || '') as string,
     signatory_name:        (d.sn   || d.signatory_name || '') as string,
     sn:                    (d.sn   || d.signatory_name || '') as string,
+    signatory_hindi:       (d.sh   || d.signatory_hindi || '') as string,
+    sh:                    (d.sh   || d.signatory_hindi || '') as string,
     signatory_designation: (d.sd   || d.signatory_designation || '') as string,
     sd:                    (d.sd   || d.signatory_designation || '') as string,
+    signatory_phone:       (d.sp   || d.signatory_phone || '') as string,
+    sp:                    (d.sp   || d.signatory_phone || '') as string,
+    constituency:          (d.sc   || d.constituency || '') as string,
+    sc:                    (d.sc   || d.constituency || '') as string,
     encl: (Array.isArray(d.enclList)
       ? (d.enclList as string[]).join('\n')
       : (d.encl || '')) as string,

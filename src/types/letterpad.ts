@@ -129,8 +129,14 @@ export interface AILetterData {
   cls?: string;
   signatory_name?: string;
   sn?: string;
+  signatory_hindi?: string;
+  sh?: string;
   signatory_designation?: string;
   sd?: string;
+  signatory_phone?: string;
+  sp?: string;
+  constituency?: string;
+  sc?: string;
   encl?: string;
   enclList?: string[];
   copy_to?: string[];

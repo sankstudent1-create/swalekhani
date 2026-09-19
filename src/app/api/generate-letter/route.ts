@@ -295,11 +295,11 @@ The JSON must have exactly these fields:
   "sal": "Salutation ('Sir / Madam', 'Dear Shri [Surname]', 'Respected Principal', 'My Dearest [Name],', 'आदरणीय पिताजी', etc.)",
   "body": "Complete letter body with authentic paragraphs. Use \\n\\n for paragraph breaks.",
   "cls": "Closing phrase ('Yours faithfully', 'Yours sincerely', 'Yours obediently', 'Forever yours,', 'With all my love,', 'आपका आज्ञाकारी')",
-  "sn": "Signatory Name / Sender Name",
+  "sn": "Signatory Name / Sender Name (English)",
+  "sh": "MANDATORY FOR OFFICIAL LETTERS & BILINGUAL TEMPLATES: Hindi/Devanagari Name of signatory matching sn (e.g. 'डॉ. विन्सेंट बारला', 'श्री नरेन्द्र मोदी', 'श्रीमती राधा धारपडे')",
   "sd": "Signatory Designation (leave empty for romantic/personal/student)",
-  "sp2": "Direct Phone/Extension (optional)",
-  "sh": "Hindi/Regional Name of signatory (optional)",
-  "sc": "Constituency/Circle (optional)",
+  "sp": "Direct Phone/Extension (optional)",
+  "sc": "Constituency/Circle/State in Hindi or English (e.g. 'वाराणसी, उत्तर प्रदेश')",
   "enclList": ["Enclosure 1", "Enclosure 2"] or [],
   "copyList": ["Copy recipient 1", "Copy recipient 2"] or []
 }
@@ -399,6 +399,13 @@ CORRESPONDENCE PROTOCOLS & STATUTORY STANDARDS:
       * Body: Formal Rajbhasha Hindi.
       * Closing: "भवदीय," / "भवदीया," / "आपका नम्र,".
       * Signatory: Name in Hindi.
+
+11. BILINGUAL HEADERS & HINDI SIGNATORY NAME INTELLIGENCE:
+    - Many templates (e.g. Template B PM/Minister, Template C MP/Sansad, Template D MLA/State) display the Hindi Name directly above or beside the English Name.
+    - Whenever drafting letters (official, D.O., MP, MLA, Minister, or any letter with a named signatory):
+      * YOU MUST ALWAYS POPULATE 'sh' with the authentic Hindi / Devanagari transliteration of 'sn' (e.g. sn="Dr. Vincent Barla" -> sh="डॉ. विन्सेंट बारला"; sn="Shri Ashwini Vaishnaw" -> sh="श्री अश्विनी वैष्णव"; sn="Mrs. Radha Dharpade" -> sh="श्रीमती राधा धारपडे").
+      * Whenever English ministry headers 'e1' and 'e2' are present, YOU MUST ALSO POPULATE 'h1' (e.g. "भारत सरकार" or "महाराष्ट्र शासन") and 'h2' (e.g. "संचार मंत्रालय" or "सामान्य प्रशासन विभाग").
+      * If signatory is an MP or MLA, provide 'sc' in Hindi/Regional (e.g. "वाराणसी, उत्तर प्रदेश" or "नागपूर, महाराष्ट्र").
 
 STATE EMBLEM ACT (2005) COMPLIANCE:
 - Personal, academic, student, citizen, and romantic letters MUST NOT have government headers or state emblems.

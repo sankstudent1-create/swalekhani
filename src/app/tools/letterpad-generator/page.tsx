@@ -114,7 +114,7 @@ export default function LetterpadGeneratorPage() {
       const isFooterVisible = state.showFooter !== undefined 
         ? state.showFooter 
         : state.officeType !== 'personal';
-      const FOOTER_H = isFooterVisible ? 18 : 0;
+      const FOOTER_H = isFooterVisible ? 20 : 0;
       const CONTENT_H = A4_H - FOOTER_H;
 
       const pdf = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
@@ -126,12 +126,13 @@ export default function LetterpadGeneratorPage() {
       const drawFooter = () => {
         if (!isFooterVisible) return; // Completely skip footer when turned off or personal
 
-        const footerY = A4_H - 10;
+        const footerY = A4_H - 8;
         const marginX = 14;
+        const colWidth = (A4_W - (marginX * 2) - 8) / 3;
 
         // Clean white background strip
         pdf.setFillColor(255, 255, 255);
-        pdf.rect(0, A4_H - 18, A4_W, 18, 'F');
+        pdf.rect(0, A4_H - 20, A4_W, 20, 'F');
 
         // Match the letter's active font family!
         const isSerif = state.font === 'fg' || state.font === 'fs' || state.font === 'ft';
@@ -144,30 +145,30 @@ export default function LetterpadGeneratorPage() {
           // National Sovereign Tricolor
           pdf.setDrawColor(255, 103, 31);
           pdf.setLineWidth(0.6);
-          pdf.line(marginX, A4_H - 16, A4_W - marginX, A4_H - 16);
+          pdf.line(marginX, A4_H - 18, A4_W - marginX, A4_H - 18);
 
           pdf.setDrawColor(4, 106, 56);
           pdf.setLineWidth(0.6);
-          pdf.line(marginX, A4_H - 15.2, A4_W - marginX, A4_H - 15.2);
+          pdf.line(marginX, A4_H - 17.2, A4_W - marginX, A4_H - 17.2);
         } else if (design === 'executive') {
           // Double executive rule
           pdf.setDrawColor(30, 41, 59);
           pdf.setLineWidth(0.5);
-          pdf.line(marginX, A4_H - 16, A4_W - marginX, A4_H - 16);
+          pdf.line(marginX, A4_H - 18, A4_W - marginX, A4_H - 18);
 
           pdf.setDrawColor(203, 213, 225);
           pdf.setLineWidth(0.2);
-          pdf.line(marginX, A4_H - 15.2, A4_W - marginX, A4_H - 15.2);
+          pdf.line(marginX, A4_H - 17.2, A4_W - marginX, A4_H - 17.2);
         } else if (design === 'modern' || design === 'minimal') {
           // Subtle hairline
           pdf.setDrawColor(226, 232, 240);
           pdf.setLineWidth(0.3);
-          pdf.line(marginX, A4_H - 16, A4_W - marginX, A4_H - 16);
+          pdf.line(marginX, A4_H - 18, A4_W - marginX, A4_H - 18);
         } else {
           // Classic navy rule
           pdf.setDrawColor(6, 3, 141);
           pdf.setLineWidth(0.5);
-          pdf.line(marginX, A4_H - 16, A4_W - marginX, A4_H - 16);
+          pdf.line(marginX, A4_H - 18, A4_W - marginX, A4_H - 18);
         }
 
         let f1 = '';
@@ -188,44 +189,44 @@ export default function LetterpadGeneratorPage() {
           pdf.setTextColor(100, 116, 139);
           const fullTxt = [f1, f2, f3 || state.form.wb].filter(Boolean).join('   •   ');
           if (fullTxt.trim()) {
-            pdf.text(fullTxt, A4_W / 2, footerY, { align: 'center' });
+            pdf.text(fullTxt, A4_W / 2, footerY, { align: 'center', maxWidth: A4_W - (marginX * 2) });
           }
         } else if (design === 'executive') {
           pdf.setFont(baseFont, 'bold');
           pdf.setFontSize(8.5);
           pdf.setTextColor(30, 41, 59);
-          if (f1) pdf.text(f1, marginX, footerY - 3);
+          if (f1) pdf.text(f1, marginX, footerY - 4, { maxWidth: colWidth * 1.8 });
 
           pdf.setFont(baseFont, 'normal');
           pdf.setFontSize(7.5);
           pdf.setTextColor(100, 116, 139);
-          if (f2) pdf.text(f2, A4_W - marginX, footerY - 3, { align: 'right' });
+          if (f2) pdf.text(f2, A4_W - marginX, footerY - 4, { align: 'right', maxWidth: colWidth * 1.2 });
 
           const contactTxt = f3 || state.form.wb || '';
           if (contactTxt) {
             pdf.setFont(baseFont, 'normal');
             pdf.setFontSize(7.5);
             pdf.setTextColor(100, 116, 139);
-            pdf.text(contactTxt, A4_W / 2, footerY + 1.5, { align: 'center' });
+            pdf.text(contactTxt, A4_W / 2, footerY + 1.5, { align: 'center', maxWidth: A4_W - (marginX * 2) });
           }
         } else {
-          // Classic / Tricolor
+          // Classic / Tricolor / Modern
           pdf.setFont(baseFont, 'bold');
           pdf.setFontSize(8);
           pdf.setTextColor(30, 41, 59);
-          if (f1) pdf.text(f1, marginX, footerY);
+          if (f1) pdf.text(f1, marginX, footerY, { maxWidth: colWidth });
 
           pdf.setFont(baseFont, 'normal');
           pdf.setFontSize(7.5);
           pdf.setTextColor(71, 85, 105);
-          if (f2) pdf.text(f2, A4_W / 2, footerY, { align: 'center' });
+          if (f2) pdf.text(f2, A4_W / 2, footerY, { align: 'center', maxWidth: colWidth });
 
           const rightTxt = f3 || state.form.wb || '';
           if (rightTxt) {
             pdf.setFont(baseFont, 'normal');
             pdf.setFontSize(7.5);
             pdf.setTextColor(100, 116, 139);
-            pdf.text(rightTxt, A4_W - marginX, footerY, { align: 'right' });
+            pdf.text(rightTxt, A4_W - marginX, footerY, { align: 'right', maxWidth: colWidth });
           }
         }
       };

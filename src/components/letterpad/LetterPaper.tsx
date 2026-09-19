@@ -270,7 +270,7 @@ export default function LetterPaper({
         <div className={styles.hB}>
           <div className={styles.hBCenter}>
             <div className={styles.hBLogoSlot} />
-            {E('sh', styles.hBHi, 'div', 'हिन्दी नाम')}
+            <div className={!form.sh?.trim() ? styles.hideIfEmptyPrint : ''}>{E('sh', styles.hBHi, 'div', 'हिन्दी नाम')}</div>
             {E('sn', styles.hBEn, 'div', 'Name')}
             {E('sd', styles.hBDg, 'div', 'Designation')}
           </div>
@@ -286,11 +286,11 @@ export default function LetterPaper({
           <div className={styles.hCRow}>
             <div className={styles.hCLogo} />
             <div className={styles.hCMid}>
-              {E('sh', styles.hCHi, 'div', 'हिन्दी नाम')}
+              <div className={!form.sh?.trim() ? styles.hideIfEmptyPrint : ''}>{E('sh', styles.hCHi, 'div', 'हिन्दी नाम')}</div>
               {E('sn', styles.hCEn, 'div', 'Name')}
               {E('sd', styles.hCDg, 'div', 'Designation')}
               {E('dept', styles.hCSub, 'div', 'Department')}
-              {E('sc', styles.hCSub, 'div', 'Constituency')}
+              <div className={!form.sc?.trim() ? styles.hideIfEmptyPrint : ''}>{E('sc', styles.hCSub, 'div', 'Constituency')}</div>
             </div>
             <div className={styles.hCLogo} />
           </div>
@@ -301,10 +301,10 @@ export default function LetterPaper({
           <div className={styles.hDRow}>
             <div className={styles.hDLogo} />
             <div className={styles.hDNames}>
-              {E('sh', styles.hDHi, 'div', 'हिन्दी नाम')}
+              <div className={!form.sh?.trim() ? styles.hideIfEmptyPrint : ''}>{E('sh', styles.hDHi, 'div', 'हिन्दी नाम')}</div>
               {E('sn', styles.hDEn, 'div', 'Name')}
               {E('sd', styles.hDDg, 'div', 'Designation')}
-              {E('sc', styles.hDCn, 'div', 'Constituency')}
+              <div className={!form.sc?.trim() ? styles.hideIfEmptyPrint : ''}>{E('sc', styles.hDCn, 'div', 'Constituency')}</div>
             </div>
             <div className={styles.hDAddr}>
               {E('dept', styles.hDEn, 'div', 'Department')}<br/>
@@ -602,7 +602,7 @@ export default function LetterPaper({
               </span>
             </div>
           ) : (
-            <>
+            <div className={styles.footerGrid}>
               <span className={styles.footerDept}>
                 {state.officeType === 'custom' ? (
                   form.dept || ''
@@ -616,7 +616,7 @@ export default function LetterPaper({
               <span className={styles.footerContact}>
                 {[form.ph ? `Tel: ${form.ph}` : '', form.em, form.wb].filter(Boolean).join(' · ') || form.wb}
               </span>
-            </>
+            </div>
           )}
         </div>
       )}

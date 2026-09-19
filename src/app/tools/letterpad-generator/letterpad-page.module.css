@@ -145,7 +145,7 @@
   /* Page size — must come first */
   @page {
     size: A4 portrait;
-    margin: 5mm; /* Tiny margin to prevent edge cropping by hardware printers */
+    margin: 0mm !important;
   }
 
   /* Root bg becomes white */
@@ -168,15 +168,15 @@
   .letterpadRoot :global([class*="editHint"]) { display: none !important; }
 
   /* ── Layout reset ───────────────────────────────── */
-  .workspace    { display: block !important; }
-  .preview      { padding: 0 !important; background: #fff !important; gap: 0 !important; min-height: 0 !important; }
+  .workspace    { display: block !important; margin: 0 !important; padding: 0 !important; }
+  .preview      { padding: 0 !important; margin: 0 !important; background: #fff !important; gap: 0 !important; min-height: 0 !important; }
   
-  /* Allow natural 100% width for iOS print engine scaling */
+  /* Paper wrap locks to exact A4 width with zero margins */
   .paperWrap {
     position: relative !important;
     transform: none !important;
-    width: 100% !important;
-    max-width: 100% !important;
+    width: 210mm !important;
+    max-width: 210mm !important;
     height: auto !important;
     margin: 0 auto !important;
     padding: 0 !important;
@@ -187,9 +187,9 @@
   /* Reset the child */
   .paperWrap > * {
     transform: none !important;
-    margin-bottom: 0 !important;
-    width: 100% !important;
-    max-width: 100% !important;
+    margin: 0 auto !important;
+    width: 210mm !important;
+    max-width: 210mm !important;
   }
 
   /* ── Content clean-up ───────────────────────────── */

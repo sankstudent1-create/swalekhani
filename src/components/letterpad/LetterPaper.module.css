@@ -65,21 +65,31 @@ div.editable { display: block; }
 
 @media print {
   @page {
-    margin: 0mm; /* Removed margin entirely for maximum width, paper naturally pads it */
+    size: A4 portrait;
+    margin: 0mm !important;
   }
   .paper {
-    width: 100% !important; /* Will stretch to A4 width */
-    max-width: none !important;
+    width: 210mm !important;
+    max-width: 210mm !important;
+    min-height: 290mm !important; /* Safely fits in 297mm A4 with 7mm buffer to prevent spillover onto page 2 */
     height: auto !important;
+    max-height: none !important;
     box-shadow: none !important;
     margin: 0 auto !important;
     padding-top: 0 !important;
-    
-    /* CRITICAL: display table ensures the tfoot (footer) repeats across pages without overlapping body */
-    display: table !important; 
+    display: flex !important;
+    flex-direction: column !important;
+    box-sizing: border-box !important;
+    overflow: visible !important;
+    page-break-after: auto;
   }
   .contentWrap {
-    display: table-row-group !important;
+    display: flex !important;
+    flex-direction: column !important;
+    flex: 1 0 auto !important;
+  }
+  .body {
+    flex: 1 0 auto !important;
   }
   .editable:empty::before {
     content: none !important;
@@ -354,12 +364,21 @@ div.editable { display: block; }
 
 @media print {
   .footer {
-    display: table-footer-group !important;
-    margin-top: 0 !important; 
+    display: block !important;
+    margin-top: auto !important;
+    break-inside: avoid !important;
+    page-break-inside: avoid !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
   }
   .footerHoverBar {
     display: none !important;
   }
+}
+
+:global(body[data-generating-pdf="true"]) .footerHoverBar,
+:global(body[data-generating-pdf="true"]) [class*="footerHoverBar"] {
+  display: none !important;
 }
 
 /* ── Three-column non-overlapping Grid ── */

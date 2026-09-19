@@ -111,159 +111,45 @@ export default function LetterpadGeneratorPage() {
       // A4 dimensions in mm
       const A4_W = 210;
       const A4_H = 297;
-      const isFooterVisible = state.showFooter !== undefined 
-        ? state.showFooter 
-        : state.officeType !== 'personal';
-      const FOOTER_H = isFooterVisible ? 20 : 0;
-      const CONTENT_H = A4_H - FOOTER_H;
 
       const pdf = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
 
-      // Calculate how many A4 pages the content spans
+      // Calculate canvas dimensions in mm
       const imgWidth = A4_W;
       const imgHeight = (canvas.height * A4_W) / canvas.width;
 
-      const drawFooter = () => {
-        if (!isFooterVisible) return; // Completely skip footer when turned off or personal
-
-        const footerY = A4_H - 8;
-        const marginX = 14;
-        const colWidth = (A4_W - (marginX * 2) - 8) / 3;
-
-        // Clean white background strip
-        pdf.setFillColor(255, 255, 255);
-        pdf.rect(0, A4_H - 20, A4_W, 20, 'F');
-
-        // Match the letter's active font family!
-        const isSerif = state.font === 'fg' || state.font === 'fs' || state.font === 'ft';
-        const baseFont = isSerif ? 'times' : 'helvetica';
-
-        const design = state.footerDesign || 'classic';
-
-        // Draw design accent lines
-        if (design === 'tricolor') {
-          // National Sovereign Tricolor
-          pdf.setDrawColor(255, 103, 31);
-          pdf.setLineWidth(0.6);
-          pdf.line(marginX, A4_H - 18, A4_W - marginX, A4_H - 18);
-
-          pdf.setDrawColor(4, 106, 56);
-          pdf.setLineWidth(0.6);
-          pdf.line(marginX, A4_H - 17.2, A4_W - marginX, A4_H - 17.2);
-        } else if (design === 'executive') {
-          // Double executive rule
-          pdf.setDrawColor(30, 41, 59);
-          pdf.setLineWidth(0.5);
-          pdf.line(marginX, A4_H - 18, A4_W - marginX, A4_H - 18);
-
-          pdf.setDrawColor(203, 213, 225);
-          pdf.setLineWidth(0.2);
-          pdf.line(marginX, A4_H - 17.2, A4_W - marginX, A4_H - 17.2);
-        } else if (design === 'modern' || design === 'minimal') {
-          // Subtle hairline
-          pdf.setDrawColor(226, 232, 240);
-          pdf.setLineWidth(0.3);
-          pdf.line(marginX, A4_H - 18, A4_W - marginX, A4_H - 18);
-        } else {
-          // Classic navy rule
-          pdf.setDrawColor(6, 3, 141);
-          pdf.setLineWidth(0.5);
-          pdf.line(marginX, A4_H - 18, A4_W - marginX, A4_H - 18);
-        }
-
-        let f1 = '';
-        if (state.officeType === 'custom') {
-          f1 = state.form.dept || '';
-        } else {
-          const dept = state.form.dept || '';
-          const isCentral = state.officeType === 'dop' || state.officeType === 'pm' || state.officeType === 'minister' || dept.toLowerCase().includes('india');
-          f1 = dept ? (isCentral && !dept.toLowerCase().includes('government of india') ? `${dept} · Government of India` : dept) : (isCentral ? 'Government of India' : '');
-        }
-
-        const f2 = [state.form.city, state.form.pin ? `PIN: ${state.form.pin}` : ''].filter(Boolean).join(' – ');
-        const f3 = [state.form.ph ? `Tel: ${state.form.ph}` : '', state.form.em, state.form.wb].filter(Boolean).join(' · ');
-
-        if (design === 'minimal') {
-          pdf.setFont(baseFont, 'normal');
-          pdf.setFontSize(8);
-          pdf.setTextColor(100, 116, 139);
-          const fullTxt = [f1, f2, f3 || state.form.wb].filter(Boolean).join('   •   ');
-          if (fullTxt.trim()) {
-            pdf.text(fullTxt, A4_W / 2, footerY, { align: 'center', maxWidth: A4_W - (marginX * 2) });
-          }
-        } else if (design === 'executive') {
-          pdf.setFont(baseFont, 'bold');
-          pdf.setFontSize(8.5);
-          pdf.setTextColor(30, 41, 59);
-          if (f1) pdf.text(f1, marginX, footerY - 4, { maxWidth: colWidth * 1.8 });
-
-          pdf.setFont(baseFont, 'normal');
-          pdf.setFontSize(7.5);
-          pdf.setTextColor(100, 116, 139);
-          if (f2) pdf.text(f2, A4_W - marginX, footerY - 4, { align: 'right', maxWidth: colWidth * 1.2 });
-
-          const contactTxt = f3 || state.form.wb || '';
-          if (contactTxt) {
-            pdf.setFont(baseFont, 'normal');
-            pdf.setFontSize(7.5);
-            pdf.setTextColor(100, 116, 139);
-            pdf.text(contactTxt, A4_W / 2, footerY + 1.5, { align: 'center', maxWidth: A4_W - (marginX * 2) });
-          }
-        } else {
-          // Classic / Tricolor / Modern
-          pdf.setFont(baseFont, 'bold');
-          pdf.setFontSize(8);
-          pdf.setTextColor(30, 41, 59);
-          if (f1) pdf.text(f1, marginX, footerY, { maxWidth: colWidth });
-
-          pdf.setFont(baseFont, 'normal');
-          pdf.setFontSize(7.5);
-          pdf.setTextColor(71, 85, 105);
-          if (f2) pdf.text(f2, A4_W / 2, footerY, { align: 'center', maxWidth: colWidth });
-
-          const rightTxt = f3 || state.form.wb || '';
-          if (rightTxt) {
-            pdf.setFont(baseFont, 'normal');
-            pdf.setFontSize(7.5);
-            pdf.setTextColor(100, 116, 139);
-            pdf.text(rightTxt, A4_W - marginX, footerY, { align: 'right', maxWidth: colWidth });
-          }
-        }
-      };
-
-      // If content fits in one page (leaving room for footer), just place it
-      if (imgHeight <= CONTENT_H) {
+      // If content fits on a single standard A4 page (accounting for up to 2mm sub-pixel rounding)
+      if (imgHeight <= A4_H + 2) {
         const imgData = canvas.toDataURL('image/png');
-        pdf.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
-        drawFooter();
+        // Place exact canvas — captures the real, beautifully styled HTML footer with active fonts!
+        pdf.addImage(imgData, 'PNG', 0, 0, A4_W, A4_H);
       } else {
-        // Multi-page: slice the canvas into CONTENT_H chunks instead of full A4_H chunks
-        // This ensures the slice never reaches the bottom 18mm where the footer goes!
-        const sliceHeightPx = (CONTENT_H / A4_W) * canvas.width;
-        const totalPages = Math.ceil(canvas.height / sliceHeightPx);
+        // Multi-page letter: slice the canvas into clean A4 page slices
+        const pageHeightPx = (A4_H / A4_W) * canvas.width;
+        const totalPages = Math.ceil(canvas.height / pageHeightPx);
 
         for (let i = 0; i < totalPages; i++) {
           if (i > 0) pdf.addPage();
 
-          // Create a slice canvas for this page
           const sliceCanvas = document.createElement('canvas');
           sliceCanvas.width = canvas.width;
-          const sliceH = Math.min(sliceHeightPx, canvas.height - i * sliceHeightPx);
-          sliceCanvas.height = sliceH;
+          const sliceH = Math.min(pageHeightPx, canvas.height - i * pageHeightPx);
+          sliceCanvas.height = pageHeightPx;
 
           const ctx = sliceCanvas.getContext('2d')!;
+          ctx.fillStyle = '#ffffff';
+          ctx.fillRect(0, 0, sliceCanvas.width, pageHeightPx);
+
           ctx.drawImage(
             canvas,
-            0, i * sliceHeightPx,           // source x, y
+            0, i * pageHeightPx,            // source x, y
             canvas.width, sliceH,            // source w, h
             0, 0,                            // dest x, y
             canvas.width, sliceH             // dest w, h
           );
 
           const sliceData = sliceCanvas.toDataURL('image/png');
-          const sliceMMHeight = (sliceH * A4_W) / canvas.width;
-          pdf.addImage(sliceData, 'PNG', 0, 0, imgWidth, sliceMMHeight);
-          drawFooter();
+          pdf.addImage(sliceData, 'PNG', 0, 0, A4_W, A4_H);
         }
       }
 

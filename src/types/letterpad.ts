@@ -15,7 +15,7 @@ export type AILetterType =
   | 'notice' | 'advisory' | 'notification' | 'student_app'
   | 'heritage_personal' | 'romantic' | 'citizen_app' | 'personal'
   | 'pm_do' | 'mp_letter' | 'custom' | 'auto';
-export type AILanguage = 'en' | 'hi' | 'bi';
+export type AILanguage = 'en' | 'hi' | 'mr' | 'bi';
 
 // ── Letter form state (all sidebar fields) ──────────────
 export interface LetterForm {

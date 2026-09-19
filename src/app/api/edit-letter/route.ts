@@ -119,6 +119,13 @@ CORRESPONDENCE & PROTOCOL INTELLIGENCE:
    - "Sanction of the Competent Authority is hereby accorded..."
    - "This issues with the approval of..."
    - "Necessary action may be taken accordingly."
+8. MARATHI & HINDI LANGUAGE CONVERSION / TRANSLATION:
+   - If asked to translate, rewrite, or convert into MARATHI (मराठी) (e.g. "translate to marathi", "मराठीत करा", "marathi madhe patra", "मराठी भाषा"):
+     * Rewrite and translate all relevant letter fields (sub, sal, body, cls, toD, toA, sn, sd) into pure, formal, authentic MARATHI (Devanagari script).
+     * Use official Marathi terminology: sub: "विषय: ... - बाबत.", sal: "महोदय,", cls: "आपला नम्र," / "आपली नम्र,", toD: "प्रति, मा. ...".
+   - If asked to translate, rewrite, or convert into HINDI (हिंदी) (e.g. "translate to hindi", "हिंदी में लिखें", "राजभाषा"):
+     * Rewrite and translate all relevant letter fields into pure, formal Rajbhasha HINDI (Devanagari script).
+     * sub: "विषय: ... संदर्भ में।", sal: "महोदय,", cls: "भवदीय,", toD: "सेवा में,".
 
 CRITICAL: Respond with ONLY a valid JSON object. No markdown, no code fences, no explanations.`;
 

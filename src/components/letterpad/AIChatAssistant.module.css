@@ -228,6 +228,51 @@
   color: #0f172a;
 }
 
+/* Language selector toolbar */
+.langBar {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 0 6px;
+  overflow-x: auto;
+  border-bottom: 1px solid #f1f5f9;
+  margin-bottom: 6px;
+  scrollbar-width: none;
+}
+.langBar::-webkit-scrollbar {
+  display: none;
+}
+.langLabel {
+  font-size: 10px;
+  font-weight: 600;
+  color: #64748b;
+  white-space: nowrap;
+  margin-right: 2px;
+}
+.langBtn {
+  font-size: 10px;
+  font-weight: 500;
+  padding: 2px 7px;
+  border-radius: 6px;
+  border: 1px solid #e2e8f0;
+  background: #ffffff;
+  color: #475569;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.15s ease;
+}
+.langBtn:hover {
+  background: #f8fafc;
+  border-color: #cbd5e1;
+  color: #0f172a;
+}
+.langBtnActive {
+  background: #0f172a;
+  color: #ffffff;
+  border-color: #0f172a;
+  font-weight: 600;
+}
+
 @media print {
   .chatContainer {
     display: none !important;

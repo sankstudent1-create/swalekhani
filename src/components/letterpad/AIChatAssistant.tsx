@@ -15,6 +15,12 @@ interface AIChatAssistantProps {
 }
 
 const QUICK_CHIPS = [
+  { label: '🚩 मराठी नागरिक अर्ज', text: 'गंगामासला येथील पोस्टमास्तर यांना मुदत ठेव खात्याचे थकीत व्याज बचत खात्यात जमा करण्याबाबत श्रीमती राधा धारपडे यांचा मराठीत सविनय अर्ज लिहा' },
+  { label: '🏛️ महाराष्ट्र शासन आदेश', text: 'महाराष्ट्र शासन सामान्य प्रशासन विभाग अंतर्गत अधिकृत परिपत्रक व शासकीय आदेश मराठीत तयार करा' },
+  { label: '📜 मराठी ना-हरकत (NOC)', text: 'कर्मचाऱ्यास पारपत्र (पासपोर्ट) काढण्यासाठी कार्यालयाचे मराठीत ना-हरकत प्रमाणपत्र (NOC)' },
+  { label: '🎓 मराठी रजेचा अर्ज', text: 'शाळेच्या / महाविद्यालयाच्या प्राचार्यांना आजारपणाच्या रजेसाठी विद्यार्थ्याचा सविनय विनंती अर्ज मराठीत' },
+  { label: '💌 मराठी भावस्पर्शी पत्र', text: 'वडिलांना / आईस / आप्तस्वकीयांना सस्नेह नमस्कार करणारे मराठीतील आपुलकीचे पत्र' },
+  { label: '🇮🇳 हिंदी आवेदन पत्र', text: 'डाकपाल महोदय को बचत खाते में लंबित ब्याज जमा करने हेतु औपचारिक हिंदी आवेदन पत्र लिखें' },
   { label: '🏛️ Formal CSMOP', text: 'Polite and strict official Government of India CSMOP administrative tone' },
   { label: '📝 Citizen Application', text: 'Write a formal citizen application to an authority (e.g. Postmaster, Bank Manager, Municipal Officer, Collector)' },
   { label: '📜 Employee NOC', text: 'Issue an official No Objection Certificate (NOC) for employee applying for passport or higher education' },
@@ -30,9 +36,10 @@ const QUICK_CHIPS = [
 export default function AIChatAssistant({ state, onSetForm, onFillAI }: AIChatAssistantProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([
-    { role: 'assistant', text: 'Hi! I can help you edit this letter or write a completely new one. Type your request below (e.g. NOC, Circular, Love Letter, Show Cause, Student Leave) and click the button.' }
+    { role: 'assistant', text: 'Hi! I can help you edit this letter or write a completely new one in English, मराठी (Marathi), or हिन्दी (Hindi). Type your request below.' }
   ]);
   const [input, setInput] = useState('');
+  const [selectedLang, setSelectedLang] = useState<'auto' | 'mr' | 'hi' | 'en'>('auto');
   const [isLoading, setIsLoading] = useState(false);
   const endRef = useRef<HTMLDivElement>(null);
 
@@ -55,7 +62,8 @@ export default function AIChatAssistant({ state, onSetForm, onFillAI }: AIChatAs
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           instruction: userText,
-          currentForm: state.form
+          currentForm: state.form,
+          language: selectedLang === 'auto' ? undefined : selectedLang
         })
       });
 
@@ -124,6 +132,7 @@ export default function AIChatAssistant({ state, onSetForm, onFillAI }: AIChatAs
         body: JSON.stringify({
           description: userText,
           letterType: 'auto', // Auto-detect NOC, Love Letter, Circular, OM, DO, Student App, etc.
+          language: selectedLang === 'auto' ? undefined : selectedLang,
           currentContext: {} // Start fresh
         })
       });
@@ -214,6 +223,28 @@ export default function AIChatAssistant({ state, onSetForm, onFillAI }: AIChatAs
             </button>
           ))}
         </div>
+        {/* Language selector bar */}
+        <div className={styles.langBar}>
+          <span className={styles.langLabel}>🌐 भाषा / Lang:</span>
+          {(
+            [
+              { id: 'auto', label: 'Auto' },
+              { id: 'mr', label: '🚩 मराठी' },
+              { id: 'hi', label: '🇮🇳 हिन्दी' },
+              { id: 'en', label: '🇬🇧 English' },
+            ] as const
+          ).map(l => (
+            <button
+              key={l.id}
+              type="button"
+              className={`${styles.langBtn} ${selectedLang === l.id ? styles.langBtnActive : ''}`}
+              onClick={() => setSelectedLang(l.id)}
+            >
+              {l.label}
+            </button>
+          ))}
+        </div>
+
         <textarea 
           className={styles.chatInput}
           rows={3}

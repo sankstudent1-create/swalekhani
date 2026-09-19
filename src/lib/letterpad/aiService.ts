@@ -36,9 +36,10 @@ export function buildPrompt(
   };
 
   const langNote =
-    lang === 'hi' ? 'Write EVERYTHING in Hindi (Devanagari script).' :
-    lang === 'bi' ? 'Write body in bilingual format (English paragraph then Hindi equivalent).' :
-    'Write in English.';
+    lang === 'mr' ? 'MANDATORY: Write EVERYTHING in pure, authentic, grammatically flawless formal Marathi (मराठी - Devanagari script). Use standard formal administrative Marathi terminology (प्रति, विषय, संदर्भ, महोदय, आपली/आपला नम्र, शासन निर्णय, इत्यादी).' :
+    lang === 'hi' ? 'MANDATORY: Write EVERYTHING in pure, formal Hindi (हिंदी - Devanagari script). Use formal Rajbhasha Hindi terminology (सेवा में, विषय, संदर्भ, महोदय, भवदीय/भवदीया).' :
+    lang === 'bi' ? 'Write body in bilingual format (English paragraph then Hindi or Marathi equivalent).' :
+    'Write in formal English.';
 
   const isPersonalType = ['personal', 'student_app', 'heritage_personal', 'romantic'].includes(type);
   const isOfficial = !isPersonalType && type !== 'custom';

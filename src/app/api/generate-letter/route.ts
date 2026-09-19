@@ -377,8 +377,28 @@ CORRESPONDENCE PROTOCOLS & STATUTORY STANDARDS:
    - Salutation (sal): "Respected Sir / महोदय," or "Sir,".
    - Body: Formal, respectful, detailed citizen application describing all account numbers, maturity dates, interest amounts, closure dates, explaining any pending credits, and polite request for administrative action.
    - Closing (cls): "Yours faithfully," / "आपली नम्र," / "भवदीय,".
-   - Signatory (sn): Name of the applicant (e.g. "Mrs. Radha Dharpade\nResident of At Post Gangamasla").
-   - Signatory Designation (sd): "Account Holder / Depositor" or empty.
+   - Signatory (sn): Name of the applicant (e.g. "Mrs. Radha Dharpade\nResident of At Post Gangamasla" or in Marathi "श्रीमती राधा धारपडे\nरा. पो. गंगामासला").
+   - Signatory Designation (sd): "Account Holder / Depositor" or in Marathi "खातेदार / अर्जदार".
+
+10. FULL MARATHI & FULL HINDI LANGUAGE LETTER PROTOCOL:
+    - If language is MARATHI ('mr') or if the user requests Marathi (e.g. "marathi", "मराठी", "मध्ये पत्र", "अर्ज लिहा", "liha", "patra"):
+      * MANDATORY: The ENTIRE letter content MUST BE in pure, authentic, grammatically flawless formal MARATHI (मराठी - Devanagari script).
+      * Recipient: "प्रति,\nमा. [हुद्दा],\n[कार्यालय व पत्ता]" (उदा. "प्रति,\nमा. पोस्टमास्तर महोदय,\nपोस्ट ऑफिस गंगामासला,\nता. माजलगाव, जि. बीड - ४३११३१").
+      * Subject: "विषय: [औपचारिक व स्पष्ट विषय] - बाबत."
+      * Reference: "संदर्भ: [मागील संदर्भ / पत्र क्र.]" (if any).
+      * Salutation: "महोदय," / "महोदया," / "आदरणीय महोदय,".
+      * Body: Rich, respectful, natural Marathi administrative/citizen terminology (उदा. "उपरोक्त विषयान्वये सविनय अर्ज सादर करतो की...", "मुदत ठेव खात्याचे थकीत व्याज...", "कृपया तात्काळ कार्यवाही करावी ही नम्र विनंती.").
+      * Closing: "आपला नम्र," / "आपली नम्र," / "आपला विश्वासू,".
+      * Signatory: Applicant / Officer name in Marathi.
+      * If official Maharashtra Govt letter: h1: "महाराष्ट्र शासन", e1: "GOVERNMENT OF MAHARASHTRA", dept: "[विभागाचे नाव]".
+    - If language is HINDI ('hi') or if the user requests Hindi:
+      * MANDATORY: The ENTIRE letter content MUST BE in pure, formal Rajbhasha HINDI (हिंदी - Devanagari script).
+      * Recipient: "सेवा में,\n[पदनाम],\n[कार्यालय व पता]".
+      * Subject: "विषय: [विषय] - संदर्भ में।".
+      * Salutation: "महोदय," / "महोदया,".
+      * Body: Formal Rajbhasha Hindi.
+      * Closing: "भवदीय," / "भवदीया," / "आपका नम्र,".
+      * Signatory: Name in Hindi.
 
 STATE EMBLEM ACT (2005) COMPLIANCE:
 - Personal, academic, student, citizen, and romantic letters MUST NOT have government headers or state emblems.
@@ -409,9 +429,45 @@ RESPOND WITH ONLY THE JSON OBJECT. NO OTHER TEXT.`;
       custom:            'Official Government Letter'
     };
 
-    const langNote = language === 'hi' ? 'Write body and relevant fields in formal Hindi (Devanagari).' :
-                     language === 'bi' ? 'Write in Bilingual - alternating English and Hindi paragraphs.' :
-                     'Write in formal English matching official Government of India style.';
+    let targetLang = (language || 'en').toLowerCase();
+    const descLower = (description || '').toLowerCase();
+
+    // Smart language intent detection: prompt can be written in English, Hinglish, or Marathi
+    const isMarathi =
+      targetLang === 'mr' ||
+      descLower.includes('marathi') ||
+      descLower.includes('मराठी') ||
+      descLower.includes('मध्ये') ||
+      descLower.includes('अर्ज') ||
+      descLower.includes('पत्र लिहा') ||
+      descLower.includes('विनंती अर्ज') ||
+      descLower.includes('मुदत ठेव') ||
+      descLower.includes('राधा धारपडे') ||
+      descLower.includes('गंगामासला') ||
+      /\b(liha|patra|arja|pahije|dya|baddal|karave|namaskar|mahoday|majalgav|beed)\b/i.test(description);
+
+    const isHindi =
+      !isMarathi && (
+        targetLang === 'hi' ||
+        descLower.includes('hindi') ||
+        descLower.includes('हिंदी') ||
+        descLower.includes('हिन्दी') ||
+        descLower.includes('आवेदन') ||
+        descLower.includes('पत्र लिखें') ||
+        /\b(likhe|kripya|chahiye|aavedan)\b/i.test(description)
+      );
+
+    if (isMarathi) {
+      targetLang = 'mr';
+    } else if (isHindi) {
+      targetLang = 'hi';
+    }
+
+    const langNote =
+      targetLang === 'mr' ? 'MANDATORY: Write the ENTIRE letter (subject, salutation, body, closing, recipient, signatory) in pure, authentic, grammatically flawless formal MARATHI (मराठी - Devanagari script). Use standard formal administrative Marathi terminology (उदा. प्रति, विषय, संदर्भ, महोदय, आपली नम्र).' :
+      targetLang === 'hi' ? 'MANDATORY: Write the ENTIRE letter (subject, salutation, body, closing, recipient, signatory) in pure, formal HINDI (हिंदी - Devanagari script). Use formal Rajbhasha Hindi terminology (उदा. सेवा में, विषय, संदर्भ, महोदय, भवदीय).' :
+      targetLang === 'bi' ? 'Write in Bilingual format - alternating English and Hindi or Marathi paragraphs.' :
+      'Write in formal English matching official Government of India style.';
 
     const isFull = !currentContext.department && !currentContext.office;
 

@@ -137,8 +137,14 @@ export const FONT_OPTIONS: Array<{ key: string; label: string; style: CSSPropert
   { key: 'fn',  label: 'DM Sans',          style: { fontFamily: "'DM Sans', sans-serif" } },
 ];
 
-export const SALUTATION_OPTIONS = ['Sir', 'Madam', 'Sir/Madam', 'Dear Sir', 'Dear Madam', 'Dear Shri'];
-export const CLOSING_OPTIONS = ['Yours faithfully', 'Yours sincerely', 'Yours obediently', 'With warm regards'];
+export const SALUTATION_OPTIONS = [
+  'Sir', 'Madam', 'Sir/Madam', 'Dear Sir', 'Dear Shri',
+  'महोदय', 'महोदया', 'आदरणीय महोदय', 'सस्नेह नमस्कार', 'प्रति / सेवा में', 'पूज्य / तीर्थरूप', 'प्रिय'
+];
+export const CLOSING_OPTIONS = [
+  'Yours faithfully', 'Yours sincerely', 'Yours obediently', 'With warm regards',
+  'आपला नम्र', 'आपली नम्र', 'आपला विश्वासू', 'आपला कृपाभिलाषी', 'कळावे, आपला नम्र', 'भवदीय', 'भवदीया', 'सस्नेह,'
+];
 
 export const AI_LETTER_TYPES: Array<{ value: string; label: string }> = [
   { value: 'office_order',       label: 'Office Order (ACC / CS / Internal)' },

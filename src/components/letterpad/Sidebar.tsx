@@ -146,9 +146,10 @@ export default function Sidebar({
 
         <Field label="Language">
           <select className={styles.select} value={aiLang} onChange={e => setAiLang(e.target.value)}>
-            <option value="en">English</option>
-            <option value="hi">हिन्दी (Hindi)</option>
-            <option value="bi">Bilingual (EN + HI)</option>
+            <option value="en">English (Official CSMOP)</option>
+            <option value="mr">मराठी (Marathi - अस्सल मराठी)</option>
+            <option value="hi">हिन्दी (Hindi - राजभाषा)</option>
+            <option value="bi">Bilingual (English + मराठी / हिन्दी)</option>
           </select>
         </Field>
 

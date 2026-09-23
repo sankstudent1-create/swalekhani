@@ -1,8 +1,11 @@
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Privacy Policy',
-  description: 'Privacy Policy for Swalekhani.',
+  title: 'Privacy Policy | Swalekhani',
+  description: 'Privacy Policy for Swalekhani AI Official Letterpad Platform.',
+  alternates: {
+    canonical: '/privacy',
+  },
 };
 
 export default function PrivacyPolicy() {

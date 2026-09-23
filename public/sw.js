@@ -1,4 +1,4 @@
-const CACHE_NAME = "swtools-shell-v2";
+const CACHE_NAME = "swalekhani-shell-v1";
 const OFFLINE_URL = "/offline";
 const APP_SHELL = [
   "/",

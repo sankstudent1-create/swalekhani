@@ -2,17 +2,20 @@
 //  tools/letterpad-generator/page.tsx
 // ─────────────────────────────────────────────
 'use client';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState, Suspense } from 'react';
+import { useSearchParams } from 'next/navigation';
 import Appbar      from '@/components/letterpad/Appbar';
 import Sidebar     from '@/components/letterpad/Sidebar';
 import LetterPaper from '@/components/letterpad/LetterPaper';
 import EditToolbar from '@/components/letterpad/EditToolbar';
 import AIChatAssistant from '@/components/letterpad/AIChatAssistant';
+import SoftwareAppSchema from '@/components/seo/SoftwareAppSchema';
 import { useLetterState } from '@/hooks/useLetterState';
-import type { LetterForm, LogoSide } from '@/types/letterpad';
+import type { LetterForm, LogoSide, TemplateType } from '@/types/letterpad';
 import styles from './letterpad-page.module.css';
 
-export default function LetterpadGeneratorPage() {
+function LetterpadGeneratorInner() {
+  const searchParams = useSearchParams();
   const {
     state,
     updateForm,
@@ -31,6 +34,34 @@ export default function LetterpadGeneratorPage() {
     fillFromAI,
     lastModel,
   } = useLetterState();
+
+  // ── Initialize from Search Parameters (Templates / Deep links) ──
+  useEffect(() => {
+    if (!searchParams) return;
+    const preset = searchParams.get('preset');
+    const tpl = searchParams.get('template') || searchParams.get('tpl');
+    const sub = searchParams.get('sub') || searchParams.get('subject');
+    const body = searchParams.get('body');
+    const toD = searchParams.get('toD') || searchParams.get('to');
+    const toA = searchParams.get('toA');
+    const fno = searchParams.get('fno') || searchParams.get('file_no');
+
+    if (preset) {
+      applyOfficePreset(preset);
+    }
+    if (tpl && ['A', 'B', 'C', 'D', 'E', 'F'].includes(tpl.toUpperCase())) {
+      setTemplate(tpl.toUpperCase() as TemplateType);
+    }
+    if (sub || body || toD || toA || fno) {
+      const updates: Partial<LetterForm> = {};
+      if (sub) updates.sub = sub;
+      if (body) updates.body = body;
+      if (toD) updates.toD = toD;
+      if (toA) updates.toA = toA;
+      if (fno) updates.fno = fno;
+      setForm(updates);
+    }
+  }, [searchParams, applyOfficePreset, setTemplate, setForm]);
 
   // ── Mobile tab: 'edit' | 'preview' ──────────
   const [mobileTab, setMobileTab] = useState<'edit' | 'preview'>('preview');
@@ -290,6 +321,15 @@ export default function LetterpadGeneratorPage() {
       </div>
       
       <AIChatAssistant state={state} onSetForm={setForm} onFillAI={fillFromAI} />
+      <SoftwareAppSchema />
     </div>
+  );
+}
+
+export default function LetterpadGeneratorPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-[#07090f] text-white flex items-center justify-center font-sans">Loading Swalekhani Studio...</div>}>
+      <LetterpadGeneratorInner />
+    </Suspense>
   );
 }

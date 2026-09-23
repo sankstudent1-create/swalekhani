@@ -1,5 +1,14 @@
 import React from 'react';
+import type { Metadata } from 'next';
 import { Mail, MessageSquare, Globe } from 'lucide-react';
+
+export const metadata: Metadata = {
+  title: 'Contact Us | Swalekhani',
+  description: 'Get in touch with the Swalekhani team for support, feature requests, and enterprise inquiries.',
+  alternates: {
+    canonical: '/contact',
+  },
+};
 
 export default function ContactPage() {
   return (

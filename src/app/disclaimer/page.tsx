@@ -1,8 +1,11 @@
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Disclaimer',
-  description: 'Disclaimer for Swalekhani.',
+  title: 'Disclaimer | Swalekhani',
+  description: 'Disclaimer and Legal Terms for Swalekhani AI Official Letterpad Platform.',
+  alternates: {
+    canonical: '/disclaimer',
+  },
 };
 
 export default function Disclaimer() {

@@ -11,8 +11,8 @@ export default function Navigation() {
   const pathname = usePathname();
 
   // Hide site nav on full-screen tool pages that have their own appbar
-  const FULLSCREEN_TOOLS = ['/tools/letterpad-generator', '/tools/gds-leave', '/tools/td-commission'];
-  const isFullscreen = FULLSCREEN_TOOLS.some(p => pathname.startsWith(p));
+  const FULLSCREEN_TOOLS = ['/tools/letterpad-generator'];
+  const isFullscreen = FULLSCREEN_TOOLS.some(p => pathname === p || pathname.startsWith(p + '/'));
   if (isFullscreen) return null;
 
   return (
@@ -38,8 +38,11 @@ export default function Navigation() {
 
             {/* Desktop Nav */}
             <nav className="hidden md:flex items-center space-x-1.5 p-1.5 rounded-full bg-white/[0.02] border border-white/[0.05] shadow-[inset_0_1px_0_rgba(255,255,255,0.02)]">
-              <Link href="/tools" className={`px-5 py-2 rounded-full text-sm font-medium transition-all duration-300 ${pathname === "/tools" || pathname === "/" ? "bg-white/[0.08] text-white shadow-[0_2px_10px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.1)] border border-white/5" : "text-white/50 hover:text-white hover:bg-white/[0.04]"}`}>
-                Tools
+              <Link href="/tools/letterpad-generator" className={`px-5 py-2 rounded-full text-sm font-medium transition-all duration-300 ${pathname === "/tools/letterpad-generator" || pathname === "/" ? "bg-white/[0.08] text-white shadow-[0_2px_10px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.1)] border border-white/5" : "text-white/50 hover:text-white hover:bg-white/[0.04]"}`}>
+                Studio
+              </Link>
+              <Link href="/tools" className={`px-5 py-2 rounded-full text-sm font-medium transition-all duration-300 ${pathname === "/tools" ? "bg-white/[0.08] text-white shadow-[0_2px_10px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.1)] border border-white/5" : "text-white/50 hover:text-white hover:bg-white/[0.04]"}`}>
+                Templates
               </Link>
               <Link href="/about" className={`px-5 py-2 rounded-full text-sm font-medium transition-all duration-300 ${pathname === "/about" ? "bg-white/[0.08] text-white shadow-[0_2px_10px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.1)] border border-white/5" : "text-white/50 hover:text-white hover:bg-white/[0.04]"}`}>
                 About
@@ -64,11 +67,18 @@ export default function Navigation() {
         <div className="fixed inset-0 z-40 bg-[#07090f]/98 backdrop-blur-3xl pt-24 pb-6 px-6 md:hidden overflow-y-auto border-t border-white/[0.05]">
           <nav className="flex flex-col space-y-2 mt-4">
             <Link 
+              href="/tools/letterpad-generator" 
+              onClick={() => setIsOpen(false)} 
+              className={`p-4 rounded-2xl text-xl font-medium transition-colors ${pathname === "/tools/letterpad-generator" || pathname === "/" ? "bg-white/[0.05] text-white border border-white/[0.05]" : "text-white/60 hover:text-white hover:bg-white/[0.02]"}`}
+            >
+              Studio
+            </Link>
+            <Link 
               href="/tools" 
               onClick={() => setIsOpen(false)} 
-              className={`p-4 rounded-2xl text-xl font-medium transition-colors ${pathname === "/tools" || pathname === "/" ? "bg-white/[0.05] text-white border border-white/[0.05]" : "text-white/60 hover:text-white hover:bg-white/[0.02]"}`}
+              className={`p-4 rounded-2xl text-xl font-medium transition-colors ${pathname === "/tools" ? "bg-white/[0.05] text-white border border-white/[0.05]" : "text-white/60 hover:text-white hover:bg-white/[0.02]"}`}
             >
-              Tools
+              Templates
             </Link>
             <Link 
               href="/about" 

@@ -89,19 +89,19 @@ export const metadata: Metadata = {
   appleWebApp: {
     capable: true,
     statusBarStyle: "black-translucent",
-    title: "SW Tools",
+    title: "Swalekhani",
   },
   openGraph: {
-    title: "SW Tools",
-    description: "A premium toolkit for image, PDF, signature, scan, and document formatting workflows.",
-    images: ["/brand/hero-ai-grid.svg"],
+    title: "Swalekhani | Official AI Letterpad Generator",
+    description: "AI-powered official letterpad and document generator. Draft perfectly formatted official, government, and bilingual letters instantly.",
+    images: ["/icon-512.png"],
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "SW Tools",
-    description: "Image, PDF, signature, and document formatting utilities in one place.",
-    images: ["/brand/hero-ai-grid.svg"],
+    title: "Swalekhani | Official AI Letterpad Generator",
+    description: "AI-powered official letterpad and document generator for government, business, and official letters.",
+    images: ["/icon-512.png"],
   },
   other: {
     "google-adsense-account": "ca-pub-4364061213343174",

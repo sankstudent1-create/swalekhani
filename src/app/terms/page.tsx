@@ -1,8 +1,11 @@
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Terms of Service',
-  description: 'Terms of Service for Swalekhani.',
+  title: 'Terms of Service | Swalekhani',
+  description: 'Terms of Service for Swalekhani AI Official Letterpad Platform.',
+  alternates: {
+    canonical: '/terms',
+  },
 };
 
 export default function TermsOfService() {

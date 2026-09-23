@@ -2,9 +2,9 @@ import type { MetadataRoute } from "next";
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: "SW Tools",
-    short_name: "SW Tools",
-    description: "Image, PDF, signature, and document utilities with fast browser-based processing.",
+    name: "Swalekhani - AI Letterpad Generator",
+    short_name: "Swalekhani",
+    description: "AI-powered official letterpad and document generator for government, business, and official letters.",
     start_url: "/",
     display: "standalone",
     background_color: "#07090f",

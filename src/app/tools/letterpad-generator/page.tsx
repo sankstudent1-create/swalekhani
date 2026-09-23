@@ -11,6 +11,7 @@ import EditToolbar from '@/components/letterpad/EditToolbar';
 import AIChatAssistant from '@/components/letterpad/AIChatAssistant';
 import SoftwareAppSchema from '@/components/seo/SoftwareAppSchema';
 import { useLetterState } from '@/hooks/useLetterState';
+import { PROFESSION_TEMPLATES } from '@/data/profession-templates';
 import type { LetterForm, LogoSide, TemplateType } from '@/types/letterpad';
 import styles from './letterpad-page.module.css';
 
@@ -39,29 +40,71 @@ function LetterpadGeneratorInner() {
   useEffect(() => {
     if (!searchParams) return;
     const preset = searchParams.get('preset');
-    const tpl = searchParams.get('template') || searchParams.get('tpl');
+    const templateParam = searchParams.get('template') || searchParams.get('tpl');
     const sub = searchParams.get('sub') || searchParams.get('subject');
     const body = searchParams.get('body');
     const toD = searchParams.get('toD') || searchParams.get('to');
     const toA = searchParams.get('toA');
     const fno = searchParams.get('fno') || searchParams.get('file_no');
+    const h1Param = searchParams.get('h1');
+    const h2Param = searchParams.get('h2');
+    const ofcParam = searchParams.get('ofc');
+    const phParam = searchParams.get('ph');
+    const emParam = searchParams.get('em');
 
     if (preset) {
       applyOfficePreset(preset);
     }
-    if (tpl && ['A', 'B', 'C', 'D', 'E', 'F'].includes(tpl.toUpperCase())) {
-      setTemplate(tpl.toUpperCase() as TemplateType);
+
+    if (templateParam) {
+      const upper = templateParam.toUpperCase();
+      if (['A', 'B', 'C', 'D', 'E', 'F'].includes(upper)) {
+        setTemplate(upper as TemplateType);
+      } else if (PROFESSION_TEMPLATES[templateParam.toLowerCase()]) {
+        const prof = PROFESSION_TEMPLATES[templateParam.toLowerCase()];
+        const sample = prof.sampleLetters[0];
+        const initialForm: Partial<LetterForm> = {
+          e1: prof.fields.find(f => f.id === 'name')?.defaultValue || prof.profession,
+          e2: prof.fields.find(f => f.id === 'subTitle' || f.id === 'qualifications' || f.id === 'designation')?.defaultValue || '',
+          ofc: prof.fields.find(f => f.id === 'address' || f.id === 'chamberAddress' || f.id === 'officeAddress')?.defaultValue || '',
+          ph: prof.fields.find(f => f.id === 'phone')?.defaultValue || '',
+          em: prof.fields.find(f => f.id === 'email')?.defaultValue || '',
+          sn: prof.fields.find(f => f.id === 'name')?.defaultValue || '',
+          sd: prof.fields.find(f => f.id === 'subTitle' || f.id === 'designation')?.defaultValue || prof.profession,
+        };
+
+        if (prof.theme.font === 'serif') {
+          setFont('fs');
+        } else if (prof.theme.font === 'mono') {
+          setFont('fn');
+        }
+
+        if (sample) {
+          initialForm.sub = sample.subject;
+          initialForm.body = sample.body.join('\n\n');
+          initialForm.toD = sample.recipient;
+          initialForm.fno = sample.fileNo || '';
+        }
+
+        setForm(initialForm);
+      }
     }
-    if (sub || body || toD || toA || fno) {
+
+    if (sub || body || toD || toA || fno || h1Param || h2Param || ofcParam || phParam || emParam) {
       const updates: Partial<LetterForm> = {};
       if (sub) updates.sub = sub;
       if (body) updates.body = body;
       if (toD) updates.toD = toD;
       if (toA) updates.toA = toA;
       if (fno) updates.fno = fno;
+      if (h1Param) updates.h1 = h1Param;
+      if (h2Param) updates.h2 = h2Param;
+      if (ofcParam) updates.ofc = ofcParam;
+      if (phParam) updates.ph = phParam;
+      if (emParam) updates.em = emParam;
       setForm(updates);
     }
-  }, [searchParams, applyOfficePreset, setTemplate, setForm]);
+  }, [searchParams, applyOfficePreset, setTemplate, setFont, setForm]);
 
   // ── Mobile tab: 'edit' | 'preview' ──────────
   const [mobileTab, setMobileTab] = useState<'edit' | 'preview'>('preview');

@@ -95,14 +95,23 @@ export async function generateLetterWithAI(
   letterType: string,
   language: string,
   currentContext: { department?: string; office?: string; city?: string },
-  onStatus: (msg: string) => void
+  onStatus: (msg: string) => void,
+  currentForm?: LetterForm,
+  templatePreset?: string
 ): Promise<AILetterResult> {
   onStatus('⏳ Sending to Groq AI server…');
 
   const res = await fetch('/api/generate-letter', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ description: prompt, letterType, language, currentContext }),
+    body: JSON.stringify({
+      description: prompt,
+      letterType,
+      language,
+      currentContext,
+      currentForm,
+      templatePreset,
+    }),
   });
 
   const json = await res.json() as {

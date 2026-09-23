@@ -105,6 +105,7 @@ export const DEFAULT_FORM: LetterForm = {
   ph: '',
   em: '',
   wb: '',
+  enrolmentNo: '',
   sn: '',
   sd: '',
   sp: '',

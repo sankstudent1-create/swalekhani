@@ -76,13 +76,15 @@ export default function Sidebar({
         ? { ...form, dept: '', divn: '', ofc: '', city: '', pin: '', ph: '', em: '', wb: '', h1: '', h2: '', e1: '', e2: '' } 
         : form;
 
-      const prompt = buildPrompt(aiType, aiPrompt, aiLang, contextForm, tpl);
+      const briefText = aiPrompt.trim() || form.sub || 'Draft a complete official letter';
       const result = await generateLetterWithAI(
-        prompt,
+        briefText,
         aiType,
         aiLang,
         aiMode === 'full' ? {} : { department: form.dept, office: form.ofc, city: form.city },
-        setAiStatus
+        setAiStatus,
+        contextForm,
+        state.officeType
       );
       onFillAI(result.data, aiMode === 'full', result.model);
       setAiStatus(`✓ Generated via ${result.model.replace(/-versatile|-instant/gi,'').replace('llama-','L-')}`);
@@ -116,9 +118,9 @@ export default function Sidebar({
 
       {/* ── AI GENERATOR (Groq-powered, no client key needed) ── */}
       <div className={styles.aiSection}>
-        <div className={styles.aiHeader}>✨ AI — Complete Letter Generator</div>
+        <div className={styles.aiHeader}>✨ AI — Letter Assistant</div>
         <div className={styles.aiInfo}>
-          Powered by <strong>Groq AI (Llama 3.3)</strong> — fills <strong>every field automatically</strong>: ministry, dept, To, Subject, Ref, body paragraphs, Encl., Copy To, File No., and signatory.
+          Drafts complete, professional letter bodies tailored to your <strong>filled fields, selected profession, and language</strong> with authentic administrative and legal formatting.
         </div>
 
         <Field label="Letter Type">
@@ -270,17 +272,18 @@ export default function Sidebar({
         </div>
         <Field label="Phone">{inp(form.ph,'ph')}</Field>
         <Field label="Email">{inp(form.em,'em')}</Field>
-        <Field label="Website">{inp(form.wb,'wb')}</Field>
+        <Field label="Website / Reg Info">{inp(form.wb,'wb')}</Field>
+        <Field label="Enrolment / Statutory Reg No.">{inp(form.enrolmentNo || '','enrolmentNo','e.g. MAH/1842/2012 or MMC-2011-04-1049')}</Field>
       </div>
 
       {/* ── SIGNATORY ── */}
       <div className={styles.section}>
-        <SectionTitle>Signatory Officer</SectionTitle>
-        <Field label="Name (with title)">{inp(form.sn,'sn','(Dr. Vincent Barla)')}</Field>
-        <Field label="Designation">{inp(form.sd,'sd','Director (Estt.)')}</Field>
+        <SectionTitle>Signatory Officer / Professional</SectionTitle>
+        <Field label="Name (with title)">{inp(form.sn,'sn','e.g. Adv. Rajeshwar S. Deshmukh / Dr. Aarav Sharma')}</Field>
+        <Field label="Designation">{inp(form.sd,'sd','Designation / Council')}</Field>
         <Field label="Direct Phone / Extn.">{inp(form.sp,'sp','Extn. 2345')}</Field>
-        <Field label="Hindi / Regional Name">{inp(form.sh,'sh','हिन्दी नाम')}</Field>
-        <Field label="Constituency / Circle">{inp(form.sc,'sc','e.g. Amritsar, Punjab')}</Field>
+        <Field label="Hindi / Regional Name">{inp(form.sh,'sh','हिन्दी / मराठी नाव')}</Field>
+        <Field label="Constituency / Circle / Bar">{inp(form.sc,'sc','e.g. High Court / Pune Constituency')}</Field>
       </div>
 
       {/* ── LETTER REFERENCE ── */}

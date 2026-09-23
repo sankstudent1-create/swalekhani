@@ -57,20 +57,44 @@ function LetterpadGeneratorInner() {
     }
 
     if (templateParam) {
+      const lower = templateParam.toLowerCase();
       const upper = templateParam.toUpperCase();
       if (['A', 'B', 'C', 'D', 'E', 'F'].includes(upper)) {
         setTemplate(upper as TemplateType);
-      } else if (PROFESSION_TEMPLATES[templateParam.toLowerCase()]) {
-        const prof = PROFESSION_TEMPLATES[templateParam.toLowerCase()];
+      } else if (PROFESSION_TEMPLATES[lower]) {
+        const prof = PROFESSION_TEMPLATES[lower];
         const sample = prof.sampleLetters[0];
+
+        // Specific clean signatory defaults
+        let defaultSignatory = prof.fields.find(f => f.id === 'name')?.defaultValue || '';
+        let defaultDesig = prof.fields.find(f => f.id === 'subTitle' || f.id === 'qualifications' || f.id === 'designation')?.defaultValue || prof.profession;
+
+        if (lower === 'clinic') {
+          defaultSignatory = 'Dr. Aarav Sharma, MBBS, MD (Med)';
+          defaultDesig = 'Consulting Physician & Medical Director';
+        } else if (lower === 'political-leader') {
+          defaultSignatory = 'Shri Amit V. Deshmukh';
+          defaultDesig = 'Public Representative / Member, Municipal Council';
+        }
+
+        const regField = prof.fields.find(f => 
+          f.id === 'enrolmentNo' || 
+          f.id === 'regNo' || 
+          f.id === 'membershipNo' || 
+          f.id === 'reraNo' || 
+          f.id === 'ceaNo' || 
+          f.id === 'trustReg'
+        );
+
         const initialForm: Partial<LetterForm> = {
           e1: prof.fields.find(f => f.id === 'name')?.defaultValue || prof.profession,
           e2: prof.fields.find(f => f.id === 'subTitle' || f.id === 'qualifications' || f.id === 'designation')?.defaultValue || '',
-          ofc: prof.fields.find(f => f.id === 'address' || f.id === 'chamberAddress' || f.id === 'officeAddress')?.defaultValue || '',
+          ofc: prof.fields.find(f => f.id === 'address' || f.id === 'chamberAddress' || f.id === 'officeAddress' || f.id === 'branchAddress')?.defaultValue || '',
           ph: prof.fields.find(f => f.id === 'phone')?.defaultValue || '',
           em: prof.fields.find(f => f.id === 'email')?.defaultValue || '',
-          sn: prof.fields.find(f => f.id === 'name')?.defaultValue || '',
-          sd: prof.fields.find(f => f.id === 'subTitle' || f.id === 'designation')?.defaultValue || prof.profession,
+          enrolmentNo: regField?.defaultValue || '',
+          sn: defaultSignatory,
+          sd: defaultDesig,
         };
 
         if (prof.theme.font === 'serif') {
@@ -82,11 +106,13 @@ function LetterpadGeneratorInner() {
         if (sample) {
           initialForm.sub = sample.subject;
           initialForm.body = sample.body.join('\n\n');
-          initialForm.toD = sample.recipient;
+          initialForm.toD = sample.recipient.replace(/^To,\s*\n?/i, '');
           initialForm.fno = sample.fileNo || '';
         }
 
-        setForm(initialForm);
+        // Apply preset office type styling
+        applyOfficePreset(lower);
+        setForm(initialForm, true);
       }
     }
 
@@ -94,7 +120,7 @@ function LetterpadGeneratorInner() {
       const updates: Partial<LetterForm> = {};
       if (sub) updates.sub = sub;
       if (body) updates.body = body;
-      if (toD) updates.toD = toD;
+      if (toD) updates.toD = toD.replace(/^To,\s*\n?/i, '');
       if (toA) updates.toA = toA;
       if (fno) updates.fno = fno;
       if (h1Param) updates.h1 = h1Param;
@@ -102,7 +128,7 @@ function LetterpadGeneratorInner() {
       if (ofcParam) updates.ofc = ofcParam;
       if (phParam) updates.ph = phParam;
       if (emParam) updates.em = emParam;
-      setForm(updates);
+      setForm(updates, true);
     }
   }, [searchParams, applyOfficePreset, setTemplate, setFont, setForm]);
 
@@ -116,7 +142,6 @@ function LetterpadGeneratorInner() {
       const vw = window.innerWidth;
       const mobile = vw <= 900;
       setIsMobile(mobile);
-      // Desktop: scale = 1, tablet: fit to available width, mobile: tighter
       let scale = 1;
       if (vw <= 480)       scale = Math.max(0.35, (vw - 12) / 794);
       else if (vw <= 640)  scale = Math.max(0.42, (vw - 16) / 794);
@@ -128,28 +153,35 @@ function LetterpadGeneratorInner() {
     return () => window.removeEventListener('resize', updateScale);
   }, []);
 
-  // ── PDF Generation — html2canvas + jsPDF for pixel-perfect output ──
-  // This bypasses the browser print engine entirely. What you see in
-  // preview is exactly what the PDF will contain — on ALL devices.
-  const [pdfBusy, setPdfBusy] = useState(false);
+  // ── Insert Numbered Paragraph (Defect B Fix) ──
+  const handleInsertNumberedPara = useCallback(() => {
+    const existing = state.form.body || '';
+    const matches = existing.match(/(?:^|\n)\s*(\d+)\.\s*/g);
+    let nextNum = 1;
+    if (matches && matches.length > 0) {
+      const nums = matches.map(m => parseInt(m.replace(/\D/g, ''), 10)).filter(n => !isNaN(n));
+      if (nums.length > 0) {
+        nextNum = Math.max(...nums) + 1;
+      }
+    }
+    const paraPrefix = existing.trim().length === 0 ? `${nextNum}. ` : `\n\n${nextNum}. `;
+    const updatedBody = existing + paraPrefix;
+    updateForm('body', updatedBody);
+  }, [state.form.body, updateForm]);
 
-  async function generatePDF() {
-    if (pdfBusy) return;
-    setPdfBusy(true);
+  // ── PNG Download (Defect C Fix) ──────────────
+  const [pngBusy, setPngBusy] = useState(false);
+
+  async function generatePNG() {
+    if (pngBusy) return;
+    setPngBusy(true);
     try {
-      // Dynamically import to keep bundle small
-      // @ts-ignore - types not strictly needed for this usage
       const html2canvas = (await import('html2canvas')).default;
-      const { jsPDF } = await import('jspdf');
-
-      // Set body attribute so globals.css can hide UI artifacts
       document.body.setAttribute('data-generating-pdf', 'true');
 
-      // Find the actual paper element via data attribute (reliable across CSS module builds)
       const paperEl = document.querySelector('[data-paper="true"]') as HTMLElement;
       if (!paperEl) { alert('Could not find paper element'); return; }
 
-      // Mark empty editables so html2canvas NEVER captures grey placeholder text
       const emptyNodes = paperEl.querySelectorAll('[class*="editable"]');
       const markedNodes: HTMLElement[] = [];
       emptyNodes.forEach(node => {
@@ -160,51 +192,95 @@ function LetterpadGeneratorInner() {
         }
       });
 
-      // Temporarily reset scale so we capture at full 794px width
       const savedScale = document.documentElement.style.getPropertyValue('--paper-scale');
       document.documentElement.style.setProperty('--paper-scale', '1');
+      await new Promise(r => setTimeout(r, 250));
 
-      // Wait a bit for layout reflow
-      await new Promise(r => setTimeout(r, 300));
-
-      // Capture at 1.5x for crisp text without hitting iOS canvas memory limits
       const canvas = await html2canvas(paperEl, {
-        scale: 1.5,
+        scale: 2, // High resolution (300 DPI equivalent)
         useCORS: true,
-        allowTaint: false, // Must be false! true causes SecurityError on toDataURL in iOS Safari
+        allowTaint: false,
         backgroundColor: '#ffffff',
         width: 794,
         windowWidth: 794,
         logging: false,
       });
 
-      // Restore scale and remove marked attributes immediately after capture
       document.documentElement.style.setProperty('--paper-scale', savedScale || '1');
       markedNodes.forEach(el => el.removeAttribute('data-empty'));
 
-      // A4 dimensions in mm
+      const imgData = canvas.toDataURL('image/png');
+      const link = document.createElement('a');
+      link.download = 'swalekhani-letterhead.png';
+      link.href = imgData;
+      link.click();
+    } catch (err: any) {
+      console.error('PNG export failed:', err);
+      alert('PNG export failed: ' + (err?.message || String(err)));
+    } finally {
+      document.body.removeAttribute('data-generating-pdf');
+      const leftovers = document.querySelectorAll('[data-empty="true"]');
+      leftovers.forEach(el => el.removeAttribute('data-empty'));
+      setPngBusy(false);
+    }
+  }
+
+  // ── PDF Generation — html2canvas + jsPDF ──────
+  const [pdfBusy, setPdfBusy] = useState(false);
+
+  async function generatePDF() {
+    if (pdfBusy) return;
+    setPdfBusy(true);
+    try {
+      const html2canvas = (await import('html2canvas')).default;
+      const { jsPDF } = await import('jspdf');
+
+      document.body.setAttribute('data-generating-pdf', 'true');
+
+      const paperEl = document.querySelector('[data-paper="true"]') as HTMLElement;
+      if (!paperEl) { alert('Could not find paper element'); return; }
+
+      const emptyNodes = paperEl.querySelectorAll('[class*="editable"]');
+      const markedNodes: HTMLElement[] = [];
+      emptyNodes.forEach(node => {
+        const el = node as HTMLElement;
+        if (!el.textContent || !el.textContent.trim()) {
+          el.setAttribute('data-empty', 'true');
+          markedNodes.push(el);
+        }
+      });
+
+      const savedScale = document.documentElement.style.getPropertyValue('--paper-scale');
+      document.documentElement.style.setProperty('--paper-scale', '1');
+      await new Promise(r => setTimeout(r, 300));
+
+      const canvas = await html2canvas(paperEl, {
+        scale: 1.5,
+        useCORS: true,
+        allowTaint: false,
+        backgroundColor: '#ffffff',
+        width: 794,
+        windowWidth: 794,
+        logging: false,
+      });
+
+      document.documentElement.style.setProperty('--paper-scale', savedScale || '1');
+      markedNodes.forEach(el => el.removeAttribute('data-empty'));
+
       const A4_W = 210;
       const A4_H = 297;
-
       const pdf = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
-
-      // Calculate canvas dimensions in mm
-      const imgWidth = A4_W;
       const imgHeight = (canvas.height * A4_W) / canvas.width;
 
-      // If content fits on a single standard A4 page (accounting for up to 2mm sub-pixel rounding)
       if (imgHeight <= A4_H + 2) {
         const imgData = canvas.toDataURL('image/png');
-        // Place exact canvas — captures the real, beautifully styled HTML footer with active fonts!
         pdf.addImage(imgData, 'PNG', 0, 0, A4_W, A4_H);
       } else {
-        // Multi-page letter: slice the canvas into clean A4 page slices
         const pageHeightPx = (A4_H / A4_W) * canvas.width;
         const totalPages = Math.ceil(canvas.height / pageHeightPx);
 
         for (let i = 0; i < totalPages; i++) {
           if (i > 0) pdf.addPage();
-
           const sliceCanvas = document.createElement('canvas');
           sliceCanvas.width = canvas.width;
           const sliceH = Math.min(pageHeightPx, canvas.height - i * pageHeightPx);
@@ -216,10 +292,10 @@ function LetterpadGeneratorInner() {
 
           ctx.drawImage(
             canvas,
-            0, i * pageHeightPx,            // source x, y
-            canvas.width, sliceH,            // source w, h
-            0, 0,                            // dest x, y
-            canvas.width, sliceH             // dest w, h
+            0, i * pageHeightPx,
+            canvas.width, sliceH,
+            0, 0,
+            canvas.width, sliceH
           );
 
           const sliceData = sliceCanvas.toDataURL('image/png');
@@ -227,7 +303,6 @@ function LetterpadGeneratorInner() {
         }
       }
 
-      // Save — triggers download on iOS and desktop alike
       pdf.save('letter.pdf');
     } catch (err: any) {
       console.error('PDF generation failed:', err);
@@ -241,7 +316,7 @@ function LetterpadGeneratorInner() {
     }
   }
 
-  // Native print (still available for desktop users who prefer it)
+  // Native print
   function doPrint() {
     document.documentElement.style.setProperty('--paper-scale', '1');
     window.print();
@@ -275,10 +350,12 @@ function LetterpadGeneratorInner() {
       <Appbar
         onPrint={doPrint}
         onPDF={generatePDF}
+        onPNG={generatePNG}
         onToggleEndorse={toggleEndorse}
         onToggleCopy={toggleCopy}
         lastModel={lastModel}
         pdfBusy={pdfBusy}
+        pngBusy={pngBusy}
       />
 
       {/* ── Mobile tab bar ── */}
@@ -292,9 +369,9 @@ function LetterpadGeneratorInner() {
             className={`${styles.mobileTab} ${mobileTab === 'preview' ? styles.mobileTabActive : ''}`}
             onClick={() => setMobileTab('preview')}
           >📄 Preview</button>
-          {/* Print & PDF accessible on mobile too */}
           <button className={styles.mobileTabPrint} onClick={doPrint}>🖨 Print</button>
-          <button className={`${styles.mobileTabPrint} ${styles.mobileTabPDF}`} onClick={doPrint}>⬇ PDF</button>
+          <button className={`${styles.mobileTabPrint} ${styles.mobileTabPDF}`} onClick={generatePNG} disabled={pngBusy}>🖼 PNG</button>
+          <button className={`${styles.mobileTabPrint} ${styles.mobileTabPDF}`} onClick={generatePDF} disabled={pdfBusy}>⬇ PDF</button>
         </div>
       )}
 
@@ -325,7 +402,7 @@ function LetterpadGeneratorInner() {
           <div className={`${styles.previewTop} ${isMobile ? styles.previewTopMobile : ''}`}>
             {!isMobile && (
               <span className={styles.previewLabel}>
-                📄 A4 · Click paper to edit · AI fills all fields · Groq powered
+                📄 A4 · Live Inline Editor · Real-time Sidebar Binding · Groq AI
                 {lastModel && <> · <span style={{color:'#4ade80'}}>⚡ {lastModel}</span></>}
               </span>
             )}
@@ -342,7 +419,10 @@ function LetterpadGeneratorInner() {
               onTogglePersonal={() => applyOfficePreset(state.officeType === 'personal' ? 'custom' : 'personal')}
               onPrint={doPrint}
               onPDF={generatePDF}
+              onPNG={generatePNG}
+              onInsertNumberedPara={handleInsertNumberedPara}
               pdfBusy={pdfBusy}
+              pngBusy={pngBusy}
             />
           </div>
 

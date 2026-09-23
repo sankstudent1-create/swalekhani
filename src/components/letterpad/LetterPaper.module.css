@@ -565,3 +565,149 @@ div.editable { display: block; }
   padding-top: 40px;
 }
 
+/* ── Profession-Specific Accents (SVG / CSS only) ── */
+
+/* 1. Doctor / Clinic */
+.rxBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-family: 'Times New Roman', serif;
+  font-size: 26px;
+  font-weight: 700;
+  color: #0891b2;
+  margin-right: 12px;
+  vertical-align: middle;
+  line-height: 1;
+}
+.vitalsStrip {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1.2fr 1.2fr;
+  gap: 8px;
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  border-radius: 4px;
+  padding: 6px 12px;
+  margin: 6px 44px 10px;
+  font-size: 11px;
+  color: #166534;
+  align-items: center;
+}
+.vitalsField {
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+  white-space: nowrap;
+}
+.vitalsLabel {
+  font-weight: 700;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #15803d;
+}
+.medicalWatermark {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 280px;
+  height: 280px;
+  opacity: 0.028;
+  pointer-events: none;
+  z-index: 1;
+}
+.medicoLegalNote {
+  color: #dc2626;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-align: center;
+  margin-top: 8px;
+  text-transform: uppercase;
+}
+
+/* 2. Advocate */
+.advocateEmblem {
+  width: 48px;
+  height: 48px;
+  color: #d97706;
+  flex-shrink: 0;
+}
+.advocateEnrolment {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 600;
+  color: #92400e;
+  background: #fef3c7;
+  border: 1px solid #fde68a;
+  border-radius: 3px;
+  padding: 2px 8px;
+  margin-top: 3px;
+  letter-spacing: 0.03em;
+}
+.advocateCurvedBand {
+  height: 6px;
+  background: linear-gradient(90deg, #92400e 0%, #d97706 50%, #92400e 100%);
+  margin: 0 44px;
+  border-radius: 2px;
+}
+
+/* 3. NGO / Non-Profit */
+.ngoSideBar {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 6px;
+  background: linear-gradient(180deg, #0d9488 0%, #0f766e 100%);
+}
+.ngoCredentialsBadge {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #f0fdfa;
+  border: 1px solid #ccfbf1;
+  padding: 4px 12px;
+  margin: 0 44px 8px;
+  border-radius: 3px;
+  font-size: 10px;
+  color: #0f766e;
+  font-weight: 600;
+}
+
+/* 4. Dual Signature Blocks (Gram Panchayat / Society / Public Rep) */
+.dualSigRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  padding: 0 46px;
+  margin-top: 24px;
+  gap: 20px;
+}
+.dualSigBlock {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 160px;
+  text-align: center;
+}
+.dualSigLine {
+  width: 140px;
+  border-top: 1px solid #333;
+  margin-bottom: 4px;
+}
+
+/* 5. Hospital appointment footer strip */
+.hospitalFooterStrip {
+  display: flex;
+  justify-content: space-around;
+  background: #ecfeff;
+  border-top: 1px solid #cffafe;
+  padding: 4px 20px;
+  font-size: 9.5px;
+  color: #0e7490;
+  font-weight: 600;
+}
+
+

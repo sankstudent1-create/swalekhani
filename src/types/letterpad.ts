@@ -6,7 +6,11 @@ export type TemplateType = 'A' | 'B' | 'C' | 'D' | 'E' | 'F';
 export type OfficeType =
   | 'dop' | 'pm' | 'minister' | 'mp' | 'mla'
   | 'district' | 'rms' | 'savings' | 'custom' | 'personal'
-  | 'company' | 'school' | 'doctor' | 'shop' | 'office_order' | 'rti' | 'leave';
+  | 'company' | 'school' | 'doctor' | 'shop' | 'office_order' | 'rti' | 'leave'
+  | 'advocate' | 'ca-accountant' | 'real-estate-dealer' | 'coaching-classes'
+  | 'clinic' | 'restaurant-hotel' | 'ngo-trust' | 'contractor-builder'
+  | 'housing-society' | 'political-leader' | 'gram-panchayat' | 'freelancer'
+  | string;
 export type FontClass = '' | 'fg' | 'fs' | 'fd2' | 'ft' | 'fn';
 export type SigMode = 'draw' | 'type' | 'upload';
 export type LogoSide = 'L' | 'R';
@@ -33,6 +37,7 @@ export interface LetterForm {
   ph: string;
   em: string;
   wb: string;
+  enrolmentNo?: string; // Bar Council Enrolment / Medical Reg / Statutory Reg No
   // Signatory
   sn: string;       // Name
   sd: string;       // Designation
@@ -138,6 +143,7 @@ export interface AILetterData {
   sp?: string;
   constituency?: string;
   sc?: string;
+  enrolmentNo?: string;
   encl?: string;
   enclList?: string[];
   copy_to?: string[];

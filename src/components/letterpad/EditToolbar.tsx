@@ -16,15 +16,18 @@ interface EditToolbarProps {
   onToggleFooter?: () => void;
   onPrint: () => void;
   onPDF: () => void;
+  onPNG?: () => void;
+  onInsertNumberedPara?: () => void;
   isPersonal?: boolean;
   onTogglePersonal?: () => void;
   pdfBusy?: boolean;
+  pngBusy?: boolean;
 }
 
 export default function EditToolbar({
   showEncl, showCopy, showEndorse, showFooter,
   onToggleEncl, onToggleCopy, onToggleEndorse, onToggleFooter,
-  onPrint, onPDF, isPersonal, onTogglePersonal, pdfBusy,
+  onPrint, onPDF, onPNG, onInsertNumberedPara, isPersonal, onTogglePersonal, pdfBusy, pngBusy
 }: EditToolbarProps) {
   function cmd(command: string, value?: string) {
     document.execCommand(command, false, value);
@@ -40,11 +43,15 @@ export default function EditToolbar({
       (el as HTMLElement).style.fontSize = sz;
     });
   }
-  function insertPara() {
-    const el = document.querySelector('[contenteditable].bodyText') as HTMLElement | null;
+  function handleInsertPara() {
+    if (onInsertNumberedPara) {
+      onInsertNumberedPara();
+      return;
+    }
+    const el = document.querySelector('[data-paper="true"] [contenteditable]') as HTMLElement | null;
     if (!el) return;
-    const count = (el.textContent?.match(/^\d+\./gm) || []).length + 1;
-    cmd('insertText', `\n\n${count}.      `);
+    const count = (el.textContent?.match(/(?:^|\n)\s*\d+\./g) || []).length + 1;
+    cmd('insertText', `\n\n${count}. `);
   }
   function insertDate() {
     cmd('insertText', new Date().toLocaleDateString('en-IN', { day: '2-digit', month: 'long', year: 'numeric' }));
@@ -69,7 +76,7 @@ export default function EditToolbar({
         ))}
       </select>
       <div className={styles.sep} />
-      <button className={styles.btn} onClick={insertPara} title="Insert numbered paragraph">¶</button>
+      <button className={styles.btn} onClick={handleInsertPara} title="Insert numbered paragraph (¶)">¶</button>
       <button className={styles.btn} onClick={insertDate} title="Insert date">📅</button>
       <button className={styles.btn} onClick={() => cmd('removeFormat')} title="Clear formatting">🧹</button>
       <div className={styles.sep} />
@@ -92,8 +99,15 @@ export default function EditToolbar({
         </button>
       )}
       <div className={styles.sep} />
-      <button className={styles.btn} onClick={onPrint}>🖨</button>
-      <button className={`${styles.btn} ${styles.btnPDF}`} onClick={onPDF} disabled={pdfBusy}>{pdfBusy ? '⏳' : '⬇ PDF'}</button>
+      <button className={styles.btn} onClick={onPrint} title="Print letter">🖨</button>
+      {onPNG && (
+        <button className={styles.btn} onClick={onPNG} disabled={pngBusy} title="Download PNG (High-Res Image)">
+          {pngBusy ? '⏳' : '🖼 PNG'}
+        </button>
+      )}
+      <button className={`${styles.btn} ${styles.btnPDF}`} onClick={onPDF} disabled={pdfBusy} title="Download Vector PDF">
+        {pdfBusy ? '⏳' : '⬇ PDF'}
+      </button>
     </div>
   );
 }

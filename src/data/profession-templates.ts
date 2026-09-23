@@ -717,12 +717,12 @@ export const PROFESSION_TEMPLATES: Record<string, ProfessionTemplate> = {
       headerLayout: 'modern'
     },
     fields: [
-      { id: 'name', label: 'Representative Name', placeholder: 'e.g. Adv. Amit S. Shinde', defaultValue: 'Adv. Amit S. Shinde' },
+      { id: 'name', label: 'Representative Name', placeholder: 'e.g. Shri Amit V. Deshmukh', defaultValue: 'Shri Amit V. Deshmukh' },
       { id: 'designation', label: 'Elected Designation', placeholder: 'e.g. Public Representative / Member of Municipal Council', defaultValue: 'Public Representative / Member, Municipal Council' },
       { id: 'constituency', label: 'Constituency / Ward Name', placeholder: 'e.g. Ward No. 14, Central Assembly Constituency', defaultValue: 'Ward No. 14, Shivajinagar Constituency' },
       { id: 'officeAddress', label: 'Public Liaison Office (जनसंपर्क कार्यालय)', placeholder: 'Office Address, City, PIN', defaultValue: 'Public Liaison Office (जनसंपर्क कार्यालय), Near Shivaji Statue, Station Road, Pune - 411004' },
       { id: 'phone', label: 'Helpline / Contact Number', placeholder: '+91 98220 99887', defaultValue: '+91 98220 99887', type: 'tel' },
-      { id: 'email', label: 'Official Correspondence Email', placeholder: 'amit.shinde@publicoffice.in', defaultValue: 'office.amitshinde@gmail.com', type: 'email' }
+      { id: 'email', label: 'Official Correspondence Email', placeholder: 'amit.deshmukh@publicoffice.in', defaultValue: 'office.amitdeshmukh@gmail.com', type: 'email' }
     ],
     languages: ['en', 'hi', 'mr'],
     bilingualDefaults: {
@@ -743,7 +743,7 @@ export const PROFESSION_TEMPLATES: Record<string, ProfessionTemplate> = {
       {
         title: 'Representation for Drinking Water Pipeline Upgradation',
         description: 'Formal representation addressed to Municipal Commissioner for civic works.',
-        recipient: 'To,\nThe Hon’ble Municipal Commissioner,\nPune Municipal Corporation,\nShivajinagar, Pune - 411005.',
+        recipient: 'The Hon’ble Municipal Commissioner,\nPune Municipal Corporation,\nShivajinagar, Pune - 411005.',
         subject: 'URGENT REPRESENTATION FOR UPGRADATION OF DRINKING WATER PIPELINE IN WARD NO. 14',
         fileNo: 'REF: PLO/CIVIC/2026/194',
         body: [
@@ -751,7 +751,7 @@ export const PROFESSION_TEMPLATES: Record<string, ProfessionTemplate> = {
           '1. In view of the rising population, an immediate replacement of the old pipeline with a 250mm ductile iron pipeline is urgently necessitated.',
           '2. I request your good office to sanction the technical estimate and release administrative approval under the Urban Infrastructure Development Head on priority.'
         ],
-        signoff: 'With regards,\n\n[Signature]\nAdv. Amit S. Shinde\nPublic Representative / Corporator'
+        signoff: 'With regards,\n\n[Signature]\nShri Amit V. Deshmukh\nPublic Representative / Corporator'
       },
       {
         title: 'Citizen Character & Recommendation Certificate',

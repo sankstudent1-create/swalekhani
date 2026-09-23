@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: 'Offline Mode | Swalekhani',
+  title: 'Offline Mode',
   description: 'Swalekhani offline application mode.',
   alternates: {
     canonical: '/offline',

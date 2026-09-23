@@ -23,7 +23,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'RTI Application Format | Section 6(1) Right to Information Draft Maker',
     description: 'Draft legally compliant RTI Applications under Section 6(1) of RTI Act 2005 with instant AI drafting.',
-    url: 'https://www.swalekhani.com/formats/rti-application',
+    url: 'https://swalekhani.vercel.app/formats/rti-application',
     images: ['/og/rti-application.svg'],
     type: 'article',
   },

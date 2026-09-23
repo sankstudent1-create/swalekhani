@@ -20,7 +20,7 @@ const routes: { path: string; priority: number; changeFrequency: "always" | "hou
 ];
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://www.swalekhani.com";
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://swalekhani.vercel.app";
   const now = new Date();
 
   return routes.map((r) => ({

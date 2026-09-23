@@ -1,7 +1,7 @@
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Swalekhani | Official AI Letterpad Studio & Document Generator',
+  title: 'Official AI Letterpad Studio & Document Generator',
   description: 'Swalekhani is India\'s premier AI-powered official letterpad generator. Draft perfectly formatted Government of India, bilingual Hindi-English, and professional letters instantly with Groq AI and direct vector PDF export.',
   keywords: [
     "swalekhani",
@@ -16,15 +16,15 @@ export const metadata: Metadata = {
     canonical: '/tools/letterpad-generator'
   },
   openGraph: {
-    title: 'Swalekhani | Official AI Letterpad Studio & Generator',
+    title: 'Official AI Letterpad Studio & Generator',
     description: 'AI-powered official letterpad and document generator. Draft perfectly formatted official, government, and bilingual letters instantly.',
-    url: 'https://www.swalekhani.com/tools/letterpad-generator',
+    url: 'https://swalekhani.vercel.app/tools/letterpad-generator',
     images: ['/icon-512.png'],
     type: 'website'
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Swalekhani | Official AI Letterpad Studio',
+    title: 'Official AI Letterpad Studio & Generator',
     description: 'AI-powered official letterpad and document generator with print-ready PDF export.',
     images: ['/icon-512.png']
   }

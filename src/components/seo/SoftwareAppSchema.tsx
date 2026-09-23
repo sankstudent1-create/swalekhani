@@ -9,8 +9,8 @@ export default function SoftwareAppSchema() {
     "applicationCategory": "BusinessApplication",
     "operatingSystem": "All (Web Browser, Windows, macOS, Android, iOS)",
     "description": "India's official AI-powered letterpad generator and document drafting platform. Generate Government of India, departmental, bilingual Hindi-English, and professional letterpads with instant PDF export.",
-    "url": "https://www.swalekhani.com/tools/letterpad-generator",
-    "image": "https://www.swalekhani.com/icon-512.png",
+    "url": "https://swalekhani.vercel.app/tools/letterpad-generator",
+    "image": "https://swalekhani.vercel.app/icon-512.png",
     "author": {
       "@type": "Organization",
       "name": "SW InfoSystems",

@@ -23,7 +23,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'Government Office Letterpad Format & Official GoI Maker',
     description: 'Create standardized Government of India and State Department letterheads with national emblems and AI assistance.',
-    url: 'https://www.swalekhani.com/templates/government-letterpad',
+    url: 'https://swalekhani.vercel.app/templates/government-letterpad',
     images: ['/og/government-letterpad.svg'],
     type: 'article',
   },

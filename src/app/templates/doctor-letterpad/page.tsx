@@ -23,7 +23,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'Doctor Letterhead & Prescription Pad Format (NMC Compliant)',
     description: 'Design NMC-compliant doctor letterheads and prescription pads with clinic timings and medical registration details.',
-    url: 'https://www.swalekhani.com/templates/doctor-letterpad',
+    url: 'https://swalekhani.vercel.app/templates/doctor-letterpad',
     images: ['/og/doctor-letterpad.svg'],
     type: 'article',
   },

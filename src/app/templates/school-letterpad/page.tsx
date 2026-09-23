@@ -23,7 +23,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'School Letterhead Format & Principal Academic Letterpad',
     description: 'Design official school and college letterheads with affiliation numbers, school motto, and AI drafting.',
-    url: 'https://www.swalekhani.com/templates/school-letterpad',
+    url: 'https://swalekhani.vercel.app/templates/school-letterpad',
     images: ['/og/school-letterpad.svg'],
     type: 'article',
   },

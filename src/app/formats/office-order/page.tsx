@@ -23,7 +23,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'Office Order Format & Official Administrative Order Maker',
     description: 'Create standardized government and corporate office orders with endorsement copies and AI drafting.',
-    url: 'https://www.swalekhani.com/formats/office-order',
+    url: 'https://swalekhani.vercel.app/formats/office-order',
     images: ['/og/office-order.svg'],
     type: 'article',
   },

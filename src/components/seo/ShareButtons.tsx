@@ -14,7 +14,7 @@ export default function ShareButtons({ title, url, description }: ShareButtonsPr
 
   const shareUrl = typeof window !== 'undefined' 
     ? (url || window.location.href) 
-    : (url || 'https://www.swalekhani.com');
+    : (url || 'https://swalekhani.vercel.app');
 
   const shareText = `${title} - Free format & generator on Swalekhani:\n${shareUrl}`;
   const whatsappUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(shareText)}`;

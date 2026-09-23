@@ -23,7 +23,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'Company Letterhead Maker Online & Business Letterpad Format',
     description: 'Design and export professional corporate letterheads with logos, GSTIN details, and AI text composition.',
-    url: 'https://www.swalekhani.com/templates/company-letterpad',
+    url: 'https://swalekhani.vercel.app/templates/company-letterpad',
     images: ['/og/company-letterpad.svg'],
     type: 'article',
   },

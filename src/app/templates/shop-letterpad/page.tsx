@@ -23,7 +23,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'Shop Letterpad Design & Retail Business Letterhead Format',
     description: 'Design GST-compliant shop letterheads and commercial business pads with instant PDF export.',
-    url: 'https://www.swalekhani.com/templates/shop-letterpad',
+    url: 'https://swalekhani.vercel.app/templates/shop-letterpad',
     images: ['/og/shop-letterpad.svg'],
     type: 'article',
   },

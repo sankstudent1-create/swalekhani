@@ -23,7 +23,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'Leave Application Format | Official Government & Office Leave Letter Maker',
     description: 'Create standard Casual Leave, Earned Leave, and Medical Leave applications for government and private offices.',
-    url: 'https://www.swalekhani.com/formats/leave-application',
+    url: 'https://swalekhani.vercel.app/formats/leave-application',
     images: ['/og/leave-application.svg'],
     type: 'article',
   },

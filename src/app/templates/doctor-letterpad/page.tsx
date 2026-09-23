@@ -7,7 +7,7 @@ import FaqAccordion, { FaqItem } from '@/components/seo/FaqAccordion';
 import AdSlot from '@/components/AdSlot';
 
 export const metadata: Metadata = {
-  title: 'Doctor Letterhead & Prescription Pad Format | Medical Pad Maker - Swalekhani',
+  title: 'Doctor Letterhead & Prescription Pad Format (NMC Compliant)',
   description: 'Download and create official Doctor Letterheads and Prescription Pads online. Standard National Medical Commission (NMC) compliant medical letterpads with Medical Council Registration Numbers, Clinic timings, and Rx headers.',
   keywords: [
     'doctor letterhead',
@@ -21,32 +21,60 @@ export const metadata: Metadata = {
     canonical: '/templates/doctor-letterpad',
   },
   openGraph: {
-    title: 'Doctor Letterhead & Prescription Pad Format | Swalekhani',
+    title: 'Doctor Letterhead & Prescription Pad Format (NMC Compliant)',
     description: 'Design NMC-compliant doctor letterheads and prescription pads with clinic timings and medical registration details.',
     url: 'https://www.swalekhani.com/templates/doctor-letterpad',
-    images: ['/icon-512.png'],
+    images: ['/og/doctor-letterpad.svg'],
     type: 'article',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Doctor Letterhead & Prescription Pad Format | Swalekhani',
+    title: 'Doctor Letterhead & Prescription Pad Format (NMC Compliant)',
     description: 'Create standardized doctor letterheads and clinic prescription pads online.',
-    images: ['/icon-512.png'],
+    images: ['/og/doctor-letterpad.svg'],
   },
 };
 
 const FAQ_ITEMS: FaqItem[] = [
   {
     question: "What details are legally required on a Doctor's Prescription Pad in India?",
-    answer: "As per the National Medical Commission (NMC) regulations, every medical practitioner's prescription must clearly display the Doctor's Full Name, Qualifications (e.g. MBBS, MD), State Medical Council / NMC Registration Number, Clinic Address, Contact Phone, and Date. Dedicated fields for Patient Name, Age, Gender, and Rx symbol must be present."
+    answer: "As per the National Medical Commission (NMC) regulations, every medical prescription must clearly display the Doctor's Full Name, Recognized Medical Qualifications (e.g. MBBS, MD), State Medical Council / NMC Registration Number, Clinic Address, Contact Phone, and Date. Dedicated fields for Patient Name, Age, Gender, and Rx symbol must be present."
   },
   {
-    question: "Can I generate Medical Certificates and Fitness Certificates with this pad?",
-    answer: "Yes, Swalekhani's AI assistant can instantly compose Medical Leave Certificates, Physical Fitness Certificates, and Discharge Summaries in professional medical terminology."
+    question: "Can I generate Medical Leave Certificates and Fitness Certificates with this pad?",
+    answer: "Yes, Swalekhani's AI assistant can instantly compose Medical Illness Certificates, Physical Fitness Certificates, and Hospital Discharge Summaries in standard professional clinical terminology."
   },
   {
-    question: "Can clinic timings and emergency contact numbers be included?",
-    answer: "Yes, Swalekhani's Doctor preset includes dedicated header lines for Morning & Evening OPD consultation hours, emergency contact numbers, and appointment booking links."
+    question: "Can clinic OPD consultation timings and emergency contact numbers be included?",
+    answer: "Yes, Swalekhani's Doctor preset includes dedicated header lines for Morning & Evening OPD consultation hours, emergency ambulance numbers, and appointment booking WhatsApp links."
+  },
+  {
+    question: "Is printing generic medicine names mandatory under NMC guidelines?",
+    answer: "Yes, NMC guidelines advise registered medical practitioners to write prescriptions legibly and preferably in capital letters, recommending generic drug names wherever feasible."
+  },
+  {
+    question: "Can dental surgeons, physiotherapists, and AYUSH doctors customize their qualifications?",
+    answer: "Yes, the template allows full editing of degrees (BDS, MDS, BPT, BAMS, BHMS) and State Dental / AYUSH Council registration numbers."
+  },
+  {
+    question: "Can I upload our clinic or hospital logo to the prescription pad?",
+    answer: "Yes, you can upload your clinic or hospital crest logo (PNG, JPG, or SVG) and place it on the top-left or top-center with custom width and height controls."
+  },
+  {
+    question: "Does the pad provide a dedicated Patient Vitals header box?",
+    answer: "Yes, Template B provides a structured patient vitals ribbon containing Patient Name, Age, Gender, Blood Pressure (BP), Pulse, Body Weight, and Date of Consultation."
+  },
+  {
+    question: "Can doctors sign electronically on the prescription pad?",
+    answer: "Yes. Swalekhani provides a built-in touch-friendly digital signature canvas where doctors can sign with a stylus, finger, or mouse, or upload a transparent scanned signature."
+  },
+  {
+    question: "Is patient medical data stored or tracked on Swalekhani servers?",
+    answer: "No. Swalekhani processes all prescriptions entirely in client-side memory. No patient names, diagnoses, or confidential health records ever leave your personal browser."
+  },
+  {
+    question: "Can I export high-quality A4 or A5 printable prescription pads?",
+    answer: "Yes, you can export vector-sharp PDFs directly suited for A4 clinic printing or thermal prescription slips without watermarks."
   }
 ];
 

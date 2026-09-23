@@ -7,7 +7,7 @@ import FaqAccordion, { FaqItem } from '@/components/seo/FaqAccordion';
 import AdSlot from '@/components/AdSlot';
 
 export const metadata: Metadata = {
-  title: 'Leave Application Format | Official Government & Office Leave Letter Maker - Swalekhani',
+  title: 'Leave Application Format | Official Government & Office Leave Letter Maker',
   description: 'Download and generate official Leave Application Formats online. Standard formats for Casual Leave (CL), Earned Leave (EL), Medical Leave, Maternity Leave, and Child Care Leave (CCL) for government employees and corporate staff.',
   keywords: [
     'leave application format',
@@ -21,17 +21,17 @@ export const metadata: Metadata = {
     canonical: '/formats/leave-application',
   },
   openGraph: {
-    title: 'Leave Application Format | Swalekhani',
+    title: 'Leave Application Format | Official Government & Office Leave Letter Maker',
     description: 'Create standard Casual Leave, Earned Leave, and Medical Leave applications for government and private offices.',
     url: 'https://www.swalekhani.com/formats/leave-application',
-    images: ['/icon-512.png'],
+    images: ['/og/leave-application.svg'],
     type: 'article',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Leave Application Format | Swalekhani',
+    title: 'Leave Application Format | Official Government & Office Leave Letter Maker',
     description: 'Official leave application letter generator with charge handover and AI drafting.',
-    images: ['/icon-512.png'],
+    images: ['/og/leave-application.svg'],
   },
 };
 
@@ -42,15 +42,43 @@ const FAQ_ITEMS: FaqItem[] = [
   },
   {
     question: "How is Casual Leave (CL) different from Earned Leave (EL)?",
-    answer: "Casual Leave (CL) is granted for unexpected personal emergencies and does not deduct from your earned leave account (it lapses at the end of the calendar year). Earned Leave (EL) is credited based on service periods and requires advance administrative sanction."
+    answer: "Casual Leave (CL) is granted for unexpected personal emergencies and does not deduct from your earned leave account (it lapses at the end of the calendar year). Earned Leave (EL) is credited based on service periods (usually 30 days per year in two installments) and requires advance administrative sanction."
+  },
+  {
+    question: "What is Station Leave Permission and when is it required?",
+    answer: "Station Leave Permission is a mandatory clause in government leave applications when an employee plans to leave the municipal limits or geographical headquarters of their posting during their leave period or over the weekend."
   },
   {
     question: "Can medical certificates be referenced or attached in this format?",
     answer: "Yes, Swalekhani's leave format includes dedicated Annexure & Enclosure lines to list medical certificates, fitness certificates, and leave account slips."
   },
   {
+    question: "What is Prefix and Suffix of holidays in leave calculations?",
+    answer: "Prefix refers to holidays/Sundays immediately preceding the commencement of leave, while Suffix refers to holidays/Sundays immediately following the end of leave. In Casual Leave and Earned Leave, intervening and prefix/suffix rules differ under CCS Leave rules."
+  },
+  {
+    question: "What is Commuted Leave and how does it affect Half Pay Leave (HPL)?",
+    answer: "Commuted Leave is leave granted on medical certificate where twice the amount of Half Pay Leave (HPL) is debited against the employee's leave balance, allowing full salary during the medical absence."
+  },
+  {
+    question: "Can leave be claimed as a matter of right in government service?",
+    answer: "No. Rule 7 of the CCS (Leave) Rules explicitly states that leave cannot be claimed as a matter of right. The competent sanctioning authority reserves the discretion to refuse or revoke leave in the interest of public service."
+  },
+  {
+    question: "What is Child Care Leave (CCL) and who is eligible?",
+    answer: "Under Central Government rules, women employees and single male employees can be granted Child Care Leave for up to 730 days during their entire service for taking care of up to two eldest surviving children under 18 years of age."
+  },
+  {
     question: "Can I generate leave applications in Hindi (अवकाश हेतु प्रार्थना पत्र)?",
     answer: "Yes, Swalekhani natively supports official Hindi leave applications formatted according to Central Government Rajbhasha guidelines."
+  },
+  {
+    question: "What is the procedure for joining duty after Medical Leave?",
+    answer: "An employee returning from Medical Leave must submit a formal 'Joining Report' along with a Medical Fitness Certificate issued by an Authorized Medical Attendant (AMA) or Registered Medical Practitioner."
+  },
+  {
+    question: "Can I export my leave application as a PDF or Print directly?",
+    answer: "Yes, clicking 'Generate Leave Application' opens the Swalekhani draft studio where you can export standard A4 PDF documents or print directly on official letterheads."
   }
 ];
 

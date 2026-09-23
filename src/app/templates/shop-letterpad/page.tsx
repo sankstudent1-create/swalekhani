@@ -7,7 +7,7 @@ import FaqAccordion, { FaqItem } from '@/components/seo/FaqAccordion';
 import AdSlot from '@/components/AdSlot';
 
 export const metadata: Metadata = {
-  title: 'Shop Letterpad Design & Retail Letterhead Format - Swalekhani',
+  title: 'Shop Letterpad Design & Retail Business Letterhead Format',
   description: 'Create professional Shop Letterpad Designs and Retail Business Letterheads online. Ideal for wholesale traders, retail stores, GST estimates, customer bills, and vendor agreements with Swalekhani.',
   keywords: [
     'shop letterpad design',
@@ -21,32 +21,60 @@ export const metadata: Metadata = {
     canonical: '/templates/shop-letterpad',
   },
   openGraph: {
-    title: 'Shop Letterpad Design & Retail Letterhead | Swalekhani',
+    title: 'Shop Letterpad Design & Retail Business Letterhead Format',
     description: 'Design GST-compliant shop letterheads and commercial business pads with instant PDF export.',
     url: 'https://www.swalekhani.com/templates/shop-letterpad',
-    images: ['/icon-512.png'],
+    images: ['/og/shop-letterpad.svg'],
     type: 'article',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Shop Letterpad Design & Retail Letterhead | Swalekhani',
+    title: 'Shop Letterpad Design & Retail Business Letterhead Format',
     description: 'Create standardized shop letterpads and commercial retail letterheads online.',
-    images: ['/icon-512.png'],
+    images: ['/og/shop-letterpad.svg'],
   },
 };
 
 const FAQ_ITEMS: FaqItem[] = [
   {
-    question: "What information should be present on a shop or retail letterpad?",
-    answer: "A standard shop letterhead includes the Trade/Shop Name, GSTIN (GST Number), Shop Act / Trade License Number, Complete Market / Shop Address, Mobile/WhatsApp Numbers for orders, Email address, and Bank Account details for UPI/NEFT payments."
+    question: "What information should be present on a shop or retail business letterpad?",
+    answer: "A standard shop letterhead includes the Trade / Firm Name, 15-digit GSTIN (GST Number), Shop & Establishment License Number, Complete Market / Shop Address, WhatsApp / Phone Order Numbers, Email Address, and Bank Account / UPI VPA details for instant payments."
   },
   {
     question: "Can I use this letterhead for formal customer quotations and rate estimates?",
-    answer: "Yes, Swalekhani's AI letter drafting co-pilot can generate commercial price quotations, discount agreements, warranty certificates, and vendor supply requests in seconds."
+    answer: "Yes, Swalekhani's AI letter drafting co-pilot can generate commercial price quotations, discount schemes, warranty terms, supply agreements, and dealer authorization letters in seconds."
   },
   {
-    question: "Can I add our shop's brand logo and barcode/UPI details?",
-    answer: "Yes, you can upload your shop's custom logo and include your UPI ID and GST credentials directly in the header and footer ribbons."
+    question: "Can I add religious invocations (e.g. || श्री गणेशाय नमः ||) on top?",
+    answer: "Yes, Template A provides a dedicated top auspicious header row popular with Indian traders, hardware merchants, jewellers, and wholesale distributors."
+  },
+  {
+    question: "Can I include bank account details and UPI QR codes on the shop letterpad?",
+    answer: "Yes, you can configure the footer with your Current Account Bank Name, IFSC code, Account Number, and UPI ID for seamless vendor settlement."
+  },
+  {
+    question: "Is this format suitable for Kirana stores, distributors, and hardware dealerships?",
+    answer: "Yes, the format is fully customizable for FMCG distributors, electrical supply shops, textile traders, hardware merchants, and general retail stores."
+  },
+  {
+    question: "Can I upload our custom shop logo or manufacturer dealership emblem?",
+    answer: "Yes, you can upload PNG, JPG, or SVG logos and place them on the top-left or top-center with custom width scaling."
+  },
+  {
+    question: "How do I print letterpads or export ready-to-print PDFs for the shop?",
+    answer: "Click 'Design Shop Letterpad', adjust your shop details, and click 'Export PDF' in the top bar. The document downloads in high-resolution A4 size ready for shop counter printing."
+  },
+  {
+    question: "Can I generate vendor supply dispute letters or delivery challan notices?",
+    answer: "Yes, you can use the built-in AI co-pilot to compose formal goods replacement requests, damaged transit claims, and delayed payment reminders."
+  },
+  {
+    question: "Does Swalekhani charge any fee for printing commercial shop pads?",
+    answer: "No, Swalekhani is completely free to use without any watermark or subscription charge."
+  },
+  {
+    question: "Can I use this letterpad on my mobile phone at the shop counter?",
+    answer: "Yes, Swalekhani is 100% mobile-responsive, allowing shop owners to compose, sign, and WhatsApp official letters directly from their smartphone."
   }
 ];
 

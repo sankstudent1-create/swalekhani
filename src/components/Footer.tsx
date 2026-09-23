@@ -17,7 +17,7 @@ export default function Footer() {
           <Link href="/contact" className="hover:text-white transition-colors">Contact</Link>
         </div>
         <div className="text-sm font-light text-white/30">
-          &copy; {new Date().getFullYear()} SW Info Systems. Crafted with glass.
+          &copy;&nbsp;{new Date().getFullYear()}&nbsp;SW Info Systems. All rights reserved.
         </div>
       </div>
     </footer>

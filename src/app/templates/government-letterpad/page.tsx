@@ -7,7 +7,7 @@ import FaqAccordion, { FaqItem } from '@/components/seo/FaqAccordion';
 import AdSlot from '@/components/AdSlot';
 
 export const metadata: Metadata = {
-  title: 'Government Office Letterpad Format | Official GoI Letterhead Maker - Swalekhani',
+  title: 'Government Office Letterpad Format & Official GoI Maker',
   description: 'Download and create official Government Office Letterpad Formats online. Standard Government of India (GoI), Ministry, and State Department bilingual letterheads with Ashoka Emblem, File Numbering, and AI drafting.',
   keywords: [
     'government office letterpad format',
@@ -21,17 +21,17 @@ export const metadata: Metadata = {
     canonical: '/templates/government-letterpad',
   },
   openGraph: {
-    title: 'Government Office Letterpad Format | Swalekhani',
+    title: 'Government Office Letterpad Format & Official GoI Maker',
     description: 'Create standardized Government of India and State Department letterheads with national emblems and AI assistance.',
     url: 'https://www.swalekhani.com/templates/government-letterpad',
-    images: ['/icon-512.png'],
+    images: ['/og/government-letterpad.svg'],
     type: 'article',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Government Office Letterpad Format | Swalekhani',
+    title: 'Government Office Letterpad Format & Official GoI Maker',
     description: 'Standard Government of India and State Department bilingual letterhead generator.',
-    images: ['/icon-512.png'],
+    images: ['/og/government-letterpad.svg'],
   },
 };
 
@@ -42,15 +42,39 @@ const FAQ_ITEMS: FaqItem[] = [
   },
   {
     question: "Is bilingual (Hindi & English) header mandatory for Central Government letters?",
-    answer: "Yes. Under the Official Languages Act and Central Secretariat Manual of Office Procedure (CSMOP), all Central Government ministries, subordinate offices, and public sector undertakings are required to use bilingual headers (Devanagari on top/left, English below/right)."
+    answer: "Yes. Under the Official Languages Act, 1963 and the Central Secretariat Manual of Office Procedure (CSMOP), all Central Government ministries, subordinate offices, and public sector undertakings must use bilingual letterheads (Devanagari on top/left, English below/right)."
   },
   {
-    question: "Can I customize the ministry name and department on Swalekhani?",
-    answer: "Yes, Swalekhani allows full customization of Hindi and English ministry titles, division names, office address, contact numbers, official email IDs, and national or state emblems."
+    question: "What are the key differences between an Official Letter, DO Letter, and Office Memorandum (OM)?",
+    answer: "An Official Letter is formal departmental correspondence to external agencies or subordinate offices. A Demi-Official (DO) letter is written between officers on a first-name basis to draw personal attention. An Office Memorandum (OM) conveys policy decisions or inter-ministerial views in the third person without formal salutations."
+  },
+  {
+    question: "How should the State Emblem (Ashoka Lion Capital) be placed on an official letterhead?",
+    answer: "As per the State Emblem of India (Prohibition of Improper Use) Act, the Lion Capital must be placed at the top-center (Template B/C) or top-left (Template A) of the letterpad, accompanied by the motto 'सत्यमेव जयते' in Devanagari script."
+  },
+  {
+    question: "What is the correct way to write a File Number (पत्रांक) on a government letter?",
+    answer: "The File Number should follow the standard departmental scheme: [Subject Code]-[Serial No.]/[Year]-[Section Code] (e.g., File No. 17-02/2026-Estt.). It is placed on the top-left margin above the recipient address."
+  },
+  {
+    question: "What is the proper salutation and subscription for official correspondence?",
+    answer: "For standard official letters, the salutation is 'Sir' or 'Madam' (महोदय/महोदया) and the subscription closing is 'Yours faithfully' (भवदीय). In Demi-Official letters, informal salutations like 'Dear Shri [Surname]' and closings like 'Yours sincerely' are used."
+  },
+  {
+    question: "How are Endorsement (पृष्ठांकन) and Copy-To sections formatted?",
+    answer: "The endorsement block appears below the signatory on the left margin, headlined with 'Copy forwarded for information and necessary action to:' followed by numbered departmental recipients and ending with a second signature of the issuing authority."
+  },
+  {
+    question: "Can I customize the ministry name, department, and contact ribbon on Swalekhani?",
+    answer: "Yes, Swalekhani allows full real-time customization of Hindi and English ministry titles, division names, office address, contact telephone numbers, official email IDs, and national or state emblems."
+  },
+  {
+    question: "How does Swalekhani's AI assistant draft official government letters?",
+    answer: "Swalekhani integrates advanced Groq LLMs fine-tuned on administrative conventions. You simply provide a brief topic (e.g., 'Request for cadre restructuring sanction'), and the AI drafts a complete, numbered official letter in flawless administrative English or Hindi."
   },
   {
     question: "How do I print or export the letterpad as PDF without watermarks?",
-    answer: "Click 'Generate with Swalekhani', edit or use the AI co-pilot to compose your text, and click 'Export PDF' in the top bar. The system generates a clean, vector-rendered A4 PDF without any watermark or subscription fee."
+    answer: "Click 'Generate with Swalekhani', customize your letter on the live A4 paper canvas, and click 'Export PDF' in the top action bar. The system renders a pixel-perfect, vector A4 PDF directly in your browser without any watermark or fee."
   }
 ];
 

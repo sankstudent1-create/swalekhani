@@ -7,7 +7,7 @@ import FaqAccordion, { FaqItem } from '@/components/seo/FaqAccordion';
 import AdSlot from '@/components/AdSlot';
 
 export const metadata: Metadata = {
-  title: 'Company Letterhead Maker Online | Business Letterpad Generator - Swalekhani',
+  title: 'Company Letterhead Maker Online & Business Letterpad Format',
   description: 'Create modern corporate letterheads with Swalekhani, India’s top Company Letterhead Maker Online. Add company logo, CIN/GSTIN numbers, registered office address, and draft official business proposals with AI.',
   keywords: [
     'company letterhead maker online',
@@ -21,36 +21,60 @@ export const metadata: Metadata = {
     canonical: '/templates/company-letterpad',
   },
   openGraph: {
-    title: 'Company Letterhead Maker Online | Swalekhani',
+    title: 'Company Letterhead Maker Online & Business Letterpad Format',
     description: 'Design and export professional corporate letterheads with logos, GSTIN details, and AI text composition.',
     url: 'https://www.swalekhani.com/templates/company-letterpad',
-    images: ['/icon-512.png'],
+    images: ['/og/company-letterpad.svg'],
     type: 'article',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Company Letterhead Maker Online | Swalekhani',
+    title: 'Company Letterhead Maker Online & Business Letterpad Format',
     description: 'Create and download corporate business letterheads with AI-assisted drafting.',
-    images: ['/icon-512.png'],
+    images: ['/og/company-letterpad.svg'],
   },
 };
 
 const FAQ_ITEMS: FaqItem[] = [
   {
-    question: "What legal information must appear on a company letterhead in India?",
-    answer: "Under the Companies Act 2013, every Indian company must display its Corporate Identity Number (CIN), registered company name, registered office address, email address, contact telephone, and website. GSTIN number is also recommended for commercial invoices and communications."
+    question: "What statutory information must appear on a company letterhead under Indian law?",
+    answer: "Under Section 12(3)(c) of the Companies Act, 2013, every company registered in India must print its Name, Registered Office Address, Corporate Identity Number (CIN), Telephone Number, Fax number (if any), Email address, and Website on all business letters, notices, and official publications."
   },
   {
-    question: "Can I upload our custom company logo to the letterhead?",
-    answer: "Yes, Swalekhani allows you to upload high-resolution PNG, JPG, or SVG logos and position them on the top-left, top-right, or top-center with custom sizing."
+    question: "Is it mandatory to include the GSTIN on commercial company letterheads?",
+    answer: "While CIN is mandatory under corporate law, printing your 15-digit GSTIN on business letterheads is essential for commercial tax compliance, quotations, vendor invoices, work orders, and inter-state purchase contracts."
   },
   {
-    question: "Is it suitable for business offer letters, NDAs, and experience certificates?",
-    answer: "Absolutely. Swalekhani's built-in Groq AI assistant can draft formal offer letters, non-disclosure agreements (NDAs), appointment letters, termination notices, and customer proposals in seconds."
+    question: "How do I upload and position our custom company logo?",
+    answer: "In Swalekhani Letterpad Studio, click 'Upload Logo' in the left sidebar. You can place your logo on the top-left, top-right, or top-center with custom width scaling and vertical alignment."
   },
   {
-    question: "Does Swalekhani store our company letters on any database?",
-    answer: "No. Swalekhani processes your document entirely in your local browser sandbox. No proprietary business data or client information is saved to external servers."
+    question: "Can I use this company letterhead for employee Offer Letters and Experience Certificates?",
+    answer: "Yes. Swalekhani's integrated AI assistant comes with dedicated prompt shortcuts for drafting formal Offer Letters, Appointment Letters, Relieving & Experience Certificates, Non-Disclosure Agreements (NDAs), and Salary Revision letters."
+  },
+  {
+    question: "What is the standard font size and typography for business letterheads?",
+    answer: "Company headers typically use 14pt to 18pt bold modern sans-serif fonts (such as Outfit, DM Sans, or Inter), subheaders in 9pt to 10pt for addresses, and 10.5pt to 11.5pt with 1.4x line spacing for the body text."
+  },
+  {
+    question: "Can I add Director / Signatory DIN numbers to the letterhead?",
+    answer: "Yes, you can configure the bottom signature footprint with the Director's full name, designation, Director Identification Number (DIN: 00000000), and digital signature."
+  },
+  {
+    question: "Can startups and LLPs use this letterhead format?",
+    answer: "Yes, LLPs can include their LLPIN (Limited Liability Partnership Identification Number) and registered partners, while proprietary startups can format professional trade letterpads."
+  },
+  {
+    question: "Does Swalekhani store our confidential company letters or client data?",
+    answer: "No. Swalekhani executes all text rendering, canvas styling, and PDF generation strictly inside your browser's local sandbox. No proprietary business agreements or employee records are sent to database storage."
+  },
+  {
+    question: "How do I download the letterhead in high-resolution vector PDF format?",
+    answer: "Click 'Open Company Letterhead Maker', input your company credentials, write or AI-generate your text, and click 'Export PDF' in the top bar. The document downloads immediately in standard A4 print resolution."
+  },
+  {
+    question: "Is there any cost or watermarking on exported PDFs?",
+    answer: "No, Swalekhani is completely free to use. All PDF exports are 100% vector-sharp without any watermarks or trial limitations."
   }
 ];
 

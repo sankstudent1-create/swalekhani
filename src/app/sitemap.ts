@@ -17,11 +17,10 @@ const routes: { path: string; priority: number; changeFrequency: "always" | "hou
   { path: "/privacy", priority: 0.5, changeFrequency: "monthly" },
   { path: "/terms", priority: 0.5, changeFrequency: "monthly" },
   { path: "/disclaimer", priority: 0.5, changeFrequency: "monthly" },
-  { path: "/offline", priority: 0.3, changeFrequency: "monthly" },
 ];
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.swalekhani.com";
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://www.swalekhani.com";
   const now = new Date();
 
   return routes.map((r) => ({

@@ -7,7 +7,7 @@ import FaqAccordion, { FaqItem } from '@/components/seo/FaqAccordion';
 import AdSlot from '@/components/AdSlot';
 
 export const metadata: Metadata = {
-  title: 'RTI Application Format | Section 6(1) Right to Information Draft Maker - Swalekhani',
+  title: 'RTI Application Format | Section 6(1) Right to Information Draft Maker',
   description: 'Download and generate legally sound RTI Application Formats under Section 6(1) of RTI Act 2005. Sample RTI drafts for exam marks, answer sheet copies, government recruitment status, and road/tender inquiries with AI.',
   keywords: [
     'RTI application format',
@@ -21,17 +21,17 @@ export const metadata: Metadata = {
     canonical: '/formats/rti-application',
   },
   openGraph: {
-    title: 'RTI Application Format | Swalekhani',
+    title: 'RTI Application Format | Section 6(1) Right to Information Draft Maker',
     description: 'Draft legally compliant RTI Applications under Section 6(1) of RTI Act 2005 with instant AI drafting.',
     url: 'https://www.swalekhani.com/formats/rti-application',
-    images: ['/icon-512.png'],
+    images: ['/og/rti-application.svg'],
     type: 'article',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'RTI Application Format | Swalekhani',
+    title: 'RTI Application Format | Section 6(1) Right to Information Draft Maker',
     description: 'Standard RTI Application generator for Central and State Public Information Officers.',
-    images: ['/icon-512.png'],
+    images: ['/og/rti-application.svg'],
   },
 };
 
@@ -49,8 +49,36 @@ const FAQ_ITEMS: FaqItem[] = [
     answer: "As per Section 7(1) of the RTI Act, the CPIO must provide the requested information or reject it within 30 days of receiving the application. If the information concerns the life or liberty of a person, the response must be given within 48 hours."
   },
   {
+    question: "What is the fee for filing an RTI application?",
+    answer: "For Central Government authorities, the application fee is ₹10 paid via Indian Postal Order (IPO), Demand Draft, Banker's Cheque, or online payment. State government fees vary between ₹10 and ₹50. Applicants belonging to Below Poverty Line (BPL) families are exempt from all fees upon producing proof."
+  },
+  {
+    question: "Can I file an RTI application to ask 'Why' an action was not taken?",
+    answer: "Under the RTI Act (Section 2(f)), only existing material records, documents, emails, opinions, press releases, circulars, orders, logbooks, contracts, and samples can be requested. Public Information Officers are not mandated to answer hypothetical questions, create new data, or explain 'Why' decisions were taken unless documented in official note-sheets."
+  },
+  {
+    question: "What should I do if the CPIO does not reply within 30 days?",
+    answer: "If no response is received within 30 days or if you are aggrieved by the decision, you can file a First Appeal under Section 19(1) of the RTI Act before the designated First Appellate Authority (FAA) within 30 days from the expiry of the response period."
+  },
+  {
+    question: "How can I request evaluated answer sheets or marks via RTI?",
+    answer: "Following the Supreme Court judgment in CBSE vs. Aditya Bandopadhyay (2011), examinees have the legal right to inspect and obtain certified copies of their evaluated answer scripts by stating their Roll Number, exam name, and center details in an RTI application."
+  },
+  {
+    question: "Can an RTI application be filed in Hindi or regional languages?",
+    answer: "Yes, Section 6(1) explicitly permits filing applications in English, Hindi, or the official language of the state in which the application is being made."
+  },
+  {
     question: "Can Swalekhani generate RTI queries in Hindi and English?",
     answer: "Yes, Swalekhani's AI assistant can structure complex queries in either Hindi (सूचना का अधिकार अधिनियम, 2005) or English with standard legal phrasing."
+  },
+  {
+    question: "Are private companies covered under the RTI Act 2005?",
+    answer: "Purely private corporations are not directly covered unless they are substantially financed by government funds. However, information about private bodies that a government regulator (like RBI, SEBI, MCA, or TRAI) can access under existing law can be accessed via RTI from that regulator."
+  },
+  {
+    question: "What is the standard format for paying fees via Indian Postal Order (IPO)?",
+    answer: "The Indian Postal Order of ₹10 should be drawn in favor of 'Accounts Officer' or the designated authority specified by the concerned ministry/department and made payable at the local GPO/Head Post Office."
   }
 ];
 

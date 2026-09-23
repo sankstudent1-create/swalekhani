@@ -7,7 +7,7 @@ import FaqAccordion, { FaqItem } from '@/components/seo/FaqAccordion';
 import AdSlot from '@/components/AdSlot';
 
 export const metadata: Metadata = {
-  title: 'School Letterhead Format | Principal & College Letterpad Generator - Swalekhani',
+  title: 'School Letterhead Format & Principal Academic Letterpad',
   description: 'Download and create official School Letterhead Formats online. Standard CBSE/ICSE/State Board school and college letterpads for Bonafide Certificates, Character Certificates, NOC, and Principal letters.',
   keywords: [
     'school letterhead format',
@@ -21,32 +21,60 @@ export const metadata: Metadata = {
     canonical: '/templates/school-letterpad',
   },
   openGraph: {
-    title: 'School Letterhead Format | Swalekhani',
+    title: 'School Letterhead Format & Principal Academic Letterpad',
     description: 'Design official school and college letterheads with affiliation numbers, school motto, and AI drafting.',
     url: 'https://www.swalekhani.com/templates/school-letterpad',
-    images: ['/icon-512.png'],
+    images: ['/og/school-letterpad.svg'],
     type: 'article',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'School Letterhead Format | Swalekhani',
+    title: 'School Letterhead Format & Principal Academic Letterpad',
     description: 'Official academic letterpad generator for schools, colleges, and university departments.',
-    images: ['/icon-512.png'],
+    images: ['/og/school-letterpad.svg'],
   },
 };
 
 const FAQ_ITEMS: FaqItem[] = [
   {
-    question: "What details should be included on a school or college letterhead?",
-    answer: "A standard school letterhead includes the school/trust name, school crest/emblem, motto (e.g. विद्या ददाति विनयं), affiliation details (e.g., Affiliated to CBSE, Affiliation No. & School Code), complete campus address, contact numbers, official school email, and website."
+    question: "What details should be included on an official school or college letterhead?",
+    answer: "A standard school letterhead includes the School / Society / Trust Name, Official Crest/Emblem, Sanskrit/Devanagari Motto (e.g., विद्या ददाति विनयं), Affiliation Details (e.g., Affiliated to CBSE, Affiliation No. & School Code), Campus Address, Phone, Official Institutional Email, and Website."
   },
   {
     question: "Can I generate Bonafide and Character Certificates using this template?",
-    answer: "Yes. Swalekhani includes pre-built AI prompt shortcuts for generating student Bonafide Certificates, Character & Conduct Certificates, NOC for Passport / Visa, and Fee Structure certificates."
+    answer: "Yes. Swalekhani includes pre-built AI prompt shortcuts for generating student Bonafide Certificates, Character & Conduct Certificates, NOC for Passport / Visa, Fee Structure certificates, and Leaving Certificates."
   },
   {
     question: "Can school administrators add dual bilingual mottos in Sanskrit/Hindi and English?",
-    answer: "Yes, Swalekhani's Template A provides dedicated Sanskrit/Devanagari motto rows at the top with English academic names below."
+    answer: "Yes, Swalekhani's Template A provides dedicated Sanskrit/Devanagari motto rows at the top with English academic names below, preserving traditional Indian institutional prestige."
+  },
+  {
+    question: "How do I format reference numbers on student certificates?",
+    answer: "Reference numbers typically follow the format: [School Acronym]/[Document Type]/[Academic Year]/[Serial No.] (e.g., DMPA/BON/2026-27/0842). This enables clear record tracking in the school registry."
+  },
+  {
+    question: "Can colleges, university departments, and polytechnics use this format?",
+    answer: "Yes, the format adapts seamlessly for Dean Offices, University Departments, HODs, Autonomous Colleges, and Technical Institutes by modifying the affiliation and degree authority headers."
+  },
+  {
+    question: "Can I upload our school's high-resolution crest or emblem logo?",
+    answer: "Yes, you can upload your school emblem (PNG, JPG, or SVG) and place it on the top-left or top-center with precise pixel scaling."
+  },
+  {
+    question: "Is this letterhead format accepted by embassies and passport offices for student visas?",
+    answer: "Yes, the generated Bonafide and NOC letters follow the strict verification format required by Regional Passport Offices (RPO) and foreign visa consulates."
+  },
+  {
+    question: "Can I generate Recommendation Letters (LOR) for students applying abroad?",
+    answer: "Yes. Swalekhani's AI Assistant can draft eloquent Letters of Recommendation (LOR) for undergraduate and postgraduate university applications in seconds."
+  },
+  {
+    question: "How do I add the Principal's digital signature and school seal?",
+    answer: "You can draw the Principal's signature on the built-in digital signature canvas or upload a scanned transparent signature and position it over the designated seal area."
+  },
+  {
+    question: "Is there any cost for exporting high-resolution school letterheads?",
+    answer: "No, Swalekhani provides free vector PDF generation without any watermark or subscription."
   }
 ];
 

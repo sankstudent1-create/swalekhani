@@ -7,7 +7,7 @@ import FaqAccordion, { FaqItem } from '@/components/seo/FaqAccordion';
 import AdSlot from '@/components/AdSlot';
 
 export const metadata: Metadata = {
-  title: 'Office Order Format | Official Government & Corporate Order Maker - Swalekhani',
+  title: 'Office Order Format & Official Administrative Order Maker',
   description: 'Download and create official Office Order Formats online. Standard formats for Government of India ministries, PSUs, and corporate companies for Employee Transfers, Postings, Sanctions, and Promotions.',
   keywords: [
     'office order format',
@@ -21,36 +21,60 @@ export const metadata: Metadata = {
     canonical: '/formats/office-order',
   },
   openGraph: {
-    title: 'Office Order Format | Swalekhani',
+    title: 'Office Order Format & Official Administrative Order Maker',
     description: 'Create standardized government and corporate office orders with endorsement copies and AI drafting.',
     url: 'https://www.swalekhani.com/formats/office-order',
-    images: ['/icon-512.png'],
+    images: ['/og/office-order.svg'],
     type: 'article',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Office Order Format | Swalekhani',
+    title: 'Office Order Format & Official Administrative Order Maker',
     description: 'Official office order format generator for government ministries, departments, and corporate offices.',
-    images: ['/icon-512.png'],
+    images: ['/og/office-order.svg'],
   },
 };
 
 const FAQ_ITEMS: FaqItem[] = [
   {
     question: "What is an Office Order and when is it issued in government offices?",
-    answer: "An Office Order is an internal administrative instruction issued by a competent authority to convey decisions relating to internal administration, employee appointments, transfers, postings, grant of regular leave, distribution of work, disciplinary sanctions, and promotions."
+    answer: "An Office Order (कार्यालय आदेश) is an internal administrative instruction issued by a competent authority to convey decisions relating to internal establishment administration, employee appointments, transfers, postings, grant of leave, work allocation, disciplinary sanctions, and promotions."
   },
   {
-    question: "How does an Office Order differ from an Official Memorandum (OM)?",
-    answer: "An Office Order deals primarily with internal day-to-day personnel and establishment matters (transfers, leave, duties) affecting employees within the organization, whereas an Office Memorandum (OM) communicates policy decisions, clarifications, or inter-departmental inquiries."
+    question: "How does an Office Order differ from an Office Memorandum (OM)?",
+    answer: "An Office Order deals with day-to-day internal personnel and administrative matters affecting specific employees within the office, whereas an Office Memorandum (OM) communicates policy decisions, clarifications, or inter-ministerial views in the third person without formal salutations."
   },
   {
-    question: "Is an Endorsement (पृष्ठांकन) block required on an Office Order?",
-    answer: "Yes, an Office Order almost always ends with an Endorsement block (Copy forwarded to...) distributing official copies to the concerned official, accounts branch (DDO), personnel file, and vigilance department."
+    question: "Why does an Office Order have no salutation or conversational closing?",
+    answer: "Under the Central Secretariat Manual of Office Procedure (CSMOP), an Office Order is a direct executive directive. It opens immediately with the operative command and ends with the issuing officer's designation without 'Dear Sir' or 'Yours faithfully'."
   },
   {
-    question: "Can Swalekhani generate bilingual Office Orders in Hindi and English?",
-    answer: "Yes, Swalekhani natively formats bilingual headers (कार्यालय आदेश / OFFICE ORDER) with appropriate Devanagari typography and standard Indian administrative phrasing."
+    question: "Is an Endorsement (पृष्ठांकन) block mandatory on an Office Order?",
+    answer: "Yes, an Office Order almost always ends with an Endorsement block ('Copy forwarded for information and necessary action to:') distributing official copies to the concerned official, accounts branch (DDO), pay & accounts office (PAO), and personal/guard files."
+  },
+  {
+    question: "How is an Office Order serial numbered in government departments?",
+    answer: "Order numbers typically follow the pattern: File No. [Section Code]/[Year]/[Order No.] (e.g. Office Order No. 45/2026 under File No. A-22012/1/2026-Estt.)."
+  },
+  {
+    question: "Can private companies and corporate HR departments use this format?",
+    answer: "Yes, corporate organizations use office orders for internal transfers, committee appointments, disciplinary memos, and project team leadership assignments."
+  },
+  {
+    question: "Can I generate bilingual Office Orders in Hindi (कार्यालय आदेश) and English?",
+    answer: "Yes, Swalekhani natively formats bilingual headers with appropriate Devanagari typography and standard Indian administrative phrasing."
+  },
+  {
+    question: "How does Swalekhani's AI compose an office order from raw bullet points?",
+    answer: "Simply type: 'Transfer of Shri Amit Kumar, Section Officer from Vigilance to Admin branch', and the AI formats the complete, numbered order citing Screening Committee recommendations."
+  },
+  {
+    question: "Can multiple employee transfer tables be added inside the order body?",
+    answer: "Yes, the interactive canvas allows creating structured transfer-posting matrices with Name, Present Posting, and New Posting columns."
+  },
+  {
+    question: "Is there any cost or watermark on exported Office Order PDFs?",
+    answer: "No, Swalekhani provides 100% free vector PDF generation without any watermark or subscription requirement."
   }
 ];
 

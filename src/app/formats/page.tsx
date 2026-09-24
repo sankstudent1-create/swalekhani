@@ -18,6 +18,8 @@ interface FormatItem {
   guideUrl?: string;
   generatorUrl: string;
   icon: any;
+  image?: string;
+  gradient?: string;
   tags: string[];
 }
 
@@ -31,7 +33,33 @@ const OFFICIAL_FORMATS: FormatItem[] = [
     guideUrl: '/formats/leave-application',
     generatorUrl: '/tools/letterpad-generator?preset=leave&sub=Application%20for%20Sanction%20of%20Earned%20Leave%20(EL)&tpl=A',
     icon: Clock,
+    image: '/illustrations/leave-3d.jpg',
+    gradient: 'from-emerald-500/20 to-teal-500/10',
     tags: ['Leave Application', 'Casual Leave', 'Earned Leave', 'Medical', 'Govt Employee', 'Corporate HR']
+  },
+  {
+    slug: 'police-complaint',
+    title: 'Police Complaint & Formal Grievance Letter',
+    category: 'Legal & Public',
+    badge: 'CrPC / BNSS Compliant',
+    desc: 'Formal representation to Station House Officer (SHO / Police Inspector) for non-cognizable loss, cyber harassment, or nuisance complaints.',
+    generatorUrl: '/tools/letterpad-generator?preset=custom&sub=Complaint%20Regarding%20Lost%20Documents%20/%20Public%20Nuisance',
+    icon: Shield,
+    image: '/illustrations/police-3d.jpg',
+    gradient: 'from-blue-500/20 to-amber-500/10',
+    tags: ['Police Complaint', 'SHO', 'NC Complaint', 'Lost Documents', 'FIR Intimation']
+  },
+  {
+    slug: 'advocate-legal-notice',
+    title: 'Advocate Formal Legal Notice Letterhead',
+    category: 'Legal & Public',
+    badge: 'Bar Council Standard',
+    desc: 'Structured legal notice framework with client instructions recital, factual matrix, statutory warning, and notice period.',
+    generatorUrl: '/tools/letterpad-generator?template=advocate',
+    icon: FileText,
+    image: '/illustrations/advocate-3d.jpg',
+    gradient: 'from-amber-500/20 to-yellow-500/10',
+    tags: ['Advocate', 'Legal Notice', 'Bar Council', 'Demand Notice', 'Court Practice']
   },
   {
     slug: 'office-order',
@@ -42,6 +70,7 @@ const OFFICIAL_FORMATS: FormatItem[] = [
     guideUrl: '/formats/office-order',
     generatorUrl: '/tools/letterpad-generator?preset=dop&sub=OFFICE%20ORDER%20-%20Administrative%20Sanction&tpl=A',
     icon: Award,
+    gradient: 'from-sky-500/20 to-blue-500/10',
     tags: ['Office Order', 'CSMOP', 'Transfer Order', 'Admin Directive', 'Bilingual']
   },
   {
@@ -53,6 +82,7 @@ const OFFICIAL_FORMATS: FormatItem[] = [
     guideUrl: '/formats/rti-application',
     generatorUrl: '/tools/letterpad-generator?preset=custom&sub=Application%20under%20Section%206(1)%20of%20RTI%20Act%202005&tpl=A',
     icon: Shield,
+    gradient: 'from-indigo-500/20 to-purple-500/10',
     tags: ['RTI', 'Right to Information', 'Section 6(1)', 'PIO', 'BPO', 'माहिती अधिकार']
   },
   {
@@ -63,17 +93,8 @@ const OFFICIAL_FORMATS: FormatItem[] = [
     desc: 'Formal public application format to Sarpanch and Gram Sevak for village infrastructure, street lights, water supply, and road repair.',
     generatorUrl: '/tools/letterpad-generator?template=gram-panchayat&sub=%E0%A4%B0%E0%A4%B8%E0%A5%8D%E0%A4%A4%E0%A4%BE%20%E0%A4%B5%20%E0%A4%AA%E0%A4%A5%E0%A4%A6%E0%A4%BF%E0%A4%B5%E0%A5%87%20%E0%A4%A6%E0%A5%81%E0%A4%B0%E0%A5%81%E0%A4%B8%E0%A5%8D%E0%A4%A4%E0%A5%80%E0%A4%AC%E0%A4%BE%E0%A4%AC%E0%A4%A4%20%E0%A4%85%E0%A4%B0%E0%A5%8D%E0%A4%9C',
     icon: Landmark,
+    gradient: 'from-amber-600/20 to-orange-500/10',
     tags: ['Gram Panchayat', 'Sarpanch', 'Gram Sevak', 'Village Grievance', 'मराठी अर्ज']
-  },
-  {
-    slug: 'police-complaint',
-    title: 'Police Complaint & Formal Grievance Letter',
-    category: 'Legal & Public',
-    badge: 'CrPC / BNSS Compliant',
-    desc: 'Formal representation to Station House Officer (SHO / Police Inspector) for non-cognizable loss, cyber harassment, or nuisance complaints.',
-    generatorUrl: '/tools/letterpad-generator?preset=custom&sub=Complaint%20Regarding%20Lost%20Documents%20/%20Public%20Nuisance',
-    icon: Shield,
-    tags: ['Police Complaint', 'SHO', 'NC Complaint', 'Lost Documents', 'FIR Intimation']
   },
   {
     slug: 'bank-representation',
@@ -83,6 +104,7 @@ const OFFICIAL_FORMATS: FormatItem[] = [
     desc: 'Official bank manager correspondence for account transfer, signature modification, stop cheque, and loan documentation.',
     generatorUrl: '/tools/letterpad-generator?preset=custom&sub=Application%20for%20Change%20of%20Address%20and%20Contact%20Details%20in%20Bank%20Account',
     icon: Building2,
+    gradient: 'from-cyan-500/20 to-blue-500/10',
     tags: ['Bank Application', 'KYC Update', 'Branch Manager', 'Account Transfer', 'Cheque Stop']
   },
   {
@@ -93,17 +115,8 @@ const OFFICIAL_FORMATS: FormatItem[] = [
     desc: 'Application to Assistant Engineer (MSEDCL / Electricity Board) regarding faulty meters, excessive billing, and new power connection.',
     generatorUrl: '/tools/letterpad-generator?preset=custom&sub=Application%20for%20Rectification%20of%20Faulty%20Electricity%20Meter%20and%20Billing',
     icon: FileCheck,
+    gradient: 'from-yellow-500/20 to-amber-500/10',
     tags: ['Mahavitaran', 'Electricity Board', 'Meter Dispute', 'Consumer Grievance', 'Power Connection']
-  },
-  {
-    slug: 'advocate-legal-notice',
-    title: 'Advocate Formal Legal Notice Letterhead',
-    category: 'Legal & Public',
-    badge: 'Bar Council Standard',
-    desc: 'Structured legal notice framework with client instructions recital, factual matrix, statutory warning, and notice period.',
-    generatorUrl: '/tools/letterpad-generator?template=advocate',
-    icon: FileText,
-    tags: ['Advocate', 'Legal Notice', 'Bar Council', 'Demand Notice', 'Court Practice']
   },
   {
     slug: 'school-bonafide',
@@ -113,6 +126,7 @@ const OFFICIAL_FORMATS: FormatItem[] = [
     desc: 'Standard Bonafide & Character certificate template for educational institutes, student concession, and scholarship verification.',
     generatorUrl: '/tools/letterpad-generator?preset=school&tpl=D',
     icon: UserCheck,
+    gradient: 'from-teal-500/20 to-emerald-500/10',
     tags: ['Bonafide Certificate', 'Character Certificate', 'School', 'College Affiliation']
   }
 ];
@@ -212,75 +226,90 @@ export default function FormatsIndexPage() {
             return (
               <div
                 key={fmt.slug}
-                className="group relative rounded-3xl bg-[#0d1017] border border-white/[0.08] hover:border-emerald-500/40 transition-all duration-300 p-6 flex flex-col justify-between overflow-hidden shadow-xl hover:-translate-y-1"
+                className="group relative rounded-3xl bg-[#0d1017] border border-white/[0.08] hover:border-emerald-500/40 transition-all duration-300 flex flex-col justify-between overflow-hidden shadow-xl hover:-translate-y-1.5"
               >
-                <div className="space-y-4">
-                  {/* Category & Badge */}
-                  <div className="flex items-center justify-between">
-                    <span className="text-[11px] font-semibold text-white/50 uppercase tracking-wider font-mono">
-                      {fmt.category}
-                    </span>
+                {/* 3D Illustration Banner or Vibrant Gradient Header */}
+                {fmt.image ? (
+                  <div className="relative h-44 w-full overflow-hidden bg-black/60 border-b border-white/[0.06]">
+                    <img 
+                      src={fmt.image} 
+                      alt={fmt.title}
+                      className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500 opacity-90 group-hover:opacity-100"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-[#0d1017] via-[#0d1017]/40 to-transparent"></div>
+                    <div className="absolute top-3.5 right-3.5">
+                      <span className="text-[10px] font-bold px-2.5 py-1 rounded-full border border-white/20 bg-black/70 backdrop-blur-md text-emerald-300 uppercase tracking-wide shadow-md">
+                        {fmt.badge}
+                      </span>
+                    </div>
+                  </div>
+                ) : (
+                  <div className={`h-24 w-full bg-gradient-to-br ${fmt.gradient || 'from-emerald-500/10 to-transparent'} border-b border-white/[0.06] p-4 flex items-center justify-between`}>
+                    <div className="w-12 h-12 rounded-2xl bg-white/[0.05] border border-white/[0.1] flex items-center justify-center">
+                      <Icon className="w-6 h-6 text-emerald-400" />
+                    </div>
                     <span className="text-[10px] font-semibold px-2.5 py-1 rounded-full border border-emerald-500/30 bg-emerald-500/10 text-emerald-300 uppercase tracking-wide">
                       {fmt.badge}
                     </span>
                   </div>
+                )}
 
-                  {/* Header Title with Icon */}
-                  <div className="flex items-start gap-3 pt-1">
-                    <div className="w-10 h-10 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center flex-shrink-0">
-                      <Icon className="w-5 h-5 text-emerald-400" />
+                <div className="p-6 space-y-4 flex-1 flex flex-col justify-between">
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between">
+                      <span className="text-[11px] font-semibold text-white/50 uppercase tracking-wider font-mono">
+                        {fmt.category}
+                      </span>
                     </div>
-                    <div>
-                      <h3 className="text-lg font-heading font-bold text-white group-hover:text-emerald-300 transition-colors">
-                        {fmt.title}
-                      </h3>
-                    </div>
+
+                    <h3 className="text-lg font-heading font-bold text-white group-hover:text-emerald-300 transition-colors">
+                      {fmt.title}
+                    </h3>
+
+                    <p className="text-xs text-white/60 leading-relaxed line-clamp-2">
+                      {fmt.desc}
+                    </p>
                   </div>
 
-                  {/* Description */}
-                  <p className="text-xs text-white/60 leading-relaxed line-clamp-3">
-                    {fmt.desc}
-                  </p>
-
                   {/* Tags */}
-                  <div className="flex flex-wrap gap-1.5 pt-1">
-                    {fmt.tags.slice(0, 4).map((tag, idx) => (
+                  <div className="flex flex-wrap gap-1.5 pt-2">
+                    {fmt.tags.slice(0, 3).map((tag, idx) => (
                       <span key={idx} className="text-[10px] text-white/40 bg-white/[0.03] px-2 py-0.5 rounded-md border border-white/[0.04]">
                         #{tag}
                       </span>
                     ))}
                   </div>
-                </div>
 
-                {/* Actions */}
-                <div className="pt-6 border-t border-white/[0.06] mt-6 flex items-center gap-2.5">
-                  {fmt.guideUrl ? (
-                    <>
-                      <Link
-                        href={fmt.guideUrl}
-                        className="flex-1 py-2.5 px-3 rounded-xl bg-white/[0.05] hover:bg-white/[0.1] text-white text-xs font-semibold border border-white/[0.08] text-center transition-all flex items-center justify-center gap-1.5"
-                      >
-                        <BookOpen className="w-3.5 h-3.5 text-white/60" />
-                        <span>Read Guide</span>
-                      </Link>
+                  {/* Actions */}
+                  <div className="pt-4 border-t border-white/[0.06] mt-4 flex items-center gap-2.5">
+                    {fmt.guideUrl ? (
+                      <>
+                        <Link
+                          href={fmt.guideUrl}
+                          className="flex-1 py-2.5 px-3 rounded-xl bg-white/[0.05] hover:bg-white/[0.1] text-white text-xs font-semibold border border-white/[0.08] text-center transition-all flex items-center justify-center gap-1.5"
+                        >
+                          <BookOpen className="w-3.5 h-3.5 text-white/60" />
+                          <span>Read Guide</span>
+                        </Link>
+                        <Link
+                          href={fmt.generatorUrl}
+                          className="py-2.5 px-4 rounded-xl bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 text-xs font-semibold border border-emerald-500/30 text-center transition-all flex items-center justify-center gap-1.5"
+                        >
+                          <Sparkles className="w-3.5 h-3.5" />
+                          <span>Draft</span>
+                        </Link>
+                      </>
+                    ) : (
                       <Link
                         href={fmt.generatorUrl}
-                        className="py-2.5 px-4 rounded-xl bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 text-xs font-semibold border border-emerald-500/30 text-center transition-all flex items-center justify-center gap-1.5"
+                        className="w-full py-2.5 px-4 rounded-xl bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 text-xs font-semibold border border-emerald-500/30 text-center transition-all flex items-center justify-center gap-1.5"
                       >
                         <Sparkles className="w-3.5 h-3.5" />
-                        <span>Draft</span>
+                        <span>Open in Studio & Draft</span>
+                        <ArrowRight className="w-3.5 h-3.5" />
                       </Link>
-                    </>
-                  ) : (
-                    <Link
-                      href={fmt.generatorUrl}
-                      className="w-full py-2.5 px-4 rounded-xl bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 text-xs font-semibold border border-emerald-500/30 text-center transition-all flex items-center justify-center gap-1.5"
-                    >
-                      <Sparkles className="w-3.5 h-3.5" />
-                      <span>Open in Studio & Draft</span>
-                      <ArrowRight className="w-3.5 h-3.5" />
-                    </Link>
-                  )}
+                    )}
+                  </div>
                 </div>
               </div>
             );

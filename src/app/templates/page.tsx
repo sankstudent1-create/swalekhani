@@ -19,6 +19,7 @@ interface GalleryTemplate {
   href: string;
   generatorHref: string;
   icon: any;
+  image?: string;
   accentColor: string;
   bgGlow: string;
   tags: string[];
@@ -38,6 +39,20 @@ const ALL_GALLERY_TEMPLATES: GalleryTemplate[] = [
     accentColor: '#38bdf8',
     bgGlow: 'bg-sky-500/10',
     tags: ['Government', 'Ministry', 'Bilingual', 'Ashoka Emblem', 'Central Gov']
+  },
+  {
+    slug: 'advocate',
+    name: 'Advocate & Legal Practitioner Letterhead',
+    category: 'Legal',
+    badge: 'Bar Council Standard',
+    description: PROFESSION_TEMPLATES['advocate'].shortDesc,
+    href: '/templates/advocate',
+    generatorHref: '/tools/letterpad-generator?template=advocate',
+    icon: Scale,
+    image: '/illustrations/advocate-3d.jpg',
+    accentColor: '#d97706',
+    bgGlow: 'bg-amber-500/10',
+    tags: ['Advocate', 'Legal Notice', 'Bar Council', 'High Court', 'Law Chambers']
   },
   {
     slug: 'company-letterpad',
@@ -90,21 +105,6 @@ const ALL_GALLERY_TEMPLATES: GalleryTemplate[] = [
     accentColor: '#fb923c',
     bgGlow: 'bg-orange-500/10',
     tags: ['Shop', 'Retail', 'GSTIN', 'Quotation', 'MSME']
-  },
-
-  // 12 New Profession Templates
-  {
-    slug: 'advocate',
-    name: 'Advocate & Legal Practitioner Letterhead',
-    category: 'Legal',
-    badge: 'Bar Council Standard',
-    description: PROFESSION_TEMPLATES['advocate'].shortDesc,
-    href: '/templates/advocate',
-    generatorHref: '/tools/letterpad-generator?template=advocate',
-    icon: Scale,
-    accentColor: '#d97706',
-    bgGlow: 'bg-amber-500/10',
-    tags: ['Advocate', 'Legal Notice', 'Bar Council', 'High Court', 'Law Chambers']
   },
   {
     slug: 'ca-accountant',
@@ -340,20 +340,37 @@ export default function TemplatesGalleryPage() {
             return (
               <div
                 key={tpl.slug}
-                className="group relative rounded-3xl bg-[#0d1017] border border-white/[0.08] hover:border-white/[0.2] transition-all duration-300 p-6 flex flex-col justify-between overflow-hidden shadow-xl hover:-translate-y-1"
+                className="group relative rounded-3xl bg-[#0d1017] border border-white/[0.08] hover:border-white/[0.2] transition-all duration-300 flex flex-col justify-between overflow-hidden shadow-xl hover:-translate-y-1.5"
               >
-                {/* Accent Top Border */}
-                <div 
-                  className="absolute top-0 left-0 right-0 h-1 transition-all"
-                  style={{ backgroundColor: tpl.accentColor }}
-                />
-
-                <div className="space-y-4">
-                  {/* Badge & Category */}
-                  <div className="flex items-center justify-between">
-                    <span className="text-[11px] font-semibold text-white/50 uppercase tracking-wider font-mono">
-                      {tpl.category}
-                    </span>
+                {/* 3D Illustration Banner or Accent Header */}
+                {tpl.image ? (
+                  <div className="relative h-44 w-full overflow-hidden bg-black/60 border-b border-white/[0.06]">
+                    <img 
+                      src={tpl.image} 
+                      alt={tpl.name}
+                      className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500 opacity-90 group-hover:opacity-100"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-[#0d1017] via-[#0d1017]/40 to-transparent"></div>
+                    <div className="absolute top-3.5 right-3.5">
+                      <span 
+                        className="text-[10px] font-bold px-2.5 py-1 rounded-full border border-white/20 bg-black/70 backdrop-blur-md uppercase tracking-wider shadow-md"
+                        style={{ color: tpl.accentColor }}
+                      >
+                        {tpl.badge}
+                      </span>
+                    </div>
+                  </div>
+                ) : (
+                  <div 
+                    className="relative h-16 w-full p-4 flex items-center justify-between border-b border-white/[0.06]"
+                    style={{ background: `linear-gradient(135deg, ${tpl.accentColor}18, transparent)` }}
+                  >
+                    <div 
+                      className="w-10 h-10 rounded-xl flex items-center justify-center"
+                      style={{ backgroundColor: `${tpl.accentColor}22` }}
+                    >
+                      <Icon className="w-5 h-5" style={{ color: tpl.accentColor }} />
+                    </div>
                     <span 
                       className="text-[10px] font-semibold px-2.5 py-1 rounded-full border uppercase tracking-wide"
                       style={{ 
@@ -365,54 +382,50 @@ export default function TemplatesGalleryPage() {
                       {tpl.badge}
                     </span>
                   </div>
+                )}
 
-                  {/* Header Title with Icon */}
-                  <div className="flex items-start gap-3 pt-1">
-                    <div 
-                      className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0"
-                      style={{ backgroundColor: `${tpl.accentColor}18` }}
-                    >
-                      <Icon className="w-5 h-5" style={{ color: tpl.accentColor }} />
-                    </div>
-                    <div>
-                      <h3 className="text-lg font-heading font-bold text-white group-hover:text-brand-orange transition-colors">
-                        {tpl.name}
-                      </h3>
-                    </div>
+                <div className="p-6 space-y-4 flex-1 flex flex-col justify-between">
+                  <div className="space-y-2">
+                    <span className="text-[11px] font-semibold text-white/50 uppercase tracking-wider font-mono">
+                      {tpl.category}
+                    </span>
+
+                    <h3 className="text-lg font-heading font-bold text-white group-hover:text-brand-orange transition-colors">
+                      {tpl.name}
+                    </h3>
+
+                    <p className="text-xs text-white/60 leading-relaxed line-clamp-2">
+                      {tpl.description}
+                    </p>
                   </div>
 
-                  {/* Description */}
-                  <p className="text-xs text-white/60 leading-relaxed line-clamp-3">
-                    {tpl.description}
-                  </p>
-
                   {/* Tags */}
-                  <div className="flex flex-wrap gap-1.5 pt-1">
-                    {tpl.tags.slice(0, 4).map((tag, idx) => (
+                  <div className="flex flex-wrap gap-1.5 pt-2">
+                    {tpl.tags.slice(0, 3).map((tag, idx) => (
                       <span key={idx} className="text-[10px] text-white/40 bg-white/[0.03] px-2 py-0.5 rounded-md border border-white/[0.04]">
                         #{tag}
                       </span>
                     ))}
                   </div>
-                </div>
 
-                {/* Card Action Buttons */}
-                <div className="pt-6 border-t border-white/[0.06] mt-6 flex items-center gap-2.5">
-                  <Link
-                    href={tpl.href}
-                    className="flex-1 py-2.5 px-4 rounded-xl bg-white/[0.05] hover:bg-white/[0.1] text-white text-xs font-semibold border border-white/[0.08] text-center transition-all flex items-center justify-center gap-1.5"
-                  >
-                    <span>View Format</span>
-                    <ArrowRight className="w-3.5 h-3.5 text-white/50" />
-                  </Link>
+                  {/* Card Action Buttons */}
+                  <div className="pt-4 border-t border-white/[0.06] mt-4 flex items-center gap-2.5">
+                    <Link
+                      href={tpl.href}
+                      className="flex-1 py-2.5 px-3 rounded-xl bg-white/[0.05] hover:bg-white/[0.1] text-white text-xs font-semibold border border-white/[0.08] text-center transition-all flex items-center justify-center gap-1.5"
+                    >
+                      <span>View Format</span>
+                      <ArrowRight className="w-3.5 h-3.5 text-white/50" />
+                    </Link>
 
-                  <Link
-                    href={tpl.generatorHref}
-                    className="py-2.5 px-4 rounded-xl bg-brand-orange/20 hover:bg-brand-orange/30 text-brand-orange text-xs font-semibold border border-brand-orange/30 text-center transition-all flex items-center justify-center gap-1.5"
-                  >
-                    <Sparkles className="w-3.5 h-3.5" />
-                    <span>Launch</span>
-                  </Link>
+                    <Link
+                      href={tpl.generatorHref}
+                      className="py-2.5 px-4 rounded-xl bg-brand-orange/20 hover:bg-brand-orange/30 text-brand-orange text-xs font-semibold border border-brand-orange/30 text-center transition-all flex items-center justify-center gap-1.5"
+                    >
+                      <Sparkles className="w-3.5 h-3.5" />
+                      <span>Launch</span>
+                    </Link>
+                  </div>
                 </div>
               </div>
             );

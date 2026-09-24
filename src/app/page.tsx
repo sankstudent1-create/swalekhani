@@ -70,6 +70,42 @@ const SAMPLE_PROMPTS: SamplePrompt[] = [
 
 const FEATURED_PRESETS = [
   {
+    id: 'advocate',
+    name: 'Advocate & High Court Chambers',
+    badge: 'Bar Council Format',
+    desc: 'Formal legal letterhead with enrolment details, court jurisdiction, and notice styling.',
+    href: '/tools/letterpad-generator?template=advocate',
+    icon: Scale,
+    image: '/illustrations/advocate-3d.jpg',
+    color: 'from-amber-600/20 to-yellow-600/10',
+    border: 'border-amber-600/30',
+    accent: 'text-yellow-400'
+  },
+  {
+    id: 'leave',
+    name: 'Official Leave Application',
+    badge: 'CCS Leave Rules',
+    desc: 'Standard administrative leave format for CL, EL, Medical, and Station Leaving.',
+    href: '/formats/leave-application',
+    icon: Clock,
+    image: '/illustrations/leave-3d.jpg',
+    color: 'from-emerald-500/20 to-teal-600/10',
+    border: 'border-emerald-500/30',
+    accent: 'text-emerald-400'
+  },
+  {
+    id: 'police',
+    name: 'Police Complaint & Grievance',
+    badge: 'CrPC / BNSS Standard',
+    desc: 'Official representation for lost document intimation, public grievance, and SHO complaints.',
+    href: '/formats',
+    icon: ShieldCheck,
+    image: '/illustrations/police-3d.jpg',
+    color: 'from-blue-600/20 to-sky-600/10',
+    border: 'border-blue-500/30',
+    accent: 'text-blue-400'
+  },
+  {
     id: 'dop',
     name: 'India Post / Central Ministry',
     badge: 'Rajbhasha Standard',
@@ -92,17 +128,6 @@ const FEATURED_PRESETS = [
     accent: 'text-amber-400'
   },
   {
-    id: 'advocate',
-    name: 'Advocate & High Court Chambers',
-    badge: 'Bar Council Format',
-    desc: 'Formal legal letterhead with enrolment details, court jurisdiction, and notice styling.',
-    href: '/tools/letterpad-generator?template=advocate',
-    icon: Scale,
-    color: 'from-amber-600/20 to-yellow-600/10',
-    border: 'border-amber-600/30',
-    accent: 'text-yellow-400'
-  },
-  {
     id: 'doctor',
     name: 'Doctor & Hospital Rx Pad',
     badge: 'NMC Ethics 2023',
@@ -112,28 +137,6 @@ const FEATURED_PRESETS = [
     color: 'from-cyan-500/20 to-teal-600/10',
     border: 'border-cyan-500/30',
     accent: 'text-cyan-400'
-  },
-  {
-    id: 'company',
-    name: 'Corporate & MSME Letterhead',
-    badge: 'MCA & GST Compliant',
-    desc: 'Section 12(3)(c) compliant business stationery with CIN, GSTIN, and registered office.',
-    href: '/tools/letterpad-generator?preset=company&tpl=B',
-    icon: Building2,
-    color: 'from-purple-500/20 to-indigo-600/10',
-    border: 'border-purple-500/30',
-    accent: 'text-purple-400'
-  },
-  {
-    id: 'leave',
-    name: 'Official Leave Application',
-    badge: 'CCS Leave Rules',
-    desc: 'Standard administrative leave format for CL, EL, Medical, and Station Leaving.',
-    href: '/formats/leave-application',
-    icon: Clock,
-    color: 'from-emerald-500/20 to-teal-600/10',
-    border: 'border-emerald-500/30',
-    accent: 'text-emerald-400'
   }
 ];
 
@@ -483,35 +486,54 @@ export default function HomePage() {
               return (
                 <div
                   key={item.id}
-                  className="group relative rounded-3xl bg-[#0d1017] border border-white/[0.08] hover:border-white/[0.2] transition-all duration-300 p-6 flex flex-col justify-between overflow-hidden shadow-xl hover:-translate-y-1"
+                  className="group relative rounded-3xl bg-[#0d1017] border border-white/[0.08] hover:border-white/[0.2] transition-all duration-300 flex flex-col justify-between overflow-hidden shadow-xl hover:-translate-y-1.5"
                 >
-                  <div className="space-y-4">
-                    <div className="flex items-center justify-between">
-                      <div className={`w-12 h-12 rounded-2xl bg-gradient-to-br ${item.color} border ${item.border} flex items-center justify-center`}>
+                  {/* 3D Illustration Banner or Styled Gradient Header */}
+                  {item.image ? (
+                    <div className="relative h-44 w-full overflow-hidden bg-black/60 border-b border-white/[0.06]">
+                      <img 
+                        src={item.image} 
+                        alt={item.name}
+                        className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500 opacity-90 group-hover:opacity-100"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-[#0d1017] via-[#0d1017]/40 to-transparent"></div>
+                      <div className="absolute top-3.5 right-3.5">
+                        <span className="text-[10px] font-bold px-2.5 py-1 rounded-full border border-white/20 bg-black/70 backdrop-blur-md text-white/90 uppercase tracking-wider shadow-md">
+                          {item.badge}
+                        </span>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className={`h-24 w-full bg-gradient-to-br ${item.color} border-b border-white/[0.06] p-4 flex items-center justify-between`}>
+                      <div className="w-12 h-12 rounded-2xl bg-white/[0.05] border border-white/[0.1] flex items-center justify-center">
                         <Icon className={`w-6 h-6 ${item.accent}`} />
                       </div>
                       <span className="text-[10px] font-semibold uppercase tracking-wider px-2.5 py-1 rounded-full bg-white/[0.04] border border-white/[0.08] text-white/70">
                         {item.badge}
                       </span>
                     </div>
+                  )}
 
-                    <h3 className="font-heading font-bold text-xl text-white group-hover:text-brand-orange transition-colors">
-                      {item.name}
-                    </h3>
+                  <div className="p-6 space-y-4 flex-1 flex flex-col justify-between">
+                    <div className="space-y-2">
+                      <h3 className="font-heading font-bold text-xl text-white group-hover:text-brand-orange transition-colors">
+                        {item.name}
+                      </h3>
 
-                    <p className="text-xs text-white/60 leading-relaxed">
-                      {item.desc}
-                    </p>
-                  </div>
+                      <p className="text-xs text-white/60 leading-relaxed">
+                        {item.desc}
+                      </p>
+                    </div>
 
-                  <div className="pt-6 border-t border-white/[0.06] mt-6">
-                    <Link
-                      href={item.href}
-                      className="w-full py-2.5 px-4 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] text-white text-xs font-semibold border border-white/[0.08] text-center transition-all flex items-center justify-between group/btn"
-                    >
-                      <span>Launch Template</span>
-                      <ChevronRight className="w-4 h-4 text-white/40 group-hover/btn:translate-x-1 group-hover/btn:text-white transition-all" />
-                    </Link>
+                    <div className="pt-4 border-t border-white/[0.06] mt-4">
+                      <Link
+                        href={item.href}
+                        className="w-full py-2.5 px-4 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] text-white text-xs font-semibold border border-white/[0.08] text-center transition-all flex items-center justify-between group/btn"
+                      >
+                        <span>Launch Template</span>
+                        <ChevronRight className="w-4 h-4 text-white/40 group-hover/btn:translate-x-1 group-hover/btn:text-white transition-all" />
+                      </Link>
+                    </div>
                   </div>
                 </div>
               );

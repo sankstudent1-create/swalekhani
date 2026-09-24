@@ -3,6 +3,8 @@ import type { MetadataRoute } from "next";
 const routes: { path: string; priority: number; changeFrequency: "always" | "hourly" | "daily" | "weekly" | "monthly" | "yearly" | "never" }[] = [
   { path: "", priority: 1.0, changeFrequency: "daily" },
   { path: "/tools/letterpad-generator", priority: 1.0, changeFrequency: "daily" },
+  { path: "/templates", priority: 0.95, changeFrequency: "weekly" },
+  { path: "/formats", priority: 0.95, changeFrequency: "weekly" },
   { path: "/tools", priority: 0.9, changeFrequency: "weekly" },
   { path: "/templates/government-letterpad", priority: 0.9, changeFrequency: "weekly" },
   { path: "/templates/company-letterpad", priority: 0.9, changeFrequency: "weekly" },

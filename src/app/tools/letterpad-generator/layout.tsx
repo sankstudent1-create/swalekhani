@@ -1,4 +1,5 @@
 import { Metadata } from 'next';
+import GeneratorGuide from './GeneratorGuide';
 
 export const metadata: Metadata = {
   title: 'Official AI Letterpad Studio & Document Generator',
@@ -31,5 +32,10 @@ export const metadata: Metadata = {
 };
 
 export default function Layout({ children }: { children: React.ReactNode }) {
-  return children;
+  return (
+    <>
+      {children}
+      <GeneratorGuide />
+    </>
+  );
 }

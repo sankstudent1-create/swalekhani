@@ -97,7 +97,7 @@ export default function GovernmentLetterpadPage() {
         <nav className="flex items-center gap-2 text-xs font-medium text-white/50 mb-6">
           <Link href="/" className="hover:text-white transition-colors">Home</Link>
           <span>/</span>
-          <Link href="/tools" className="hover:text-white transition-colors">Templates</Link>
+          <Link href="/templates" className="hover:text-white transition-colors">Templates</Link>
           <span>/</span>
           <span className="text-white/80">Government Office Letterpad</span>
         </nav>
@@ -143,7 +143,7 @@ export default function GovernmentLetterpadPage() {
             </Link>
 
             <Link
-              href="/tools"
+              href="/templates"
               className="inline-flex items-center gap-2 px-6 py-3.5 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] text-white/80 hover:text-white border border-white/[0.08] text-sm font-medium transition-all"
             >
               <Layers className="w-4 h-4" />

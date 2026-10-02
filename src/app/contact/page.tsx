@@ -47,6 +47,42 @@ export default function ContactPage() {
           </div>
         </div>
         
+        {/* Support details — what we help with */}
+        <div className="mt-12 p-8 bg-white/[0.03] rounded-2xl border border-white/[0.07] text-left">
+          <h2 className="text-2xl font-semibold mb-6 text-center">How we can help</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-sm leading-relaxed">
+            <div>
+              <h3 className="font-semibold text-white mb-2">Template requests</h3>
+              <p className="text-white/55">
+                Need a letterpad format for a profession, department, or use-case we don&apos;t cover yet?
+                Write to <a href="mailto:support@swinfosystems.com" className="text-white/80 underline decoration-white/25 underline-offset-2 hover:text-white">support@swinfosystems.com</a> with
+                the exact header details and we&apos;ll prioritise it in our template roadmap.
+              </p>
+            </div>
+            <div>
+              <h3 className="font-semibold text-white mb-2">Bug reports &amp; printing issues</h3>
+              <p className="text-white/55">
+                If a PDF export misaligns, a font doesn&apos;t render, or the studio misbehaves on your device,
+                include your browser, device, and a screenshot. Most rendering issues are fixed within a week.
+              </p>
+            </div>
+            <div>
+              <h3 className="font-semibold text-white mb-2">Response time</h3>
+              <p className="text-white/55">
+                We reply to every genuine support email within <strong className="text-white/75">2 business days</strong>.
+                For quick questions, the FAQ sections on our template pages usually have the answer already.
+              </p>
+            </div>
+            <div>
+              <h3 className="font-semibold text-white mb-2">Who we are</h3>
+              <p className="text-white/55">
+                Swalekhani is built and maintained by <strong className="text-white/75">SW InfoSystems (Sanket Wanve Technologies)</strong>,
+                an independent Indian software studio crafting practical tools for education, operations, and publishing workflows.
+              </p>
+            </div>
+          </div>
+        </div>
+
         <div className="mt-16 p-8 bg-white/5 rounded-2xl border border-white/5 text-center">
           <h2 className="text-2xl font-semibold mb-4">Connect with us</h2>
           <p className="text-white/50 mb-6">For business inquiries and collaboration, reach out via our official channels.</p>

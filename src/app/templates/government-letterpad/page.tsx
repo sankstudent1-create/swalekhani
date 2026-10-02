@@ -1,7 +1,7 @@
 import React from 'react';
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { Landmark, ArrowRight, CheckCircle2, Shield, FileText, Sparkles, Copy, Layers } from 'lucide-react';
+import { Landmark, ArrowRight, CheckCircle2, Shield, ShieldAlert, FileText, Sparkles, Copy, Layers } from 'lucide-react';
 import ShareButtons from '@/components/seo/ShareButtons';
 import FaqAccordion, { FaqItem } from '@/components/seo/FaqAccordion';
 import AdSlot from '@/components/AdSlot';
@@ -75,7 +75,11 @@ const FAQ_ITEMS: FaqItem[] = [
   {
     question: "How do I print or export the letterpad as PDF without watermarks?",
     answer: "Click 'Generate with Swalekhani', customize your letter on the live A4 paper canvas, and click 'Export PDF' in the top action bar. The system renders a pixel-perfect, vector A4 PDF directly in your browser without any watermark or fee."
-  }
+  },
+  {
+    question: "Are Swalekhani\u2019s government letterheads official documents?",
+    answer: "No. Swalekhani generates unofficial design drafts for practice, study, and layout reference only. They are not issued by the Government of India, any ministry, or public authority, and must never be presented as genuine official communications or used to impersonate government officials. For real administrative use, always verify format requirements against the official CSMOP manual."
+  },
 ];
 
 export default function GovernmentLetterpadPage() {
@@ -112,6 +116,20 @@ export default function GovernmentLetterpadPage() {
           <p className="text-base sm:text-lg text-white/70 leading-relaxed">
             Standardized, bilingual letterhead format for Government of India ministries, state administrative departments, and statutory bodies. Complies with the Central Secretariat Manual of Office Procedure (CSMOP).
           </p>
+
+          {/* Unofficial Draft Notice — policy safeguard */}
+          <div className="mt-6 p-4 sm:p-5 rounded-2xl bg-amber-500/[0.07] border border-amber-500/25 flex items-start gap-3.5">
+            <ShieldAlert className="w-5 h-5 text-amber-400 flex-shrink-0 mt-0.5" />
+            <div className="text-sm leading-relaxed">
+              <p className="font-semibold text-amber-300 mb-1">Unofficial draft tool — not issued by any government</p>
+              <p className="text-white/65">
+                Swalekhani creates <strong className="text-white/85">unofficial design drafts</strong> for practice, study, and layout reference only.
+                These templates are not issued by the Government of India, any ministry, or public authority, and must never be presented
+                as genuine official documents or used to impersonate officials. Misuse is the user&apos;s sole responsibility.
+                See our <Link href="/disclaimer" className="underline decoration-amber-400/50 underline-offset-2 hover:text-amber-300">Disclaimer</Link>.
+              </p>
+            </div>
+          </div>
 
           {/* Main Action Bar */}
           <div className="mt-8 flex flex-wrap items-center gap-4">

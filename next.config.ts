@@ -31,7 +31,16 @@ const nextConfig: NextConfig = {
       source: `/tools/${slug}`,
       destination: '/tools',
       permanent: true,
-    }));
+    })).concat(
+      // Gov templates removed in the corporate-focus redesign — send to the gallery
+      ['government-letterpad', 'political-leader', 'gram-panchayat'].map(
+        (slug) => ({
+          source: `/templates/${slug}`,
+          destination: '/templates',
+          permanent: true,
+        }),
+      ),
+    );
   },
 };
 

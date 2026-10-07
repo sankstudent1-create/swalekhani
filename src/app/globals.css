@@ -1,20 +1,20 @@
 @import "tailwindcss";
 
 :root {
-  --background: #07090f;
-  --foreground: #e5e9f6;
-  --brand-orange: #f29a4a;
-  --brand-pink: #f06a9b;
-  --brand-sky: #67a9ff;
-  --brand-orange-light: #3b2617;
-  --brand-pink-light: #3a1f31;
-  --brand-sky-light: #1b2d47;
-  --accent-warm: #f0b05d;
-  --accent-cool: #6ab0ff;
-  --surface-1: #0f131d;
-  --surface-2: #151a26;
-  --surface-3: #1c2332;
-  --border-soft: rgba(255, 255, 255, 0.1);
+  --background: #f7f5f1;
+  --foreground: #1e293b;
+  --brand-orange: #ea7c28;
+  --brand-pink: #e0528a;
+  --brand-sky: #3b82c4;
+  --brand-orange-light: #fdeeda;
+  --brand-pink-light: #fbdcea;
+  --brand-sky-light: #dbeafe;
+  --accent-warm: #d97a1f;
+  --accent-cool: #3b82c4;
+  --surface-1: #ffffff;
+  --surface-2: #f1ede6;
+  --surface-3: #e8e2d6;
+  --border-soft: rgba(30, 41, 59, 0.12);
   --site-combo-main: linear-gradient(96deg, var(--brand-orange) 0%, var(--brand-pink) 52%, var(--brand-sky) 100%);
   --site-combo-warm: linear-gradient(120deg, #f4aa66, #f27ea9);
   --site-combo-cool: linear-gradient(120deg, #7fb6ff, #c97bb7);
@@ -31,9 +31,9 @@
 
 body {
   background:
-    radial-gradient(circle at 14% -8%, rgba(242, 154, 74, 0.22), transparent 42%),
-    radial-gradient(circle at 90% 18%, rgba(103, 169, 255, 0.18), transparent 36%),
-    radial-gradient(circle at 50% 100%, rgba(240, 106, 155, 0.16), transparent 48%),
+    radial-gradient(circle at 14% -8%, rgba(234, 124, 40, 0.10), transparent 42%),
+    radial-gradient(circle at 90% 18%, rgba(59, 130, 196, 0.08), transparent 36%),
+    radial-gradient(circle at 50% 100%, rgba(224, 82, 138, 0.07), transparent 48%),
     var(--background);
   color: var(--foreground);
   font-family: var(--font-inter), system-ui, -apple-system, sans-serif;

@@ -87,6 +87,7 @@ const OFFICIAL_FORMATS: FormatItem[] = [
   },
   {
     slug: 'consumer-complaint',
+    guideUrl: '/formats/complaint-letter',
     title: 'Consumer Complaint Letter',
     category: 'Legal & Public',
     badge: 'Consumer Rights Format',
@@ -154,7 +155,7 @@ export default function FormatsIndexPage() {
   }, [searchQuery, selectedCategory]);
 
   return (
-    <main className="min-h-screen bg-[#07090f] text-white pt-24 pb-20 selection:bg-brand-pink/30">
+    <main className="min-h-screen bg-[#f7f5f1] text-slate-900 pt-24 pb-20 selection:bg-brand-pink/30">
       {/* Background Ambient Glow */}
       <div className="fixed inset-0 pointer-events-none z-0">
         <div className="absolute top-10 left-1/2 -translate-x-1/2 w-[850px] h-[450px] bg-gradient-to-r from-emerald-500/10 via-teal-500/10 to-brand-sky/10 blur-[150px] rounded-full"></div>
@@ -163,10 +164,10 @@ export default function FormatsIndexPage() {
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Breadcrumb */}
-        <nav className="flex items-center gap-2 text-xs font-medium text-white/50 mb-6">
-          <Link href="/" className="hover:text-white transition-colors">Home</Link>
+        <nav className="flex items-center gap-2 text-xs font-medium text-slate-500 mb-6">
+          <Link href="/" className="hover:text-slate-900 transition-colors">Home</Link>
           <span>/</span>
-          <span className="text-white/80">Official Formats Library</span>
+          <span className="text-slate-700">Official Formats Library</span>
         </nav>
 
         {/* Hero Header */}
@@ -176,11 +177,11 @@ export default function FormatsIndexPage() {
             <span>Statutory & Administrative Standard Formats</span>
           </div>
 
-          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-heading font-bold text-white tracking-tight mb-4 leading-tight">
+          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-heading font-bold text-slate-900 tracking-tight mb-4 leading-tight">
             Official Indian Letter Formats & Drafting Guides
           </h1>
 
-          <p className="text-base sm:text-lg text-white/70 leading-relaxed">
+          <p className="text-base sm:text-lg text-slate-600 leading-relaxed">
             Standardized formats for Corporate applications, RTI, Leave letters, Office Orders, and Complaint letters with instant AI drafting.
           </p>
         </div>
@@ -191,13 +192,13 @@ export default function FormatsIndexPage() {
         {/* Search & Filter Bar */}
         <div className="space-y-4 mb-10 max-w-3xl mx-auto">
           <div className="relative">
-            <Search className="w-5 h-5 text-white/40 absolute left-4 top-1/2 -translate-y-1/2" />
+            <Search className="w-5 h-5 text-slate-400 absolute left-4 top-1/2 -translate-y-1/2" />
             <input
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search formats (e.g. Leave, RTI, Complaint, Office Order, Police)..."
-              className="w-full pl-12 pr-4 py-3.5 rounded-2xl bg-white/[0.04] border border-white/[0.1] text-sm text-white placeholder-white/40 focus:outline-none focus:border-emerald-400 transition-colors shadow-lg"
+              className="w-full pl-12 pr-4 py-3.5 rounded-2xl bg-white border border-slate-200 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:border-emerald-400 transition-colors shadow-lg"
             />
           </div>
 
@@ -210,7 +211,7 @@ export default function FormatsIndexPage() {
                 className={`px-4 py-2 rounded-xl text-xs font-semibold tracking-wide border transition-all ${
                   selectedCategory === cat
                     ? 'bg-emerald-500 text-white border-emerald-400 shadow-[0_0_15px_rgba(16,185,129,0.3)]'
-                    : 'bg-white/[0.03] text-white/70 border-white/[0.08] hover:bg-white/[0.08] hover:text-white'
+                    : 'bg-white/[0.03] text-slate-600 border-slate-200 hover:bg-slate-100 hover:text-slate-900'
                 }`}
               >
                 {cat}
@@ -226,11 +227,11 @@ export default function FormatsIndexPage() {
             return (
               <div
                 key={fmt.slug}
-                className="group relative rounded-3xl bg-[#0d1017] border border-white/[0.08] hover:border-emerald-500/40 transition-all duration-300 flex flex-col justify-between overflow-hidden shadow-xl hover:-translate-y-1.5"
+                className="group relative rounded-3xl bg-white border border-slate-200 hover:border-emerald-500/40 transition-all duration-300 flex flex-col justify-between overflow-hidden shadow-xl hover:-translate-y-1.5"
               >
                 {/* 3D Illustration Banner or Vibrant Gradient Header */}
                 {fmt.image ? (
-                  <div className="relative h-44 w-full overflow-hidden bg-black/60 border-b border-white/[0.06]">
+                  <div className="relative h-44 w-full overflow-hidden bg-black/60 border-b border-slate-200">
                     <img 
                       src={fmt.image} 
                       alt={fmt.title}
@@ -238,14 +239,14 @@ export default function FormatsIndexPage() {
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-[#0d1017] via-[#0d1017]/40 to-transparent"></div>
                     <div className="absolute top-3.5 right-3.5">
-                      <span className="text-[10px] font-bold px-2.5 py-1 rounded-full border border-white/20 bg-black/70 backdrop-blur-md text-emerald-300 uppercase tracking-wide shadow-md">
+                      <span className="text-[10px] font-bold px-2.5 py-1 rounded-full border border-slate-200 bg-black/70 backdrop-blur-md text-emerald-300 uppercase tracking-wide shadow-md">
                         {fmt.badge}
                       </span>
                     </div>
                   </div>
                 ) : (
-                  <div className={`h-24 w-full bg-gradient-to-br ${fmt.gradient || 'from-emerald-500/10 to-transparent'} border-b border-white/[0.06] p-4 flex items-center justify-between`}>
-                    <div className="w-12 h-12 rounded-2xl bg-white/[0.05] border border-white/[0.1] flex items-center justify-center">
+                  <div className={`h-24 w-full bg-gradient-to-br ${fmt.gradient || 'from-emerald-500/10 to-transparent'} border-b border-slate-200 p-4 flex items-center justify-between`}>
+                    <div className="w-12 h-12 rounded-2xl bg-white/[0.05] border border-slate-200 flex items-center justify-center">
                       <Icon className="w-6 h-6 text-emerald-400" />
                     </div>
                     <span className="text-[10px] font-semibold px-2.5 py-1 rounded-full border border-emerald-500/30 bg-emerald-500/10 text-emerald-300 uppercase tracking-wide">
@@ -257,16 +258,16 @@ export default function FormatsIndexPage() {
                 <div className="p-6 space-y-4 flex-1 flex flex-col justify-between">
                   <div className="space-y-3">
                     <div className="flex items-center justify-between">
-                      <span className="text-[11px] font-semibold text-white/50 uppercase tracking-wider font-mono">
+                      <span className="text-[11px] font-semibold text-slate-500 uppercase tracking-wider font-mono">
                         {fmt.category}
                       </span>
                     </div>
 
-                    <h3 className="text-lg font-heading font-bold text-white group-hover:text-emerald-300 transition-colors">
+                    <h3 className="text-lg font-heading font-bold text-slate-900 group-hover:text-emerald-300 transition-colors">
                       {fmt.title}
                     </h3>
 
-                    <p className="text-xs text-white/60 leading-relaxed line-clamp-2">
+                    <p className="text-xs text-slate-500 leading-relaxed line-clamp-2">
                       {fmt.desc}
                     </p>
                   </div>
@@ -274,21 +275,21 @@ export default function FormatsIndexPage() {
                   {/* Tags */}
                   <div className="flex flex-wrap gap-1.5 pt-2">
                     {fmt.tags.slice(0, 3).map((tag, idx) => (
-                      <span key={idx} className="text-[10px] text-white/40 bg-white/[0.03] px-2 py-0.5 rounded-md border border-white/[0.04]">
+                      <span key={idx} className="text-[10px] text-slate-400 bg-white/[0.03] px-2 py-0.5 rounded-md border border-white/[0.04]">
                         #{tag}
                       </span>
                     ))}
                   </div>
 
                   {/* Actions */}
-                  <div className="pt-4 border-t border-white/[0.06] mt-4 flex items-center gap-2.5">
+                  <div className="pt-4 border-t border-slate-200 mt-4 flex items-center gap-2.5">
                     {fmt.guideUrl ? (
                       <>
                         <Link
                           href={fmt.guideUrl}
-                          className="flex-1 py-2.5 px-3 rounded-xl bg-white/[0.05] hover:bg-white/[0.1] text-white text-xs font-semibold border border-white/[0.08] text-center transition-all flex items-center justify-center gap-1.5"
+                          className="flex-1 py-2.5 px-3 rounded-xl bg-white/[0.05] hover:bg-white/[0.1] text-slate-900 text-xs font-semibold border border-slate-200 text-center transition-all flex items-center justify-center gap-1.5"
                         >
-                          <BookOpen className="w-3.5 h-3.5 text-white/60" />
+                          <BookOpen className="w-3.5 h-3.5 text-slate-500" />
                           <span>Read Guide</span>
                         </Link>
                         <Link
@@ -318,8 +319,8 @@ export default function FormatsIndexPage() {
 
         {/* Empty State */}
         {filteredFormats.length === 0 && (
-          <div className="text-center py-16 p-8 rounded-3xl bg-white/[0.02] border border-white/[0.08]">
-            <p className="text-white/60 text-sm">No formats matched &quot;{searchQuery}&quot;.</p>
+          <div className="text-center py-16 p-8 rounded-3xl bg-white border border-slate-200">
+            <p className="text-slate-500 text-sm">No formats matched &quot;{searchQuery}&quot;.</p>
             <button
               onClick={() => { setSearchQuery(""); setSelectedCategory("All"); }}
               className="mt-4 px-4 py-2 rounded-xl bg-white text-black text-xs font-semibold"
@@ -332,10 +333,10 @@ export default function FormatsIndexPage() {
         {/* FAQs */}
         <section className="mt-20 max-w-4xl mx-auto space-y-6">
           <div className="text-center mb-8">
-            <h2 className="text-2xl sm:text-3xl font-heading font-bold text-white mb-2">
+            <h2 className="text-2xl sm:text-3xl font-heading font-bold text-slate-900 mb-2">
               Frequently Asked Questions on Official Formats
             </h2>
-            <p className="text-sm text-white/60">
+            <p className="text-sm text-slate-500">
               Guidance on statutory compliance, Marathi / Hindi Devanagari drafting, and legal standards.
             </p>
           </div>
@@ -355,12 +356,12 @@ export default function FormatsIndexPage() {
                 a: "Once you draft your letter in the Studio, click 'Download PDF' for an unwatermarked, high-resolution vector A4 PDF, or 'Print' to send directly to your connected office letterhead printer."
               }
             ].map((faq, i) => (
-              <div key={i} className="p-6 rounded-2xl bg-white/[0.02] border border-white/[0.06]">
-                <h3 className="text-base font-semibold text-white mb-2 flex items-start gap-2.5">
+              <div key={i} className="p-6 rounded-2xl bg-white border border-slate-200">
+                <h3 className="text-base font-semibold text-slate-900 mb-2 flex items-start gap-2.5">
                   <HelpCircle className="w-5 h-5 text-emerald-400 flex-shrink-0 mt-0.5" />
                   <span>{faq.q}</span>
                 </h3>
-                <p className="text-sm text-white/65 pl-7 leading-relaxed">{faq.a}</p>
+                <p className="text-sm text-slate-500 pl-7 leading-relaxed">{faq.a}</p>
               </div>
             ))}
           </div>

@@ -82,7 +82,7 @@ export default function ShopLetterpadPage() {
   const adsEnabled = process.env.NEXT_PUBLIC_ADS_ENABLED === "true";
 
   return (
-    <main className="min-h-screen bg-[#07090f] text-white pt-24 pb-20 selection:bg-brand-pink/30">
+    <main className="min-h-screen bg-[#f7f5f1] text-slate-900 pt-24 pb-20 selection:bg-brand-pink/30">
       {/* Background Glow */}
       <div className="fixed inset-0 pointer-events-none z-0">
         <div className="absolute top-10 left-1/2 -translate-x-1/2 w-[750px] h-[450px] bg-amber-500/10 blur-[150px] rounded-full"></div>
@@ -90,12 +90,12 @@ export default function ShopLetterpadPage() {
 
       <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Breadcrumb */}
-        <nav className="flex items-center gap-2 text-xs font-medium text-white/50 mb-6">
-          <Link href="/" className="hover:text-white transition-colors">Home</Link>
+        <nav className="flex items-center gap-2 text-xs font-medium text-slate-500 mb-6">
+          <Link href="/" className="hover:text-slate-900 transition-colors">Home</Link>
           <span>/</span>
-          <Link href="/tools" className="hover:text-white transition-colors">Templates</Link>
+          <Link href="/tools" className="hover:text-slate-900 transition-colors">Templates</Link>
           <span>/</span>
-          <span className="text-white/80">Shop Letterpad Design</span>
+          <span className="text-slate-700">Shop Letterpad Design</span>
         </nav>
 
         {/* Hero Header */}
@@ -105,11 +105,11 @@ export default function ShopLetterpadPage() {
             <span>Retail & Commercial Trading</span>
           </div>
 
-          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-heading font-bold text-white tracking-tight mb-4 leading-tight">
+          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-heading font-bold text-slate-900 tracking-tight mb-4 leading-tight">
             Shop Letterpad Design & Retail Letterhead Format
           </h1>
 
-          <p className="text-base sm:text-lg text-white/70 leading-relaxed">
+          <p className="text-base sm:text-lg text-slate-600 leading-relaxed">
             Create high-impact letterheads for retail shops, wholesale distributors, hardware stores, and commercial traders. Includes GSTIN details, shop license numbers, and AI quotation drafting.
           </p>
 
@@ -117,7 +117,7 @@ export default function ShopLetterpadPage() {
           <div className="mt-8 flex flex-wrap items-center gap-4">
             <Link
               href="/tools/letterpad-generator?preset=shop&tpl=A"
-              className="inline-flex items-center gap-2.5 px-7 py-3.5 rounded-xl bg-gradient-to-r from-amber-500 via-orange-500 to-rose-500 text-white font-semibold text-base shadow-[0_10px_30px_rgba(245,158,11,0.25)] hover:shadow-[0_15px_40px_rgba(245,158,11,0.35)] hover:-translate-y-0.5 transition-all"
+              className="inline-flex items-center gap-2.5 px-7 py-3.5 rounded-xl bg-gradient-to-r from-amber-500 via-orange-500 to-rose-500 text-slate-900 font-semibold text-base shadow-[0_10px_30px_rgba(245,158,11,0.25)] hover:shadow-[0_15px_40px_rgba(245,158,11,0.35)] hover:-translate-y-0.5 transition-all"
             >
               <Sparkles className="w-5 h-5" />
               Design Shop Letterpad
@@ -126,7 +126,7 @@ export default function ShopLetterpadPage() {
 
             <Link
               href="/tools"
-              className="inline-flex items-center gap-2 px-6 py-3.5 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] text-white/80 hover:text-white border border-white/[0.08] text-sm font-medium transition-all"
+              className="inline-flex items-center gap-2 px-6 py-3.5 rounded-xl bg-white hover:bg-slate-100 text-slate-700 hover:text-slate-900 border border-slate-200 text-sm font-medium transition-all"
             >
               <Layers className="w-4 h-4" />
               Browse All Formats
@@ -138,10 +138,10 @@ export default function ShopLetterpadPage() {
         {adsEnabled && <AdSlot slotKey="content-top" label="Sponsored Content" />}
 
         {/* Core Guide Content (300-500 words) */}
-        <article className="prose prose-invert max-w-none space-y-8 my-10 text-white/80 leading-relaxed">
+        <article className="prose prose max-w-none space-y-8 my-10 text-slate-700 leading-relaxed">
           
           <section className="space-y-4">
-            <h2 className="text-2xl font-heading font-bold text-white flex items-center gap-2.5">
+            <h2 className="text-2xl font-heading font-bold text-slate-900 flex items-center gap-2.5">
               <ShoppingBag className="w-6 h-6 text-amber-400" />
               Commercial Value of Professional Shop Letterheads
             </h2>
@@ -155,7 +155,7 @@ export default function ShopLetterpadPage() {
 
           {/* Key Checklist */}
           <section className="space-y-4">
-            <h3 className="text-xl font-heading font-semibold text-white">
+            <h3 className="text-xl font-heading font-semibold text-slate-900">
               Essential Fields for Shop & Trading Letterpads
             </h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 not-prose">
@@ -167,11 +167,11 @@ export default function ShopLetterpadPage() {
                 { title: "Bank & UPI Payment Details", desc: "Optional footer ribbon with Current A/c details and UPI VPA." },
                 { title: "Authorized Signature & Stamp", desc: "Proprietor / Partner authorization block." },
               ].map((item, idx) => (
-                <div key={idx} className="p-4 rounded-xl bg-white/[0.02] border border-white/[0.06] flex items-start gap-3">
+                <div key={idx} className="p-4 rounded-xl bg-white border border-slate-200 flex items-start gap-3">
                   <CheckCircle2 className="w-5 h-5 text-amber-400 flex-shrink-0 mt-0.5" />
                   <div>
-                    <h4 className="text-sm font-semibold text-white">{item.title}</h4>
-                    <p className="text-xs text-white/60 mt-0.5">{item.desc}</p>
+                    <h4 className="text-sm font-semibold text-slate-900">{item.title}</h4>
+                    <p className="text-xs text-slate-500 mt-0.5">{item.desc}</p>
                   </div>
                 </div>
               ))}
@@ -180,43 +180,43 @@ export default function ShopLetterpadPage() {
 
           {/* Formatted Sample */}
           <section className="space-y-4">
-            <h3 className="text-xl font-heading font-semibold text-white flex items-center gap-2">
+            <h3 className="text-xl font-heading font-semibold text-slate-900 flex items-center gap-2">
               <FileText className="w-5 h-5 text-amber-400" />
               Sample Shop Quotation Letter
             </h3>
-            <div className="p-6 rounded-2xl bg-[#0d1017] border border-white/[0.1] text-white/90 text-sm leading-relaxed shadow-inner font-sans">
-              <div className="text-center border-b border-white/[0.1] pb-4 mb-4">
+            <div className="p-6 rounded-2xl bg-white border border-slate-200 text-slate-800 text-sm leading-relaxed shadow-inner font-sans">
+              <div className="text-center border-b border-slate-200 pb-4 mb-4">
                 <p className="text-xs text-amber-400 font-mono tracking-widest">|| श्री गणेशाय नमः ||</p>
-                <h4 className="text-lg font-bold text-white tracking-wide">SHREE GANESH COMMERCIAL TRADING CO.</h4>
-                <p className="text-xs text-white/60">Wholesale & Retail Distributors | Electrical & Hardware Supplies</p>
-                <p className="text-xs text-white/50">Shop No. 18, Central Market Yard, Pune - 411002 | GSTIN: 27AABCS1234F1Z8</p>
+                <h4 className="text-lg font-bold text-slate-900 tracking-wide">SHREE GANESH COMMERCIAL TRADING CO.</h4>
+                <p className="text-xs text-slate-500">Wholesale & Retail Distributors | Electrical & Hardware Supplies</p>
+                <p className="text-xs text-slate-500">Shop No. 18, Central Market Yard, Pune - 411002 | GSTIN: 27AABCS1234F1Z8</p>
                 <p className="text-xs text-amber-300/80">Ph: +91-20-24450000 | Mob: +91-9822012345</p>
               </div>
 
-              <div className="flex justify-between text-xs text-white/60 mb-4 font-mono">
+              <div className="flex justify-between text-xs text-slate-500 mb-4 font-mono">
                 <span>Ref: SGT/QTN/2026/412</span>
                 <span>Date: 23-Sep-2026</span>
               </div>
 
               <div className="text-xs space-y-1 mb-4">
-                <p className="font-semibold text-white">To: M/s Urban BuildCon Pvt Ltd</p>
+                <p className="font-semibold text-slate-900">To: M/s Urban BuildCon Pvt Ltd</p>
                 <p>Site Office: Sector 4, Hinjewadi, Pune</p>
               </div>
 
-              <p className="text-xs font-bold text-white mb-2">
+              <p className="text-xs font-bold text-slate-900 mb-2">
                 Subject: Formal Price Quotation for Electrical Conduits & Heavy Wiring Cables
               </p>
 
-              <div className="text-xs space-y-2 text-white/80">
+              <div className="text-xs space-y-2 text-slate-700">
                 <p>Respected Sir,</p>
                 <p>With reference to your inquiry dated 20th Sept 2026, we are pleased to submit our most competitive wholesale rates for the required electrical supplies...</p>
               </div>
 
               <div className="flex justify-between items-end text-xs pt-6">
-                <p className="text-white/40">Terms: 18% GST Extra | Delivery within 48 Hrs</p>
+                <p className="text-slate-400">Terms: 18% GST Extra | Delivery within 48 Hrs</p>
                 <div className="text-right">
-                  <p className="font-semibold text-white">For Shree Ganesh Commercial Trading Co.</p>
-                  <p className="text-white/50">Authorized Proprietor</p>
+                  <p className="font-semibold text-slate-900">For Shree Ganesh Commercial Trading Co.</p>
+                  <p className="text-slate-500">Authorized Proprietor</p>
                 </div>
               </div>
             </div>
@@ -241,11 +241,11 @@ export default function ShopLetterpadPage() {
         />
 
         {/* Bottom CTA Card */}
-        <div className="mt-14 p-8 sm:p-10 rounded-3xl bg-gradient-to-br from-amber-500/15 via-white/[0.02] to-orange-500/10 border border-white/[0.1] text-center">
-          <h3 className="text-2xl sm:text-3xl font-heading font-bold text-white mb-3">
+        <div className="mt-14 p-8 sm:p-10 rounded-3xl bg-gradient-to-br from-amber-500/15 via-white/[0.02] to-orange-500/10 border border-slate-200 text-center">
+          <h3 className="text-2xl sm:text-3xl font-heading font-bold text-slate-900 mb-3">
             Build Your Shop Letterhead Online
           </h3>
-          <p className="text-sm sm:text-base text-white/65 max-w-xl mx-auto mb-6">
+          <p className="text-sm sm:text-base text-slate-500 max-w-xl mx-auto mb-6">
             Enter your shop name, GST number, address, and generate commercial quotations with AI in seconds.
           </p>
           <Link

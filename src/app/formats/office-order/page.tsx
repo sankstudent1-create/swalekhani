@@ -81,7 +81,7 @@ export default function OfficeOrderPage() {
   const adsEnabled = process.env.NEXT_PUBLIC_ADS_ENABLED === "true";
 
   return (
-    <main className="min-h-screen bg-[#07090f] text-white pt-24 pb-20 selection:bg-brand-pink/30">
+    <main className="min-h-screen bg-[#f7f5f1] text-slate-900 pt-24 pb-20 selection:bg-brand-pink/30">
       {/* Background Glow */}
       <div className="fixed inset-0 pointer-events-none z-0">
         <div className="absolute top-10 left-1/2 -translate-x-1/2 w-[750px] h-[450px] bg-violet-500/10 blur-[150px] rounded-full"></div>
@@ -89,12 +89,12 @@ export default function OfficeOrderPage() {
 
       <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Breadcrumb */}
-        <nav className="flex items-center gap-2 text-xs font-medium text-white/50 mb-6">
-          <Link href="/" className="hover:text-white transition-colors">Home</Link>
+        <nav className="flex items-center gap-2 text-xs font-medium text-slate-500 mb-6">
+          <Link href="/" className="hover:text-slate-900 transition-colors">Home</Link>
           <span>/</span>
-          <Link href="/tools" className="hover:text-white transition-colors">Formats</Link>
+          <Link href="/tools" className="hover:text-slate-900 transition-colors">Formats</Link>
           <span>/</span>
-          <span className="text-white/80">Office Order Format</span>
+          <span className="text-slate-700">Office Order Format</span>
         </nav>
 
         {/* Hero Header */}
@@ -104,11 +104,11 @@ export default function OfficeOrderPage() {
             <span>Administrative Orders & Establishment</span>
           </div>
 
-          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-heading font-bold text-white tracking-tight mb-4 leading-tight">
+          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-heading font-bold text-slate-900 tracking-tight mb-4 leading-tight">
             Corporate Office Order Format & Generator
           </h1>
 
-          <p className="text-base sm:text-lg text-white/70 leading-relaxed">
+          <p className="text-base sm:text-lg text-slate-600 leading-relaxed">
             Standard format for corporate office orders covering transfers, postings, promotions, work allocations, and sanctions with auto-formatted endorsement blocks.
           </p>
 
@@ -116,7 +116,7 @@ export default function OfficeOrderPage() {
           <div className="mt-8 flex flex-wrap items-center gap-4">
             <Link
               href="/tools/letterpad-generator?preset=corporate&sub=OFFICE%20ORDER%20NO.%2012/2026&tpl=A"
-              className="inline-flex items-center gap-2.5 px-7 py-3.5 rounded-xl bg-gradient-to-r from-violet-500 via-purple-500 to-pink-500 text-white font-semibold text-base shadow-[0_10px_30px_rgba(139,92,246,0.25)] hover:shadow-[0_15px_40px_rgba(139,92,246,0.35)] hover:-translate-y-0.5 transition-all"
+              className="inline-flex items-center gap-2.5 px-7 py-3.5 rounded-xl bg-gradient-to-r from-violet-500 via-purple-500 to-pink-500 text-slate-900 font-semibold text-base shadow-[0_10px_30px_rgba(139,92,246,0.25)] hover:shadow-[0_15px_40px_rgba(139,92,246,0.35)] hover:-translate-y-0.5 transition-all"
             >
               <Sparkles className="w-5 h-5" />
               Generate Office Order in Studio
@@ -125,7 +125,7 @@ export default function OfficeOrderPage() {
 
             <Link
               href="/tools"
-              className="inline-flex items-center gap-2 px-6 py-3.5 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] text-white/80 hover:text-white border border-white/[0.08] text-sm font-medium transition-all"
+              className="inline-flex items-center gap-2 px-6 py-3.5 rounded-xl bg-white hover:bg-slate-100 text-slate-700 hover:text-slate-900 border border-slate-200 text-sm font-medium transition-all"
             >
               <Layers className="w-4 h-4" />
               All Formats
@@ -137,10 +137,10 @@ export default function OfficeOrderPage() {
         {adsEnabled && <AdSlot slotKey="content-top" label="Sponsored Content" />}
 
         {/* Core Guide Content (300-500 words) */}
-        <article className="prose prose-invert max-w-none space-y-8 my-10 text-white/80 leading-relaxed">
+        <article className="prose prose max-w-none space-y-8 my-10 text-slate-700 leading-relaxed">
           
           <section className="space-y-4">
-            <h2 className="text-2xl font-heading font-bold text-white flex items-center gap-2.5">
+            <h2 className="text-2xl font-heading font-bold text-slate-900 flex items-center gap-2.5">
               <Building className="w-6 h-6 text-violet-400" />
               Structure & Rules of an Office Order
             </h2>
@@ -154,7 +154,7 @@ export default function OfficeOrderPage() {
 
           {/* Key Checklist */}
           <section className="space-y-4">
-            <h3 className="text-xl font-heading font-semibold text-white">
+            <h3 className="text-xl font-heading font-semibold text-slate-900">
               Anatomy of a Compliant Office Order
             </h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 not-prose">
@@ -166,11 +166,11 @@ export default function OfficeOrderPage() {
                 { title: "Issuing Officer Block", desc: "Signature, Name, Designation, and official phone/email of the issuer." },
                 { title: "Endorsement Block (पृष्ठांकन)", desc: "Numbered list of internal teams and recipients receiving copies." },
               ].map((item, idx) => (
-                <div key={idx} className="p-4 rounded-xl bg-white/[0.02] border border-white/[0.06] flex items-start gap-3">
+                <div key={idx} className="p-4 rounded-xl bg-white border border-slate-200 flex items-start gap-3">
                   <CheckCircle2 className="w-5 h-5 text-violet-400 flex-shrink-0 mt-0.5" />
                   <div>
-                    <h4 className="text-sm font-semibold text-white">{item.title}</h4>
-                    <p className="text-xs text-white/60 mt-0.5">{item.desc}</p>
+                    <h4 className="text-sm font-semibold text-slate-900">{item.title}</h4>
+                    <p className="text-xs text-slate-500 mt-0.5">{item.desc}</p>
                   </div>
                 </div>
               ))}
@@ -179,18 +179,18 @@ export default function OfficeOrderPage() {
 
           {/* Formatted Sample */}
           <section className="space-y-4">
-            <h3 className="text-xl font-heading font-semibold text-white flex items-center gap-2">
+            <h3 className="text-xl font-heading font-semibold text-slate-900 flex items-center gap-2">
               <FileText className="w-5 h-5 text-violet-400" />
               Standard Office Order Sample
             </h3>
-            <div className="p-6 rounded-2xl bg-[#0d1017] border border-white/[0.1] text-white/90 text-sm leading-relaxed shadow-inner font-serif">
-              <div className="text-center border-b border-white/[0.1] pb-4 mb-4">
+            <div className="p-6 rounded-2xl bg-white border border-slate-200 text-slate-800 text-sm leading-relaxed shadow-inner font-serif">
+              <div className="text-center border-b border-slate-200 pb-4 mb-4">
                 <p className="text-xs text-amber-300 font-semibold">APEX ENTERPRISE SOLUTIONS PVT. LTD.</p>
-                <h4 className="text-base font-bold text-white tracking-wide">HUMAN RESOURCES DEPARTMENT</h4>
-                <p className="text-xs text-white/60">Level 5, Cyber Park, Bengaluru - 560100</p>
+                <h4 className="text-base font-bold text-slate-900 tracking-wide">HUMAN RESOURCES DEPARTMENT</h4>
+                <p className="text-xs text-slate-500">Level 5, Cyber Park, Bengaluru - 560100</p>
               </div>
 
-              <div className="flex justify-between text-xs text-white/60 mb-4 font-mono">
+              <div className="flex justify-between text-xs text-slate-500 mb-4 font-mono">
                 <span>File No. A-22012/1/2026-Estt.(A)</span>
                 <span>Dated: 23rd September, 2026</span>
               </div>
@@ -201,7 +201,7 @@ export default function OfficeOrderPage() {
                 </span>
               </div>
 
-              <div className="text-xs space-y-3 leading-relaxed text-white/85 mb-6 font-sans">
+              <div className="text-xs space-y-3 leading-relaxed text-slate-700 mb-6 font-sans">
                 <p>
                   1. Consequent upon the recommendations of the Departmental Screening Committee, the Competent Authority is pleased to order the transfer and posting of <strong>Shri Amit Kumar</strong>, Section Officer (Emp ID: 4920), from Vigilance Division to Administration Division with immediate effect.
                 </p>
@@ -211,13 +211,13 @@ export default function OfficeOrderPage() {
               </div>
 
               <div className="text-right text-xs pt-2">
-                <p className="font-bold text-white">[S. K. Mukherjee]</p>
-                <p className="text-white/60">Head of Human Resources</p>
-                <p className="text-white/50">Tel: +91-80-41234567</p>
+                <p className="font-bold text-slate-900">[S. K. Mukherjee]</p>
+                <p className="text-slate-500">Head of Human Resources</p>
+                <p className="text-slate-500">Tel: +91-80-41234567</p>
               </div>
 
-              <div className="border-t border-white/[0.1] mt-6 pt-4 text-xs font-sans text-white/70">
-                <p className="font-bold text-white mb-2">Copy forwarded for information and necessary action to:</p>
+              <div className="border-t border-slate-200 mt-6 pt-4 text-xs font-sans text-slate-600">
+                <p className="font-bold text-slate-900 mb-2">Copy forwarded for information and necessary action to:</p>
                 <ol className="list-decimal pl-5 space-y-1 text-xs">
                   <li>Officer concerned.</li>
                   <li>Drawing and Disbursing Officer (DDO), Administration Division.</li>
@@ -247,11 +247,11 @@ export default function OfficeOrderPage() {
         />
 
         {/* Bottom CTA Card */}
-        <div className="mt-14 p-8 sm:p-10 rounded-3xl bg-gradient-to-br from-violet-500/15 via-white/[0.02] to-pink-500/10 border border-white/[0.1] text-center">
-          <h3 className="text-2xl sm:text-3xl font-heading font-bold text-white mb-3">
+        <div className="mt-14 p-8 sm:p-10 rounded-3xl bg-gradient-to-br from-violet-500/15 via-white/[0.02] to-pink-500/10 border border-slate-200 text-center">
+          <h3 className="text-2xl sm:text-3xl font-heading font-bold text-slate-900 mb-3">
             Draft an Office Order in Minutes
           </h3>
-          <p className="text-sm sm:text-base text-white/65 max-w-xl mx-auto mb-6">
+          <p className="text-sm sm:text-base text-slate-500 max-w-xl mx-auto mb-6">
             Preloaded with professional typography, endorsement copy-to lists, and AI instant order composition.
           </p>
           <Link

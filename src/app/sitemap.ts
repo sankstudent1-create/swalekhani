@@ -21,6 +21,7 @@ const routes: { path: string; priority: number; changeFrequency: "always" | "hou
   { path: "/templates/freelancer", priority: 0.85, changeFrequency: "weekly" },
   { path: "/formats/office-order", priority: 0.9, changeFrequency: "weekly" },
   { path: "/formats/rti-application", priority: 0.9, changeFrequency: "weekly" },
+  { path: "/formats/complaint-letter", priority: 0.9, changeFrequency: "weekly" },
   { path: "/formats/leave-application", priority: 0.9, changeFrequency: "weekly" },
   { path: "/about", priority: 0.7, changeFrequency: "monthly" },
   { path: "/contact", priority: 0.6, changeFrequency: "monthly" },

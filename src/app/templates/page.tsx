@@ -235,7 +235,7 @@ export default function TemplatesGalleryPage() {
   }, [searchQuery, selectedCategory]);
 
   return (
-    <main className="min-h-screen bg-[#07090f] text-white pt-24 pb-20 selection:bg-brand-pink/30">
+    <main className="min-h-screen bg-[#f7f5f1] text-slate-900 pt-24 pb-20 selection:bg-brand-pink/30">
       {/* Background Glow */}
       <div className="fixed inset-0 pointer-events-none z-0">
         <div className="absolute top-10 left-1/2 -translate-x-1/2 w-[800px] h-[500px] bg-brand-orange/10 blur-[160px] rounded-full"></div>
@@ -245,16 +245,16 @@ export default function TemplatesGalleryPage() {
         
         {/* Gallery Header */}
         <div className="text-center max-w-3xl mx-auto mb-10">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/[0.05] border border-white/[0.1] text-brand-orange text-xs font-semibold uppercase tracking-wider mb-4">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/[0.05] border border-slate-200 text-brand-orange text-xs font-semibold uppercase tracking-wider mb-4">
             <Sparkles className="w-3.5 h-3.5" />
             <span>17 Official Formats & Profession Presets</span>
           </div>
 
-          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-heading font-bold text-white tracking-tight mb-4 leading-tight">
+          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-heading font-bold text-slate-900 tracking-tight mb-4 leading-tight">
             Official Letterhead & Profession Template Library
           </h1>
 
-          <p className="text-base sm:text-lg text-white/70 leading-relaxed">
+          <p className="text-base sm:text-lg text-slate-600 leading-relaxed">
             Choose from authentic, professionally structured letterhead templates tailored for Indian advocates, CAs, doctors, businesses, clinics, and freelancers.
           </p>
         </div>
@@ -266,13 +266,13 @@ export default function TemplatesGalleryPage() {
         <div className="space-y-4 mb-10">
           {/* Search Input */}
           <div className="relative max-w-xl mx-auto">
-            <Search className="w-5 h-5 text-white/40 absolute left-4 top-1/2 -translate-y-1/2" />
+            <Search className="w-5 h-5 text-slate-400 absolute left-4 top-1/2 -translate-y-1/2" />
             <input
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search by profession, keyword, statutory code (e.g. RERA, Bar Council, PWD)..."
-              className="w-full pl-12 pr-4 py-3.5 rounded-2xl bg-white/[0.04] border border-white/[0.1] text-sm text-white placeholder-white/40 focus:outline-none focus:border-brand-orange transition-colors shadow-lg"
+              className="w-full pl-12 pr-4 py-3.5 rounded-2xl bg-white border border-slate-200 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:border-brand-orange transition-colors shadow-lg"
             />
           </div>
 
@@ -285,7 +285,7 @@ export default function TemplatesGalleryPage() {
                 className={`px-4 py-2 rounded-xl text-xs font-semibold tracking-wide border transition-all ${
                   selectedCategory === cat
                     ? 'bg-white text-black border-white shadow-lg'
-                    : 'bg-white/[0.03] text-white/70 border-white/[0.08] hover:bg-white/[0.08] hover:text-white'
+                    : 'bg-white/[0.03] text-slate-600 border-slate-200 hover:bg-slate-100 hover:text-slate-900'
                 }`}
               >
                 {cat}
@@ -301,11 +301,11 @@ export default function TemplatesGalleryPage() {
             return (
               <div
                 key={tpl.slug}
-                className="group relative rounded-3xl bg-[#0d1017] border border-white/[0.08] hover:border-white/[0.2] transition-all duration-300 flex flex-col justify-between overflow-hidden shadow-xl hover:-translate-y-1.5"
+                className="group relative rounded-3xl bg-white border border-slate-200 hover:border-white/[0.2] transition-all duration-300 flex flex-col justify-between overflow-hidden shadow-xl hover:-translate-y-1.5"
               >
                 {/* 3D Illustration Banner or Accent Header */}
                 {tpl.image ? (
-                  <div className="relative h-44 w-full overflow-hidden bg-black/60 border-b border-white/[0.06]">
+                  <div className="relative h-44 w-full overflow-hidden bg-black/60 border-b border-slate-200">
                     <img 
                       src={tpl.image} 
                       alt={tpl.name}
@@ -314,7 +314,7 @@ export default function TemplatesGalleryPage() {
                     <div className="absolute inset-0 bg-gradient-to-t from-[#0d1017] via-[#0d1017]/40 to-transparent"></div>
                     <div className="absolute top-3.5 right-3.5">
                       <span 
-                        className="text-[10px] font-bold px-2.5 py-1 rounded-full border border-white/20 bg-black/70 backdrop-blur-md uppercase tracking-wider shadow-md"
+                        className="text-[10px] font-bold px-2.5 py-1 rounded-full border border-slate-200 bg-black/70 backdrop-blur-md uppercase tracking-wider shadow-md"
                         style={{ color: tpl.accentColor }}
                       >
                         {tpl.badge}
@@ -323,7 +323,7 @@ export default function TemplatesGalleryPage() {
                   </div>
                 ) : (
                   <div 
-                    className="relative h-16 w-full p-4 flex items-center justify-between border-b border-white/[0.06]"
+                    className="relative h-16 w-full p-4 flex items-center justify-between border-b border-slate-200"
                     style={{ background: `linear-gradient(135deg, ${tpl.accentColor}18, transparent)` }}
                   >
                     <div 
@@ -347,15 +347,15 @@ export default function TemplatesGalleryPage() {
 
                 <div className="p-6 space-y-4 flex-1 flex flex-col justify-between">
                   <div className="space-y-2">
-                    <span className="text-[11px] font-semibold text-white/50 uppercase tracking-wider font-mono">
+                    <span className="text-[11px] font-semibold text-slate-500 uppercase tracking-wider font-mono">
                       {tpl.category}
                     </span>
 
-                    <h3 className="text-lg font-heading font-bold text-white group-hover:text-brand-orange transition-colors">
+                    <h3 className="text-lg font-heading font-bold text-slate-900 group-hover:text-brand-orange transition-colors">
                       {tpl.name}
                     </h3>
 
-                    <p className="text-xs text-white/60 leading-relaxed line-clamp-2">
+                    <p className="text-xs text-slate-500 leading-relaxed line-clamp-2">
                       {tpl.description}
                     </p>
                   </div>
@@ -363,20 +363,20 @@ export default function TemplatesGalleryPage() {
                   {/* Tags */}
                   <div className="flex flex-wrap gap-1.5 pt-2">
                     {tpl.tags.slice(0, 3).map((tag, idx) => (
-                      <span key={idx} className="text-[10px] text-white/40 bg-white/[0.03] px-2 py-0.5 rounded-md border border-white/[0.04]">
+                      <span key={idx} className="text-[10px] text-slate-400 bg-white/[0.03] px-2 py-0.5 rounded-md border border-white/[0.04]">
                         #{tag}
                       </span>
                     ))}
                   </div>
 
                   {/* Card Action Buttons */}
-                  <div className="pt-4 border-t border-white/[0.06] mt-4 flex items-center gap-2.5">
+                  <div className="pt-4 border-t border-slate-200 mt-4 flex items-center gap-2.5">
                     <Link
                       href={tpl.href}
-                      className="flex-1 py-2.5 px-3 rounded-xl bg-white/[0.05] hover:bg-white/[0.1] text-white text-xs font-semibold border border-white/[0.08] text-center transition-all flex items-center justify-center gap-1.5"
+                      className="flex-1 py-2.5 px-3 rounded-xl bg-white/[0.05] hover:bg-white/[0.1] text-slate-900 text-xs font-semibold border border-slate-200 text-center transition-all flex items-center justify-center gap-1.5"
                     >
                       <span>View Format</span>
-                      <ArrowRight className="w-3.5 h-3.5 text-white/50" />
+                      <ArrowRight className="w-3.5 h-3.5 text-slate-500" />
                     </Link>
 
                     <Link
@@ -395,8 +395,8 @@ export default function TemplatesGalleryPage() {
 
         {/* Empty State */}
         {filteredTemplates.length === 0 && (
-          <div className="text-center py-16 p-8 rounded-3xl bg-white/[0.02] border border-white/[0.08]">
-            <p className="text-white/60 text-sm">No templates matched your search for &quot;{searchQuery}&quot;.</p>
+          <div className="text-center py-16 p-8 rounded-3xl bg-white border border-slate-200">
+            <p className="text-slate-500 text-sm">No templates matched your search for &quot;{searchQuery}&quot;.</p>
             <button
               onClick={() => { setSearchQuery(""); setSelectedCategory("All"); }}
               className="mt-4 px-4 py-2 rounded-xl bg-white text-black text-xs font-semibold"
@@ -407,32 +407,32 @@ export default function TemplatesGalleryPage() {
         )}
 
         {/* Bottom Educational Banner */}
-        <div className="mt-16 p-8 rounded-3xl bg-gradient-to-r from-white/[0.03] via-white/[0.05] to-white/[0.03] border border-white/[0.08]">
+        <div className="mt-16 p-8 rounded-3xl bg-gradient-to-r from-white/[0.03] via-white/[0.05] to-white/[0.03] border border-slate-200">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-center md:text-left">
             <div className="space-y-2">
-              <h4 className="text-sm font-semibold text-white flex items-center justify-center md:justify-start gap-2">
+              <h4 className="text-sm font-semibold text-slate-900 flex items-center justify-center md:justify-start gap-2">
                 <CheckCircle2 className="w-4 h-4 text-emerald-400" />
                 <span>Statutory Compliance</span>
               </h4>
-              <p className="text-xs text-white/50 leading-relaxed">
+              <p className="text-xs text-slate-500 leading-relaxed">
                 Pre-formatted for Bar Council, ICAI, RERA, and NMC Medical regulations.
               </p>
             </div>
             <div className="space-y-2">
-              <h4 className="text-sm font-semibold text-white flex items-center justify-center md:justify-start gap-2">
+              <h4 className="text-sm font-semibold text-slate-900 flex items-center justify-center md:justify-start gap-2">
                 <CheckCircle2 className="w-4 h-4 text-emerald-400" />
                 <span>Devanagari Bilingual</span>
               </h4>
-              <p className="text-xs text-white/50 leading-relaxed">
+              <p className="text-xs text-slate-500 leading-relaxed">
                 Full Hindi and Marathi font engine with bilingual corporate and professional layouts.
               </p>
             </div>
             <div className="space-y-2">
-              <h4 className="text-sm font-semibold text-white flex items-center justify-center md:justify-start gap-2">
+              <h4 className="text-sm font-semibold text-slate-900 flex items-center justify-center md:justify-start gap-2">
                 <CheckCircle2 className="w-4 h-4 text-emerald-400" />
                 <span>Print-Ready Vector PDF</span>
               </h4>
-              <p className="text-xs text-white/50 leading-relaxed">
+              <p className="text-xs text-slate-500 leading-relaxed">
                 1-click instant vector A4 PDF export or direct printing on executive letterhead bond stationery.
               </p>
             </div>

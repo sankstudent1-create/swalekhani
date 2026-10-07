@@ -82,7 +82,7 @@ export default function SchoolLetterpadPage() {
   const adsEnabled = process.env.NEXT_PUBLIC_ADS_ENABLED === "true";
 
   return (
-    <main className="min-h-screen bg-[#07090f] text-white pt-24 pb-20 selection:bg-brand-pink/30">
+    <main className="min-h-screen bg-[#f7f5f1] text-slate-900 pt-24 pb-20 selection:bg-brand-pink/30">
       {/* Background Glow */}
       <div className="fixed inset-0 pointer-events-none z-0">
         <div className="absolute top-10 left-1/2 -translate-x-1/2 w-[750px] h-[450px] bg-emerald-500/10 blur-[150px] rounded-full"></div>
@@ -90,12 +90,12 @@ export default function SchoolLetterpadPage() {
 
       <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Breadcrumb */}
-        <nav className="flex items-center gap-2 text-xs font-medium text-white/50 mb-6">
-          <Link href="/" className="hover:text-white transition-colors">Home</Link>
+        <nav className="flex items-center gap-2 text-xs font-medium text-slate-500 mb-6">
+          <Link href="/" className="hover:text-slate-900 transition-colors">Home</Link>
           <span>/</span>
-          <Link href="/tools" className="hover:text-white transition-colors">Templates</Link>
+          <Link href="/tools" className="hover:text-slate-900 transition-colors">Templates</Link>
           <span>/</span>
-          <span className="text-white/80">School Letterhead</span>
+          <span className="text-slate-700">School Letterhead</span>
         </nav>
 
         {/* Hero Header */}
@@ -105,11 +105,11 @@ export default function SchoolLetterpadPage() {
             <span>Academic & Institutional Format</span>
           </div>
 
-          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-heading font-bold text-white tracking-tight mb-4 leading-tight">
+          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-heading font-bold text-slate-900 tracking-tight mb-4 leading-tight">
             School Letterhead Format & Principal Letterpad Maker
           </h1>
 
-          <p className="text-base sm:text-lg text-white/70 leading-relaxed">
+          <p className="text-base sm:text-lg text-slate-600 leading-relaxed">
             Format authentic school and college letterheads with educational emblems, CBSE/ICSE board affiliation codes, Sanskrit motto lines, and official certificate templates.
           </p>
 
@@ -117,7 +117,7 @@ export default function SchoolLetterpadPage() {
           <div className="mt-8 flex flex-wrap items-center gap-4">
             <Link
               href="/tools/letterpad-generator?preset=school&tpl=A"
-              className="inline-flex items-center gap-2.5 px-7 py-3.5 rounded-xl bg-gradient-to-r from-emerald-500 via-teal-500 to-sky-500 text-white font-semibold text-base shadow-[0_10px_30px_rgba(16,185,129,0.25)] hover:shadow-[0_15px_40px_rgba(16,185,129,0.35)] hover:-translate-y-0.5 transition-all"
+              className="inline-flex items-center gap-2.5 px-7 py-3.5 rounded-xl bg-gradient-to-r from-emerald-500 via-teal-500 to-sky-500 text-slate-900 font-semibold text-base shadow-[0_10px_30px_rgba(16,185,129,0.25)] hover:shadow-[0_15px_40px_rgba(16,185,129,0.35)] hover:-translate-y-0.5 transition-all"
             >
               <Sparkles className="w-5 h-5" />
               Generate School Letterhead
@@ -126,7 +126,7 @@ export default function SchoolLetterpadPage() {
 
             <Link
               href="/tools"
-              className="inline-flex items-center gap-2 px-6 py-3.5 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] text-white/80 hover:text-white border border-white/[0.08] text-sm font-medium transition-all"
+              className="inline-flex items-center gap-2 px-6 py-3.5 rounded-xl bg-white hover:bg-slate-100 text-slate-700 hover:text-slate-900 border border-slate-200 text-sm font-medium transition-all"
             >
               <Layers className="w-4 h-4" />
               View Other Templates
@@ -138,10 +138,10 @@ export default function SchoolLetterpadPage() {
         {adsEnabled && <AdSlot slotKey="content-top" label="Sponsored Content" />}
 
         {/* Core Guide Content (300-500 words) */}
-        <article className="prose prose-invert max-w-none space-y-8 my-10 text-white/80 leading-relaxed">
+        <article className="prose prose max-w-none space-y-8 my-10 text-slate-700 leading-relaxed">
           
           <section className="space-y-4">
-            <h2 className="text-2xl font-heading font-bold text-white flex items-center gap-2.5">
+            <h2 className="text-2xl font-heading font-bold text-slate-900 flex items-center gap-2.5">
               <BookOpen className="w-6 h-6 text-emerald-400" />
               Academic Standards for School & College Letterheads
             </h2>
@@ -155,7 +155,7 @@ export default function SchoolLetterpadPage() {
 
           {/* Mandatory Details */}
           <section className="space-y-4">
-            <h3 className="text-xl font-heading font-semibold text-white">
+            <h3 className="text-xl font-heading font-semibold text-slate-900">
               Key Requirements for Academic Letterpads
             </h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 not-prose">
@@ -167,11 +167,11 @@ export default function SchoolLetterpadPage() {
                 { title: "Student Identifiers", desc: "Dedicated placeholders for Roll No., Admission No., and Academic Class." },
                 { title: "Principal's Seal & Signature", desc: "Designated footprint for physical or digital rubber stamp and signature." },
               ].map((item, idx) => (
-                <div key={idx} className="p-4 rounded-xl bg-white/[0.02] border border-white/[0.06] flex items-start gap-3">
+                <div key={idx} className="p-4 rounded-xl bg-white border border-slate-200 flex items-start gap-3">
                   <CheckCircle2 className="w-5 h-5 text-emerald-400 flex-shrink-0 mt-0.5" />
                   <div>
-                    <h4 className="text-sm font-semibold text-white">{item.title}</h4>
-                    <p className="text-xs text-white/60 mt-0.5">{item.desc}</p>
+                    <h4 className="text-sm font-semibold text-slate-900">{item.title}</h4>
+                    <p className="text-xs text-slate-500 mt-0.5">{item.desc}</p>
                   </div>
                 </div>
               ))}
@@ -180,19 +180,19 @@ export default function SchoolLetterpadPage() {
 
           {/* Formatted Sample */}
           <section className="space-y-4">
-            <h3 className="text-xl font-heading font-semibold text-white flex items-center gap-2">
+            <h3 className="text-xl font-heading font-semibold text-slate-900 flex items-center gap-2">
               <FileText className="w-5 h-5 text-emerald-400" />
               Sample School Bonafide Certificate
             </h3>
-            <div className="p-6 rounded-2xl bg-[#0d1017] border border-white/[0.1] text-white/90 text-sm leading-relaxed shadow-inner font-serif">
-              <div className="text-center border-b border-white/[0.1] pb-4 mb-4">
+            <div className="p-6 rounded-2xl bg-white border border-slate-200 text-slate-800 text-sm leading-relaxed shadow-inner font-serif">
+              <div className="text-center border-b border-slate-200 pb-4 mb-4">
                 <p className="text-xs text-amber-300 font-semibold">विद्या ददाति विनयं</p>
-                <h4 className="text-lg font-bold text-white tracking-wide">DELHI MODEL PUBLIC ACADEMY</h4>
-                <p className="text-xs text-white/60">(Affiliated to CBSE, New Delhi | Affiliation No: 2730198 | School Code: 85210)</p>
-                <p className="text-xs text-white/50">Sector 12, Institutional Area, New Delhi - 110075 | Tel: 011-28080000</p>
+                <h4 className="text-lg font-bold text-slate-900 tracking-wide">DELHI MODEL PUBLIC ACADEMY</h4>
+                <p className="text-xs text-slate-500">(Affiliated to CBSE, New Delhi | Affiliation No: 2730198 | School Code: 85210)</p>
+                <p className="text-xs text-slate-500">Sector 12, Institutional Area, New Delhi - 110075 | Tel: 011-28080000</p>
               </div>
 
-              <div className="flex justify-between text-xs text-white/60 mb-4 font-mono">
+              <div className="flex justify-between text-xs text-slate-500 mb-4 font-mono">
                 <span>Ref: DMPA/BON/2026/1042</span>
                 <span>Date: 23-09-2026</span>
               </div>
@@ -203,18 +203,18 @@ export default function SchoolLetterpadPage() {
                 </span>
               </div>
 
-              <p className="text-xs leading-relaxed text-white/85 mb-4">
+              <p className="text-xs leading-relaxed text-slate-700 mb-4">
                 This is to certify that <strong>Master Aarav Sharma</strong>, S/o Shri Rajesh Sharma, is a bonafide student of this institution currently studying in <strong>Class X, Section B</strong> (Admission No. 8924) during the academic year 2026-2027.
               </p>
-              <p className="text-xs text-white/80 mb-6">
+              <p className="text-xs text-slate-700 mb-6">
                 As per school records, his date of birth is 14th August 2011. He bears good moral character and conduct.
               </p>
 
               <div className="flex justify-between items-end text-xs pt-4">
-                <p className="text-white/40">[School Round Seal]</p>
+                <p className="text-slate-400">[School Round Seal]</p>
                 <div className="text-right">
-                  <p className="font-bold text-white">Principal</p>
-                  <p className="text-white/50">Delhi Model Public Academy</p>
+                  <p className="font-bold text-slate-900">Principal</p>
+                  <p className="text-slate-500">Delhi Model Public Academy</p>
                 </div>
               </div>
             </div>
@@ -239,11 +239,11 @@ export default function SchoolLetterpadPage() {
         />
 
         {/* Bottom CTA Card */}
-        <div className="mt-14 p-8 sm:p-10 rounded-3xl bg-gradient-to-br from-emerald-500/15 via-white/[0.02] to-sky-500/10 border border-white/[0.1] text-center">
-          <h3 className="text-2xl sm:text-3xl font-heading font-bold text-white mb-3">
+        <div className="mt-14 p-8 sm:p-10 rounded-3xl bg-gradient-to-br from-emerald-500/15 via-white/[0.02] to-sky-500/10 border border-slate-200 text-center">
+          <h3 className="text-2xl sm:text-3xl font-heading font-bold text-slate-900 mb-3">
             Create Your School Letterhead Now
           </h3>
-          <p className="text-sm sm:text-base text-white/65 max-w-xl mx-auto mb-6">
+          <p className="text-sm sm:text-base text-slate-500 max-w-xl mx-auto mb-6">
             Customize school name, affiliation numbers, logos, and issue certificates in print-ready PDF format.
           </p>
           <Link

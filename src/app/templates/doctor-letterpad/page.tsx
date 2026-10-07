@@ -82,7 +82,7 @@ export default function DoctorLetterpadPage() {
   const adsEnabled = process.env.NEXT_PUBLIC_ADS_ENABLED === "true";
 
   return (
-    <main className="min-h-screen bg-[#07090f] text-white pt-24 pb-20 selection:bg-brand-pink/30">
+    <main className="min-h-screen bg-[#f7f5f1] text-slate-900 pt-24 pb-20 selection:bg-brand-pink/30">
       {/* Background Glow */}
       <div className="fixed inset-0 pointer-events-none z-0">
         <div className="absolute top-10 left-1/2 -translate-x-1/2 w-[750px] h-[450px] bg-rose-500/10 blur-[150px] rounded-full"></div>
@@ -90,12 +90,12 @@ export default function DoctorLetterpadPage() {
 
       <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Breadcrumb */}
-        <nav className="flex items-center gap-2 text-xs font-medium text-white/50 mb-6">
-          <Link href="/" className="hover:text-white transition-colors">Home</Link>
+        <nav className="flex items-center gap-2 text-xs font-medium text-slate-500 mb-6">
+          <Link href="/" className="hover:text-slate-900 transition-colors">Home</Link>
           <span>/</span>
-          <Link href="/tools" className="hover:text-white transition-colors">Templates</Link>
+          <Link href="/tools" className="hover:text-slate-900 transition-colors">Templates</Link>
           <span>/</span>
-          <span className="text-white/80">Doctor Letterhead</span>
+          <span className="text-slate-700">Doctor Letterhead</span>
         </nav>
 
         {/* Hero Header */}
@@ -105,11 +105,11 @@ export default function DoctorLetterpadPage() {
             <span>Healthcare & Medical Compliance</span>
           </div>
 
-          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-heading font-bold text-white tracking-tight mb-4 leading-tight">
+          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-heading font-bold text-slate-900 tracking-tight mb-4 leading-tight">
             Doctor Letterhead & Prescription Pad Format
           </h1>
 
-          <p className="text-base sm:text-lg text-white/70 leading-relaxed">
+          <p className="text-base sm:text-lg text-slate-600 leading-relaxed">
             NMC-compliant medical prescription pad and clinic letterhead format for doctors, physicians, consultants, and hospitals. Includes registration number, Rx section, and consultation timings.
           </p>
 
@@ -117,7 +117,7 @@ export default function DoctorLetterpadPage() {
           <div className="mt-8 flex flex-wrap items-center gap-4">
             <Link
               href="/tools/letterpad-generator?preset=doctor&tpl=B"
-              className="inline-flex items-center gap-2.5 px-7 py-3.5 rounded-xl bg-gradient-to-r from-rose-500 via-pink-500 to-amber-500 text-white font-semibold text-base shadow-[0_10px_30px_rgba(244,63,94,0.25)] hover:shadow-[0_15px_40px_rgba(244,63,94,0.35)] hover:-translate-y-0.5 transition-all"
+              className="inline-flex items-center gap-2.5 px-7 py-3.5 rounded-xl bg-gradient-to-r from-rose-500 via-pink-500 to-amber-500 text-slate-900 font-semibold text-base shadow-[0_10px_30px_rgba(244,63,94,0.25)] hover:shadow-[0_15px_40px_rgba(244,63,94,0.35)] hover:-translate-y-0.5 transition-all"
             >
               <Sparkles className="w-5 h-5" />
               Generate Doctor Prescription Pad
@@ -126,7 +126,7 @@ export default function DoctorLetterpadPage() {
 
             <Link
               href="/tools"
-              className="inline-flex items-center gap-2 px-6 py-3.5 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] text-white/80 hover:text-white border border-white/[0.08] text-sm font-medium transition-all"
+              className="inline-flex items-center gap-2 px-6 py-3.5 rounded-xl bg-white hover:bg-slate-100 text-slate-700 hover:text-slate-900 border border-slate-200 text-sm font-medium transition-all"
             >
               <Layers className="w-4 h-4" />
               View All Templates
@@ -138,10 +138,10 @@ export default function DoctorLetterpadPage() {
         {adsEnabled && <AdSlot slotKey="content-top" label="Sponsored Content" />}
 
         {/* Core Guide Content (300-500 words) */}
-        <article className="prose prose-invert max-w-none space-y-8 my-10 text-white/80 leading-relaxed">
+        <article className="prose prose max-w-none space-y-8 my-10 text-slate-700 leading-relaxed">
           
           <section className="space-y-4">
-            <h2 className="text-2xl font-heading font-bold text-white flex items-center gap-2.5">
+            <h2 className="text-2xl font-heading font-bold text-slate-900 flex items-center gap-2.5">
               <ShieldAlert className="w-6 h-6 text-rose-400" />
               Medical Council Norms for Doctor Letterpads
             </h2>
@@ -155,7 +155,7 @@ export default function DoctorLetterpadPage() {
 
           {/* Key Checklist */}
           <section className="space-y-4">
-            <h3 className="text-xl font-heading font-semibold text-white">
+            <h3 className="text-xl font-heading font-semibold text-slate-900">
               Essential Fields on a Doctor's Letterpad
             </h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 not-prose">
@@ -167,11 +167,11 @@ export default function DoctorLetterpadPage() {
                 { title: "Rx Prescription Symbol", desc: "Traditional medical symbol denoting prescribed treatment instructions." },
                 { title: "Doctor's Stamp & Signature", desc: "Footprint for official doctor seal and signature." },
               ].map((item, idx) => (
-                <div key={idx} className="p-4 rounded-xl bg-white/[0.02] border border-white/[0.06] flex items-start gap-3">
+                <div key={idx} className="p-4 rounded-xl bg-white border border-slate-200 flex items-start gap-3">
                   <CheckCircle2 className="w-5 h-5 text-rose-400 flex-shrink-0 mt-0.5" />
                   <div>
-                    <h4 className="text-sm font-semibold text-white">{item.title}</h4>
-                    <p className="text-xs text-white/60 mt-0.5">{item.desc}</p>
+                    <h4 className="text-sm font-semibold text-slate-900">{item.title}</h4>
+                    <p className="text-xs text-slate-500 mt-0.5">{item.desc}</p>
                   </div>
                 </div>
               ))}
@@ -180,24 +180,24 @@ export default function DoctorLetterpadPage() {
 
           {/* Formatted Sample */}
           <section className="space-y-4">
-            <h3 className="text-xl font-heading font-semibold text-white flex items-center gap-2">
+            <h3 className="text-xl font-heading font-semibold text-slate-900 flex items-center gap-2">
               <FileText className="w-5 h-5 text-rose-400" />
               Doctor Medical Certificate Sample
             </h3>
-            <div className="p-6 rounded-2xl bg-[#0d1017] border border-white/[0.1] text-white/90 text-sm leading-relaxed shadow-inner font-sans">
-              <div className="flex justify-between items-start border-b border-white/[0.1] pb-4 mb-4">
+            <div className="p-6 rounded-2xl bg-white border border-slate-200 text-slate-800 text-sm leading-relaxed shadow-inner font-sans">
+              <div className="flex justify-between items-start border-b border-slate-200 pb-4 mb-4">
                 <div>
-                  <h4 className="text-lg font-bold text-white tracking-wide">DR. AARAV SHARMA, MBBS, MD (MEDICINE)</h4>
+                  <h4 className="text-lg font-bold text-slate-900 tracking-wide">DR. AARAV SHARMA, MBBS, MD (MEDICINE)</h4>
                   <p className="text-xs text-rose-300">Consultant Physician & Cardiologist</p>
-                  <p className="text-xs text-white/60">Reg. No: MMC-2015-08-3421 | CareWell Specialty Clinic</p>
+                  <p className="text-xs text-slate-500">Reg. No: MMC-2015-08-3421 | CareWell Specialty Clinic</p>
                 </div>
-                <div className="text-right text-xs text-white/50">
+                <div className="text-right text-xs text-slate-500">
                   <p>OPD Timings: 10 AM - 2 PM, 6 PM - 9 PM</p>
                   <p>Ph: +91-9820012345</p>
                 </div>
               </div>
 
-              <div className="border border-white/[0.06] p-2.5 rounded-lg flex justify-between text-xs text-white/70 mb-4 font-mono">
+              <div className="border border-slate-200 p-2.5 rounded-lg flex justify-between text-xs text-slate-600 mb-4 font-mono">
                 <span>Patient: Mr. Vikas Gupta</span>
                 <span>Age: 32 Yrs / Male</span>
                 <span>Date: 23/09/2026</span>
@@ -209,18 +209,18 @@ export default function DoctorLetterpadPage() {
                 </span>
               </div>
 
-              <p className="text-xs leading-relaxed text-white/85 mb-3">
+              <p className="text-xs leading-relaxed text-slate-700 mb-3">
                 This is to certify that I have carefully examined <strong>Mr. Vikas Gupta</strong>. He was suffering from Acute Viral Gastroenteritis and was under my active medical treatment from 18th Sept 2026 to 22nd Sept 2026.
               </p>
-              <p className="text-xs text-white/80 mb-6">
+              <p className="text-xs text-slate-700 mb-6">
                 He has now fully recovered and is physically fit to resume his official duties with effect from 24th September 2026.
               </p>
 
               <div className="flex justify-between items-end text-xs pt-4">
-                <p className="text-white/40">[Clinic Seal]</p>
+                <p className="text-slate-400">[Clinic Seal]</p>
                 <div className="text-right">
-                  <p className="font-bold text-white">Dr. Aarav Sharma</p>
-                  <p className="text-white/50">Reg. No: MMC-2015-08-3421</p>
+                  <p className="font-bold text-slate-900">Dr. Aarav Sharma</p>
+                  <p className="text-slate-500">Reg. No: MMC-2015-08-3421</p>
                 </div>
               </div>
             </div>
@@ -245,11 +245,11 @@ export default function DoctorLetterpadPage() {
         />
 
         {/* Bottom CTA Card */}
-        <div className="mt-14 p-8 sm:p-10 rounded-3xl bg-gradient-to-br from-rose-500/15 via-white/[0.02] to-amber-500/10 border border-white/[0.1] text-center">
-          <h3 className="text-2xl sm:text-3xl font-heading font-bold text-white mb-3">
+        <div className="mt-14 p-8 sm:p-10 rounded-3xl bg-gradient-to-br from-rose-500/15 via-white/[0.02] to-amber-500/10 border border-slate-200 text-center">
+          <h3 className="text-2xl sm:text-3xl font-heading font-bold text-slate-900 mb-3">
             Generate Your Doctor Letterhead Now
           </h3>
-          <p className="text-sm sm:text-base text-white/65 max-w-xl mx-auto mb-6">
+          <p className="text-sm sm:text-base text-slate-500 max-w-xl mx-auto mb-6">
             Input doctor name, council registration number, clinic schedule, and print crisp prescription pads instantly.
           </p>
           <Link

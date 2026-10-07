@@ -60,8 +60,8 @@ export default function SuccessPopup({
               <CheckIcon className="ui-success-check h-8 w-8" />
             </div>
             <div>
-              <h3 className="font-heading text-2xl font-bold text-white">{title}</h3>
-              <p className="mt-1 text-sm text-white/75">{message}</p>
+              <h3 className="font-heading text-2xl font-bold text-slate-900">{title}</h3>
+              <p className="mt-1 text-sm text-slate-600">{message}</p>
             </div>
           </div>
 

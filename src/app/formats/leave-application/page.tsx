@@ -86,7 +86,7 @@ export default function LeaveApplicationPage() {
   const adsEnabled = process.env.NEXT_PUBLIC_ADS_ENABLED === "true";
 
   return (
-    <main className="min-h-screen bg-[#07090f] text-white pt-24 pb-20 selection:bg-brand-pink/30">
+    <main className="min-h-screen bg-[#f7f5f1] text-slate-900 pt-24 pb-20 selection:bg-brand-pink/30">
       {/* Background Glow */}
       <div className="fixed inset-0 pointer-events-none z-0">
         <div className="absolute top-10 left-1/2 -translate-x-1/2 w-[750px] h-[450px] bg-emerald-500/10 blur-[150px] rounded-full"></div>
@@ -94,12 +94,12 @@ export default function LeaveApplicationPage() {
 
       <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Breadcrumb */}
-        <nav className="flex items-center gap-2 text-xs font-medium text-white/50 mb-6">
-          <Link href="/" className="hover:text-white transition-colors">Home</Link>
+        <nav className="flex items-center gap-2 text-xs font-medium text-slate-500 mb-6">
+          <Link href="/" className="hover:text-slate-900 transition-colors">Home</Link>
           <span>/</span>
-          <Link href="/tools" className="hover:text-white transition-colors">Formats</Link>
+          <Link href="/tools" className="hover:text-slate-900 transition-colors">Formats</Link>
           <span>/</span>
-          <span className="text-white/80">Leave Application Format</span>
+          <span className="text-slate-700">Leave Application Format</span>
         </nav>
 
         {/* Hero Header */}
@@ -109,11 +109,11 @@ export default function LeaveApplicationPage() {
             <span>HR Leave Policies & Compliance</span>
           </div>
 
-          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-heading font-bold text-white tracking-tight mb-4 leading-tight">
+          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-heading font-bold text-slate-900 tracking-tight mb-4 leading-tight">
             Official Leave Application Format & Letter Generator
           </h1>
 
-          <p className="text-base sm:text-lg text-white/70 leading-relaxed">
+          <p className="text-base sm:text-lg text-slate-600 leading-relaxed">
             Standard format for Casual Leave (CL), Earned Leave (EL), Medical Leave, and Special Leave. Aligned with standard corporate HR policies.
           </p>
 
@@ -121,7 +121,7 @@ export default function LeaveApplicationPage() {
           <div className="mt-8 flex flex-wrap items-center gap-4">
             <Link
               href="/tools/letterpad-generator?preset=personal&sub=Application%20for%20Sanction%20of%20Earned%20Leave%20(EL)&tpl=A"
-              className="inline-flex items-center gap-2.5 px-7 py-3.5 rounded-xl bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-500 text-white font-semibold text-base shadow-[0_10px_30px_rgba(16,185,129,0.25)] hover:shadow-[0_15px_40px_rgba(16,185,129,0.35)] hover:-translate-y-0.5 transition-all"
+              className="inline-flex items-center gap-2.5 px-7 py-3.5 rounded-xl bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-500 text-slate-900 font-semibold text-base shadow-[0_10px_30px_rgba(16,185,129,0.25)] hover:shadow-[0_15px_40px_rgba(16,185,129,0.35)] hover:-translate-y-0.5 transition-all"
             >
               <Sparkles className="w-5 h-5" />
               Generate Leave Application
@@ -130,7 +130,7 @@ export default function LeaveApplicationPage() {
 
             <Link
               href="/tools"
-              className="inline-flex items-center gap-2 px-6 py-3.5 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] text-white/80 hover:text-white border border-white/[0.08] text-sm font-medium transition-all"
+              className="inline-flex items-center gap-2 px-6 py-3.5 rounded-xl bg-white hover:bg-slate-100 text-slate-700 hover:text-slate-900 border border-slate-200 text-sm font-medium transition-all"
             >
               <Layers className="w-4 h-4" />
               All Formats
@@ -142,10 +142,10 @@ export default function LeaveApplicationPage() {
         {adsEnabled && <AdSlot slotKey="content-top" label="Sponsored Content" />}
 
         {/* Core Guide Content (300-500 words) */}
-        <article className="prose prose-invert max-w-none space-y-8 my-10 text-white/80 leading-relaxed">
+        <article className="prose prose max-w-none space-y-8 my-10 text-slate-700 leading-relaxed">
           
           <section className="space-y-4">
-            <h2 className="text-2xl font-heading font-bold text-white flex items-center gap-2.5">
+            <h2 className="text-2xl font-heading font-bold text-slate-900 flex items-center gap-2.5">
               <UserCheck className="w-6 h-6 text-emerald-400" />
               Guidelines for Submitting Official Leave Applications
             </h2>
@@ -159,7 +159,7 @@ export default function LeaveApplicationPage() {
 
           {/* Key Checklist */}
           <section className="space-y-4">
-            <h3 className="text-xl font-heading font-semibold text-white">
+            <h3 className="text-xl font-heading font-semibold text-slate-900">
               Essential Fields for Official Leave Letters
             </h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 not-prose">
@@ -171,11 +171,11 @@ export default function LeaveApplicationPage() {
                 { title: "Handover & Relieving Charge", desc: "Name and designation of the colleague holding dual charge." },
                 { title: "Medical Certificate Enclosure", desc: "Reference doctor's recommendation in case of illness." },
               ].map((item, idx) => (
-                <div key={idx} className="p-4 rounded-xl bg-white/[0.02] border border-white/[0.06] flex items-start gap-3">
+                <div key={idx} className="p-4 rounded-xl bg-white border border-slate-200 flex items-start gap-3">
                   <CheckCircle2 className="w-5 h-5 text-emerald-400 flex-shrink-0 mt-0.5" />
                   <div>
-                    <h4 className="text-sm font-semibold text-white">{item.title}</h4>
-                    <p className="text-xs text-white/60 mt-0.5">{item.desc}</p>
+                    <h4 className="text-sm font-semibold text-slate-900">{item.title}</h4>
+                    <p className="text-xs text-slate-500 mt-0.5">{item.desc}</p>
                   </div>
                 </div>
               ))}
@@ -184,27 +184,27 @@ export default function LeaveApplicationPage() {
 
           {/* Formatted Sample */}
           <section className="space-y-4">
-            <h3 className="text-xl font-heading font-semibold text-white flex items-center gap-2">
+            <h3 className="text-xl font-heading font-semibold text-slate-900 flex items-center gap-2">
               <FileText className="w-5 h-5 text-emerald-400" />
               Official Earned Leave Application Sample
             </h3>
-            <div className="p-6 rounded-2xl bg-[#0d1017] border border-white/[0.1] text-white/90 text-sm leading-relaxed shadow-inner font-serif">
-              <div className="flex justify-between text-xs text-white/60 mb-4 font-mono">
+            <div className="p-6 rounded-2xl bg-white border border-slate-200 text-slate-800 text-sm leading-relaxed shadow-inner font-serif">
+              <div className="flex justify-between text-xs text-slate-500 mb-4 font-mono">
                 <span>Station: Nagpur</span>
                 <span>Date: 23rd September, 2026</span>
               </div>
 
               <div className="text-xs space-y-1 mb-4">
-                <p className="font-bold text-white">To,</p>
+                <p className="font-bold text-slate-900">To,</p>
                 <p>The Senior Superintendent of Post Offices,</p>
                 <p>Nagpur City Division, Nagpur - 440001.</p>
               </div>
 
-              <p className="text-xs font-bold text-white mb-3">
+              <p className="text-xs font-bold text-slate-900 mb-3">
                 Subject: Application for Sanction of 05 Days Earned Leave (EL) on Private Affairs — Regarding.
               </p>
 
-              <div className="text-xs space-y-2 text-white/85 font-sans leading-relaxed">
+              <div className="text-xs space-y-2 text-slate-700 font-sans leading-relaxed">
                 <p>Respected Sir,</p>
                 <p>
                   1. I have the honor to submit that due to urgent domestic affairs at my native place, I am unable to attend official duties from <strong>28th September 2026 to 02nd October 2026 (05 days)</strong> with permission to prefix Sunday (27th Sept) and suffix National Holiday (2nd Oct).
@@ -218,11 +218,11 @@ export default function LeaveApplicationPage() {
               </div>
 
               <div className="text-right text-xs pt-6 space-y-1">
-                <p className="font-bold text-white">Yours faithfully,</p>
-                <p className="text-white/80">[Signature]</p>
-                <p className="text-white/70">Name: Sandeep K. Deshmukh</p>
-                <p className="text-white/50">Designation: Postal Assistant, Estt. Branch</p>
-                <p className="text-white/50">Employee ID: 10048291</p>
+                <p className="font-bold text-slate-900">Yours faithfully,</p>
+                <p className="text-slate-700">[Signature]</p>
+                <p className="text-slate-600">Name: Sandeep K. Deshmukh</p>
+                <p className="text-slate-500">Designation: Postal Assistant, Estt. Branch</p>
+                <p className="text-slate-500">Employee ID: 10048291</p>
               </div>
             </div>
           </section>
@@ -246,11 +246,11 @@ export default function LeaveApplicationPage() {
         />
 
         {/* Bottom CTA Card */}
-        <div className="mt-14 p-8 sm:p-10 rounded-3xl bg-gradient-to-br from-emerald-500/15 via-white/[0.02] to-cyan-500/10 border border-white/[0.1] text-center">
-          <h3 className="text-2xl sm:text-3xl font-heading font-bold text-white mb-3">
+        <div className="mt-14 p-8 sm:p-10 rounded-3xl bg-gradient-to-br from-emerald-500/15 via-white/[0.02] to-cyan-500/10 border border-slate-200 text-center">
+          <h3 className="text-2xl sm:text-3xl font-heading font-bold text-slate-900 mb-3">
             Draft Your Leave Application in Seconds
           </h3>
-          <p className="text-sm sm:text-base text-white/65 max-w-xl mx-auto mb-6">
+          <p className="text-sm sm:text-base text-slate-500 max-w-xl mx-auto mb-6">
             Enter your leave dates and reason; Swalekhani formats an official leave letter ready for print or instant PDF download.
           </p>
           <Link

@@ -149,7 +149,7 @@ export default function HomePage() {
   };
 
   return (
-    <main className="min-h-screen bg-[#07090f] text-white selection:bg-brand-pink/30 relative overflow-x-hidden font-sans">
+    <main className="min-h-screen bg-[#f7f5f1] text-slate-900 selection:bg-brand-pink/30 relative overflow-x-hidden font-sans">
       
       {/* Dynamic Ambient Background Glows */}
       <div className="fixed inset-0 pointer-events-none z-0">
@@ -163,15 +163,15 @@ export default function HomePage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           
           {/* Hero Tag */}
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/[0.04] border border-white/[0.08] backdrop-blur-md mb-6 shadow-[inset_0_1px_0_rgba(255,255,255,0.1)]">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white border border-slate-200 backdrop-blur-md mb-6 shadow-[inset_0_1px_0_rgba(255,255,255,0.1)]">
             <Sparkles className="w-4 h-4 text-brand-orange animate-pulse" />
-            <span className="text-xs font-semibold uppercase tracking-wider text-white/80">
+            <span className="text-xs font-semibold uppercase tracking-wider text-slate-700">
               India&apos;s Standard AI Letterpad & Document Studio
             </span>
           </div>
 
           {/* Headline */}
-          <h1 className="text-4xl sm:text-6xl lg:text-7xl font-heading font-extrabold tracking-tight text-white mb-6 leading-[1.1]">
+          <h1 className="text-4xl sm:text-6xl lg:text-7xl font-heading font-extrabold tracking-tight text-slate-900 mb-6 leading-[1.1]">
             Draft, Format & Print <br className="hidden sm:inline" />
             <span className="bg-gradient-to-r from-brand-orange via-brand-pink to-brand-sky bg-clip-text text-transparent">
               Professional Business Letters
@@ -179,8 +179,8 @@ export default function HomePage() {
           </h1>
 
           {/* Subtitle */}
-          <p className="text-base sm:text-xl text-white/65 max-w-3xl mx-auto mb-10 font-normal leading-relaxed">
-            Create professional bilingual letterheads for Corporate, Legal, Healthcare, and Personal communications. Generate structured, formal drafts with Groq AI in <strong className="text-white">मराठी, हिन्दी & English</strong>.
+          <p className="text-base sm:text-xl text-slate-500 max-w-3xl mx-auto mb-10 font-normal leading-relaxed">
+            Create professional bilingual letterheads for Corporate, Legal, Healthcare, and Personal communications. Generate structured, formal drafts with Groq AI in <strong className="text-slate-900">मराठी, हिन्दी & English</strong>.
           </p>
 
           {/* Primary CTA Buttons */}
@@ -196,15 +196,15 @@ export default function HomePage() {
 
             <Link
               href="/templates"
-              className="inline-flex items-center gap-2 px-7 py-4 rounded-2xl bg-white/[0.04] hover:bg-white/[0.08] text-white/80 hover:text-white border border-white/[0.08] text-sm font-semibold transition-all backdrop-blur-md"
+              className="inline-flex items-center gap-2 px-7 py-4 rounded-2xl bg-white hover:bg-slate-100 text-slate-700 hover:text-slate-900 border border-slate-200 text-sm font-semibold transition-all backdrop-blur-md"
             >
               <Layers className="w-4 h-4" />
-              <span>Browse 17+ Templates</span>
+              <span>Browse 14+ Templates</span>
             </Link>
 
             <Link
               href="/formats"
-              className="inline-flex items-center gap-2 px-7 py-4 rounded-2xl bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-300 border border-emerald-500/20 text-sm font-semibold transition-all backdrop-blur-md"
+              className="inline-flex items-center gap-2 px-7 py-4 rounded-2xl bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-700 border border-emerald-500/25 text-sm font-semibold transition-all backdrop-blur-md"
             >
               <BookOpen className="w-4 h-4" />
               <span>Statutory Formats (RTI / Leave)</span>
@@ -217,16 +217,16 @@ export default function HomePage() {
             {/* Gateway 1: Blank Studio */}
             <Link
               href="/tools/letterpad-generator"
-              className="group p-5 rounded-2xl bg-white/[0.02] hover:bg-white/[0.06] border border-white/[0.06] hover:border-brand-orange/40 transition-all duration-300 hover:-translate-y-1 shadow-lg"
+              className="group p-5 rounded-2xl bg-white hover:bg-slate-50 border border-slate-200 hover:border-brand-orange/40 transition-all duration-300 hover:-translate-y-1 shadow-lg"
             >
               <div className="w-10 h-10 rounded-xl bg-brand-orange/15 border border-brand-orange/20 flex items-center justify-center mb-3 text-brand-orange">
                 <Sparkles className="w-5 h-5" />
               </div>
-              <h3 className="font-heading font-bold text-white text-base mb-1 group-hover:text-brand-orange transition-colors">
+              <h3 className="font-heading font-bold text-slate-900 text-base mb-1 group-hover:text-brand-orange transition-colors">
                 1. Make Your Letterpad
               </h3>
-              <p className="text-xs text-white/55 leading-relaxed">
-                Design professional stationery with your own logos, emblems, and branding.
+              <p className="text-xs text-slate-500 leading-relaxed">
+                Design professional stationery with your own logo and branding.
               </p>
               <div className="mt-3 flex items-center gap-1 text-xs font-semibold text-brand-orange">
                 <span>Start Studio</span>
@@ -237,15 +237,15 @@ export default function HomePage() {
             {/* Gateway 2: AI Write */}
             <a
               href="#ai-studio-section"
-              className="group p-5 rounded-2xl bg-white/[0.02] hover:bg-white/[0.06] border border-white/[0.06] hover:border-brand-pink/40 transition-all duration-300 hover:-translate-y-1 shadow-lg"
+              className="group p-5 rounded-2xl bg-white hover:bg-slate-50 border border-slate-200 hover:border-brand-pink/40 transition-all duration-300 hover:-translate-y-1 shadow-lg"
             >
               <div className="w-10 h-10 rounded-xl bg-brand-pink/15 border border-brand-pink/20 flex items-center justify-center mb-3 text-brand-pink">
                 <Zap className="w-5 h-5" />
               </div>
-              <h3 className="font-heading font-bold text-white text-base mb-1 group-hover:text-brand-pink transition-colors">
+              <h3 className="font-heading font-bold text-slate-900 text-base mb-1 group-hover:text-brand-pink transition-colors">
                 2. Write Letter by AI
               </h3>
-              <p className="text-xs text-white/55 leading-relaxed">
+              <p className="text-xs text-slate-500 leading-relaxed">
                 Provide brief bullet points in Marathi, Hindi, or English; get structured formal paragraphs instantly.
               </p>
               <div className="mt-3 flex items-center gap-1 text-xs font-semibold text-brand-pink">
@@ -257,15 +257,15 @@ export default function HomePage() {
             {/* Gateway 3: Profession Templates */}
             <Link
               href="/templates"
-              className="group p-5 rounded-2xl bg-white/[0.02] hover:bg-white/[0.06] border border-white/[0.06] hover:border-brand-sky/40 transition-all duration-300 hover:-translate-y-1 shadow-lg"
+              className="group p-5 rounded-2xl bg-white hover:bg-slate-50 border border-slate-200 hover:border-brand-sky/40 transition-all duration-300 hover:-translate-y-1 shadow-lg"
             >
               <div className="w-10 h-10 rounded-xl bg-brand-sky/15 border border-brand-sky/20 flex items-center justify-center mb-3 text-brand-sky">
                 <Layers className="w-5 h-5" />
               </div>
-              <h3 className="font-heading font-bold text-white text-base mb-1 group-hover:text-brand-sky transition-colors">
-                3. 17+ Profession Presets
+              <h3 className="font-heading font-bold text-slate-900 text-base mb-1 group-hover:text-brand-sky transition-colors">
+                3. 14+ Profession Templates
               </h3>
-              <p className="text-xs text-white/55 leading-relaxed">
+              <p className="text-xs text-slate-500 leading-relaxed">
                 Pre-formatted layouts for Advocates, CAs, Doctors, Housing Societies, Companies & Shops.
               </p>
               <div className="mt-3 flex items-center gap-1 text-xs font-semibold text-brand-sky">
@@ -277,15 +277,15 @@ export default function HomePage() {
             {/* Gateway 4: Formats & RTI */}
             <Link
               href="/formats"
-              className="group p-5 rounded-2xl bg-white/[0.02] hover:bg-white/[0.06] border border-white/[0.06] hover:border-emerald-400/40 transition-all duration-300 hover:-translate-y-1 shadow-lg"
+              className="group p-5 rounded-2xl bg-white hover:bg-slate-50 border border-slate-200 hover:border-emerald-400/40 transition-all duration-300 hover:-translate-y-1 shadow-lg"
             >
               <div className="w-10 h-10 rounded-xl bg-emerald-500/15 border border-emerald-500/20 flex items-center justify-center mb-3 text-emerald-400">
                 <ShieldCheck className="w-5 h-5" />
               </div>
-              <h3 className="font-heading font-bold text-white text-base mb-1 group-hover:text-emerald-300 transition-colors">
+              <h3 className="font-heading font-bold text-slate-900 text-base mb-1 group-hover:text-emerald-300 transition-colors">
                 4. Statutory Formats
               </h3>
-              <p className="text-xs text-white/55 leading-relaxed">
+              <p className="text-xs text-slate-500 leading-relaxed">
                 RTI applications, HR leave requests, Office Orders, Complaints & Legal notices.
               </p>
               <div className="mt-3 flex items-center gap-1 text-xs font-semibold text-emerald-400">
@@ -303,7 +303,7 @@ export default function HomePage() {
       {adsEnabled && <AdSlot slotKey="home-top" label="Sponsored Content" />}
 
       {/* SECTION: Interactive AI Prompt Playground */}
-      <section id="ai-studio-section" className="relative z-10 py-16 sm:py-20 border-t border-white/[0.06]">
+      <section id="ai-studio-section" className="relative z-10 py-16 sm:py-20 border-t border-slate-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           
           <div className="text-center max-w-3xl mx-auto mb-12">
@@ -311,10 +311,10 @@ export default function HomePage() {
               <Zap className="w-3.5 h-3.5" />
               <span>Multilingual AI Prompt Generator</span>
             </div>
-            <h2 className="text-3xl sm:text-4xl font-heading font-bold text-white tracking-tight mb-3">
+            <h2 className="text-3xl sm:text-4xl font-heading font-bold text-slate-900 tracking-tight mb-3">
               Experience Instant AI Drafting in Action
             </h2>
-            <p className="text-sm sm:text-base text-white/60">
+            <p className="text-sm sm:text-base text-slate-500">
               Select a real-world scenario or type your prompt to see how Swalekhani structures formal business and official letters.
             </p>
           </div>
@@ -323,7 +323,7 @@ export default function HomePage() {
             
             {/* Left Prompt Selector Column */}
             <div className="lg:col-span-5 space-y-3">
-              <span className="text-xs font-semibold text-white/40 uppercase tracking-wider block mb-1">
+              <span className="text-xs font-semibold text-slate-400 uppercase tracking-wider block mb-1">
                 Select a Standard Use Case
               </span>
 
@@ -333,30 +333,30 @@ export default function HomePage() {
                   onClick={() => setActivePromptIdx(idx)}
                   className={`w-full text-left p-4 rounded-2xl border transition-all duration-300 ${
                     activePromptIdx === idx
-                      ? 'bg-white/[0.08] border-brand-pink/50 shadow-[0_4px_20px_rgba(236,72,153,0.15)] scale-[1.02]'
-                      : 'bg-white/[0.02] border-white/[0.06] hover:bg-white/[0.04] text-white/70'
+                      ? 'bg-slate-100 border-brand-pink/50 shadow-[0_4px_20px_rgba(236,72,153,0.15)] scale-[1.02]'
+                      : 'bg-white border-slate-200 hover:bg-white text-slate-600'
                   }`}
                 >
                   <div className="flex items-center justify-between mb-1.5">
-                    <span className="text-[10px] font-semibold px-2 py-0.5 rounded-md bg-white/[0.06] text-white/80 font-mono">
+                    <span className="text-[10px] font-semibold px-2 py-0.5 rounded-md bg-slate-50 text-slate-700 font-mono">
                       {sample.lang}
                     </span>
                     <span className="text-[11px] font-medium text-brand-pink">
                       {sample.category}
                     </span>
                   </div>
-                  <h4 className="text-sm font-semibold text-white mb-1">
+                  <h4 className="text-sm font-semibold text-slate-900 mb-1">
                     {sample.title}
                   </h4>
-                  <p className="text-xs text-white/50 line-clamp-2">
+                  <p className="text-xs text-slate-500 line-clamp-2">
                     &quot;{sample.prompt}&quot;
                   </p>
                 </button>
               ))}
 
               {/* Custom Prompt Box */}
-              <div className="mt-4 p-4 rounded-2xl bg-white/[0.02] border border-white/[0.06]">
-                <label className="text-xs font-semibold text-white/70 block mb-2">
+              <div className="mt-4 p-4 rounded-2xl bg-white border border-slate-200">
+                <label className="text-xs font-semibold text-slate-600 block mb-2">
                   Or Write Your Own Custom Subject / Need:
                 </label>
                 <div className="flex gap-2">
@@ -365,7 +365,7 @@ export default function HomePage() {
                     value={customPrompt}
                     onChange={(e) => setCustomPrompt(e.target.value)}
                     placeholder="उदा. रस्ता दुरुस्ती, NOC अर्ज, Transfer order..."
-                    className="flex-1 bg-white/[0.04] border border-white/[0.1] rounded-xl px-3 py-2 text-xs text-white placeholder-white/40 focus:outline-none focus:border-brand-pink"
+                    className="flex-1 bg-white border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-900 placeholder-slate-400 focus:outline-none focus:border-brand-pink"
                   />
                   <Link
                     href={`/tools/letterpad-generator?sub=${encodeURIComponent(customPrompt || 'Official Representation')}`}
@@ -381,20 +381,20 @@ export default function HomePage() {
 
             {/* Right Interactive A4 Preview Card */}
             <div className="lg:col-span-7">
-              <div className="rounded-3xl bg-[#0d1017] border border-white/[0.1] p-6 sm:p-8 shadow-2xl relative overflow-hidden">
+              <div className="rounded-3xl bg-white border border-slate-200 p-6 sm:p-8 shadow-2xl relative overflow-hidden">
                 
                 {/* Top Card Header */}
-                <div className="flex items-center justify-between pb-4 border-b border-white/[0.06] mb-6">
+                <div className="flex items-center justify-between pb-4 border-b border-slate-200 mb-6">
                   <div className="flex items-center gap-2">
                     <div className="w-3 h-3 rounded-full bg-rose-500/80"></div>
                     <div className="w-3 h-3 rounded-full bg-amber-500/80"></div>
                     <div className="w-3 h-3 rounded-full bg-emerald-500/80"></div>
-                    <span className="text-xs text-white/40 font-mono ml-2">A4 Canvas Live Preview</span>
+                    <span className="text-xs text-slate-400 font-mono ml-2">A4 Canvas Live Preview</span>
                   </div>
 
                   <button
                     onClick={handleCopy}
-                    className="flex items-center gap-1.5 text-xs text-white/60 hover:text-white px-3 py-1.5 rounded-lg bg-white/[0.04] hover:bg-white/[0.08] transition-all"
+                    className="flex items-center gap-1.5 text-xs text-slate-500 hover:text-slate-900 px-3 py-1.5 rounded-lg bg-white hover:bg-slate-100 transition-all"
                   >
                     {copied ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
                     <span>{copied ? 'Copied' : 'Copy Sample'}</span>
@@ -402,32 +402,32 @@ export default function HomePage() {
                 </div>
 
                 {/* Subject Block */}
-                <div className="mb-4 bg-white/[0.02] p-3.5 rounded-xl border border-white/[0.05]">
-                  <span className="text-[10px] uppercase font-bold text-white/40 tracking-wider block mb-1">
+                <div className="mb-4 bg-white p-3.5 rounded-xl border border-white/[0.05]">
+                  <span className="text-[10px] uppercase font-bold text-slate-400 tracking-wider block mb-1">
                     Subject / विषय:
                   </span>
-                  <p className="text-sm font-semibold text-white">
+                  <p className="text-sm font-semibold text-slate-900">
                     {currentPrompt.subject}
                   </p>
                 </div>
 
                 {/* Formatted Body */}
-                <div className="mb-6 p-4 rounded-xl bg-black/40 border border-white/[0.04] text-white/85 text-xs sm:text-sm leading-relaxed font-serif">
+                <div className="mb-6 p-4 rounded-xl bg-black/40 border border-white/[0.04] text-slate-700 text-xs sm:text-sm leading-relaxed font-serif">
                   <p className="whitespace-pre-line">
                     {currentPrompt.preview}
                   </p>
                 </div>
 
                 {/* Action Row */}
-                <div className="flex flex-wrap items-center justify-between gap-4 pt-4 border-t border-white/[0.06]">
-                  <div className="text-xs text-white/50 flex items-center gap-1.5">
+                <div className="flex flex-wrap items-center justify-between gap-4 pt-4 border-t border-slate-200">
+                  <div className="text-xs text-slate-500 flex items-center gap-1.5">
                     <CheckCircle2 className="w-4 h-4 text-emerald-400" />
                     <span>Formatted with professional Indian business standards</span>
                   </div>
 
                   <Link
                     href={buildStudioLaunchUrl(currentPrompt)}
-                    className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-brand-pink to-brand-orange text-white text-xs font-semibold shadow-lg hover:shadow-brand-pink/20 hover:scale-105 transition-all"
+                    className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-brand-pink to-brand-orange text-slate-900 text-xs font-semibold shadow-lg hover:shadow-brand-pink/20 hover:scale-105 transition-all"
                   >
                     <Sparkles className="w-3.5 h-3.5" />
                     <span>Open in Studio & Customize</span>
@@ -444,7 +444,7 @@ export default function HomePage() {
       </section>
 
       {/* SECTION: Featured Letterhead & Profession Presets */}
-      <section className="relative z-10 py-16 sm:py-24 border-t border-white/[0.06] bg-white/[0.01]">
+      <section className="relative z-10 py-16 sm:py-24 border-t border-slate-200 bg-white/[0.01]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           
           <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-4">
@@ -453,14 +453,14 @@ export default function HomePage() {
                 <Layers className="w-3.5 h-3.5" />
                 <span>Profession Presets</span>
               </div>
-              <h2 className="text-3xl sm:text-4xl font-heading font-bold text-white tracking-tight">
+              <h2 className="text-3xl sm:text-4xl font-heading font-bold text-slate-900 tracking-tight">
                 Authentic Layouts for Every Authority
               </h2>
             </div>
             
             <Link
               href="/templates"
-              className="inline-flex items-center gap-2 text-sm font-semibold text-brand-sky hover:text-white transition-colors"
+              className="inline-flex items-center gap-2 text-sm font-semibold text-brand-sky hover:text-slate-900 transition-colors"
             >
               <span>Explore all 17 Templates</span>
               <ArrowRight className="w-4 h-4" />
@@ -473,11 +473,11 @@ export default function HomePage() {
               return (
                 <div
                   key={item.id}
-                  className="group relative rounded-3xl bg-[#0d1017] border border-white/[0.08] hover:border-white/[0.2] transition-all duration-300 flex flex-col justify-between overflow-hidden shadow-xl hover:-translate-y-1.5"
+                  className="group relative rounded-3xl bg-white border border-slate-200 hover:border-white/[0.2] transition-all duration-300 flex flex-col justify-between overflow-hidden shadow-xl hover:-translate-y-1.5"
                 >
                   {/* 3D Illustration Banner or Styled Gradient Header */}
                   {item.image ? (
-                    <div className="relative h-44 w-full overflow-hidden bg-black/60 border-b border-white/[0.06]">
+                    <div className="relative h-44 w-full overflow-hidden bg-black/60 border-b border-slate-200">
                       <img 
                         src={item.image} 
                         alt={item.name}
@@ -485,17 +485,17 @@ export default function HomePage() {
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-[#0d1017] via-[#0d1017]/40 to-transparent"></div>
                       <div className="absolute top-3.5 right-3.5">
-                        <span className="text-[10px] font-bold px-2.5 py-1 rounded-full border border-white/20 bg-black/70 backdrop-blur-md text-white/90 uppercase tracking-wider shadow-md">
+                        <span className="text-[10px] font-bold px-2.5 py-1 rounded-full border border-slate-200 bg-black/70 backdrop-blur-md text-slate-800 uppercase tracking-wider shadow-md">
                           {item.badge}
                         </span>
                       </div>
                     </div>
                   ) : (
-                    <div className={`h-24 w-full bg-gradient-to-br ${item.color} border-b border-white/[0.06] p-4 flex items-center justify-between`}>
-                      <div className="w-12 h-12 rounded-2xl bg-white/[0.05] border border-white/[0.1] flex items-center justify-center">
+                    <div className={`h-24 w-full bg-gradient-to-br ${item.color} border-b border-slate-200 p-4 flex items-center justify-between`}>
+                      <div className="w-12 h-12 rounded-2xl bg-white/[0.05] border border-slate-200 flex items-center justify-center">
                         <Icon className={`w-6 h-6 ${item.accent}`} />
                       </div>
-                      <span className="text-[10px] font-semibold uppercase tracking-wider px-2.5 py-1 rounded-full bg-white/[0.04] border border-white/[0.08] text-white/70">
+                      <span className="text-[10px] font-semibold uppercase tracking-wider px-2.5 py-1 rounded-full bg-white border border-slate-200 text-slate-600">
                         {item.badge}
                       </span>
                     </div>
@@ -503,22 +503,22 @@ export default function HomePage() {
 
                   <div className="p-6 space-y-4 flex-1 flex flex-col justify-between">
                     <div className="space-y-2">
-                      <h3 className="font-heading font-bold text-xl text-white group-hover:text-brand-orange transition-colors">
+                      <h3 className="font-heading font-bold text-xl text-slate-900 group-hover:text-brand-orange transition-colors">
                         {item.name}
                       </h3>
 
-                      <p className="text-xs text-white/60 leading-relaxed">
+                      <p className="text-xs text-slate-500 leading-relaxed">
                         {item.desc}
                       </p>
                     </div>
 
-                    <div className="pt-4 border-t border-white/[0.06] mt-4">
+                    <div className="pt-4 border-t border-slate-200 mt-4">
                       <Link
                         href={item.href}
-                        className="w-full py-2.5 px-4 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] text-white text-xs font-semibold border border-white/[0.08] text-center transition-all flex items-center justify-between group/btn"
+                        className="w-full py-2.5 px-4 rounded-xl bg-white hover:bg-slate-100 text-slate-900 text-xs font-semibold border border-slate-200 text-center transition-all flex items-center justify-between group/btn"
                       >
                         <span>Launch Template</span>
-                        <ChevronRight className="w-4 h-4 text-white/40 group-hover/btn:translate-x-1 group-hover/btn:text-white transition-all" />
+                        <ChevronRight className="w-4 h-4 text-slate-400 group-hover/btn:translate-x-1 group-hover/btn:text-slate-900 transition-all" />
                       </Link>
                     </div>
                   </div>
@@ -531,53 +531,53 @@ export default function HomePage() {
       </section>
 
       {/* SECTION: 3-Step Simple Workflow */}
-      <section className="relative z-10 py-16 sm:py-24 border-t border-white/[0.06]">
+      <section className="relative z-10 py-16 sm:py-24 border-t border-slate-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           
-          <h2 className="text-3xl sm:text-4xl font-heading font-bold text-white tracking-tight mb-4">
+          <h2 className="text-3xl sm:text-4xl font-heading font-bold text-slate-900 tracking-tight mb-4">
             How Swalekhani Works
           </h2>
-          <p className="text-sm sm:text-base text-white/60 max-w-2xl mx-auto mb-16">
+          <p className="text-sm sm:text-base text-slate-500 max-w-2xl mx-auto mb-16">
             From blank page to print-ready official stationery in 3 frictionless steps.
           </p>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-left max-w-5xl mx-auto">
             
             {/* Step 1 */}
-            <div className="relative p-7 rounded-3xl bg-white/[0.02] border border-white/[0.06] shadow-lg">
+            <div className="relative p-7 rounded-3xl bg-white border border-slate-200 shadow-lg">
               <div className="w-12 h-12 rounded-2xl bg-brand-orange/15 border border-brand-orange/30 text-brand-orange font-mono font-bold text-xl flex items-center justify-center mb-6">
                 01
               </div>
-              <h3 className="text-lg font-heading font-bold text-white mb-2">
+              <h3 className="text-lg font-heading font-bold text-slate-900 mb-2">
                 Choose Header & Layout
               </h3>
-              <p className="text-xs text-white/60 leading-relaxed">
+              <p className="text-xs text-slate-500 leading-relaxed">
                 Select your department insignia, emblem, contact ribbons, and bilingual font sizing in the live A4 visual studio.
               </p>
             </div>
 
             {/* Step 2 */}
-            <div className="relative p-7 rounded-3xl bg-white/[0.02] border border-white/[0.06] shadow-lg">
+            <div className="relative p-7 rounded-3xl bg-white border border-slate-200 shadow-lg">
               <div className="w-12 h-12 rounded-2xl bg-brand-pink/15 border border-brand-pink/30 text-brand-pink font-mono font-bold text-xl flex items-center justify-center mb-6">
                 02
               </div>
-              <h3 className="text-lg font-heading font-bold text-white mb-2">
+              <h3 className="text-lg font-heading font-bold text-slate-900 mb-2">
                 Draft with AI or Rich Text
               </h3>
-              <p className="text-xs text-white/60 leading-relaxed">
+              <p className="text-xs text-slate-500 leading-relaxed">
                 Use integrated Groq AI to structure paragraphs in Marathi, Hindi, or English, or format manually with dynamic date stamps and paragraph markers.
               </p>
             </div>
 
             {/* Step 3 */}
-            <div className="relative p-7 rounded-3xl bg-white/[0.02] border border-white/[0.06] shadow-lg">
+            <div className="relative p-7 rounded-3xl bg-white border border-slate-200 shadow-lg">
               <div className="w-12 h-12 rounded-2xl bg-brand-sky/15 border border-brand-sky/30 text-brand-sky font-mono font-bold text-xl flex items-center justify-center mb-6">
                 03
               </div>
-              <h3 className="text-lg font-heading font-bold text-white mb-2">
+              <h3 className="text-lg font-heading font-bold text-slate-900 mb-2">
                 Export PDF or Print Direct
               </h3>
-              <p className="text-xs text-white/60 leading-relaxed">
+              <p className="text-xs text-slate-500 leading-relaxed">
                 Download a 100% vector, crystal-clear unwatermarked A4 PDF or print directly onto your pre-printed office bond letterhead paper.
               </p>
             </div>
@@ -591,7 +591,7 @@ export default function HomePage() {
       {adsEnabled && <AdSlot slotKey="home-mid" label="Advertisement" />}
 
       {/* SECTION: Trust & Compliance Badges */}
-      <section className="relative z-10 py-16 sm:py-20 border-t border-white/[0.06] bg-white/[0.01]">
+      <section className="relative z-10 py-16 sm:py-20 border-t border-slate-200 bg-white/[0.01]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -619,10 +619,10 @@ export default function HomePage() {
             ].map((feature, i) => {
               const Icon = feature.icon;
               return (
-                <div key={i} className="p-6 rounded-2xl bg-white/[0.02] border border-white/[0.05]">
+                <div key={i} className="p-6 rounded-2xl bg-white border border-white/[0.05]">
                   <Icon className="w-6 h-6 text-brand-orange mb-3" />
-                  <h4 className="font-heading font-semibold text-white text-base mb-1">{feature.title}</h4>
-                  <p className="text-xs text-white/55 leading-relaxed">{feature.desc}</p>
+                  <h4 className="font-heading font-semibold text-slate-900 text-base mb-1">{feature.title}</h4>
+                  <p className="text-xs text-slate-500 leading-relaxed">{feature.desc}</p>
                 </div>
               );
             })}
@@ -632,14 +632,14 @@ export default function HomePage() {
       </section>
 
       {/* SECTION: FAQ */}
-      <section className="relative z-10 py-16 sm:py-24 border-t border-white/[0.06]">
+      <section className="relative z-10 py-16 sm:py-24 border-t border-slate-200">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           
           <div className="text-center mb-12">
-            <h2 className="text-3xl font-heading font-bold text-white mb-2">
+            <h2 className="text-3xl font-heading font-bold text-slate-900 mb-2">
               Frequently Asked Questions
             </h2>
-            <p className="text-sm text-white/60">
+            <p className="text-sm text-slate-500">
               Everything you need to know about Swalekhani letterheads and AI drafting.
             </p>
           </div>
@@ -663,12 +663,12 @@ export default function HomePage() {
                 a: "No. All text editing, formatting, and PDF rendering take place entirely within your local browser session. No personal drafts or contact details are saved to external databases."
               }
             ].map((faq, i) => (
-              <div key={i} className="p-6 rounded-2xl bg-white/[0.02] border border-white/[0.06]">
-                <h3 className="text-base font-semibold text-white mb-2 flex items-start gap-2.5">
+              <div key={i} className="p-6 rounded-2xl bg-white border border-slate-200">
+                <h3 className="text-base font-semibold text-slate-900 mb-2 flex items-start gap-2.5">
                   <HelpCircle className="w-5 h-5 text-brand-pink flex-shrink-0 mt-0.5" />
                   <span>{faq.q}</span>
                 </h3>
-                <p className="text-sm text-white/65 pl-7 leading-relaxed">{faq.a}</p>
+                <p className="text-sm text-slate-500 pl-7 leading-relaxed">{faq.a}</p>
               </div>
             ))}
           </div>
@@ -677,16 +677,16 @@ export default function HomePage() {
       </section>
 
       {/* SECTION: Bottom CTA Banner */}
-      <section className="relative z-10 py-16 sm:py-24 border-t border-white/[0.06]">
+      <section className="relative z-10 py-16 sm:py-24 border-t border-slate-200">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="p-8 sm:p-14 rounded-3xl bg-gradient-to-br from-brand-orange/20 via-brand-pink/15 to-brand-sky/20 border border-white/[0.15] text-center shadow-2xl relative overflow-hidden">
-            <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full blur-3xl pointer-events-none"></div>
+            <div className="absolute top-0 right-0 w-64 h-64 bg-slate-50 rounded-full blur-3xl pointer-events-none"></div>
             
-            <h3 className="text-3xl sm:text-4xl font-heading font-extrabold text-white mb-4 tracking-tight">
+            <h3 className="text-3xl sm:text-4xl font-heading font-extrabold text-slate-900 mb-4 tracking-tight">
               Ready to Draft Your Official Letter?
             </h3>
             
-            <p className="text-base sm:text-lg text-white/75 max-w-xl mx-auto mb-8 font-normal">
+            <p className="text-base sm:text-lg text-slate-600 max-w-xl mx-auto mb-8 font-normal">
               No login required. Choose a template or prompt and start drafting in the Studio immediately.
             </p>
 

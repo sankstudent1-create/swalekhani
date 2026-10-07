@@ -33,14 +33,14 @@ export default function ShareButtons({ title, url, description }: ShareButtonsPr
   };
 
   return (
-    <div className="p-4 sm:p-5 rounded-2xl bg-white/[0.03] border border-white/[0.08] backdrop-blur-md flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 my-8 shadow-[inset_0_1px_0_rgba(255,255,255,0.05)]">
+    <div className="p-4 sm:p-5 rounded-2xl bg-white/[0.03] border border-slate-200 backdrop-blur-md flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 my-8 shadow-[inset_0_1px_0_rgba(255,255,255,0.05)]">
       <div className="flex items-center gap-2.5">
         <div className="w-9 h-9 rounded-xl bg-brand-orange/10 border border-brand-orange/20 flex items-center justify-center">
           <Share2 className="w-4 h-4 text-brand-orange" />
         </div>
         <div>
-          <h4 className="text-sm font-semibold text-white">Share this Template</h4>
-          <p className="text-xs text-white/50">Help colleagues & officers format official letters faster</p>
+          <h4 className="text-sm font-semibold text-slate-900">Share this Template</h4>
+          <p className="text-xs text-slate-500">Help colleagues & officers format official letters faster</p>
         </div>
       </div>
 
@@ -69,7 +69,7 @@ export default function ShareButtons({ title, url, description }: ShareButtonsPr
         {/* Copy Link */}
         <button
           onClick={handleCopy}
-          className="flex-1 sm:flex-none inline-flex items-center justify-center gap-2 px-3.5 py-2 rounded-xl bg-white/[0.05] hover:bg-white/[0.1] text-white/80 hover:text-white border border-white/[0.08] text-xs font-medium transition-all"
+          className="flex-1 sm:flex-none inline-flex items-center justify-center gap-2 px-3.5 py-2 rounded-xl bg-white/[0.05] hover:bg-white/[0.1] text-slate-700 hover:text-slate-900 border border-slate-200 text-xs font-medium transition-all"
         >
           {copied ? (
             <>

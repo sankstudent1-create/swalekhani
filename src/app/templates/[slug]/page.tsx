@@ -100,7 +100,7 @@ export default async function ProfessionTemplatePage({ params }: PageProps) {
   };
 
   return (
-    <main className="min-h-screen bg-[#07090f] text-white pt-24 pb-20 selection:bg-brand-pink/30">
+    <main className="min-h-screen bg-[#f7f5f1] text-slate-900 pt-24 pb-20 selection:bg-brand-pink/30">
       {/* Background Glow */}
       <div className="fixed inset-0 pointer-events-none z-0">
         <div className={`absolute top-10 left-1/2 -translate-x-1/2 w-[750px] h-[450px] ${template.theme.bgGlow} blur-[150px] rounded-full`}></div>
@@ -115,12 +115,12 @@ export default async function ProfessionTemplatePage({ params }: PageProps) {
       <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Breadcrumb Navigation */}
-        <nav className="flex items-center gap-2 text-xs font-medium text-white/50 mb-6">
-          <Link href="/" className="hover:text-white transition-colors">Home</Link>
+        <nav className="flex items-center gap-2 text-xs font-medium text-slate-500 mb-6">
+          <Link href="/" className="hover:text-slate-900 transition-colors">Home</Link>
           <span>/</span>
-          <Link href="/templates" className="hover:text-white transition-colors">Templates</Link>
+          <Link href="/templates" className="hover:text-slate-900 transition-colors">Templates</Link>
           <span>/</span>
-          <span className="text-white/80">{template.profession}</span>
+          <span className="text-slate-700">{template.profession}</span>
         </nav>
 
         {/* Hero Header */}
@@ -130,19 +130,19 @@ export default async function ProfessionTemplatePage({ params }: PageProps) {
             <span>{template.badge}</span>
           </div>
 
-          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-heading font-bold text-white tracking-tight mb-4 leading-tight">
+          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-heading font-bold text-slate-900 tracking-tight mb-4 leading-tight">
             {template.title}
           </h1>
 
           {/* 150-word Original Intro Copy */}
-          <p className="text-base sm:text-lg text-white/75 leading-relaxed max-w-4xl">
+          <p className="text-base sm:text-lg text-slate-600 leading-relaxed max-w-4xl">
             {template.introText}
           </p>
 
           <div className="mt-6 flex flex-wrap items-center gap-3">
             <Link
               href={`/tools/letterpad-generator?template=${template.slug}`}
-              className="inline-flex items-center gap-2.5 px-6 py-3 rounded-xl bg-gradient-to-r from-orange-500 via-rose-500 to-amber-500 text-white font-semibold text-sm shadow-[0_10px_25px_rgba(249,115,22,0.25)] hover:shadow-[0_15px_35px_rgba(249,115,22,0.35)] hover:-translate-y-0.5 transition-all"
+              className="inline-flex items-center gap-2.5 px-6 py-3 rounded-xl bg-gradient-to-r from-orange-500 via-rose-500 to-amber-500 text-slate-900 font-semibold text-sm shadow-[0_10px_25px_rgba(249,115,22,0.25)] hover:shadow-[0_15px_35px_rgba(249,115,22,0.35)] hover:-translate-y-0.5 transition-all"
             >
               <Sparkles className="w-4 h-4" />
               <span>Launch in Generator</span>
@@ -151,7 +151,7 @@ export default async function ProfessionTemplatePage({ params }: PageProps) {
 
             <Link
               href="/templates"
-              className="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] text-white/80 hover:text-white border border-white/[0.08] text-xs font-medium transition-all"
+              className="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-white hover:bg-slate-100 text-slate-700 hover:text-slate-900 border border-slate-200 text-xs font-medium transition-all"
             >
               <Layers className="w-4 h-4" />
               <span>Browse All 17 Templates</span>

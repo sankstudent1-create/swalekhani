@@ -86,7 +86,7 @@ export default function RtiApplicationPage() {
   const adsEnabled = process.env.NEXT_PUBLIC_ADS_ENABLED === "true";
 
   return (
-    <main className="min-h-screen bg-[#07090f] text-white pt-24 pb-20 selection:bg-brand-pink/30">
+    <main className="min-h-screen bg-[#f7f5f1] text-slate-900 pt-24 pb-20 selection:bg-brand-pink/30">
       {/* Background Glow */}
       <div className="fixed inset-0 pointer-events-none z-0">
         <div className="absolute top-10 left-1/2 -translate-x-1/2 w-[750px] h-[450px] bg-cyan-500/10 blur-[150px] rounded-full"></div>
@@ -94,12 +94,12 @@ export default function RtiApplicationPage() {
 
       <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Breadcrumb */}
-        <nav className="flex items-center gap-2 text-xs font-medium text-white/50 mb-6">
-          <Link href="/" className="hover:text-white transition-colors">Home</Link>
+        <nav className="flex items-center gap-2 text-xs font-medium text-slate-500 mb-6">
+          <Link href="/" className="hover:text-slate-900 transition-colors">Home</Link>
           <span>/</span>
-          <Link href="/tools" className="hover:text-white transition-colors">Formats</Link>
+          <Link href="/tools" className="hover:text-slate-900 transition-colors">Formats</Link>
           <span>/</span>
-          <span className="text-white/80">RTI Application Format</span>
+          <span className="text-slate-700">RTI Application Format</span>
         </nav>
 
         {/* Hero Header */}
@@ -109,11 +109,11 @@ export default function RtiApplicationPage() {
             <span>Right to Information Act, 2005</span>
           </div>
 
-          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-heading font-bold text-white tracking-tight mb-4 leading-tight">
+          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-heading font-bold text-slate-900 tracking-tight mb-4 leading-tight">
             RTI Application Format & Legal Draft Maker
           </h1>
 
-          <p className="text-base sm:text-lg text-white/70 leading-relaxed">
+          <p className="text-base sm:text-lg text-slate-600 leading-relaxed">
             Statutory RTI Application format under Section 6(1) of the RTI Act 2005. Format precise point-by-point inquiries for marks, public works, recruitments, and government records.
           </p>
 
@@ -121,7 +121,7 @@ export default function RtiApplicationPage() {
           <div className="mt-8 flex flex-wrap items-center gap-4">
             <Link
               href="/tools/letterpad-generator?preset=rti&sub=Application%20Seeking%20Information%20Under%20Section%206(1)%20of%20RTI%20Act,%202005&tpl=A"
-              className="inline-flex items-center gap-2.5 px-7 py-3.5 rounded-xl bg-gradient-to-r from-cyan-500 via-blue-500 to-indigo-500 text-white font-semibold text-base shadow-[0_10px_30px_rgba(6,182,212,0.25)] hover:shadow-[0_15px_40px_rgba(6,182,212,0.35)] hover:-translate-y-0.5 transition-all"
+              className="inline-flex items-center gap-2.5 px-7 py-3.5 rounded-xl bg-gradient-to-r from-cyan-500 via-blue-500 to-indigo-500 text-slate-900 font-semibold text-base shadow-[0_10px_30px_rgba(6,182,212,0.25)] hover:shadow-[0_15px_40px_rgba(6,182,212,0.35)] hover:-translate-y-0.5 transition-all"
             >
               <Sparkles className="w-5 h-5" />
               Generate RTI Application
@@ -130,7 +130,7 @@ export default function RtiApplicationPage() {
 
             <Link
               href="/tools"
-              className="inline-flex items-center gap-2 px-6 py-3.5 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] text-white/80 hover:text-white border border-white/[0.08] text-sm font-medium transition-all"
+              className="inline-flex items-center gap-2 px-6 py-3.5 rounded-xl bg-white hover:bg-slate-100 text-slate-700 hover:text-slate-900 border border-slate-200 text-sm font-medium transition-all"
             >
               <Layers className="w-4 h-4" />
               All Formats
@@ -142,10 +142,10 @@ export default function RtiApplicationPage() {
         {adsEnabled && <AdSlot slotKey="content-top" label="Sponsored Content" />}
 
         {/* Core Guide Content (300-500 words) */}
-        <article className="prose prose-invert max-w-none space-y-8 my-10 text-white/80 leading-relaxed">
+        <article className="prose prose max-w-none space-y-8 my-10 text-slate-700 leading-relaxed">
           
           <section className="space-y-4">
-            <h2 className="text-2xl font-heading font-bold text-white flex items-center gap-2.5">
+            <h2 className="text-2xl font-heading font-bold text-slate-900 flex items-center gap-2.5">
               <FileSearch className="w-6 h-6 text-cyan-400" />
               How to Write an Effective RTI Application
             </h2>
@@ -159,7 +159,7 @@ export default function RtiApplicationPage() {
 
           {/* Key Checklist */}
           <section className="space-y-4">
-            <h3 className="text-xl font-heading font-semibold text-white">
+            <h3 className="text-xl font-heading font-semibold text-slate-900">
               Checklist for Filing an RTI Application
             </h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 not-prose">
@@ -171,11 +171,11 @@ export default function RtiApplicationPage() {
                 { title: "Application Fee Mode", desc: "Mention of ₹10 IPO, Court Fee Stamp, DD, or online transaction ID." },
                 { title: "BPL Exemption (If Applicable)", desc: "Proof of Below Poverty Line (BPL) status for fee waiver." },
               ].map((item, idx) => (
-                <div key={idx} className="p-4 rounded-xl bg-white/[0.02] border border-white/[0.06] flex items-start gap-3">
+                <div key={idx} className="p-4 rounded-xl bg-white border border-slate-200 flex items-start gap-3">
                   <CheckCircle2 className="w-5 h-5 text-cyan-400 flex-shrink-0 mt-0.5" />
                   <div>
-                    <h4 className="text-sm font-semibold text-white">{item.title}</h4>
-                    <p className="text-xs text-white/60 mt-0.5">{item.desc}</p>
+                    <h4 className="text-sm font-semibold text-slate-900">{item.title}</h4>
+                    <p className="text-xs text-slate-500 mt-0.5">{item.desc}</p>
                   </div>
                 </div>
               ))}
@@ -184,33 +184,33 @@ export default function RtiApplicationPage() {
 
           {/* Formatted Sample */}
           <section className="space-y-4">
-            <h3 className="text-xl font-heading font-semibold text-white flex items-center gap-2">
+            <h3 className="text-xl font-heading font-semibold text-slate-900 flex items-center gap-2">
               <FileText className="w-5 h-5 text-cyan-400" />
               Standard RTI Application Draft Sample
             </h3>
-            <div className="p-6 rounded-2xl bg-[#0d1017] border border-white/[0.1] text-white/90 text-sm leading-relaxed shadow-inner font-serif">
-              <div className="text-center border-b border-white/[0.1] pb-3 mb-4">
-                <h4 className="text-base font-bold text-white tracking-wide">APPLICATION UNDER SECTION 6(1) OF THE RTI ACT, 2005</h4>
-                <p className="text-xs text-white/60">सूचना का अधिकार अधिनियम, 2005 की धारा 6(1) के तहत आवेदन</p>
+            <div className="p-6 rounded-2xl bg-white border border-slate-200 text-slate-800 text-sm leading-relaxed shadow-inner font-serif">
+              <div className="text-center border-b border-slate-200 pb-3 mb-4">
+                <h4 className="text-base font-bold text-slate-900 tracking-wide">APPLICATION UNDER SECTION 6(1) OF THE RTI ACT, 2005</h4>
+                <p className="text-xs text-slate-500">सूचना का अधिकार अधिनियम, 2005 की धारा 6(1) के तहत आवेदन</p>
               </div>
 
-              <div className="flex justify-between text-xs text-white/60 mb-4 font-mono">
+              <div className="flex justify-between text-xs text-slate-500 mb-4 font-mono">
                 <span>Date: 23rd September, 2026</span>
                 <span>Place: New Delhi</span>
               </div>
 
               <div className="text-xs space-y-1 mb-4">
-                <p className="font-bold text-white">To,</p>
+                <p className="font-bold text-slate-900">To,</p>
                 <p>The Central Public Information Officer (CPIO),</p>
                 <p>Staff Selection Commission (Northern Region),</p>
                 <p>Block No. 12, CGO Complex, Lodhi Road, New Delhi - 110003.</p>
               </div>
 
-              <p className="text-xs font-bold text-white mb-3">
+              <p className="text-xs font-bold text-slate-900 mb-3">
                 Subject: Request for Information under Section 6(1) of RTI Act, 2005 regarding CGL Examination 2025.
               </p>
 
-              <div className="text-xs space-y-2 text-white/85 font-sans leading-relaxed">
+              <div className="text-xs space-y-2 text-slate-700 font-sans leading-relaxed">
                 <p>Respected Sir / Madam,</p>
                 <p>I, the undersigned, am a citizen of India. Please provide the following information under the RTI Act, 2005:</p>
                 <ol className="list-decimal pl-5 space-y-1">
@@ -224,11 +224,11 @@ export default function RtiApplicationPage() {
               </div>
 
               <div className="text-right text-xs pt-6 space-y-1">
-                <p className="font-bold text-white">Yours faithfully,</p>
-                <p className="text-white/80">[Applicant's Signature]</p>
-                <p className="text-white/70">Name: Rohit Kumar Sharma</p>
-                <p className="text-white/50">Address: Flat 204, Shanti Vihar, New Delhi - 110092</p>
-                <p className="text-white/50">Mobile: +91-9876543210</p>
+                <p className="font-bold text-slate-900">Yours faithfully,</p>
+                <p className="text-slate-700">[Applicant's Signature]</p>
+                <p className="text-slate-600">Name: Rohit Kumar Sharma</p>
+                <p className="text-slate-500">Address: Flat 204, Shanti Vihar, New Delhi - 110092</p>
+                <p className="text-slate-500">Mobile: +91-9876543210</p>
               </div>
             </div>
           </section>
@@ -252,11 +252,11 @@ export default function RtiApplicationPage() {
         />
 
         {/* Bottom CTA Card */}
-        <div className="mt-14 p-8 sm:p-10 rounded-3xl bg-gradient-to-br from-cyan-500/15 via-white/[0.02] to-blue-500/10 border border-white/[0.1] text-center">
-          <h3 className="text-2xl sm:text-3xl font-heading font-bold text-white mb-3">
+        <div className="mt-14 p-8 sm:p-10 rounded-3xl bg-gradient-to-br from-cyan-500/15 via-white/[0.02] to-blue-500/10 border border-slate-200 text-center">
+          <h3 className="text-2xl sm:text-3xl font-heading font-bold text-slate-900 mb-3">
             Draft Your RTI Application with AI
           </h3>
-          <p className="text-sm sm:text-base text-white/65 max-w-xl mx-auto mb-6">
+          <p className="text-sm sm:text-base text-slate-500 max-w-xl mx-auto mb-6">
             State your questions in simple words; Swalekhani's AI transforms them into rigorous, legally compliant RTI queries.
           </p>
           <Link

@@ -130,11 +130,11 @@ export default function ProfessionTemplateClient({ template }: Props) {
           <div className="flex items-center justify-between px-2">
             <div className="flex items-center gap-2">
               <Eye className="w-4 h-4 text-brand-orange" />
-              <span className="text-xs font-semibold uppercase tracking-wider text-white/70">
+              <span className="text-xs font-semibold uppercase tracking-wider text-slate-600">
                 Interactive A4 Canvas Preview
               </span>
             </div>
-            <div className="text-xs text-white/40 font-mono">210mm × 297mm (Standard A4)</div>
+            <div className="text-xs text-slate-400 font-mono">210mm × 297mm (Standard A4)</div>
           </div>
 
           {/* Printable Letterpad Canvas Container */}
@@ -247,7 +247,7 @@ export default function ProfessionTemplateClient({ template }: Props) {
           <div className="flex flex-wrap items-center gap-3 pt-2">
             <Link
               href={generatorLink}
-              className="flex-1 sm:flex-none inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-orange-500 via-rose-500 to-amber-500 text-white font-semibold text-sm shadow-[0_10px_25px_rgba(249,115,22,0.3)] hover:shadow-[0_15px_35px_rgba(249,115,22,0.4)] hover:-translate-y-0.5 transition-all"
+              className="flex-1 sm:flex-none inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-orange-500 via-rose-500 to-amber-500 text-slate-900 font-semibold text-sm shadow-[0_10px_25px_rgba(249,115,22,0.3)] hover:shadow-[0_15px_35px_rgba(249,115,22,0.4)] hover:-translate-y-0.5 transition-all"
             >
               <Sparkles className="w-4 h-4" />
               <span>Use in Generator</span>
@@ -256,7 +256,7 @@ export default function ProfessionTemplateClient({ template }: Props) {
 
             <button
               onClick={handlePrint}
-              className="inline-flex items-center gap-2 px-4 py-3 rounded-xl bg-white/[0.06] hover:bg-white/[0.1] text-white border border-white/[0.1] text-sm font-medium transition-all"
+              className="inline-flex items-center gap-2 px-4 py-3 rounded-xl bg-slate-50 hover:bg-white/[0.1] text-slate-900 border border-slate-200 text-sm font-medium transition-all"
             >
               <Printer className="w-4 h-4 text-emerald-400" />
               <span>Print A4</span>
@@ -264,7 +264,7 @@ export default function ProfessionTemplateClient({ template }: Props) {
 
             <button
               onClick={handleCopySample}
-              className="inline-flex items-center gap-2 px-4 py-3 rounded-xl bg-white/[0.06] hover:bg-white/[0.1] text-white border border-white/[0.1] text-sm font-medium transition-all"
+              className="inline-flex items-center gap-2 px-4 py-3 rounded-xl bg-slate-50 hover:bg-white/[0.1] text-slate-900 border border-slate-200 text-sm font-medium transition-all"
             >
               {copied ? (
                 <>
@@ -283,14 +283,14 @@ export default function ProfessionTemplateClient({ template }: Props) {
 
         {/* Right / Bottom: Live Customizer Panel */}
         <div className="lg:col-span-5 xl:col-span-5 space-y-6">
-          <div className="p-6 rounded-3xl bg-[#0d1017] border border-white/[0.1] space-y-6 shadow-xl">
+          <div className="p-6 rounded-3xl bg-white border border-slate-200 space-y-6 shadow-xl">
             
-            <div className="border-b border-white/[0.08] pb-4">
-              <h3 className="text-lg font-heading font-bold text-white flex items-center gap-2">
+            <div className="border-b border-slate-200 pb-4">
+              <h3 className="text-lg font-heading font-bold text-slate-900 flex items-center gap-2">
                 <Palette className="w-5 h-5 text-brand-orange" />
                 Customize Letterpad Fields
               </h3>
-              <p className="text-xs text-white/50 mt-1">
+              <p className="text-xs text-slate-500 mt-1">
                 Edit inputs below to update the live preview canvas in real-time.
               </p>
             </div>
@@ -298,7 +298,7 @@ export default function ProfessionTemplateClient({ template }: Props) {
             {/* Language Switcher (if template supports multilingual) */}
             {template.languages.length > 1 && (
               <div className="space-y-2">
-                <label className="text-xs font-semibold uppercase tracking-wider text-white/70 flex items-center gap-1.5">
+                <label className="text-xs font-semibold uppercase tracking-wider text-slate-600 flex items-center gap-1.5">
                   <Globe className="w-3.5 h-3.5 text-cyan-400" />
                   Language / भाषा
                 </label>
@@ -310,7 +310,7 @@ export default function ProfessionTemplateClient({ template }: Props) {
                       className={`flex-1 py-1.5 px-3 rounded-xl text-xs font-medium border transition-all ${
                         selectedLang === lang 
                           ? 'bg-white text-black border-white font-semibold' 
-                          : 'bg-white/[0.04] text-white/70 border-white/[0.08] hover:bg-white/[0.08]'
+                          : 'bg-white text-slate-600 border-slate-200 hover:bg-slate-100'
                       }`}
                     >
                       {lang === 'en' ? 'English' : lang === 'hi' ? 'हिंदी (Hindi)' : 'मराठी (Marathi)'}
@@ -322,7 +322,7 @@ export default function ProfessionTemplateClient({ template }: Props) {
 
             {/* Theme Color Selector */}
             <div className="space-y-2">
-              <label className="text-xs font-semibold uppercase tracking-wider text-white/70">
+              <label className="text-xs font-semibold uppercase tracking-wider text-slate-600">
                 Letterhead Theme Color
               </label>
               <div className="flex flex-wrap gap-2">
@@ -347,7 +347,7 @@ export default function ProfessionTemplateClient({ template }: Props) {
             <div className="space-y-3.5 max-h-[380px] overflow-y-auto pr-1">
               {template.fields.map(field => (
                 <div key={field.id} className="space-y-1">
-                  <label className="text-xs font-medium text-white/80 block">
+                  <label className="text-xs font-medium text-slate-700 block">
                     {field.label}
                   </label>
                   <input
@@ -355,15 +355,15 @@ export default function ProfessionTemplateClient({ template }: Props) {
                     value={fieldValues[field.id] || ''}
                     onChange={e => handleFieldChange(field.id, e.target.value)}
                     placeholder={field.placeholder}
-                    className="w-full px-3 py-2 rounded-xl bg-white/[0.04] border border-white/[0.1] text-xs text-white placeholder-white/30 focus:outline-none focus:border-brand-orange transition-colors"
+                    className="w-full px-3 py-2 rounded-xl bg-white border border-slate-200 text-xs text-slate-900 placeholder-white/30 focus:outline-none focus:border-brand-orange transition-colors"
                   />
                 </div>
               ))}
             </div>
 
             {/* Sample Letter Preset Selector */}
-            <div className="space-y-2 pt-2 border-t border-white/[0.08]">
-              <label className="text-xs font-semibold uppercase tracking-wider text-white/70 flex items-center gap-1.5">
+            <div className="space-y-2 pt-2 border-t border-slate-200">
+              <label className="text-xs font-semibold uppercase tracking-wider text-slate-600 flex items-center gap-1.5">
                 <FileText className="w-3.5 h-3.5 text-brand-orange" />
                 Select Realistic Sample Draft
               </label>
@@ -375,11 +375,11 @@ export default function ProfessionTemplateClient({ template }: Props) {
                     className={`w-full text-left p-2.5 rounded-xl border text-xs transition-all ${
                       selectedSampleIndex === idx
                         ? 'bg-brand-orange/15 border-brand-orange text-white font-medium'
-                        : 'bg-white/[0.02] border-white/[0.06] text-white/70 hover:bg-white/[0.05]'
+                        : 'bg-white border-slate-200 text-slate-600 hover:bg-white/[0.05]'
                     }`}
                   >
-                    <div className="font-semibold text-white">{s.title}</div>
-                    <div className="text-[11px] text-white/50 truncate mt-0.5">{s.description}</div>
+                    <div className="font-semibold text-slate-900">{s.title}</div>
+                    <div className="text-[11px] text-slate-500 truncate mt-0.5">{s.description}</div>
                   </button>
                 ))}
               </div>
@@ -405,22 +405,22 @@ export default function ProfessionTemplateClient({ template }: Props) {
       <section className="space-y-6">
         <div className="flex items-center gap-3">
           <FileText className="w-6 h-6 text-brand-orange" />
-          <h2 className="text-2xl font-heading font-bold text-white">
+          <h2 className="text-2xl font-heading font-bold text-slate-900">
             Realistic Sample Letters for {template.profession}
           </h2>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 not-prose">
           {template.sampleLetters.map((sample, idx) => (
-            <div key={idx} className="p-6 rounded-2xl bg-[#0d1017] border border-white/[0.1] space-y-4 flex flex-col justify-between">
+            <div key={idx} className="p-6 rounded-2xl bg-white border border-slate-200 space-y-4 flex flex-col justify-between">
               <div className="space-y-3">
                 <div className="inline-block px-2.5 py-1 rounded-lg bg-white/[0.05] text-brand-orange font-mono text-xs font-semibold">
                   Sample {idx + 1}: {sample.title}
                 </div>
-                <p className="text-xs text-white/60">{sample.description}</p>
-                <div className="p-4 rounded-xl bg-black/40 border border-white/[0.05] text-xs font-mono text-white/80 space-y-2 max-h-48 overflow-y-auto">
-                  <div className="text-white/50">Subject: {sample.subject}</div>
-                  <div className="text-white/70 text-[11px] whitespace-pre-line">{sample.body[0]}</div>
+                <p className="text-xs text-slate-500">{sample.description}</p>
+                <div className="p-4 rounded-xl bg-black/40 border border-white/[0.05] text-xs font-mono text-slate-700 space-y-2 max-h-48 overflow-y-auto">
+                  <div className="text-slate-500">Subject: {sample.subject}</div>
+                  <div className="text-slate-600 text-[11px] whitespace-pre-line">{sample.body[0]}</div>
                 </div>
               </div>
 
@@ -430,7 +430,7 @@ export default function ProfessionTemplateClient({ template }: Props) {
                     setSelectedSampleIndex(idx);
                     window.scrollTo({ top: 300, behavior: 'smooth' });
                   }}
-                  className="flex-1 py-2 rounded-xl bg-white/[0.05] hover:bg-white/[0.1] text-white text-xs font-medium border border-white/[0.08] transition-all"
+                  className="flex-1 py-2 rounded-xl bg-white/[0.05] hover:bg-white/[0.1] text-slate-900 text-xs font-medium border border-slate-200 transition-all"
                 >
                   Load in Canvas
                 </button>
@@ -448,14 +448,14 @@ export default function ProfessionTemplateClient({ template }: Props) {
 
       {/* ── FORMAT & COMPLIANCE GUIDE (5+ RULES) ── */}
       <section className="space-y-6">
-        <h2 className="text-2xl font-heading font-bold text-white flex items-center gap-2.5">
+        <h2 className="text-2xl font-heading font-bold text-slate-900 flex items-center gap-2.5">
           <CheckCircle2 className="w-6 h-6 text-emerald-400" />
           Format Guidelines & Statutory Rules for {template.profession}
         </h2>
         
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 not-prose">
           {template.formatGuide.map((guide, idx) => (
-            <div key={idx} className="p-5 rounded-2xl bg-white/[0.02] border border-white/[0.06] space-y-2">
+            <div key={idx} className="p-5 rounded-2xl bg-white border border-slate-200 space-y-2">
               <div className="flex items-center justify-between">
                 <span className="w-6 h-6 rounded-full bg-emerald-500/10 text-emerald-400 text-xs font-bold flex items-center justify-center">
                   {idx + 1}
@@ -464,8 +464,8 @@ export default function ProfessionTemplateClient({ template }: Props) {
                   {guide.importance}
                 </span>
               </div>
-              <h3 className="text-sm font-semibold text-white pt-1">{guide.title}</h3>
-              <p className="text-xs text-white/60 leading-relaxed">{guide.rule}</p>
+              <h3 className="text-sm font-semibold text-slate-900 pt-1">{guide.title}</h3>
+              <p className="text-xs text-slate-500 leading-relaxed">{guide.rule}</p>
             </div>
           ))}
         </div>
@@ -487,13 +487,13 @@ export default function ProfessionTemplateClient({ template }: Props) {
 
       {/* ── RELATED TEMPLATES SECTION ── */}
       {template.relatedSlugs && template.relatedSlugs.length > 0 && (
-        <section className="space-y-6 pt-6 border-t border-white/[0.08]">
+        <section className="space-y-6 pt-6 border-t border-slate-200">
           <div className="flex items-center justify-between">
-            <h2 className="text-xl font-heading font-bold text-white flex items-center gap-2">
+            <h2 className="text-xl font-heading font-bold text-slate-900 flex items-center gap-2">
               <Layers className="w-5 h-5 text-brand-orange" />
               Related Profession Letterheads
             </h2>
-            <Link href="/templates" className="text-xs text-white/60 hover:text-white flex items-center gap-1">
+            <Link href="/templates" className="text-xs text-slate-500 hover:text-slate-900 flex items-center gap-1">
               <span>View All Templates</span>
               <ArrowRight className="w-3.5 h-3.5" />
             </Link>
@@ -507,15 +507,15 @@ export default function ProfessionTemplateClient({ template }: Props) {
                 <Link
                   key={rel.slug}
                   href={`/templates/${rel.slug}`}
-                  className="p-4 rounded-2xl bg-white/[0.02] hover:bg-white/[0.06] border border-white/[0.06] hover:border-white/[0.15] transition-all group"
+                  className="p-4 rounded-2xl bg-white hover:bg-slate-50 border border-slate-200 hover:border-white/[0.15] transition-all group"
                 >
                   <span className="text-[10px] font-semibold text-brand-orange uppercase tracking-wider block mb-1">
                     {rel.category}
                   </span>
-                  <h4 className="text-sm font-semibold text-white group-hover:text-brand-orange transition-colors">
+                  <h4 className="text-sm font-semibold text-slate-900 group-hover:text-brand-orange transition-colors">
                     {rel.profession}
                   </h4>
-                  <p className="text-xs text-white/50 line-clamp-2 mt-1">
+                  <p className="text-xs text-slate-500 line-clamp-2 mt-1">
                     {rel.shortDesc}
                   </p>
                 </Link>
@@ -526,11 +526,11 @@ export default function ProfessionTemplateClient({ template }: Props) {
       )}
 
       {/* ── BOTTOM CTA CARD ── */}
-      <div className="p-8 sm:p-10 rounded-3xl bg-gradient-to-br from-orange-500/15 via-white/[0.02] to-amber-500/10 border border-white/[0.1] text-center not-prose">
-        <h3 className="text-2xl sm:text-3xl font-heading font-bold text-white mb-3">
+      <div className="p-8 sm:p-10 rounded-3xl bg-gradient-to-br from-orange-500/15 via-white/[0.02] to-amber-500/10 border border-slate-200 text-center not-prose">
+        <h3 className="text-2xl sm:text-3xl font-heading font-bold text-slate-900 mb-3">
           Draft Your Official {template.profession} Letterhead with AI
         </h3>
-        <p className="text-sm sm:text-base text-white/65 max-w-xl mx-auto mb-6">
+        <p className="text-sm sm:text-base text-slate-500 max-w-xl mx-auto mb-6">
           Say goodbye to complex Word templates. Swalekhani formats and styles your official letterhead to perfection in seconds.
         </p>
         <Link

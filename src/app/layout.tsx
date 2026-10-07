@@ -141,7 +141,7 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body className={`${outfit.variable} ${poppins.variable} ${jetbrainsMono.variable} ${yatraOne.variable} font-sans antialiased text-white bg-[#07090f]`}>
+      <body className={`${outfit.variable} ${poppins.variable} ${jetbrainsMono.variable} ${yatraOne.variable} font-sans antialiased text-slate-900 bg-[#f7f5f1]`}>
         {adsEnabled && adClient ? (
           <Script
             id="adsense-script"

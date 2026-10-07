@@ -5,66 +5,11 @@ import type { OfficePreset, LetterForm, TemplateType, LogoPos } from '@/types/le
 import type { CSSProperties } from 'react';
 
 // ── SVG Logos ────────────────────────────────
-const SPOKES_24 = Array.from({ length: 24 }, (_, i) => {
-  const a = (i * Math.PI * 2) / 24;
-  const x1 = (60 + 8 * Math.sin(a)).toFixed(1);
-  const y1 = (50 - 8 * Math.cos(a)).toFixed(1);
-  const x2 = (60 + 33 * Math.sin(a)).toFixed(1);
-  const y2 = (50 - 33 * Math.cos(a)).toFixed(1);
-  return `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="#06038D" stroke-width="1.8"/>`;
-}).join('');
+// (Government seal artwork removed during corporate refocus.)
 
-export const SVG_LOGOS: Record<string, string> = {
-  ashoka: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 135" width="100%" height="100%">
-<circle cx="60" cy="50" r="43" fill="none" stroke="#06038D" stroke-width="3"/>
-<circle cx="60" cy="50" r="35" fill="none" stroke="#06038D" stroke-width="1.5"/>
-<circle cx="60" cy="50" r="6" fill="#06038D"/>
-${SPOKES_24}
-<g fill="#06038D">
-  <ellipse cx="43" cy="92" rx="7" ry="9"/><circle cx="42" cy="83" r="6"/>
-  <ellipse cx="77" cy="92" rx="7" ry="9"/><circle cx="78" cy="83" r="6"/>
-  <ellipse cx="60" cy="91" rx="6" ry="8"/><circle cx="60" cy="82" r="6"/>
-</g>
-<rect x="29" y="100" width="62" height="7" rx="1" fill="#06038D"/>
-<text x="60" y="116" text-anchor="middle" font-size="7.5" fill="#06038D" font-family="'Noto Serif Devanagari',serif" font-weight="600">सत्यमेव जयते</text>
-<text x="60" y="128" text-anchor="middle" font-size="5.8" fill="#06038D" font-family="serif" letter-spacing="1">SATYAMEVA JAYATE</text>
-</svg>`,
-
-  ip: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100%" height="100%">
-<rect width="100" height="100" rx="6" fill="#CC1111"/>
-<rect x="4" y="4" width="92" height="92" rx="4" fill="none" stroke="#fff" stroke-width="1.5"/>
-<text x="50" y="28" text-anchor="middle" font-size="9.5" fill="#fff" font-family="'Libre Baskerville',serif" font-weight="700" letter-spacing=".5">INDIA POST</text>
-<text x="50" y="40" text-anchor="middle" font-size="8.5" fill="#ffdd99" font-family="'Noto Serif Devanagari',serif">भारतीय डाक</text>
-<text x="50" y="64" text-anchor="middle" font-size="26" fill="#fff">✉</text>
-<text x="50" y="80" text-anchor="middle" font-size="7" fill="rgba(255,255,255,.8)" font-family="sans-serif">Department of Posts</text>
-<text x="50" y="92" text-anchor="middle" font-size="6" fill="rgba(255,255,255,.6)" font-family="sans-serif">Government of India</text>
-</svg>`,
-
-  sansad: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 110 120" width="100%" height="100%">
-<circle cx="55" cy="50" r="47" fill="none" stroke="#8B0000" stroke-width="3"/>
-<circle cx="55" cy="50" r="39" fill="none" stroke="#8B0000" stroke-width="1"/>
-<text x="55" y="38" text-anchor="middle" font-size="10.5" fill="#8B0000" font-family="'Noto Serif Devanagari',serif" font-weight="700">संसद</text>
-<text x="55" y="52" text-anchor="middle" font-size="9" fill="#8B0000" font-family="'Libre Baskerville',serif" font-weight="700">SANSAD</text>
-<text x="55" y="63" text-anchor="middle" font-size="7.5" fill="#8B0000" font-family="serif">BHARAT · INDIA</text>
-<path d="M22 78 Q55 65 88 78" fill="none" stroke="#8B0000" stroke-width="1.5"/>
-<text x="55" y="93" text-anchor="middle" font-size="7" fill="#8B0000" font-family="serif">Parliament of India</text>
-<text x="55" y="108" text-anchor="middle" font-size="7" fill="#8B0000" font-family="'Noto Serif Devanagari',serif">भारत की संसद</text>
-</svg>`,
-
-  mh: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 110" width="100%" height="100%">
-<circle cx="50" cy="47" r="44" fill="none" stroke="#FF6600" stroke-width="2.5"/>
-<circle cx="50" cy="47" r="36" fill="none" stroke="#FF6600" stroke-width="1"/>
-<text x="50" y="33" text-anchor="middle" font-size="8.5" fill="#FF6600" font-family="'Noto Serif Devanagari',serif" font-weight="700">महाराष्ट्र सरकार</text>
-<text x="50" y="46" text-anchor="middle" font-size="7.5" fill="#FF6600" font-family="serif">GOVT. OF MAHARASHTRA</text>
-<text x="50" y="62" text-anchor="middle" font-size="22" fill="#FF6600">🌀</text>
-<text x="50" y="83" text-anchor="middle" font-size="7" fill="#FF6600" font-family="sans-serif">State Seal</text>
-<text x="50" y="100" text-anchor="middle" font-size="7" fill="#FF6600" font-family="'Noto Serif Devanagari',serif">महाराष्ट्र</text>
-</svg>`,
-};
+export const SVG_LOGOS: Record<string, string> = {};
 
 export function svgToDataUri(key: string): string {
-  if (key === 'ip') return '/logo-ip.png';
-  if (key === 'ashoka') return '/logo-ashoka.png';
   const svg = SVG_LOGOS[key];
   if (!svg) return '';
   return 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg);

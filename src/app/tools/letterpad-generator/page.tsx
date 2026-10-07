@@ -448,7 +448,7 @@ function LetterpadGeneratorInner() {
 
 export default function LetterpadGeneratorPage() {
   return (
-    <Suspense fallback={<div className="min-h-screen bg-[#07090f] text-white flex items-center justify-center font-sans">Loading Swalekhani Studio...</div>}>
+    <Suspense fallback={<div className="min-h-screen bg-[#f7f5f1] text-slate-900 flex items-center justify-center font-sans">Loading Swalekhani Studio...</div>}>
       <LetterpadGeneratorInner />
     </Suspense>
   );

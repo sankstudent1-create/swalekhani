@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 export default function OfflinePage() {
   return (
     <main className="min-h-screen grid place-items-center px-4">
-      <section className="w-full max-w-xl rounded-2xl border border-white/10 bg-white/[0.03] p-8 text-center">
+      <section className="w-full max-w-xl rounded-2xl border border-slate-200 bg-white/[0.03] p-8 text-center">
         <p className="text-xs uppercase tracking-[0.2em] text-foreground/50">Offline Mode</p>
         <h1 className="mt-3 text-3xl font-bold">You are offline</h1>
         <p className="mt-3 text-foreground/70">

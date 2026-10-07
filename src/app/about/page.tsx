@@ -215,7 +215,7 @@ export default function AboutPage() {
               ].map((item, idx) => (
                 <div key={idx} className="flex gap-4 p-4 rounded-xl border border-foreground/10 hover:border-brand-orange/30 hover:bg-brand-orange/5 transition-all">
                   <div className="flex-shrink-0">
-                    <div className="flex items-center justify-center h-10 w-10 rounded-md bg-gradient-to-r from-brand-orange to-brand-pink text-white font-semibold">
+                    <div className="flex items-center justify-center h-10 w-10 rounded-md bg-gradient-to-r from-brand-orange to-brand-pink text-slate-900 font-semibold">
                       {idx + 1}
                     </div>
                   </div>
@@ -271,7 +271,7 @@ export default function AboutPage() {
           </div>
           <Link
             href="/"
-            className="inline-flex items-center gap-2 px-10 py-5 text-lg font-semibold rounded-xl bg-gradient-to-r from-brand-orange to-brand-pink text-white hover:shadow-2xl hover:-translate-y-1 transition-all"
+            className="inline-flex items-center gap-2 px-10 py-5 text-lg font-semibold rounded-xl bg-gradient-to-r from-brand-orange to-brand-pink text-slate-900 hover:shadow-2xl hover:-translate-y-1 transition-all"
           >
             Open Swalekhani Studio
           </Link>

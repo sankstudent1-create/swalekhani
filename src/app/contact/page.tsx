@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 
 export default function ContactPage() {
  return (
- <div className="min-h-screen bg-[#f7f5f1] dark:bg-[#07090f] text-slate-900 dark:text-white font-sans py-20 px-6">
+ <div className="min-h-screen bg-[#faf8f3] dark:bg-[#0a0d13] text-slate-900 dark:text-white font-sans py-20 px-6">
  <div className="max-w-4xl mx-auto bg-slate-50 dark:bg-white/5 backdrop-blur-xl rounded-3xl p-8 border border-slate-200 dark:border-white/10">
  <h1 className="text-4xl font-bold mb-8 bg-clip-text text-transparent bg-gradient-to-r from-orange-400 to-rose-400 text-center">
  Contact Us

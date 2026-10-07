@@ -155,7 +155,7 @@ export default function FormatsIndexPage() {
  }, [searchQuery, selectedCategory]);
 
  return (
- <main className="min-h-screen bg-[#f7f5f1] dark:bg-[#07090f] text-slate-900 dark:text-white pt-24 pb-20 selection:bg-brand-pink/30">
+ <main className="min-h-screen bg-[#faf8f3] dark:bg-[#0a0d13] text-slate-900 dark:text-white pt-24 pb-20 selection:bg-brand-pink/30">
  {/* Background Ambient Glow */}
  <div className="fixed inset-0 pointer-events-none z-0">
  <div className="absolute top-10 left-1/2 -translate-x-1/2 w-[850px] h-[450px] bg-gradient-to-r from-emerald-500/10 via-teal-500/10 to-brand-sky/10 blur-[150px] rounded-full"></div>

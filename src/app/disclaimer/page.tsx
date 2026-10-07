@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 
 export default function Disclaimer() {
  return (
- <main className="min-h-screen bg-[#f7f5f1] dark:bg-[#07090f] text-slate-700 dark:text-white/80 p-8 pt-24 max-w-4xl mx-auto">
+ <main className="min-h-screen bg-[#faf8f3] dark:bg-[#0a0d13] text-slate-700 dark:text-white/80 p-8 pt-24 max-w-4xl mx-auto">
  <h1 className="text-4xl font-bold text-slate-900 dark:text-white mb-6">Disclaimer</h1>
  <p className="mb-4">Last updated: {new Date().toLocaleDateString()}</p>
  

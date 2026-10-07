@@ -38,7 +38,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
  `${template.profession.toLowerCase()} letterhead maker online`,
  `sample ${template.profession.toLowerCase()} letterhead format in english`,
  'swalekhani letterpad templates',
- 'official letterhead maker'
+ 'professional letterhead maker'
  ],
  alternates: {
  canonical: `/templates/${slug}`,
@@ -100,11 +100,8 @@ export default async function ProfessionTemplatePage({ params }: PageProps) {
  };
 
  return (
- <main className="min-h-screen bg-[#f7f5f1] dark:bg-[#07090f] text-slate-900 dark:text-white pt-24 pb-20 selection:bg-brand-pink/30">
- {/* Background Glow */}
- <div className="fixed inset-0 pointer-events-none z-0">
- <div className={`absolute top-10 left-1/2 -translate-x-1/2 w-[750px] h-[450px] ${template.theme.bgGlow} blur-[150px] rounded-full`}></div>
- </div>
+ <main className="min-h-screen bg-[#faf8f3] dark:bg-[#0a0d13] text-slate-900 dark:text-white pt-28 pb-20">
+ <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
 
  {/* HowTo JSON-LD Injection */}
  <script
@@ -112,49 +109,42 @@ export default async function ProfessionTemplatePage({ params }: PageProps) {
  dangerouslySetInnerHTML={{ __html: JSON.stringify(howToSchema) }}
  />
 
- <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
- 
- {/* Breadcrumb Navigation */}
- <nav className="flex items-center gap-2 text-xs font-medium text-slate-500 dark:text-white/60 mb-6">
+ {/* Breadcrumb */}
+ <nav className="flex items-center gap-2 text-xs font-medium text-slate-400 dark:text-white/40 mb-8">
  <Link href="/" className="hover:text-slate-900 dark:hover:text-white transition-colors">Home</Link>
  <span>/</span>
  <Link href="/templates" className="hover:text-slate-900 dark:hover:text-white transition-colors">Templates</Link>
  <span>/</span>
- <span className="text-slate-700 dark:text-white/80">{template.profession}</span>
+ <span className="text-slate-600 dark:text-white/70">{template.profession}</span>
  </nav>
 
- {/* Hero Header */}
- <div className="mb-10">
- <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/[0.05] dark:bg-[#0f131d]/[0.05] border border-white/[0.1] text-brand-orange text-xs font-semibold uppercase tracking-wider mb-4">
+ {/* Hero */}
+ <div className="max-w-3xl mb-10">
+ <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-brand-orange/10 border border-brand-orange/25 text-brand-orange text-[11px] font-bold uppercase tracking-wider mb-4">
  <ShieldCheck className="w-3.5 h-3.5" />
- <span>{template.badge}</span>
- </div>
-
- <h1 className="text-3xl sm:text-4xl lg:text-5xl font-heading font-bold text-slate-900 dark:text-white tracking-tight mb-4 leading-tight">
+ {template.badge}
+ </span>
+ <h1 className="font-heading font-extrabold text-3xl sm:text-4xl lg:text-[2.9rem] tracking-tight leading-[1.12] mb-4">
  {template.title}
  </h1>
-
- {/* 150-word Original Intro Copy */}
- <p className="text-base sm:text-lg text-slate-600 dark:text-white/70 leading-relaxed max-w-4xl">
+ <p className="text-slate-500 dark:text-white/50 leading-relaxed mb-7">
  {template.introText}
  </p>
-
- <div className="mt-6 flex flex-wrap items-center gap-3">
+ <div className="flex flex-wrap gap-3">
  <Link
  href={`/tools/letterpad-generator?template=${template.slug}`}
- className="inline-flex items-center gap-2.5 px-6 py-3 rounded-xl bg-gradient-to-r from-orange-500 via-rose-500 to-amber-500 text-slate-900 dark:text-white font-semibold text-sm shadow-[0_10px_25px_rgba(249,115,22,0.25)] hover:shadow-[0_15px_35px_rgba(249,115,22,0.35)] hover:-translate-y-0.5 transition-all"
+ className="inline-flex items-center gap-2 px-6 py-3.5 rounded-xl bg-brand-orange text-white font-bold text-sm shadow-[0_12px_30px_-10px_rgba(232,118,43,0.6)] hover:brightness-95 hover:-translate-y-0.5 transition-all"
  >
  <Sparkles className="w-4 h-4" />
- <span>Launch in Generator</span>
+ Customize this template
  <ArrowRight className="w-4 h-4" />
  </Link>
-
  <Link
  href="/templates"
- className="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-white dark:bg-[#0f131d] hover:bg-slate-100 dark:hover:bg-white/10 text-slate-700 dark:text-white/80 hover:text-slate-900 dark:hover:text-white border border-slate-200 dark:border-white/10 text-xs font-medium transition-all"
+ className="inline-flex items-center gap-2 px-5 py-3.5 rounded-xl bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 font-bold text-sm hover:border-slate-300 dark:hover:border-white/25 transition-all"
  >
- <Layers className="w-4 h-4" />
- <span>Browse All 17 Templates</span>
+ <Layers className="w-4 h-4 text-brand-orange" />
+ All templates
  </Link>
  </div>
  </div>
@@ -162,8 +152,29 @@ export default async function ProfessionTemplatePage({ params }: PageProps) {
  {/* In-article Ad Slot */}
  {adsEnabled && <AdSlot slotKey="content-top" label="Sponsored Content" />}
 
- {/* Interactive Customizer & Live Preview Component */}
+ {/* Interactive Customizer & Live Preview */}
  <ProfessionTemplateClient template={template} />
+
+ {/* Related templates */}
+ <div className="mt-16">
+ <h2 className="font-heading font-bold text-2xl tracking-tight mb-6">Related templates</h2>
+ <div className="grid sm:grid-cols-3 gap-4">
+ {template.relatedSlugs.slice(0, 3).map((relSlug) => {
+ const rel = PROFESSION_TEMPLATES[relSlug];
+ if (!rel) return null;
+ return (
+ <Link
+ key={relSlug}
+ href={`/templates/${relSlug}`}
+ className="group p-5 rounded-2xl bg-white dark:bg-[#11161f] border border-slate-200 dark:border-white/10 hover:border-brand-orange/40 hover:-translate-y-0.5 transition-all"
+ >
+ <p className="text-[11px] font-bold uppercase tracking-wider text-slate-400 dark:text-white/40 mb-1.5">{rel.category}</p>
+ <h3 className="font-heading font-bold group-hover:text-brand-orange transition-colors">{rel.profession}</h3>
+ </Link>
+ );
+ })}
+ </div>
+ </div>
 
  </div>
  </main>

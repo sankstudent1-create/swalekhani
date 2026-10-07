@@ -18,7 +18,7 @@ export default function Navigation() {
 
  return (
  <>
- <header className="fixed top-0 inset-x-0 z-50 bg-[#f7f5f1]/80 dark:bg-[#07090f]/80 backdrop-blur-2xl border-b border-slate-200 dark:border-white/10 shadow-[0_4px_24px_rgba(0,0,0,0.06)] dark:shadow-[0_4px_30px_rgba(0,0,0,0.4)]">
+ <header className="fixed top-0 inset-x-0 z-50 bg-[#faf8f3]/80 dark:bg-[#0a0d13]/80 backdrop-blur-2xl border-b border-slate-200 dark:border-white/10 shadow-[0_4px_24px_rgba(0,0,0,0.06)] dark:shadow-[0_4px_30px_rgba(0,0,0,0.4)]">
  <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
  <div className="flex justify-between items-center h-20">
  {/* Logo */}
@@ -71,7 +71,7 @@ export default function Navigation() {
 
  {/* Mobile Menu Overlay */}
  {isOpen && (
- <div className="fixed inset-0 z-40 bg-[#f7f5f1]/98 backdrop-blur-3xl pt-24 pb-6 px-6 md:hidden overflow-y-auto border-t border-white/[0.05]">
+ <div className="fixed inset-0 z-40 bg-[#faf8f3]/98 dark:bg-[#0a0d13]/98 backdrop-blur-3xl pt-24 pb-6 px-6 md:hidden overflow-y-auto border-t border-slate-200 dark:border-white/10">
  <nav className="flex flex-col space-y-2 mt-4">
  <Link 
  href="/tools/letterpad-generator" 

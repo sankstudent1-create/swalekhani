@@ -235,57 +235,42 @@ export default function TemplatesGalleryPage() {
  }, [searchQuery, selectedCategory]);
 
  return (
- <main className="min-h-screen bg-[#f7f5f1] dark:bg-[#07090f] text-slate-900 dark:text-white pt-24 pb-20 selection:bg-brand-pink/30">
- {/* Background Glow */}
- <div className="fixed inset-0 pointer-events-none z-0">
- <div className="absolute top-10 left-1/2 -translate-x-1/2 w-[800px] h-[500px] bg-brand-orange/10 blur-[160px] rounded-full"></div>
- </div>
+ <main className="min-h-screen bg-[#faf8f3] dark:bg-[#0a0d13] text-slate-900 dark:text-white pt-28 pb-20">
+ <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
- <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
- 
- {/* Gallery Header */}
- <div className="text-center max-w-3xl mx-auto mb-10">
- <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/[0.05] dark:bg-[#0f131d]/[0.05] border border-slate-200 dark:border-white/10 text-brand-orange text-xs font-semibold uppercase tracking-wider mb-4">
- <Sparkles className="w-3.5 h-3.5" />
- <span>17 Official Formats & Profession Presets</span>
- </div>
-
- <h1 className="text-3xl sm:text-4xl lg:text-5xl font-heading font-bold text-slate-900 dark:text-white tracking-tight mb-4 leading-tight">
- Official Letterhead & Profession Template Library
- </h1>
-
- <p className="text-base sm:text-lg text-slate-600 dark:text-white/70 leading-relaxed">
- Choose from authentic, professionally structured letterhead templates tailored for Indian advocates, CAs, doctors, businesses, clinics, and freelancers.
+ {/* Header */}
+ <div className="text-center max-w-2xl mx-auto mb-10">
+ <p className="text-xs font-bold uppercase tracking-[0.18em] text-brand-orange mb-2">Template library</p>
+ <h1 className="font-heading font-extrabold text-4xl sm:text-5xl tracking-tight mb-4">Pick your letterhead.</h1>
+ <p className="text-slate-500 dark:text-white/50 leading-relaxed">
+ Professionally structured letterheads for advocates, CAs, doctors, businesses, and freelancers — ready to customize in the Studio.
  </p>
  </div>
 
  {/* In-article Ad Slot */}
  {adsEnabled && <AdSlot slotKey="gallery-top" label="Sponsored Content" />}
 
- {/* Search & Filter Bar */}
- <div className="space-y-4 mb-10">
- {/* Search Input */}
- <div className="relative max-w-xl mx-auto">
- <Search className="w-5 h-5 text-slate-400 dark:text-white/40 absolute left-4 top-1/2 -translate-y-1/2" />
+ {/* Search & Filter */}
+ <div className="mb-10 max-w-2xl mx-auto">
+ <div className="relative mb-4">
+ <Search className="w-5 h-5 text-slate-400 absolute left-4 top-1/2 -translate-y-1/2" />
  <input
  type="text"
  value={searchQuery}
  onChange={(e) => setSearchQuery(e.target.value)}
- placeholder="Search by profession, keyword, statutory code (e.g. RERA, Bar Council, PWD)..."
- className="w-full pl-12 pr-4 py-3.5 rounded-2xl bg-white dark:bg-[#0f131d] border border-slate-200 dark:border-white/10 text-sm text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-white/40 focus:outline-none focus:border-brand-orange transition-colors shadow-lg"
+ placeholder="Search professions, e.g. advocate, clinic, contractor…"
+ className="w-full pl-12 pr-4 py-3.5 rounded-2xl bg-white dark:bg-[#11161f] border border-slate-200 dark:border-white/10 text-sm placeholder-slate-400 dark:placeholder-white/30 focus:outline-none focus:border-brand-orange shadow-sm transition-colors"
  />
  </div>
-
- {/* Category Filter Pills */}
- <div className="flex flex-wrap justify-center gap-2 pt-2">
+ <div className="flex flex-wrap justify-center gap-2">
  {CATEGORIES.map((cat) => (
  <button
  key={cat}
  onClick={() => setSelectedCategory(cat)}
- className={`px-4 py-2 rounded-xl text-xs font-semibold tracking-wide border transition-all ${
+ className={`px-4 py-2 rounded-full text-xs font-bold border transition-all ${
  selectedCategory === cat
- ? 'bg-white text-black border-white shadow-lg'
- : 'bg-white/[0.03] dark:bg-[#0f131d]/[0.03] text-slate-600 dark:text-white/70 border-slate-200 dark:border-white/10 hover:bg-slate-100 dark:hover:bg-white/10 hover:text-slate-900 dark:hover:text-white'
+ ? 'bg-slate-900 dark:bg-white text-white dark:text-slate-900 border-slate-900 dark:border-white'
+ : 'bg-white dark:bg-white/5 text-slate-500 dark:text-white/60 border-slate-200 dark:border-white/10 hover:border-slate-300 dark:hover:border-white/25'
  }`}
  >
  {cat}
@@ -294,97 +279,50 @@ export default function TemplatesGalleryPage() {
  </div>
  </div>
 
- {/* Template Cards Grid */}
- <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+ {/* Cards */}
+ <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
  {filteredTemplates.map((tpl) => {
  const Icon = tpl.icon;
  return (
  <div
  key={tpl.slug}
- className="group relative rounded-3xl bg-white dark:bg-[#0f131d] border border-slate-200 dark:border-white/10 hover:border-white/[0.2] transition-all duration-300 flex flex-col justify-between overflow-hidden shadow-xl hover:-translate-y-1.5"
+ className="group rounded-2xl bg-white dark:bg-[#11161f] border border-slate-200 dark:border-white/10 hover:border-brand-orange/40 hover:shadow-[0_20px_50px_-20px_rgba(232,118,43,0.35)] hover:-translate-y-1 transition-all flex flex-col overflow-hidden"
  >
- {/* 3D Illustration Banner or Accent Header */}
- {tpl.image ? (
- <div className="relative h-44 w-full overflow-hidden bg-black/60 border-b border-slate-200 dark:border-white/10">
- <img 
- src={tpl.image} 
- alt={tpl.name}
- className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500 opacity-90 group-hover:opacity-100"
- />
- <div className="absolute inset-0 bg-gradient-to-t from-[#0d1017] via-[#0d1017]/40 to-transparent"></div>
- <div className="absolute top-3.5 right-3.5">
- <span 
- className="text-[10px] font-bold px-2.5 py-1 rounded-full border border-slate-200 dark:border-white/10 bg-black/70 backdrop-blur-md uppercase tracking-wider shadow-md"
- style={{ color: tpl.accentColor }}
+ <div className="p-6 pb-0 flex items-start justify-between">
+ <div
+ className="w-12 h-12 rounded-2xl flex items-center justify-center"
+ style={{ backgroundColor: `${tpl.accentColor}18` }}
+ >
+ <Icon className="w-6 h-6" style={{ color: tpl.accentColor }} />
+ </div>
+ <span
+ className="text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider"
+ style={{ color: tpl.accentColor, backgroundColor: `${tpl.accentColor}14` }}
  >
  {tpl.badge}
  </span>
  </div>
- </div>
- ) : (
- <div 
- className="relative h-16 w-full p-4 flex items-center justify-between border-b border-slate-200 dark:border-white/10"
- style={{ background: `linear-gradient(135deg, ${tpl.accentColor}18, transparent)` }}
- >
- <div 
- className="w-10 h-10 rounded-xl flex items-center justify-center"
- style={{ backgroundColor: `${tpl.accentColor}22` }}
- >
- <Icon className="w-5 h-5" style={{ color: tpl.accentColor }} />
- </div>
- <span 
- className="text-[10px] font-semibold px-2.5 py-1 rounded-full border uppercase tracking-wide"
- style={{ 
- color: tpl.accentColor,
- borderColor: `${tpl.accentColor}33`,
- backgroundColor: `${tpl.accentColor}11`
- }}
- >
- {tpl.badge}
- </span>
- </div>
- )}
-
- <div className="p-6 space-y-4 flex-1 flex flex-col justify-between">
- <div className="space-y-2">
- <span className="text-[11px] font-semibold text-slate-500 dark:text-white/60 uppercase tracking-wider font-mono">
- {tpl.category}
- </span>
-
- <h3 className="text-lg font-heading font-bold text-slate-900 dark:text-white group-hover:text-brand-orange transition-colors">
- {tpl.name}
- </h3>
-
- <p className="text-xs text-slate-500 dark:text-white/60 leading-relaxed line-clamp-2">
- {tpl.description}
- </p>
- </div>
-
- {/* Tags */}
- <div className="flex flex-wrap gap-1.5 pt-2">
+ <div className="p-6 pt-4 flex-1 flex flex-col">
+ <p className="text-[11px] font-bold uppercase tracking-wider text-slate-400 dark:text-white/40 mb-1">{tpl.category}</p>
+ <h3 className="font-heading font-bold text-lg mb-2 group-hover:text-brand-orange transition-colors">{tpl.name}</h3>
+ <p className="text-[13px] text-slate-500 dark:text-white/50 leading-relaxed line-clamp-2 mb-4">{tpl.description}</p>
+ <div className="flex flex-wrap gap-1.5 mb-5">
  {tpl.tags.slice(0, 3).map((tag, idx) => (
- <span key={idx} className="text-[10px] text-slate-400 dark:text-white/40 bg-white/[0.03] dark:bg-[#0f131d]/[0.03] px-2 py-0.5 rounded-md border border-white/[0.04]">
- #{tag}
- </span>
+ <span key={idx} className="text-[10px] font-medium text-slate-400 dark:text-white/40 bg-slate-100 dark:bg-white/5 px-2 py-0.5 rounded-md">#{tag}</span>
  ))}
  </div>
-
- {/* Card Action Buttons */}
- <div className="pt-4 border-t border-slate-200 dark:border-white/10 mt-4 flex items-center gap-2.5">
+ <div className="mt-auto pt-4 border-t border-slate-100 dark:border-white/10 flex gap-2.5">
  <Link
  href={tpl.href}
- className="flex-1 py-2.5 px-3 rounded-xl bg-white/[0.05] dark:bg-[#0f131d]/[0.05] hover:bg-white/[0.1] text-slate-900 dark:text-white text-xs font-semibold border border-slate-200 dark:border-white/10 text-center transition-all flex items-center justify-center gap-1.5"
+ className="flex-1 py-2.5 rounded-xl text-[13px] font-bold text-center border border-slate-200 dark:border-white/10 hover:border-slate-300 dark:hover:border-white/25 transition-colors"
  >
- <span>View Format</span>
- <ArrowRight className="w-3.5 h-3.5 text-slate-500 dark:text-white/60" />
+ View format
  </Link>
-
  <Link
  href={tpl.generatorHref}
- className="py-2.5 px-4 rounded-xl bg-brand-orange/20 hover:bg-brand-orange/30 text-brand-orange text-xs font-semibold border border-brand-orange/30 text-center transition-all flex items-center justify-center gap-1.5"
+ className="flex-1 py-2.5 rounded-xl text-[13px] font-bold text-center bg-brand-orange text-white hover:brightness-95 transition-all inline-flex items-center justify-center gap-1.5"
  >
- <Sparkles className="w-3.5 h-3.5" />
- <span>Launch</span>
+ <Sparkles className="w-3.5 h-3.5" /> Use it
  </Link>
  </div>
  </div>
@@ -395,64 +333,45 @@ export default function TemplatesGalleryPage() {
 
  {/* Empty State */}
  {filteredTemplates.length === 0 && (
- <div className="text-center py-16 p-8 rounded-3xl bg-white dark:bg-[#0f131d] border border-slate-200 dark:border-white/10">
- <p className="text-slate-500 dark:text-white/60 text-sm">No templates matched your search for &quot;{searchQuery}&quot;.</p>
+ <div className="text-center py-16 px-8 rounded-3xl bg-white dark:bg-[#11161f] border border-slate-200 dark:border-white/10">
+ <p className="text-slate-500 dark:text-white/50 text-sm mb-4">No templates matched &ldquo;{searchQuery}&rdquo;.</p>
  <button
  onClick={() => { setSearchQuery(""); setSelectedCategory("All"); }}
- className="mt-4 px-4 py-2 rounded-xl bg-white text-black text-xs font-semibold"
+ className="px-5 py-2.5 rounded-xl bg-slate-900 dark:bg-white text-white dark:text-slate-900 text-xs font-bold"
  >
- Reset Filters
+ Reset filters
  </button>
  </div>
  )}
 
- {/* Bottom Educational Banner */}
- <div className="mt-16 p-8 rounded-3xl bg-white dark:bg-[#0f131d] border border-slate-200 dark:border-white/10 shadow-sm">
- <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-center md:text-left">
- <div className="space-y-2">
- <h4 className="text-sm font-semibold text-slate-900 dark:text-white flex items-center justify-center md:justify-start gap-2">
- <CheckCircle2 className="w-4 h-4 text-emerald-600" />
- <span>Statutory Compliance</span>
- </h4>
- <p className="text-xs text-slate-500 dark:text-white/60 leading-relaxed">
- Pre-formatted for Bar Council, ICAI, RERA, and NMC Medical regulations.
- </p>
+ {/* Bottom strip */}
+ <div className="mt-16 grid sm:grid-cols-3 gap-5">
+ {[
+ { title: 'Profession-grade formats', desc: 'Structured for Bar Council, ICAI, and medical council conventions.' },
+ { title: 'Hindi · Marathi · English', desc: 'Full Devanagari font engine with bilingual layout support.' },
+ { title: 'Print-ready vector PDF', desc: 'One-click A4 export — crisp at any zoom, no watermark.' },
+ ].map((b) => (
+ <div key={b.title} className="p-6 rounded-2xl bg-white dark:bg-[#11161f] border border-slate-200 dark:border-white/10">
+ <CheckCircle2 className="w-5 h-5 text-emerald-600 mb-3" />
+ <h4 className="font-bold text-sm mb-1.5">{b.title}</h4>
+ <p className="text-xs text-slate-500 dark:text-white/50 leading-relaxed">{b.desc}</p>
  </div>
- <div className="space-y-2">
- <h4 className="text-sm font-semibold text-slate-900 dark:text-white flex items-center justify-center md:justify-start gap-2">
- <CheckCircle2 className="w-4 h-4 text-emerald-600" />
- <span>Devanagari Bilingual</span>
- </h4>
- <p className="text-xs text-slate-500 dark:text-white/60 leading-relaxed">
- Full Hindi and Marathi font engine with bilingual corporate and professional layouts.
- </p>
- </div>
- <div className="space-y-2">
- <h4 className="text-sm font-semibold text-slate-900 dark:text-white flex items-center justify-center md:justify-start gap-2">
- <CheckCircle2 className="w-4 h-4 text-emerald-600" />
- <span>Print-Ready Vector PDF</span>
- </h4>
- <p className="text-xs text-slate-500 dark:text-white/60 leading-relaxed">
- 1-click instant vector A4 PDF export or direct printing on executive letterhead bond stationery.
- </p>
- </div>
- </div>
+ ))}
  </div>
 
- {/* Request a Template CTA */}
- <div className="mt-10 p-8 rounded-3xl bg-gradient-to-br from-brand-orange/10 via-white to-brand-sky/10 border border-slate-200 dark:border-white/10 text-center">
- <h3 className="text-xl sm:text-2xl font-heading font-bold text-slate-900 dark:text-white mb-2">
- Need a letterhead for your profession?
- </h3>
- <p className="text-sm text-slate-500 dark:text-white/60 max-w-lg mx-auto mb-5">
- Tell us your profession or business type and we will add a tailored template to the gallery.
- </p>
+ {/* Request CTA */}
+ <div className="mt-8 p-8 sm:p-10 rounded-[2rem] bg-slate-900 dark:bg-white text-center relative overflow-hidden">
+ <div className="absolute -top-20 -right-20 w-64 h-64 bg-brand-orange/20 rounded-full blur-3xl" aria-hidden />
+ <div className="relative">
+ <h3 className="font-heading font-bold text-2xl text-white dark:text-slate-900 mb-2">Need a letterhead for your profession?</h3>
+ <p className="text-sm text-white/60 dark:text-slate-600 max-w-md mx-auto mb-6">Tell us your profession or business type — we&apos;ll add a tailored template to the gallery.</p>
  <a
  href="/contact"
- className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-slate-900 dark:bg-white text-white dark:text-slate-900 text-sm font-semibold hover:bg-slate-800 transition-all"
+ className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-white dark:bg-slate-900 text-slate-900 dark:text-white text-sm font-bold hover:scale-[1.03] transition-transform"
  >
- Request a Template
+ Request a template <ArrowRight className="w-4 h-4" />
  </a>
+ </div>
  </div>
 
  </div>

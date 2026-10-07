@@ -23,7 +23,7 @@ import "./globals.css";
 export const viewport: Viewport = {
  width: "device-width",
  initialScale: 1,
- themeColor: "#07090f",
+ themeColor: "#0a0d13",
  colorScheme: "light dark",
 };
 
@@ -158,7 +158,7 @@ export default function RootLayout({
  }}
  />
  </head>
- <body className={`${outfit.variable} ${poppins.variable} ${jetbrainsMono.variable} ${yatraOne.variable} font-sans antialiased text-slate-900 dark:text-white bg-[#f7f5f1] dark:bg-[#07090f]`}>
+ <body className={`${outfit.variable} ${poppins.variable} ${jetbrainsMono.variable} ${yatraOne.variable} font-sans antialiased text-slate-900 dark:text-white bg-[#faf8f3] dark:bg-[#0a0d13]`}>
  {adsEnabled && adClient ? (
  <Script
  id="adsense-script"

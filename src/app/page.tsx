@@ -2,751 +2,476 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { 
- Sparkles, Landmark, FileText, Scale, Building2, Stethoscope, 
- ArrowRight, CheckCircle2, ShieldCheck, Printer, Zap, 
- Layers, HelpCircle, ChevronRight, Copy, Check, Terminal,
- Clock, Award, BookOpen, UserCheck, Flame, Send
+import {
+  Sparkles, Scale, Building2, Stethoscope, Calculator, HardHat, Briefcase,
+  ArrowRight, CheckCircle2, ShieldCheck, Printer, Zap, Layers,
+  HelpCircle, ChevronRight, Copy, Check, FileText, Megaphone, Clock, Award, Send
 } from 'lucide-react';
 import AdSlot from '@/components/AdSlot';
 
 interface SamplePrompt {
- id: string;
- lang: string;
- category: string;
- title: string;
- prompt: string;
- subject: string;
- preset: string;
- template?: string;
- preview: string;
+  id: string;
+  lang: string;
+  category: string;
+  title: string;
+  prompt: string;
+  subject: string;
+  preset: string;
+  template?: string;
+  preview: string;
 }
 
 const SAMPLE_PROMPTS: SamplePrompt[] = [
- {
- id: 'corporate-hr',
- lang: 'English',
- category: 'Corporate / HR',
- title: 'Job Offer Letter',
- prompt: 'Formal job offer letter for a software engineer role with joining date, CTC breakup, and probation terms',
- subject: 'Offer of Employment — Software Engineer.',
- preset: 'corporate',
- preview: 'Dear Candidate, We are pleased to offer you the position of Software Engineer at our organisation. Your annual cost-to-company (CTC) will be as per the annexure, with a probation period of six months from your date of joining. Please confirm your acceptance by signing and returning a copy of this letter.'
- },
- {
- id: 'client-complaint',
- lang: 'English',
- category: 'Consumer / Complaint',
- title: 'Defective Product Complaint',
- prompt: 'Formal complaint to a retailer about a defective appliance delivered last week, seeking replacement under warranty',
- subject: 'Complaint Regarding Defective Product — Request for Replacement.',
- preset: 'complaint',
- preview: 'Dear Sir/Madam, I am writing to bring to your attention that the appliance delivered to my address on the above date stopped working within three days of installation. As the product is under warranty, I request an immediate replacement or a full refund of the purchase amount.'
- },
- {
- id: 'vendor-payment',
- lang: 'English',
- category: 'Business / Vendor',
- title: 'Vendor Payment Follow-up',
- prompt: 'Polite but firm follow-up letter to a vendor regarding long-pending invoice payment',
- subject: 'Follow-up: Payment Against Invoice No. 4821.',
- preset: 'corporate',
- preview: 'Dear Sir/Madam, This is to follow up on our invoice No. 4821 dated last month, which remains unpaid despite two earlier reminders. We request you to release the outstanding payment within seven working days to avoid any disruption in ongoing supplies.'
- },
- {
- id: 'legal-notice',
- lang: 'English / Legal',
- category: 'Advocate / Bar Council',
- title: 'Legal Notice (Cheque Dishonour / Sec 138)',
- prompt: 'Statutory demand notice under Section 138 of Negotiable Instruments Act for cheque return due to insufficient funds',
- subject: 'Statutory Demand Notice under Section 138 of the Negotiable Instruments Act, 1881.',
- preset: 'legal',
- template: 'advocate',
- preview: 'Under instructions from and on behalf of my client, I hereby serve upon you this formal legal notice calling upon you to make payment of the cheque amount within 15 days of receipt of this notice, failing which criminal proceedings will be instituted.'
- }
+  {
+    id: 'corporate-hr',
+    lang: 'English',
+    category: 'Corporate / HR',
+    title: 'Job Offer Letter',
+    prompt: 'Formal job offer letter for a software engineer role with joining date, CTC breakup, and probation terms',
+    subject: 'Offer of Employment — Software Engineer.',
+    preset: 'corporate',
+    preview: 'Dear Candidate, We are pleased to offer you the position of Software Engineer at our organisation. Your annual cost-to-company (CTC) will be as per the annexure, with a probation period of six months from your date of joining. Please confirm your acceptance by signing and returning a copy of this letter.'
+  },
+  {
+    id: 'client-complaint',
+    lang: 'English',
+    category: 'Consumer / Complaint',
+    title: 'Defective Product Complaint',
+    prompt: 'Formal complaint to a retailer about a defective appliance delivered last week, seeking replacement under warranty',
+    subject: 'Complaint Regarding Defective Product — Request for Replacement.',
+    preset: 'complaint',
+    preview: 'Dear Sir/Madam, I am writing to bring to your attention that the appliance delivered to my address on the above date stopped working within three days of installation. As the product is under warranty, I request an immediate replacement or a full refund of the purchase amount.'
+  },
+  {
+    id: 'vendor-payment',
+    lang: 'English',
+    category: 'Business / Vendor',
+    title: 'Vendor Payment Follow-up',
+    prompt: 'Polite but firm follow-up letter to a vendor regarding long-pending invoice payment',
+    subject: 'Follow-up: Payment Against Invoice No. 4821.',
+    preset: 'corporate',
+    preview: 'Dear Sir/Madam, This is to follow up on our invoice No. 4821 dated last month, which remains unpaid despite two earlier reminders. We request you to release the outstanding payment within seven working days to avoid any disruption in ongoing supplies.'
+  },
+  {
+    id: 'legal-notice',
+    lang: 'English / Legal',
+    category: 'Advocate / Bar Council',
+    title: 'Legal Notice (Cheque Dishonour / Sec 138)',
+    prompt: 'Statutory demand notice under Section 138 of Negotiable Instruments Act for cheque return due to insufficient funds',
+    subject: 'Statutory Demand Notice under Section 138 of the Negotiable Instruments Act, 1881.',
+    preset: 'legal',
+    template: 'advocate',
+    preview: 'Under instructions from and on behalf of my client, I hereby serve upon you this formal legal notice calling upon you to make payment of the cheque amount within 15 days of receipt of this notice, failing which criminal proceedings will be instituted.'
+  },
 ];
 
-const FEATURED_PRESETS = [
- {
- id: 'advocate',
- name: 'Advocate & High Court Chambers',
- badge: 'Bar Council Format',
- desc: 'Formal legal letterhead with enrolment details, court jurisdiction, and notice styling.',
- href: '/tools/letterpad-generator?template=advocate',
- icon: Scale,
- image: '/illustrations/advocate-3d.jpg',
- color: 'from-amber-600/20 to-yellow-600/10',
- border: 'border-amber-600/30',
- accent: 'text-yellow-400'
- },
- {
- id: 'leave',
- name: 'Leave Application',
- badge: 'HR Standard',
- desc: 'Standard leave format for casual, earned, medical, and sick leave requests.',
- href: '/formats/leave-application',
- icon: Clock,
- image: '/illustrations/leave-3d.jpg',
- color: 'from-emerald-500/20 to-teal-600/10',
- border: 'border-emerald-500/30',
- accent: 'text-emerald-600'
- },
- {
- id: 'police',
- name: 'Police Complaint & Grievance',
- badge: 'CrPC / BNSS Standard',
- desc: 'Official representation for lost document intimation, public grievance, and SHO complaints.',
- href: '/formats',
- icon: ShieldCheck,
- image: '/illustrations/police-3d.jpg',
- color: 'from-blue-600/20 to-sky-600/10',
- border: 'border-blue-500/30',
- accent: 'text-blue-400'
- },
- {
- id: 'corporate',
- name: 'Corporate Letterhead',
- badge: 'Business Standard',
- desc: 'Professional company letterhead with registered office block and clean typography.',
- href: '/tools/letterpad-generator?preset=corporate&tpl=A',
- icon: Building2,
- color: 'from-sky-500/20 to-blue-600/10',
- border: 'border-sky-500/30',
- accent: 'text-sky-600'
- },
- {
- id: 'doctor',
- name: 'Doctor & Hospital Rx Pad',
- badge: 'NMC Ethics 2023',
- desc: 'Medical prescription pad with clinic timings, qualification, and vital stats layout.',
- href: '/tools/letterpad-generator?preset=doctor&tpl=C',
- icon: Stethoscope,
- color: 'from-cyan-500/20 to-teal-600/10',
- border: 'border-cyan-500/30',
- accent: 'text-cyan-600'
- }
+const TEMPLATE_CARDS = [
+  {
+    name: 'Corporate Letterhead',
+    desc: 'Registered office block, CIN line, and clean executive typography.',
+    href: '/tools/letterpad-generator?preset=corporate&tpl=A',
+    Icon: Building2,
+  },
+  {
+    name: 'Advocate Chambers',
+    desc: 'Enrolment number, court jurisdiction, and formal notice styling.',
+    href: '/tools/letterpad-generator?template=advocate',
+    Icon: Scale,
+  },
+  {
+    name: 'Clinic & Hospital',
+    desc: 'Doctor panel, timings, and prescription-ready layout.',
+    href: '/tools/letterpad-generator?template=clinic',
+    Icon: Stethoscope,
+  },
+  {
+    name: 'CA & Accountant',
+    desc: 'Firm registration, membership number, and UDIN-ready format.',
+    href: '/tools/letterpad-generator?template=ca-accountant',
+    Icon: Calculator,
+  },
+  {
+    name: 'Contractor & Builder',
+    desc: 'GSTIN, project credentials, and bid-ready presentation.',
+    href: '/tools/letterpad-generator?template=contractor-builder',
+    Icon: HardHat,
+  },
+  {
+    name: 'Freelancer & Consultant',
+    desc: 'Personal brand header with services and payment terms.',
+    href: '/tools/letterpad-generator?template=freelancer',
+    Icon: Briefcase,
+  },
 ];
+
+const FORMAT_CARDS = [
+  {
+    name: 'RTI Application',
+    desc: 'Section 6(1) format with point-wise queries and fee details.',
+    href: '/formats/rti-application',
+    Icon: FileText,
+  },
+  {
+    name: 'Complaint Letter',
+    desc: 'Consumer complaints that get answered — with escalation line.',
+    href: '/formats/complaint-letter',
+    Icon: Megaphone,
+  },
+  {
+    name: 'Leave Application',
+    desc: 'Casual, earned, and medical leave with charge handover.',
+    href: '/formats/leave-application',
+    Icon: Clock,
+  },
+  {
+    name: 'Office Order',
+    desc: 'Transfers, duty allocation, and internal circulars.',
+    href: '/formats/office-order',
+    Icon: Award,
+  },
+];
+
+const FAQS = [
+  {
+    q: 'Is Swalekhani really free?',
+    a: 'Yes. Drafting, formatting, and unwatermarked A4 PDF export are free — no account, no trial, no catch.',
+  },
+  {
+    q: 'Will my letters and personal details stay private?',
+    a: 'Everything runs inside your browser. Your drafts, names, and addresses are never uploaded to our servers or stored in any database.',
+  },
+  {
+    q: 'Can I write in Hindi or Marathi?',
+    a: 'Yes. The AI drafts in English, Hindi (हिन्दी), and Marathi (मराठी) with proper formal salutations and subject lines for each language.',
+  },
+  {
+    q: 'Can I print on my existing printed letterhead paper?',
+    a: 'Yes. Toggle off the header in the Studio and only your letter body prints — aligned to your pre-printed stationery.',
+  },
+];
+
+function LetterVisual() {
+  return (
+    <div className="relative">
+      <div className="absolute -inset-4 bg-gradient-to-br from-brand-orange/15 via-transparent to-brand-sky/15 rounded-[2rem] blur-2xl" aria-hidden />
+      <div className="relative bg-white dark:bg-[#11161f] rounded-2xl border border-slate-200 dark:border-white/10 shadow-[0_24px_60px_-12px_rgba(0,0,0,0.18)] p-6 sm:p-8 rotate-1 hover:rotate-0 transition-transform duration-500">
+        <div className="text-center border-b-2 border-slate-900 dark:border-white pb-4 mb-4">
+          <p className="font-heading font-bold text-lg text-slate-900 dark:text-white tracking-wide">VOLTEDGE HOME APPLIANCES</p>
+          <p className="text-[10px] text-slate-500 dark:text-white/50 tracking-[0.2em] uppercase mt-1">Private Limited · Pune · Mumbai</p>
+        </div>
+        <p className="text-[11px] font-semibold text-slate-900 dark:text-white mb-3">Subject: Offer of Employment — Software Engineer.</p>
+        <div className="space-y-2" aria-hidden>
+          {[92, 100, 88, 96, 70].map((w, i) => (
+            <div key={i} className="h-2 rounded-full bg-slate-100 dark:bg-white/10" style={{ width: `${w}%` }} />
+          ))}
+        </div>
+        <div className="flex justify-between items-end mt-6">
+          <div className="flex gap-1.5">
+            <span className="w-2 h-2 rounded-full bg-brand-orange" />
+            <span className="w-2 h-2 rounded-full bg-brand-pink" />
+            <span className="w-2 h-2 rounded-full bg-brand-sky" />
+          </div>
+          <p className="text-[10px] text-slate-400 dark:text-white/40 font-medium">A4 · Vector PDF</p>
+        </div>
+      </div>
+      <div className="absolute -bottom-5 -left-5 bg-white dark:bg-[#11161f] rounded-xl border border-slate-200 dark:border-white/10 shadow-lg px-4 py-3 flex items-center gap-2.5 -rotate-2">
+        <CheckCircle2 className="w-5 h-5 text-emerald-600" />
+        <div>
+          <p className="text-xs font-bold text-slate-900 dark:text-white">PDF exported</p>
+          <p className="text-[10px] text-slate-500 dark:text-white/50">No watermark · Print-ready</p>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 export default function HomePage() {
- const [activePromptIdx, setActivePromptIdx] = useState(0);
- const [copied, setCopied] = useState(false);
- const [customPrompt, setCustomPrompt] = useState('');
+  const [activePromptIdx, setActivePromptIdx] = useState(0);
+  const [copied, setCopied] = useState(false);
+  const [customPrompt, setCustomPrompt] = useState('');
 
- const currentPrompt = SAMPLE_PROMPTS[activePromptIdx];
- const adsEnabled = process.env.NEXT_PUBLIC_ADS_ENABLED === "true";
+  const currentPrompt = SAMPLE_PROMPTS[activePromptIdx];
+  const adsEnabled = process.env.NEXT_PUBLIC_ADS_ENABLED === "true";
 
- const handleCopy = () => {
- navigator.clipboard.writeText(currentPrompt.preview);
- setCopied(true);
- setTimeout(() => setCopied(false), 2000);
- };
+  const handleCopy = () => {
+    navigator.clipboard.writeText(currentPrompt.preview);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
 
- const buildStudioLaunchUrl = (promptObj: SamplePrompt) => {
- let url = `/tools/letterpad-generator?preset=${promptObj.preset}`;
- if (promptObj.template) url += `&template=${promptObj.template}`;
- if (promptObj.subject) url += `&sub=${encodeURIComponent(promptObj.subject)}`;
- return url;
- };
+  return (
+    <main className="min-h-screen bg-[#faf8f3] dark:bg-[#0a0d13] text-slate-900 dark:text-white font-sans overflow-x-hidden">
 
- return (
- <main className="min-h-screen bg-[#f7f5f1] dark:bg-[#07090f] text-slate-900 dark:text-white selection:bg-brand-pink/30 relative overflow-x-hidden font-sans">
- 
- {/* Dynamic Ambient Background Glows */}
- <div className="fixed inset-0 pointer-events-none z-0">
- <div className="absolute -top-32 left-1/2 -translate-x-1/2 w-[900px] h-[550px] bg-gradient-to-b from-brand-orange/15 via-brand-pink/10 to-transparent blur-[160px] rounded-full opacity-70"></div>
- <div className="absolute top-[35%] -left-32 w-[600px] h-[600px] bg-brand-sky/10 blur-[180px] rounded-full"></div>
- <div className="absolute top-[65%] -right-32 w-[600px] h-[600px] bg-emerald-500/10 blur-[180px] rounded-full"></div>
- </div>
+      {/* ── HERO ── */}
+      <section className="relative pt-32 pb-16 sm:pt-40 sm:pb-24">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+            <div>
+              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 text-xs font-semibold text-slate-600 dark:text-white/70 mb-6 shadow-sm">
+                <Sparkles className="w-3.5 h-3.5 text-brand-orange" />
+                AI letterpad studio · English · हिन्दी · मराठी
+              </div>
+              <h1 className="font-heading font-extrabold tracking-tight text-4xl sm:text-5xl lg:text-[3.6rem] leading-[1.08] mb-6">
+                Letters that look like you{' '}
+                <span className="text-brand-orange">mean business.</span>
+              </h1>
+              <p className="text-base sm:text-lg text-slate-600 dark:text-white/60 leading-relaxed max-w-lg mb-8">
+                Swalekhani drafts, formats, and prints professional letters — corporate, legal, personal, complaints, RTI — in seconds. Free forever, private by design, no sign-up.
+              </p>
+              <div className="flex flex-wrap gap-3.5 mb-10">
+                <Link
+                  href="/tools/letterpad-generator"
+                  className="inline-flex items-center gap-2 px-7 py-3.5 rounded-xl bg-slate-900 dark:bg-white text-white dark:text-slate-900 font-semibold text-[15px] shadow-[0_10px_30px_-8px_rgba(0,0,0,0.4)] hover:-translate-y-0.5 transition-all"
+                >
+                  <Sparkles className="w-4 h-4" />
+                  Open the Studio
+                  <ArrowRight className="w-4 h-4" />
+                </Link>
+                <Link
+                  href="/templates"
+                  className="inline-flex items-center gap-2 px-7 py-3.5 rounded-xl bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 font-semibold text-[15px] hover:border-slate-300 dark:hover:border-white/20 hover:-translate-y-0.5 transition-all"
+                >
+                  <Layers className="w-4 h-4 text-brand-orange" />
+                  Browse templates
+                </Link>
+              </div>
+              <div className="flex flex-wrap gap-x-6 gap-y-2">
+                {['Free forever', 'No sign-up needed', 'Runs in your browser'].map((t) => (
+                  <span key={t} className="inline-flex items-center gap-1.5 text-[13px] font-medium text-slate-500 dark:text-white/50">
+                    <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+                    {t}
+                  </span>
+                ))}
+              </div>
+            </div>
+            <div className="hidden md:block">
+              <LetterVisual />
+            </div>
+          </div>
+        </div>
+      </section>
 
- {/* Hero Section */}
- <section className="relative z-10 pt-28 pb-16 sm:pt-36 sm:pb-24">
- <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
- 
- {/* Hero Tag */}
- <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white dark:bg-[#0f131d] border border-slate-200 dark:border-white/10 backdrop-blur-md mb-6 shadow-[inset_0_1px_0_rgba(255,255,255,0.1)]">
- <Sparkles className="w-4 h-4 text-brand-orange animate-pulse" />
- <span className="text-xs font-semibold uppercase tracking-wider text-slate-700 dark:text-white/80">
- India&apos;s Standard AI Letterpad & Document Studio
- </span>
- </div>
+      {adsEnabled && <AdSlot slotKey="home-top" label="Sponsored Content" />}
 
- {/* Headline */}
- <h1 className="text-4xl sm:text-6xl lg:text-7xl font-heading font-extrabold tracking-tight text-slate-900 dark:text-white mb-6 leading-[1.1]">
- Draft, Format & Print <br className="hidden sm:inline" />
- <span className="bg-gradient-to-r from-brand-orange via-brand-pink to-brand-sky bg-clip-text text-transparent">
- Professional Business Letters
- </span> in Seconds.
- </h1>
+      {/* ── TEMPLATES ── */}
+      <section className="py-16 sm:py-20 border-t border-slate-200/70 dark:border-white/5">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex flex-wrap items-end justify-between gap-4 mb-10">
+            <div>
+              <p className="text-xs font-bold uppercase tracking-[0.18em] text-brand-orange mb-2">Templates</p>
+              <h2 className="font-heading font-bold text-3xl sm:text-4xl tracking-tight">Letterheads for every profession</h2>
+            </div>
+            <Link href="/templates" className="inline-flex items-center gap-1.5 text-sm font-semibold text-slate-600 dark:text-white/60 hover:text-slate-900 dark:hover:text-white transition-colors">
+              View all 14+ templates <ChevronRight className="w-4 h-4" />
+            </Link>
+          </div>
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+            {TEMPLATE_CARDS.map((t) => (
+              <Link
+                key={t.name}
+                href={t.href}
+                className="group p-6 rounded-2xl bg-white dark:bg-[#11161f] border border-slate-200 dark:border-white/10 hover:border-brand-orange/50 hover:shadow-[0_16px_40px_-16px_rgba(232,118,43,0.35)] hover:-translate-y-1 transition-all"
+              >
+                <div className="w-11 h-11 rounded-xl bg-brand-orange/10 border border-brand-orange/20 flex items-center justify-center mb-4 group-hover:bg-brand-orange group-hover:border-brand-orange transition-colors">
+                  <t.Icon className="w-5 h-5 text-brand-orange group-hover:text-white transition-colors" />
+                </div>
+                <h3 className="font-heading font-bold text-lg mb-1.5">{t.name}</h3>
+                <p className="text-sm text-slate-500 dark:text-white/50 leading-relaxed mb-4">{t.desc}</p>
+                <span className="inline-flex items-center gap-1 text-[13px] font-semibold text-brand-orange">
+                  Use template <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
+                </span>
+              </Link>
+            ))}
+          </div>
+        </div>
+      </section>
 
- {/* Subtitle */}
- <p className="text-base sm:text-xl text-slate-500 dark:text-white/60 max-w-3xl mx-auto mb-10 font-normal leading-relaxed">
- Create professional bilingual letterheads for Corporate, Legal, Healthcare, and Personal communications. Generate structured, formal drafts with Groq AI in <strong className="text-slate-900 dark:text-white">मराठी, हिन्दी & English</strong>.
- </p>
+      {/* ── HOW IT WORKS ── */}
+      <section className="py-16 sm:py-20 bg-white dark:bg-[#0d1117] border-y border-slate-200/70 dark:border-white/5">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center max-w-2xl mx-auto mb-12">
+            <p className="text-xs font-bold uppercase tracking-[0.18em] text-brand-orange mb-2">How it works</p>
+            <h2 className="font-heading font-bold text-3xl sm:text-4xl tracking-tight mb-3">Blank page to signed PDF in three steps</h2>
+            <p className="text-slate-500 dark:text-white/50">No design skills. Nothing to install.</p>
+          </div>
+          <div className="grid sm:grid-cols-3 gap-5 max-w-5xl mx-auto">
+            {[
+              { n: '01', Icon: Layers, title: 'Pick a letterhead', desc: 'Choose a profession template or start blank with your own logo and details.' },
+              { n: '02', Icon: Sparkles, title: 'Draft with AI', desc: 'Describe the letter in plain words. The AI structures it with subject, reference, and formal tone.' },
+              { n: '03', Icon: Printer, title: 'Export and print', desc: 'Preview on a live A4 canvas. Export a crisp, unwatermarked vector PDF.' },
+            ].map((s) => (
+              <div key={s.n} className="relative p-7 rounded-2xl bg-[#faf8f3] dark:bg-white/[0.03] border border-slate-200 dark:border-white/10">
+                <span className="font-heading font-extrabold text-5xl text-slate-200 dark:text-white/10 absolute top-5 right-6 select-none">{s.n}</span>
+                <s.Icon className="w-6 h-6 text-brand-orange mb-4" />
+                <h3 className="font-heading font-bold text-lg mb-2">{s.title}</h3>
+                <p className="text-sm text-slate-500 dark:text-white/50 leading-relaxed">{s.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
 
- {/* Primary CTA Buttons */}
- <div className="flex flex-wrap items-center justify-center gap-4 mb-16">
- <Link
- href="/tools/letterpad-generator"
- className="inline-flex items-center gap-2.5 px-8 py-4 rounded-2xl bg-gradient-to-r from-brand-orange via-brand-pink to-brand-sky text-white font-semibold text-base shadow-[0_10px_35px_rgba(255,100,50,0.3)] hover:shadow-[0_15px_45px_rgba(255,100,50,0.45)] hover:-translate-y-0.5 transition-all duration-300"
- >
- <Sparkles className="w-5 h-5" />
- <span>Launch Letterpad Studio</span>
- <ArrowRight className="w-4 h-4 ml-1" />
- </Link>
+      {/* ── AI PLAYGROUND ── */}
+      <section id="ai-studio-section" className="py-16 sm:py-24">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center max-w-2xl mx-auto mb-12">
+            <p className="text-xs font-bold uppercase tracking-[0.18em] text-brand-orange mb-2">Try it now</p>
+            <h2 className="font-heading font-bold text-3xl sm:text-4xl tracking-tight mb-3">Watch AI draft a real letter</h2>
+            <p className="text-slate-500 dark:text-white/50">Pick a scenario — this is exactly how the Studio structures your draft.</p>
+          </div>
+          <div className="grid lg:grid-cols-12 gap-6 max-w-6xl mx-auto items-start">
+            <div className="lg:col-span-5 space-y-3">
+              {SAMPLE_PROMPTS.map((sample, idx) => (
+                <button
+                  key={sample.id}
+                  onClick={() => setActivePromptIdx(idx)}
+                  className={`w-full text-left p-4 rounded-2xl border transition-all ${
+                    activePromptIdx === idx
+                      ? 'bg-white dark:bg-[#11161f] border-brand-orange/60 shadow-[0_8px_30px_-12px_rgba(232,118,43,0.4)]'
+                      : 'bg-white/60 dark:bg-white/[0.02] border-slate-200 dark:border-white/10 hover:border-slate-300 dark:hover:border-white/20'
+                  }`}
+                >
+                  <div className="flex items-center justify-between mb-1.5">
+                    <span className="text-[10px] font-bold px-2 py-0.5 rounded-md bg-slate-100 dark:bg-white/10 text-slate-600 dark:text-white/70 font-mono">{sample.lang}</span>
+                    <span className="text-[11px] font-semibold text-brand-orange">{sample.category}</span>
+                  </div>
+                  <h4 className="text-sm font-bold mb-1">{sample.title}</h4>
+                  <p className="text-xs text-slate-500 dark:text-white/50 line-clamp-2">&ldquo;{sample.prompt}&rdquo;</p>
+                </button>
+              ))}
+              <div className="p-4 rounded-2xl bg-white dark:bg-[#11161f] border border-slate-200 dark:border-white/10">
+                <label className="text-xs font-bold text-slate-600 dark:text-white/70 block mb-2">Or describe your own letter:</label>
+                <div className="flex gap-2">
+                  <input
+                    type="text"
+                    value={customPrompt}
+                    onChange={(e) => setCustomPrompt(e.target.value)}
+                    placeholder="e.g. NOC for passport, salary hike request…"
+                    className="flex-1 bg-[#faf8f3] dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-xl px-3 py-2 text-xs placeholder-slate-400 dark:placeholder-white/30 focus:outline-none focus:border-brand-orange"
+                  />
+                  <Link
+                    href={`/tools/letterpad-generator?sub=${encodeURIComponent(customPrompt || 'Letter')}`}
+                    className="px-4 py-2 rounded-xl bg-slate-900 dark:bg-white text-white dark:text-slate-900 font-bold text-xs flex items-center gap-1.5 hover:opacity-90 transition-opacity"
+                  >
+                    Draft <Send className="w-3 h-3" />
+                  </Link>
+                </div>
+              </div>
+            </div>
+            <div className="lg:col-span-7">
+              <div className="rounded-2xl bg-white dark:bg-[#11161f] border border-slate-200 dark:border-white/10 shadow-[0_24px_60px_-24px_rgba(0,0,0,0.25)] overflow-hidden">
+                <div className="flex items-center justify-between px-5 py-3.5 border-b border-slate-200 dark:border-white/10">
+                  <div className="flex items-center gap-2">
+                    <span className="w-2.5 h-2.5 rounded-full bg-rose-400" />
+                    <span className="w-2.5 h-2.5 rounded-full bg-amber-400" />
+                    <span className="w-2.5 h-2.5 rounded-full bg-emerald-500" />
+                    <span className="text-[11px] text-slate-400 dark:text-white/40 font-mono ml-2">Live preview</span>
+                  </div>
+                  <button
+                    onClick={handleCopy}
+                    className="flex items-center gap-1.5 text-xs font-semibold text-slate-500 dark:text-white/60 hover:text-slate-900 dark:hover:text-white px-3 py-1.5 rounded-lg hover:bg-slate-100 dark:hover:bg-white/10 transition-all"
+                  >
+                    {copied ? <Check className="w-3.5 h-3.5 text-emerald-600" /> : <Copy className="w-3.5 h-3.5" />}
+                    {copied ? 'Copied' : 'Copy text'}
+                  </button>
+                </div>
+                <div className="p-6 sm:p-8">
+                  <p className="text-[11px] font-bold uppercase tracking-wider text-slate-400 dark:text-white/40 mb-1">Subject</p>
+                  <p className="text-sm font-bold mb-5">{currentPrompt.subject}</p>
+                  <p className="text-sm text-slate-600 dark:text-white/70 leading-[1.9]">{currentPrompt.preview}</p>
+                  <div className="mt-6 pt-5 border-t border-slate-100 dark:border-white/10 flex flex-wrap gap-3">
+                    <Link
+                      href={`/tools/letterpad-generator?preset=${currentPrompt.preset}${currentPrompt.template ? `&template=${currentPrompt.template}` : ''}&sub=${encodeURIComponent(currentPrompt.subject)}`}
+                      className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-brand-orange text-white text-sm font-bold hover:brightness-95 transition-all"
+                    >
+                      <Sparkles className="w-4 h-4" /> Open in Studio
+                    </Link>
+                    <span className="inline-flex items-center gap-1.5 text-xs text-slate-400 dark:text-white/40 font-medium self-center">
+                      <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" /> Private — drafts never leave your browser
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
 
- <Link
- href="/templates"
- className="inline-flex items-center gap-2 px-7 py-4 rounded-2xl bg-white dark:bg-[#0f131d] hover:bg-slate-100 dark:hover:bg-white/10 text-slate-700 dark:text-white/80 hover:text-slate-900 dark:hover:text-white border border-slate-200 dark:border-white/10 text-sm font-semibold transition-all backdrop-blur-md"
- >
- <Layers className="w-4 h-4" />
- <span>Browse 14+ Templates</span>
- </Link>
+      {/* ── FORMATS ── */}
+      <section className="py-16 sm:py-20 bg-white dark:bg-[#0d1117] border-y border-slate-200/70 dark:border-white/5">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex flex-wrap items-end justify-between gap-4 mb-10">
+            <div>
+              <p className="text-xs font-bold uppercase tracking-[0.18em] text-brand-orange mb-2">Formats</p>
+              <h2 className="font-heading font-bold text-3xl sm:text-4xl tracking-tight">Ready-made formats, done right</h2>
+            </div>
+            <Link href="/formats" className="inline-flex items-center gap-1.5 text-sm font-semibold text-slate-600 dark:text-white/60 hover:text-slate-900 dark:hover:text-white transition-colors">
+              All formats <ChevronRight className="w-4 h-4" />
+            </Link>
+          </div>
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
+            {FORMAT_CARDS.map((f) => (
+              <Link
+                key={f.name}
+                href={f.href}
+                className="group p-6 rounded-2xl bg-[#faf8f3] dark:bg-white/[0.03] border border-slate-200 dark:border-white/10 hover:border-brand-orange/50 hover:-translate-y-1 transition-all"
+              >
+                <f.Icon className="w-6 h-6 text-brand-orange mb-4" />
+                <h3 className="font-heading font-bold mb-1.5">{f.name}</h3>
+                <p className="text-[13px] text-slate-500 dark:text-white/50 leading-relaxed">{f.desc}</p>
+              </Link>
+            ))}
+          </div>
+        </div>
+      </section>
 
- <Link
- href="/formats"
- className="inline-flex items-center gap-2 px-7 py-4 rounded-2xl bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-700 border border-emerald-500/25 text-sm font-semibold transition-all backdrop-blur-md"
- >
- <BookOpen className="w-4 h-4" />
- <span>Statutory Formats (RTI / Leave)</span>
- </Link>
- </div>
+      {/* ── FAQ ── */}
+      <section className="py-16 sm:py-24">
+        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-10">
+            <p className="text-xs font-bold uppercase tracking-[0.18em] text-brand-orange mb-2">FAQ</p>
+            <h2 className="font-heading font-bold text-3xl sm:text-4xl tracking-tight">Questions, answered</h2>
+          </div>
+          <div className="space-y-3.5">
+            {FAQS.map((faq, i) => (
+              <div key={i} className="p-5 sm:p-6 rounded-2xl bg-white dark:bg-[#11161f] border border-slate-200 dark:border-white/10">
+                <h3 className="font-bold text-[15px] mb-2 flex items-start gap-2.5">
+                  <HelpCircle className="w-5 h-5 text-brand-orange flex-shrink-0 mt-0.5" />
+                  {faq.q}
+                </h3>
+                <p className="text-sm text-slate-500 dark:text-white/50 leading-relaxed pl-[30px]">{faq.a}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
 
- {/* Trust Badge Strip */}
- <div className="flex flex-wrap items-center justify-center gap-2.5 sm:gap-3 mb-14">
- {[
- 'Free forever',
- 'No sign-up needed',
- 'Private — runs in your browser',
- 'Unwatermarked PDF export',
- ].map((label, i) => (
- <span key={i} className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-white dark:bg-[#0f131d] border border-slate-200 dark:border-white/10 text-xs font-semibold text-slate-600 dark:text-white/70 shadow-sm">
- <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
- {label}
- </span>
- ))}
- </div>
+      {/* ── CTA ── */}
+      <section className="pb-20 sm:pb-28">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="relative overflow-hidden rounded-[2rem] bg-slate-900 dark:bg-white px-8 py-14 sm:p-16 text-center">
+            <div className="absolute -top-24 -right-24 w-72 h-72 bg-brand-orange/25 rounded-full blur-3xl" aria-hidden />
+            <div className="absolute -bottom-24 -left-24 w-72 h-72 bg-brand-sky/20 rounded-full blur-3xl" aria-hidden />
+            <div className="relative">
+              <h2 className="font-heading font-extrabold text-3xl sm:text-4xl tracking-tight text-white dark:text-slate-900 mb-4">
+                Your next letter is two minutes away.
+              </h2>
+              <p className="text-white/60 dark:text-slate-600 max-w-xl mx-auto mb-8">
+                Pick a letterhead, describe your letter, export the PDF. No account, no watermark, no fuss.
+              </p>
+              <Link
+                href="/tools/letterpad-generator"
+                className="inline-flex items-center gap-2 px-8 py-4 rounded-xl bg-white dark:bg-slate-900 text-slate-900 dark:text-white font-bold hover:scale-[1.03] transition-transform shadow-xl"
+              >
+                <Sparkles className="w-5 h-5 text-brand-orange" />
+                Start drafting — it&apos;s free
+                <ArrowRight className="w-4 h-4" />
+              </Link>
+            </div>
+          </div>
+        </div>
+      </section>
 
- {/* 4 Core Entry Gateway Cards */}
- <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 text-left max-w-6xl mx-auto">
- 
- {/* Gateway 1: Blank Studio */}
- <Link
- href="/tools/letterpad-generator"
- className="group p-5 rounded-2xl bg-white dark:bg-[#0f131d] hover:bg-slate-50 dark:hover:bg-white/5 border border-slate-200 dark:border-white/10 hover:border-brand-orange/40 transition-all duration-300 hover:-translate-y-1 shadow-lg"
- >
- <div className="w-10 h-10 rounded-xl bg-brand-orange/15 border border-brand-orange/20 flex items-center justify-center mb-3 text-brand-orange">
- <Sparkles className="w-5 h-5" />
- </div>
- <h3 className="font-heading font-bold text-slate-900 dark:text-white text-base mb-1 group-hover:text-brand-orange transition-colors">
- 1. Make Your Letterpad
- </h3>
- <p className="text-xs text-slate-500 dark:text-white/60 leading-relaxed">
- Design professional stationery with your own logo and branding.
- </p>
- <div className="mt-3 flex items-center gap-1 text-xs font-semibold text-brand-orange">
- <span>Start Studio</span>
- <ChevronRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
- </div>
- </Link>
-
- {/* Gateway 2: AI Write */}
- <a
- href="#ai-studio-section"
- className="group p-5 rounded-2xl bg-white dark:bg-[#0f131d] hover:bg-slate-50 dark:hover:bg-white/5 border border-slate-200 dark:border-white/10 hover:border-brand-pink/40 transition-all duration-300 hover:-translate-y-1 shadow-lg"
- >
- <div className="w-10 h-10 rounded-xl bg-brand-pink/15 border border-brand-pink/20 flex items-center justify-center mb-3 text-brand-pink">
- <Zap className="w-5 h-5" />
- </div>
- <h3 className="font-heading font-bold text-slate-900 dark:text-white text-base mb-1 group-hover:text-brand-pink transition-colors">
- 2. Write Letter by AI
- </h3>
- <p className="text-xs text-slate-500 dark:text-white/60 leading-relaxed">
- Provide brief bullet points in Marathi, Hindi, or English; get structured formal paragraphs instantly.
- </p>
- <div className="mt-3 flex items-center gap-1 text-xs font-semibold text-brand-pink">
- <span>Try AI Prompts</span>
- <ChevronRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
- </div>
- </a>
-
- {/* Gateway 3: Profession Templates */}
- <Link
- href="/templates"
- className="group p-5 rounded-2xl bg-white dark:bg-[#0f131d] hover:bg-slate-50 dark:hover:bg-white/5 border border-slate-200 dark:border-white/10 hover:border-brand-sky/40 transition-all duration-300 hover:-translate-y-1 shadow-lg"
- >
- <div className="w-10 h-10 rounded-xl bg-brand-sky/15 border border-brand-sky/20 flex items-center justify-center mb-3 text-brand-sky">
- <Layers className="w-5 h-5" />
- </div>
- <h3 className="font-heading font-bold text-slate-900 dark:text-white text-base mb-1 group-hover:text-brand-sky transition-colors">
- 3. 14+ Profession Templates
- </h3>
- <p className="text-xs text-slate-500 dark:text-white/60 leading-relaxed">
- Pre-formatted layouts for Advocates, CAs, Doctors, Housing Societies, Companies & Shops.
- </p>
- <div className="mt-3 flex items-center gap-1 text-xs font-semibold text-brand-sky">
- <span>View Templates</span>
- <ChevronRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
- </div>
- </Link>
-
- {/* Gateway 4: Formats & RTI */}
- <Link
- href="/formats"
- className="group p-5 rounded-2xl bg-white dark:bg-[#0f131d] hover:bg-slate-50 dark:hover:bg-white/5 border border-slate-200 dark:border-white/10 hover:border-emerald-400/40 transition-all duration-300 hover:-translate-y-1 shadow-lg"
- >
- <div className="w-10 h-10 rounded-xl bg-emerald-500/15 border border-emerald-500/20 flex items-center justify-center mb-3 text-emerald-400">
- <ShieldCheck className="w-5 h-5" />
- </div>
- <h3 className="font-heading font-bold text-slate-900 dark:text-white text-base mb-1 group-hover:text-emerald-700 transition-colors">
- 4. Statutory Formats
- </h3>
- <p className="text-xs text-slate-500 dark:text-white/60 leading-relaxed">
- RTI applications, HR leave requests, Office Orders, Complaints & Legal notices.
- </p>
- <div className="mt-3 flex items-center gap-1 text-xs font-semibold text-emerald-600">
- <span>Explore Formats</span>
- <ChevronRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
- </div>
- </Link>
-
- </div>
-
- </div>
- </section>
-
- {/* Top Ad Slot */}
- {adsEnabled && <AdSlot slotKey="home-top" label="Sponsored Content" />}
-
- {/* SECTION: Interactive AI Prompt Playground */}
- <section id="ai-studio-section" className="relative z-10 py-16 sm:py-20 border-t border-slate-200 dark:border-white/10">
- <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
- 
- <div className="text-center max-w-3xl mx-auto mb-12">
- <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-pink/10 border border-brand-pink/20 text-brand-pink text-xs font-semibold uppercase tracking-wider mb-3">
- <Zap className="w-3.5 h-3.5" />
- <span>Multilingual AI Prompt Generator</span>
- </div>
- <h2 className="text-3xl sm:text-4xl font-heading font-bold text-slate-900 dark:text-white tracking-tight mb-3">
- Experience Instant AI Drafting in Action
- </h2>
- <p className="text-sm sm:text-base text-slate-500 dark:text-white/60">
- Select a real-world scenario or type your prompt to see how Swalekhani structures formal business and personal letters.
- </p>
- </div>
-
- <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start max-w-6xl mx-auto">
- 
- {/* Left Prompt Selector Column */}
- <div className="lg:col-span-5 space-y-3">
- <span className="text-xs font-semibold text-slate-400 dark:text-white/40 uppercase tracking-wider block mb-1">
- Select a Standard Use Case
- </span>
-
- {SAMPLE_PROMPTS.map((sample, idx) => (
- <button
- key={sample.id}
- onClick={() => setActivePromptIdx(idx)}
- className={`w-full text-left p-4 rounded-2xl border transition-all duration-300 ${
- activePromptIdx === idx
- ? 'bg-slate-100 dark:bg-white/10 border-brand-pink/50 shadow-[0_4px_20px_rgba(236,72,153,0.15)] scale-[1.02]'
- : 'bg-white dark:bg-[#0f131d] border-slate-200 dark:border-white/10 hover:bg-white text-slate-600 dark:text-white/70'
- }`}
- >
- <div className="flex items-center justify-between mb-1.5">
- <span className="text-[10px] font-semibold px-2 py-0.5 rounded-md bg-slate-50 dark:bg-white/5 text-slate-700 dark:text-white/80 font-mono">
- {sample.lang}
- </span>
- <span className="text-[11px] font-medium text-brand-pink">
- {sample.category}
- </span>
- </div>
- <h4 className="text-sm font-semibold text-slate-900 dark:text-white mb-1">
- {sample.title}
- </h4>
- <p className="text-xs text-slate-500 dark:text-white/60 line-clamp-2">
- &quot;{sample.prompt}&quot;
- </p>
- </button>
- ))}
-
- {/* Custom Prompt Box */}
- <div className="mt-4 p-4 rounded-2xl bg-white dark:bg-[#0f131d] border border-slate-200 dark:border-white/10">
- <label className="text-xs font-semibold text-slate-600 dark:text-white/70 block mb-2">
- Or Write Your Own Custom Subject / Need:
- </label>
- <div className="flex gap-2">
- <input
- type="text"
- value={customPrompt}
- onChange={(e) => setCustomPrompt(e.target.value)}
- placeholder="उदा. रस्ता दुरुस्ती, NOC अर्ज, Transfer order..."
- className="flex-1 bg-white dark:bg-[#0f131d] border border-slate-200 dark:border-white/10 rounded-xl px-3 py-2 text-xs text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-white/40 focus:outline-none focus:border-brand-pink"
- />
- <Link
- href={`/tools/letterpad-generator?sub=${encodeURIComponent(customPrompt || 'Official Representation')}`}
- className="px-4 py-2 rounded-xl bg-brand-pink text-white font-semibold text-xs flex items-center gap-1 hover:bg-brand-pink/90 transition-all shadow-md"
- >
- <span>Draft</span>
- <Send className="w-3 h-3" />
- </Link>
- </div>
- </div>
-
- </div>
-
- {/* Right Interactive A4 Preview Card */}
- <div className="lg:col-span-7">
- <div className="rounded-3xl bg-white dark:bg-[#0f131d] border border-slate-200 dark:border-white/10 p-6 sm:p-8 shadow-2xl relative overflow-hidden">
- 
- {/* Top Card Header */}
- <div className="flex items-center justify-between pb-4 border-b border-slate-200 dark:border-white/10 mb-6">
- <div className="flex items-center gap-2">
- <div className="w-3 h-3 rounded-full bg-rose-500/80"></div>
- <div className="w-3 h-3 rounded-full bg-amber-500/80"></div>
- <div className="w-3 h-3 rounded-full bg-emerald-500/80"></div>
- <span className="text-xs text-slate-400 dark:text-white/40 font-mono ml-2">A4 Canvas Live Preview</span>
- </div>
-
- <button
- onClick={handleCopy}
- className="flex items-center gap-1.5 text-xs text-slate-500 dark:text-white/60 hover:text-slate-900 dark:hover:text-white px-3 py-1.5 rounded-lg bg-white dark:bg-[#0f131d] hover:bg-slate-100 dark:hover:bg-white/10 transition-all"
- >
- {copied ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
- <span>{copied ? 'Copied' : 'Copy Sample'}</span>
- </button>
- </div>
-
- {/* Subject Block */}
- <div className="mb-4 bg-white dark:bg-[#0f131d] p-3.5 rounded-xl border border-white/[0.05]">
- <span className="text-[10px] uppercase font-bold text-slate-400 dark:text-white/40 tracking-wider block mb-1">
- Subject / विषय:
- </span>
- <p className="text-sm font-semibold text-slate-900 dark:text-white">
- {currentPrompt.subject}
- </p>
- </div>
-
- {/* Formatted Body */}
- <div className="mb-6 p-4 rounded-xl bg-black/40 border border-white/[0.04] text-slate-700 dark:text-white/80 text-xs sm:text-sm leading-relaxed font-serif">
- <p className="whitespace-pre-line">
- {currentPrompt.preview}
- </p>
- </div>
-
- {/* Action Row */}
- <div className="flex flex-wrap items-center justify-between gap-4 pt-4 border-t border-slate-200 dark:border-white/10">
- <div className="text-xs text-slate-500 dark:text-white/60 flex items-center gap-1.5">
- <CheckCircle2 className="w-4 h-4 text-emerald-400" />
- <span>Formatted with professional Indian business standards</span>
- </div>
-
- <Link
- href={buildStudioLaunchUrl(currentPrompt)}
- className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-brand-pink to-brand-orange text-slate-900 dark:text-white text-xs font-semibold shadow-lg hover:shadow-brand-pink/20 hover:scale-105 transition-all"
- >
- <Sparkles className="w-3.5 h-3.5" />
- <span>Open in Studio & Customize</span>
- <ArrowRight className="w-3.5 h-3.5" />
- </Link>
- </div>
-
- </div>
- </div>
-
- </div>
-
- </div>
- </section>
-
- {/* SECTION: Featured Letterhead & Profession Presets */}
- <section className="relative z-10 py-16 sm:py-24 border-t border-slate-200 dark:border-white/10 bg-white/[0.01] dark:bg-[#0f131d]/[0.01]">
- <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
- 
- <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-4">
- <div>
- <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-sky/10 border border-brand-sky/20 text-brand-sky text-xs font-semibold uppercase tracking-wider mb-3">
- <Layers className="w-3.5 h-3.5" />
- <span>Profession Presets</span>
- </div>
- <h2 className="text-3xl sm:text-4xl font-heading font-bold text-slate-900 dark:text-white tracking-tight">
- Authentic Layouts for Every Authority
- </h2>
- </div>
- 
- <Link
- href="/templates"
- className="inline-flex items-center gap-2 text-sm font-semibold text-brand-sky hover:text-slate-900 dark:hover:text-white transition-colors"
- >
- <span>Explore all 17 Templates</span>
- <ArrowRight className="w-4 h-4" />
- </Link>
- </div>
-
- <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
- {FEATURED_PRESETS.map((item) => {
- const Icon = item.icon;
- return (
- <div
- key={item.id}
- className="group relative rounded-3xl bg-white dark:bg-[#0f131d] border border-slate-200 dark:border-white/10 hover:border-white/[0.2] transition-all duration-300 flex flex-col justify-between overflow-hidden shadow-xl hover:-translate-y-1.5"
- >
- {/* 3D Illustration Banner or Styled Gradient Header */}
- {item.image ? (
- <div className="relative h-44 w-full overflow-hidden bg-black/60 border-b border-slate-200 dark:border-white/10">
- <img 
- src={item.image} 
- alt={item.name}
- className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500 opacity-90 group-hover:opacity-100"
- />
- <div className="absolute inset-0 bg-gradient-to-t from-[#0d1017] via-[#0d1017]/40 to-transparent"></div>
- <div className="absolute top-3.5 right-3.5">
- <span className="text-[10px] font-bold px-2.5 py-1 rounded-full border border-slate-200 dark:border-white/10 bg-black/70 backdrop-blur-md text-slate-800 dark:text-white/90 uppercase tracking-wider shadow-md">
- {item.badge}
- </span>
- </div>
- </div>
- ) : (
- <div className={`h-24 w-full bg-gradient-to-br ${item.color} border-b border-slate-200 dark:border-white/10 p-4 flex items-center justify-between`}>
- <div className="w-12 h-12 rounded-2xl bg-white/[0.05] dark:bg-[#0f131d]/[0.05] border border-slate-200 dark:border-white/10 flex items-center justify-center">
- <Icon className={`w-6 h-6 ${item.accent}`} />
- </div>
- <span className="text-[10px] font-semibold uppercase tracking-wider px-2.5 py-1 rounded-full bg-white dark:bg-[#0f131d] border border-slate-200 dark:border-white/10 text-slate-600 dark:text-white/70">
- {item.badge}
- </span>
- </div>
- )}
-
- <div className="p-6 space-y-4 flex-1 flex flex-col justify-between">
- <div className="space-y-2">
- <h3 className="font-heading font-bold text-xl text-slate-900 dark:text-white group-hover:text-brand-orange transition-colors">
- {item.name}
- </h3>
-
- <p className="text-xs text-slate-500 dark:text-white/60 leading-relaxed">
- {item.desc}
- </p>
- </div>
-
- <div className="pt-4 border-t border-slate-200 dark:border-white/10 mt-4">
- <Link
- href={item.href}
- className="w-full py-2.5 px-4 rounded-xl bg-white dark:bg-[#0f131d] hover:bg-slate-100 dark:hover:bg-white/10 text-slate-900 dark:text-white text-xs font-semibold border border-slate-200 dark:border-white/10 text-center transition-all flex items-center justify-between group/btn"
- >
- <span>Launch Template</span>
- <ChevronRight className="w-4 h-4 text-slate-400 dark:text-white/40 group-hover/btn:translate-x-1 group-hover/btn:text-slate-900 transition-all" />
- </Link>
- </div>
- </div>
- </div>
- );
- })}
- </div>
-
- </div>
- </section>
-
- {/* SECTION: 3-Step Simple Workflow */}
- <section className="relative z-10 py-16 sm:py-24 border-t border-slate-200 dark:border-white/10">
- <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
- 
- <h2 className="text-3xl sm:text-4xl font-heading font-bold text-slate-900 dark:text-white tracking-tight mb-4">
- How Swalekhani Works
- </h2>
- <p className="text-sm sm:text-base text-slate-500 dark:text-white/60 max-w-2xl mx-auto mb-16">
- From blank page to print-ready official stationery in 3 frictionless steps.
- </p>
-
- <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-left max-w-5xl mx-auto">
- 
- {/* Step 1 */}
- <div className="relative p-7 rounded-3xl bg-white dark:bg-[#0f131d] border border-slate-200 dark:border-white/10 shadow-lg">
- <div className="w-12 h-12 rounded-2xl bg-brand-orange/15 border border-brand-orange/30 text-brand-orange font-mono font-bold text-xl flex items-center justify-center mb-6">
- 01
- </div>
- <h3 className="text-lg font-heading font-bold text-slate-900 dark:text-white mb-2">
- Choose Header & Layout
- </h3>
- <p className="text-xs text-slate-500 dark:text-white/60 leading-relaxed">
- Select your department insignia, emblem, contact ribbons, and bilingual font sizing in the live A4 visual studio.
- </p>
- </div>
-
- {/* Step 2 */}
- <div className="relative p-7 rounded-3xl bg-white dark:bg-[#0f131d] border border-slate-200 dark:border-white/10 shadow-lg">
- <div className="w-12 h-12 rounded-2xl bg-brand-pink/15 border border-brand-pink/30 text-brand-pink font-mono font-bold text-xl flex items-center justify-center mb-6">
- 02
- </div>
- <h3 className="text-lg font-heading font-bold text-slate-900 dark:text-white mb-2">
- Draft with AI or Rich Text
- </h3>
- <p className="text-xs text-slate-500 dark:text-white/60 leading-relaxed">
- Use integrated Groq AI to structure paragraphs in Marathi, Hindi, or English, or format manually with dynamic date stamps and paragraph markers.
- </p>
- </div>
-
- {/* Step 3 */}
- <div className="relative p-7 rounded-3xl bg-white dark:bg-[#0f131d] border border-slate-200 dark:border-white/10 shadow-lg">
- <div className="w-12 h-12 rounded-2xl bg-brand-sky/15 border border-brand-sky/30 text-brand-sky font-mono font-bold text-xl flex items-center justify-center mb-6">
- 03
- </div>
- <h3 className="text-lg font-heading font-bold text-slate-900 dark:text-white mb-2">
- Export PDF or Print Direct
- </h3>
- <p className="text-xs text-slate-500 dark:text-white/60 leading-relaxed">
- Download a 100% vector, crystal-clear unwatermarked A4 PDF or print directly onto your pre-printed office bond letterhead paper.
- </p>
- </div>
-
- </div>
-
- </div>
- </section>
-
- {/* Mid Ad Slot */}
- {adsEnabled && <AdSlot slotKey="home-mid" label="Advertisement" />}
-
- {/* SECTION: Trust & Compliance Badges */}
- <section className="relative z-10 py-16 sm:py-20 border-t border-slate-200 dark:border-white/10 bg-white/[0.01] dark:bg-[#0f131d]/[0.01]">
- <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
- 
- <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
- {[
- {
- icon: ShieldCheck,
- title: "100% Client-Side Privacy",
- desc: "Your confidential representations and drafts stay inside your browser without database logging."
- },
- {
- icon: Landmark,
- title: "Bilingual Hindi–English Ready",
- desc: "Professional bilingual typography with Devanagari and English layouts for Indian business correspondence."
- },
- {
- icon: Printer,
- title: "Zero Watermark Export",
- desc: "Export crisp vector PDF documents ready for administrative submission and stamping."
- },
- {
- icon: Zap,
- title: "Sub-Second Groq AI",
- desc: "Draft complex multi-paragraph administrative letters in under 2 seconds with high formality."
- }
- ].map((feature, i) => {
- const Icon = feature.icon;
- return (
- <div key={i} className="p-6 rounded-2xl bg-white dark:bg-[#0f131d] border border-slate-200 dark:border-white/10 shadow-sm">
- <Icon className="w-6 h-6 text-brand-orange mb-3" />
- <h4 className="font-heading font-semibold text-slate-900 dark:text-white text-base mb-1">{feature.title}</h4>
- <p className="text-xs text-slate-500 dark:text-white/60 leading-relaxed">{feature.desc}</p>
- </div>
- );
- })}
- </div>
-
- </div>
- </section>
-
- {/* SECTION: How It Works */}
- <section className="relative z-10 py-16 sm:py-20 border-t border-slate-200 dark:border-white/10">
- <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
- <div className="text-center max-w-2xl mx-auto mb-12">
- <h2 className="text-3xl sm:text-4xl font-heading font-bold text-slate-900 dark:text-white tracking-tight mb-3">
- From Blank Page to Signed PDF in 3 Steps
- </h2>
- <p className="text-sm sm:text-base text-slate-500 dark:text-white/60">
- No design skills needed. No software to install.
- </p>
- </div>
- <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
- {[
- { step: '1', Icon: Layers, title: 'Pick a template', desc: 'Choose from 14+ corporate, legal, medical, and personal letterhead layouts — or start blank with your own logo.' },
- { step: '2', Icon: Sparkles, title: 'Draft with AI', desc: 'Describe your letter in plain words (English, Hindi, or Marathi). The AI structures it with proper subject, references, and formal tone.' },
- { step: '3', Icon: Printer, title: 'Export & print', desc: 'Preview on a live A4 canvas and export a crisp, unwatermarked vector PDF — ready to print, sign, or email.' },
- ].map((h, i) => (
- <div key={i} className="relative p-6 rounded-2xl bg-white dark:bg-[#0f131d] border border-slate-200 dark:border-white/10 shadow-sm">
- <span className="absolute top-5 right-6 text-4xl font-extrabold text-slate-100 dark:text-white/10 select-none">{h.step}</span>
- <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-brand-orange/20 to-brand-pink/20 border border-brand-orange/25 flex items-center justify-center mb-4">
- <h.Icon className="w-5 h-5 text-brand-orange" />
- </div>
- <h3 className="font-heading font-bold text-slate-900 dark:text-white text-lg mb-1.5">{h.title}</h3>
- <p className="text-sm text-slate-500 dark:text-white/60 leading-relaxed">{h.desc}</p>
- </div>
- ))}
- </div>
- </div>
- </section>
-
- {/* SECTION: FAQ */}
- <section className="relative z-10 py-16 sm:py-24 border-t border-slate-200 dark:border-white/10">
- <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
- 
- <div className="text-center mb-12">
- <h2 className="text-3xl font-heading font-bold text-slate-900 dark:text-white mb-2">
- Frequently Asked Questions
- </h2>
- <p className="text-sm text-slate-500 dark:text-white/60">
- Everything you need to know about Swalekhani letterheads and AI drafting.
- </p>
- </div>
-
- <div className="space-y-4">
- {[
- {
- q: "Is Swalekhani completely free to use?",
- a: "Yes. Swalekhani is free for professionals, students, advocates, and small business owners to generate professional letterheads, draft letters, and export unwatermarked A4 PDFs."
- },
- {
- q: "Can I print directly onto pre-printed letterhead bond paper?",
- a: "Yes! In the Studio settings, you can toggle 'Hide Headers' off. This keeps your text margins perfectly aligned while printing only your letter body onto your existing pre-printed stationery."
- },
- {
- q: "How accurate is the Marathi and Hindi AI letter drafting?",
- a: "Swalekhani is optimized with specialized Indian business-writing prompts, ensuring proper formal salutations, Subject-Reference format, and grammatically precise closing endorsements in English, Hindi, and Marathi."
- },
- {
- q: "Are my confidential letters or personal details stored?",
- a: "No. All text editing, formatting, and PDF rendering take place entirely within your local browser session. No personal drafts or contact details are saved to external databases."
- }
- ].map((faq, i) => (
- <div key={i} className="p-6 rounded-2xl bg-white dark:bg-[#0f131d] border border-slate-200 dark:border-white/10">
- <h3 className="text-base font-semibold text-slate-900 dark:text-white mb-2 flex items-start gap-2.5">
- <HelpCircle className="w-5 h-5 text-brand-pink flex-shrink-0 mt-0.5" />
- <span>{faq.q}</span>
- </h3>
- <p className="text-sm text-slate-500 dark:text-white/60 pl-7 leading-relaxed">{faq.a}</p>
- </div>
- ))}
- </div>
-
- </div>
- </section>
-
- {/* SECTION: Bottom CTA Banner */}
- <section className="relative z-10 py-16 sm:py-24 border-t border-slate-200 dark:border-white/10">
- <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
- <div className="p-8 sm:p-14 rounded-3xl bg-gradient-to-br from-brand-orange/20 via-brand-pink/15 to-brand-sky/20 border border-slate-200 dark:border-white/10 text-center shadow-2xl relative overflow-hidden">
- <div className="absolute top-0 right-0 w-64 h-64 bg-slate-50 dark:bg-white/5 rounded-full blur-3xl pointer-events-none"></div>
- 
- <h3 className="text-3xl sm:text-4xl font-heading font-extrabold text-slate-900 dark:text-white mb-4 tracking-tight">
- Ready to Draft Your Professional Letter?
- </h3>
- 
- <p className="text-base sm:text-lg text-slate-600 dark:text-white/70 max-w-xl mx-auto mb-8 font-normal">
- No login required. Choose a template or prompt and start drafting in the Studio immediately.
- </p>
-
- <Link
- href="/tools/letterpad-generator"
- className="inline-flex items-center gap-2.5 px-9 py-4 rounded-2xl bg-white text-black font-bold text-base hover:bg-white/90 hover:scale-105 transition-all shadow-[0_0_30px_rgba(255,255,255,0.3)]"
- >
- <Sparkles className="w-5 h-5 text-brand-orange" />
- <span>Open Swalekhani Studio</span>
- <ArrowRight className="w-4 h-4 ml-1" />
- </Link>
- </div>
- </div>
- </section>
-
- </main>
- );
+    </main>
+  );
 }

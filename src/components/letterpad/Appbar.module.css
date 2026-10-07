@@ -116,6 +116,7 @@
 }
 .btnSaffron:hover { filter: brightness(1.07); transform: translateY(-1px); }
 .btnSaffron:active { transform: translateY(0); }
+.btnPrint { /* marker class: keeps Print visible on mobile */ }
 
 /* ── Responsive ── */
 @media (max-width: 900px) {

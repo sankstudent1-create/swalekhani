@@ -3,65 +3,65 @@
 import { useEffect, useRef } from "react";
 
 type AdSlotProps = {
-  slotKey: string;
-  label: string;
-  variant?: "banner" | "inline";
+ slotKey: string;
+ label: string;
+ variant?: "banner" | "inline";
 };
 
 declare global {
-  interface Window {
-    adsbygoogle?: unknown[];
-  }
+ interface Window {
+ adsbygoogle?: unknown[];
+ }
 }
 
 export default function AdSlot({ slotKey, label, variant = "banner" }: AdSlotProps) {
-  const adRef = useRef<HTMLModElement | null>(null);
-  const adsEnabled = process.env.NEXT_PUBLIC_ADS_ENABLED === "true";
-  const client = process.env.NEXT_PUBLIC_ADSENSE_CLIENT;
-  const slotMap: Record<string, string | undefined> = {
-    "global-top": process.env.NEXT_PUBLIC_AD_SLOT_GLOBAL_TOP,
-    "global-bottom": process.env.NEXT_PUBLIC_AD_SLOT_GLOBAL_BOTTOM,
-    "tools-top": process.env.NEXT_PUBLIC_AD_SLOT_TOOLS_TOP,
-    "tools-bottom": process.env.NEXT_PUBLIC_AD_SLOT_TOOLS_BOTTOM,
-  };
-  const slot = slotMap[slotKey];
+ const adRef = useRef<HTMLModElement | null>(null);
+ const adsEnabled = process.env.NEXT_PUBLIC_ADS_ENABLED === "true";
+ const client = process.env.NEXT_PUBLIC_ADSENSE_CLIENT;
+ const slotMap: Record<string, string | undefined> = {
+ "global-top": process.env.NEXT_PUBLIC_AD_SLOT_GLOBAL_TOP,
+ "global-bottom": process.env.NEXT_PUBLIC_AD_SLOT_GLOBAL_BOTTOM,
+ "tools-top": process.env.NEXT_PUBLIC_AD_SLOT_TOOLS_TOP,
+ "tools-bottom": process.env.NEXT_PUBLIC_AD_SLOT_TOOLS_BOTTOM,
+ };
+ const slot = slotMap[slotKey];
 
-  useEffect(() => {
-    if (!adsEnabled) return;
-    if (!client || !slot || !adRef.current) return;
+ useEffect(() => {
+ if (!adsEnabled) return;
+ if (!client || !slot || !adRef.current) return;
 
-    try {
-      window.adsbygoogle = window.adsbygoogle || [];
-      window.adsbygoogle.push({});
-    } catch {
-      // Ignore ad network boot failures and keep the slot reserved.
-    }
-  }, [adsEnabled, client, slot]);
+ try {
+ window.adsbygoogle = window.adsbygoogle || [];
+ window.adsbygoogle.push({});
+ } catch {
+ // Ignore ad network boot failures and keep the slot reserved.
+ }
+ }, [adsEnabled, client, slot]);
 
-  if (!adsEnabled) return null;
-  if (!slot) return null;
+ if (!adsEnabled) return null;
+ if (!slot) return null;
 
-  const minHeight = variant === "banner" ? "min-h-[110px]" : "min-h-[260px]";
+ const minHeight = variant === "banner" ? "min-h-[110px]" : "min-h-[260px]";
 
-  return (
-    <section className="mx-auto w-full max-w-7xl px-4 md:px-6">
-      <div className={`my-4 overflow-hidden rounded-2xl border border-slate-200 bg-white/[0.03] p-3 ${minHeight}`}>
-        <div className="mb-3 flex items-center justify-between gap-3 border-b border-slate-200 pb-2">
-          <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-400">Ad Slot</p>
-          <p className="text-[11px] uppercase tracking-[0.18em] text-slate-400">{label}</p>
-        </div>
-        {client && slot ? (
-          <ins
-            ref={adRef}
-            className="adsbygoogle block h-full w-full"
-            style={{ display: "block" }}
-            data-ad-client={client}
-            data-ad-slot={slot}
-            data-ad-format="auto"
-            data-full-width-responsive="true"
-          />
-        ) : null}
-      </div>
-    </section>
-  );
+ return (
+ <section className="mx-auto w-full max-w-7xl px-4 md:px-6">
+ <div className={`my-4 overflow-hidden rounded-2xl border border-slate-200 dark:border-white/10 bg-white/[0.03] dark:bg-[#0f131d]/[0.03] p-3 ${minHeight}`}>
+ <div className="mb-3 flex items-center justify-between gap-3 border-b border-slate-200 dark:border-white/10 pb-2">
+ <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-400 dark:text-white/40">Ad Slot</p>
+ <p className="text-[11px] uppercase tracking-[0.18em] text-slate-400 dark:text-white/40">{label}</p>
+ </div>
+ {client && slot ? (
+ <ins
+ ref={adRef}
+ className="adsbygoogle block h-full w-full"
+ style={{ display: "block" }}
+ data-ad-client={client}
+ data-ad-slot={slot}
+ data-ad-format="auto"
+ data-full-width-responsive="true"
+ />
+ ) : null}
+ </div>
+ </section>
+ );
 }

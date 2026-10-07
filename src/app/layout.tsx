@@ -1,14 +1,14 @@
 // Polyfill for Promise.withResolvers (needed for Node < 22 and older browsers)
 if (typeof Promise.withResolvers === 'undefined') {
-  // @ts-ignore
-  Promise.withResolvers = function() {
-    let resolve, reject;
-    const promise = new Promise((res, rej) => {
-      resolve = res;
-      reject = rej;
-    });
-    return { promise, resolve, reject };
-  };
+ // @ts-ignore
+ Promise.withResolvers = function() {
+ let resolve, reject;
+ const promise = new Promise((res, rej) => {
+ resolve = res;
+ reject = rej;
+ });
+ return { promise, resolve, reject };
+ };
 }
 
 import type { Metadata, Viewport } from "next";
@@ -21,143 +21,160 @@ import Footer from "@/components/Footer";
 import "./globals.css";
 
 export const viewport: Viewport = {
-  width: "device-width",
-  initialScale: 1,
-  themeColor: "#07090f",
-  colorScheme: "light dark",
+ width: "device-width",
+ initialScale: 1,
+ themeColor: "#07090f",
+ colorScheme: "light dark",
 };
 
 
 const outfit = Outfit({
-  variable: "--font-outfit",
-  subsets: ["latin"],
-  display: "swap",
+ variable: "--font-outfit",
+ subsets: ["latin"],
+ display: "swap",
 });
 
 const poppins = Poppins({
-  variable: "--font-poppins",
-  weight: ["400", "500", "600", "700"],
-  subsets: ["latin", "devanagari"],
-  display: "swap",
+ variable: "--font-poppins",
+ weight: ["400", "500", "600", "700"],
+ subsets: ["latin", "devanagari"],
+ display: "swap",
 });
 
 const yatraOne = Yatra_One({
-  variable: "--font-yatra",
-  weight: "400",
-  subsets: ["devanagari"],
-  display: "swap",
+ variable: "--font-yatra",
+ weight: "400",
+ subsets: ["devanagari"],
+ display: "swap",
 });
 
 const jetbrainsMono = JetBrains_Mono({
-  variable: "--font-jetbrains-mono",
-  subsets: ["latin"],
-  display: "swap",
+ variable: "--font-jetbrains-mono",
+ subsets: ["latin"],
+ display: "swap",
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://swalekhani.vercel.app"),
-  alternates: {
-    canonical: "/",
-  },
-  title: {
-    default: "Swalekhani | Professional AI Letterpad Generator",
-    template: "%s | Swalekhani",
-  },
-  description: "Swalekhani is a premium, AI-powered letterpad generator. Generate perfectly formatted corporate, personal, legal, and complaint letters instantly in English, Hindi, and bilingual formats using advanced AI.",
-  keywords: [
-    "Swalekhani",
-    "Swalekhani letterpad generator",
-    "business letter generator",
-    "corporate letterhead format",
-    "AI letter writer",
-    "Hindi letter generator",
-    "company letterhead maker",
-    "Sanket Wanve Infosystems",
-  ],
-  icons: {
-    icon: [
-      { url: "/favicon.ico" },
-      { url: "/favicon-16x16.png", sizes: "16x16", type: "image/png" },
-      { url: "/favicon-32x32.png", sizes: "32x32", type: "image/png" },
-      { url: "/icon-192.png", sizes: "192x192", type: "image/png" },
-      { url: "/icon-512.png", sizes: "512x512", type: "image/png" },
-    ],
-    shortcut: "/favicon.ico",
-    apple: "/apple-touch-icon.png",
-  },
-  manifest: "/manifest.webmanifest",
-  appleWebApp: {
-    capable: true,
-    statusBarStyle: "black-translucent",
-    title: "Swalekhani",
-  },
-  openGraph: {
-    title: "Swalekhani | Professional AI Letterpad Generator",
-    description: "AI-powered letterpad and document generator. Draft perfectly formatted corporate, business, and bilingual letters instantly.",
-    images: ["/icon-512.png"],
-    type: "website",
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "Swalekhani | Professional AI Letterpad Generator",
-    description: "AI-powered letterpad and document generator for corporate, business, and personal letters.",
-    images: ["/icon-512.png"],
-  },
-  other: {
-    "google-adsense-account": "ca-pub-4364061213343174",
-  },
+ metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://swalekhani.vercel.app"),
+ alternates: {
+ canonical: "/",
+ },
+ title: {
+ default: "Swalekhani | Professional AI Letterpad Generator",
+ template: "%s | Swalekhani",
+ },
+ description: "Swalekhani is a premium, AI-powered letterpad generator. Generate perfectly formatted corporate, personal, legal, and complaint letters instantly in English, Hindi, and bilingual formats using advanced AI.",
+ keywords: [
+ "Swalekhani",
+ "Swalekhani letterpad generator",
+ "business letter generator",
+ "corporate letterhead format",
+ "AI letter writer",
+ "Hindi letter generator",
+ "company letterhead maker",
+ "Sanket Wanve Infosystems",
+ ],
+ icons: {
+ icon: [
+ { url: "/favicon.ico" },
+ { url: "/favicon-16x16.png", sizes: "16x16", type: "image/png" },
+ { url: "/favicon-32x32.png", sizes: "32x32", type: "image/png" },
+ { url: "/icon-192.png", sizes: "192x192", type: "image/png" },
+ { url: "/icon-512.png", sizes: "512x512", type: "image/png" },
+ ],
+ shortcut: "/favicon.ico",
+ apple: "/apple-touch-icon.png",
+ },
+ manifest: "/manifest.webmanifest",
+ appleWebApp: {
+ capable: true,
+ statusBarStyle: "black-translucent",
+ title: "Swalekhani",
+ },
+ openGraph: {
+ title: "Swalekhani | Professional AI Letterpad Generator",
+ description: "AI-powered letterpad and document generator. Draft perfectly formatted corporate, business, and bilingual letters instantly.",
+ images: ["/icon-512.png"],
+ type: "website",
+ },
+ twitter: {
+ card: "summary_large_image",
+ title: "Swalekhani | Professional AI Letterpad Generator",
+ description: "AI-powered letterpad and document generator for corporate, business, and personal letters.",
+ images: ["/icon-512.png"],
+ },
+ other: {
+ "google-adsense-account": "ca-pub-4364061213343174",
+ },
 };
 
 export default function RootLayout({
-  children,
+ children,
 }: Readonly<{
-  children: React.ReactNode;
+ children: React.ReactNode;
 }>) {
-  const adsEnabled = process.env.NEXT_PUBLIC_ADS_ENABLED === "true";
-  const adClient = process.env.NEXT_PUBLIC_ADSENSE_CLIENT;
+ const adsEnabled = process.env.NEXT_PUBLIC_ADS_ENABLED === "true";
+ const adClient = process.env.NEXT_PUBLIC_ADSENSE_CLIENT;
 
-  return (
-    <html lang="en">
-      <head>
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-              (function() {
-                try {
-                  var ua = navigator.userAgent;
-                  var index = ua.indexOf('Chrome/');
-                  var isOldChrome = false;
-                  if (index !== -1) {
-                    var version = parseInt(ua.substring(index + 7), 10);
-                    isOldChrome = version < 76;
-                  }
-                  var supportsBackdrop = window.CSS && CSS.supports && (CSS.supports('backdrop-filter', 'blur(1px)') || CSS.supports('-webkit-backdrop-filter', 'blur(1px)'));
-                  if (isOldChrome || !supportsBackdrop) {
-                    document.documentElement.className += ' no-backdrop-filter';
-                  }
-                } catch (e) {}
-              })();
-            `
-          }}
-        />
-      </head>
-      <body className={`${outfit.variable} ${poppins.variable} ${jetbrainsMono.variable} ${yatraOne.variable} font-sans antialiased text-slate-900 bg-[#f7f5f1]`}>
-        {adsEnabled && adClient ? (
-          <Script
-            id="adsense-script"
-            async
-            strategy="afterInteractive"
-            crossOrigin="anonymous"
-            src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${adClient}`}
-          />
-        ) : null}
-        <PwaRegister />
-        <Navigation />
-        {adsEnabled ? <AdSlot slotKey="global-top" label="Global Top Banner" /> : null}
-        {children}
-        {adsEnabled ? <AdSlot slotKey="global-bottom" label="Global Footer Banner" /> : null}
-        <Footer />
-      </body>
-    </html>
-  );
+ return (
+ <html lang="en">
+ <head>
+ <script
+ dangerouslySetInnerHTML={{
+ __html: `
+ (function() {
+ try {
+ var stored = null;
+ try { stored = localStorage.getItem('swalekhani-theme'); } catch (e) {}
+ var theme = stored === 'light' || stored === 'dark'
+ ? stored
+ : (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+ if (theme === 'dark') document.documentElement.classList.add('dark');
+ document.documentElement.style.colorScheme = theme;
+ } catch (e) {}
+ })();
+ `
+ }}
+ />
+ <script
+ dangerouslySetInnerHTML={{
+ __html: `
+ (function() {
+ try {
+ var ua = navigator.userAgent;
+ var index = ua.indexOf('Chrome/');
+ var isOldChrome = false;
+ if (index !== -1) {
+ var version = parseInt(ua.substring(index + 7), 10);
+ isOldChrome = version < 76;
+ }
+ var supportsBackdrop = window.CSS && CSS.supports && (CSS.supports('backdrop-filter', 'blur(1px)') || CSS.supports('-webkit-backdrop-filter', 'blur(1px)'));
+ if (isOldChrome || !supportsBackdrop) {
+ document.documentElement.className += ' no-backdrop-filter';
+ }
+ } catch (e) {}
+ })();
+ `
+ }}
+ />
+ </head>
+ <body className={`${outfit.variable} ${poppins.variable} ${jetbrainsMono.variable} ${yatraOne.variable} font-sans antialiased text-slate-900 dark:text-white bg-[#f7f5f1] dark:bg-[#07090f]`}>
+ {adsEnabled && adClient ? (
+ <Script
+ id="adsense-script"
+ async
+ strategy="afterInteractive"
+ crossOrigin="anonymous"
+ src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${adClient}`}
+ />
+ ) : null}
+ <PwaRegister />
+ <Navigation />
+ {adsEnabled ? <AdSlot slotKey="global-top" label="Global Top Banner" /> : null}
+ {children}
+ {adsEnabled ? <AdSlot slotKey="global-bottom" label="Global Footer Banner" /> : null}
+ <Footer />
+ </body>
+ </html>
+ );
 }

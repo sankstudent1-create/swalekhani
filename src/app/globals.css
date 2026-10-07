@@ -1,5 +1,48 @@
 @import "tailwindcss";
 
+/* Class-based dark mode (toggled via <html class="dark">) */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* ── Studio theme variables (CSS-module components) ── */
+:root {
+  --st-bg: #ffffff;
+  --st-panel: #efe9df;
+  --st-input: #ffffff;
+  --st-text: #1e293b;
+  --st-muted: #64748b;
+  --st-faint: #94a3b8;
+  --st-border: rgba(30, 41, 59, 0.14);
+  --st-border-strong: #cbd5e1;
+  --st-accent: #ea7c28;
+  --st-accent-soft: rgba(234, 124, 40, 0.08);
+  --st-scroll: #cbd5e1;
+  --st-bar-bg: rgba(255, 255, 255, 0.85);
+  --st-bar-border: rgba(30, 41, 59, 0.1);
+  --st-bar-shadow: 0 3px 16px rgba(0, 0, 0, 0.08);
+  --st-chip-bg: rgba(30, 41, 59, 0.05);
+  --st-chip-border: rgba(30, 41, 59, 0.14);
+  --st-chip-text: rgba(30, 41, 59, 0.55);
+}
+.dark {
+  --st-bg: #18223a;
+  --st-panel: #0f1827;
+  --st-input: #0f1827;
+  --st-text: #b8c8e8;
+  --st-muted: #5878a8;
+  --st-faint: #344e78;
+  --st-border: #293958;
+  --st-border-strong: #405898;
+  --st-accent: #ff6600;
+  --st-accent-soft: rgba(255, 102, 0, 0.06);
+  --st-scroll: #293958;
+  --st-bar-bg: rgba(15, 19, 29, 0.85);
+  --st-bar-border: rgba(255, 255, 255, 0.05);
+  --st-bar-shadow: 0 3px 16px rgba(0, 0, 0, 0.5);
+  --st-chip-bg: rgba(255, 255, 255, 0.07);
+  --st-chip-border: rgba(255, 255, 255, 0.15);
+  --st-chip-text: rgba(255, 255, 255, 0.55);
+}
+
 :root {
   --background: #f7f5f1;
   --foreground: #1e293b;

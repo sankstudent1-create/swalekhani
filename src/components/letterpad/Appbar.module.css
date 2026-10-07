@@ -2,10 +2,10 @@
 
 /* ── Full bar ──────────────────────────────────────────────── */
 .bar {
-  background: rgba(15, 19, 29, 0.85);
+  background: var(--st-bar-bg);
   backdrop-filter: blur(12px);
-  border-bottom: 1px solid rgba(255,255,255,0.05);
-  color: #fff;
+  border-bottom: 1px solid var(--st-bar-border);
+  color: var(--st-text);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -14,7 +14,7 @@
   position: sticky;
   top: 0;
   z-index: 500;
-  box-shadow: 0 3px 16px rgba(0,0,0,.5);
+  box-shadow: var(--st-bar-shadow);
   gap: 8px;
 }
 
@@ -30,7 +30,7 @@
 .logo {
   width: auto; height: 28px;
   padding: 0 6px;
-  background: #FF6600;
+  background: var(--st-accent);
   border-radius: 4px;
   display: flex; align-items: center; justify-content: center; gap: 2px;
   font-family: 'Libre Baskerville', serif;
@@ -41,21 +41,21 @@
 .name { font-size: 14px; font-weight: 700; line-height: 1.1; white-space: nowrap; }
 .swalekhaniName {
   font-family: var(--font-outfit), sans-serif;
-  color: #fff;
+  color: var(--st-text);
 }
 .marathiName {
   font-family: var(--font-yatra), serif;
-  color: rgba(255, 255, 255, 0.85);
+  color: var(--st-text);
   font-size: 16px;
   transform: translateY(2px);
 }
 .tag  {
-  background: rgba(255,255,255,.07);
-  border: 1px solid rgba(255,255,255,.15);
+  background: var(--st-chip-bg);
+  border: 1px solid var(--st-chip-border);
   border-radius: 3px;
   padding: 2px 7px;
   font-size: 8.5px;
-  color: rgba(255,255,255,.55);
+  color: var(--st-chip-text);
   letter-spacing: .05em;
   text-transform: uppercase;
   white-space: nowrap;
@@ -64,13 +64,13 @@
 
 /* Model badge — shows which Groq model was used */
 .modelBadge {
-  background: rgba(74,222,128,.12);
-  border: 1px solid rgba(74,222,128,.3);
+  background: var(--st-accent-soft);
+  border: 1px solid var(--st-accent);
   border-radius: 3px;
   padding: 2px 7px;
   font-size: 7px;
   font-family: 'DM Mono', monospace;
-  color: #4ade80;
+  color: var(--st-accent);
   letter-spacing: .04em;
   white-space: nowrap;
   flex-shrink: 0;
@@ -100,10 +100,10 @@
   transition: all .13s;
   white-space: nowrap;
 }
-.btnGhost { background: transparent; color: #fff; border: 1.5px solid rgba(255,255,255,.22); }
-.btnGhost:hover { background: rgba(255,255,255,.08); border-color: rgba(255,255,255,.5); }
-.btnSaffron { background: #FF6600; color: #fff; }
-.btnSaffron:hover { background: #d45500; }
+.btnGhost { background: transparent; color: var(--st-text); border: 1.5px solid var(--st-chip-border); }
+.btnGhost:hover { background: var(--st-chip-bg); border-color: var(--st-border-strong); }
+.btnSaffron { background: var(--st-accent); color: #fff; }
+.btnSaffron:hover { filter: brightness(0.92); }
 
 /* ── Responsive: hide non-essential items ───────────────────── */
 

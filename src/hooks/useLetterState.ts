@@ -2,9 +2,11 @@
 //  hooks/useLetterState.ts  –  Central state for the letterpad
 // ─────────────────────────────────────────────
 'use client';
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect, useRef } from 'react';
 import type { AppState, LetterForm, TemplateType, FontClass, LogoSide, SigMode, AILetterData } from '@/types/letterpad';
 import { DEFAULT_FORM, DEFAULT_LOGO_POS, OFFICE_PRESETS, svgToDataUri } from '@/lib/letterpad/constants';
+
+const DRAFT_KEY = 'swalekhani-studio-draft-v1';
 
 const INITIAL_STATE: AppState = {
   tpl: 'A',
@@ -30,6 +32,54 @@ export function useLetterState() {
     return { ...INITIAL_STATE, form: { ...DEFAULT_FORM, dt } };
   });
   const [lastModel, setLastModel] = useState<string | undefined>(undefined);
+  const [draftStatus, setDraftStatus] = useState<'fresh' | 'restored' | 'saved'>('fresh');
+  const saveTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const skipNextSave = useRef(true); // skip the initial mount save
+
+  // ── Restore draft once on mount (unless a template/preset deep-link is used) ──
+  useEffect(() => {
+    try {
+      const q = new URLSearchParams(window.location.search);
+      const hasDeepLink = q.get('preset') || q.get('template') || q.get('tpl');
+      if (hasDeepLink) return;
+      const raw = window.localStorage.getItem(DRAFT_KEY);
+      if (!raw) return;
+      const draft = JSON.parse(raw);
+      if (draft && typeof draft === 'object' && draft.form) {
+        setState(s => ({ ...s, ...draft, form: { ...s.form, ...draft.form } }));
+        setDraftStatus('restored');
+      }
+    } catch { /* corrupted draft — start fresh */ }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // ── Autosave draft (debounced; logos/signatures excluded to stay under quota) ──
+  useEffect(() => {
+    if (skipNextSave.current) { skipNextSave.current = false; return; }
+    if (saveTimer.current) clearTimeout(saveTimer.current);
+    saveTimer.current = setTimeout(() => {
+      try {
+        const { logoL, logoR, sigUrl, ...rest } = state;
+        void logoL; void logoR; void sigUrl;
+        window.localStorage.setItem(DRAFT_KEY, JSON.stringify(rest));
+        setDraftStatus('saved');
+      } catch { /* quota or privacy mode — stay silent */ }
+    }, 1200);
+    return () => { if (saveTimer.current) clearTimeout(saveTimer.current); };
+  }, [state]);
+
+  const clearDraft = useCallback(() => {
+    try { window.localStorage.removeItem(DRAFT_KEY); } catch { /* noop */ }
+    setDraftStatus('fresh');
+  }, []);
+
+  // ── Start a fresh letter (clears draft + resets state) ──
+  const resetLetter = useCallback(() => {
+    try { window.localStorage.removeItem(DRAFT_KEY); } catch { /* noop */ }
+    const dt = new Date().toLocaleDateString('en-IN', { day: '2-digit', month: 'long', year: 'numeric' });
+    setState({ ...INITIAL_STATE, form: { ...DEFAULT_FORM, dt } });
+    setDraftStatus('fresh');
+  }, []);
 
   // ── Form field update ────────────────────────────────
   const updateForm = useCallback(<K extends keyof LetterForm>(key: K, value: LetterForm[K]) => {
@@ -187,6 +237,9 @@ export function useLetterState() {
   return {
     state,
     lastModel,
+    draftStatus,
+    clearDraft,
+    resetLetter,
     updateForm,
     setForm,
     setTemplate,

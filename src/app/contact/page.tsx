@@ -27,7 +27,7 @@ export default function ContactPage() {
  <Mail className="text-indigo-400 w-6 h-6" />
  </div>
  <h3 className="font-semibold mb-2">Email</h3>
- <p className="text-sm text-slate-600 dark:text-white/60">support@swinfosystems.com</p>
+ <p className="text-sm text-slate-600 dark:text-white/60">advsanket01@gmail.com</p>
  </div>
  
  <div className="bg-slate-50 dark:bg-white/5 p-6 rounded-2xl border border-slate-200 dark:border-white/10 text-center hover:bg-slate-100 dark:hover:bg-white/10 transition-colors">
@@ -43,7 +43,7 @@ export default function ContactPage() {
  <Globe className="text-cyan-400 w-6 h-6" />
  </div>
  <h3 className="font-semibold mb-2">Website</h3>
- <p className="text-sm text-slate-600 dark:text-white/60">www.swinfosystems.com</p>
+ <p className="text-sm text-slate-600 dark:text-white/60">swalekhani.vercel.app</p>
  </div>
  </div>
  
@@ -55,7 +55,7 @@ export default function ContactPage() {
  <h3 className="font-semibold text-slate-900 dark:text-white mb-2">Template requests</h3>
  <p className="text-slate-600 dark:text-white/60">
  Need a letterpad format for a profession, department, or use-case we don&apos;t cover yet?
- Write to <a href="mailto:support@swinfosystems.com" className="text-slate-700 dark:text-white/80 underline decoration-slate-300 dark:decoration-white/25 underline-offset-2 hover:text-slate-900 dark:hover:text-white ">support@swinfosystems.com</a> with
+ Write to <a href="mailto:advsanket01@gmail.com" className="text-slate-700 dark:text-white/80 underline decoration-slate-300 dark:decoration-white/25 underline-offset-2 hover:text-slate-900 dark:hover:text-white ">advsanket01@gmail.com</a> with
  the exact header details and we&apos;ll prioritise it in our template roadmap.
  </p>
  </div>
@@ -87,7 +87,7 @@ export default function ContactPage() {
  <h2 className="text-2xl font-semibold mb-4">Connect with us</h2>
  <p className="text-slate-600 dark:text-white/60 mb-6">For business inquiries and collaboration, reach out via our official channels.</p>
  <a 
- href="mailto:support@swinfosystems.com" 
+ href="mailto:advsanket01@gmail.com" 
  className="inline-flex items-center px-8 py-3 rounded-xl bg-white text-black font-semibold hover:bg-white/90 transition-all shadow-[0_0_20px_rgba(255,255,255,0.2)]"
  >
  Send an Email

@@ -14,7 +14,7 @@ export default function SoftwareAppSchema() {
  "author": {
  "@type": "Organization",
  "name": "SW InfoSystems",
- "url": "https://www.swinfosystems.com"
+ "url": "https://swalekhani.vercel.app"
  },
  "offers": {
  "@type": "Offer",

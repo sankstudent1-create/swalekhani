@@ -407,11 +407,11 @@ export default function TemplatesGalleryPage() {
         )}
 
         {/* Bottom Educational Banner */}
-        <div className="mt-16 p-8 rounded-3xl bg-gradient-to-r from-white/[0.03] via-white/[0.05] to-white/[0.03] border border-slate-200">
+        <div className="mt-16 p-8 rounded-3xl bg-white border border-slate-200 shadow-sm">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-center md:text-left">
             <div className="space-y-2">
               <h4 className="text-sm font-semibold text-slate-900 flex items-center justify-center md:justify-start gap-2">
-                <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+                <CheckCircle2 className="w-4 h-4 text-emerald-600" />
                 <span>Statutory Compliance</span>
               </h4>
               <p className="text-xs text-slate-500 leading-relaxed">
@@ -420,7 +420,7 @@ export default function TemplatesGalleryPage() {
             </div>
             <div className="space-y-2">
               <h4 className="text-sm font-semibold text-slate-900 flex items-center justify-center md:justify-start gap-2">
-                <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+                <CheckCircle2 className="w-4 h-4 text-emerald-600" />
                 <span>Devanagari Bilingual</span>
               </h4>
               <p className="text-xs text-slate-500 leading-relaxed">
@@ -429,7 +429,7 @@ export default function TemplatesGalleryPage() {
             </div>
             <div className="space-y-2">
               <h4 className="text-sm font-semibold text-slate-900 flex items-center justify-center md:justify-start gap-2">
-                <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+                <CheckCircle2 className="w-4 h-4 text-emerald-600" />
                 <span>Print-Ready Vector PDF</span>
               </h4>
               <p className="text-xs text-slate-500 leading-relaxed">
@@ -437,6 +437,22 @@ export default function TemplatesGalleryPage() {
               </p>
             </div>
           </div>
+        </div>
+
+        {/* Request a Template CTA */}
+        <div className="mt-10 p-8 rounded-3xl bg-gradient-to-br from-brand-orange/10 via-white to-brand-sky/10 border border-slate-200 text-center">
+          <h3 className="text-xl sm:text-2xl font-heading font-bold text-slate-900 mb-2">
+            Need a letterhead for your profession?
+          </h3>
+          <p className="text-sm text-slate-500 max-w-lg mx-auto mb-5">
+            Tell us your profession or business type and we will add a tailored template to the gallery.
+          </p>
+          <a
+            href="/contact"
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-slate-900 text-white text-sm font-semibold hover:bg-slate-800 transition-all"
+          >
+            Request a Template
+          </a>
         </div>
 
       </div>

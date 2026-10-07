@@ -104,7 +104,7 @@ export default function RtiApplicationPage() {
 
         {/* Hero Header */}
         <div className="mb-10">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 text-xs font-semibold uppercase tracking-wider mb-4">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-cyan-500/10 border border-cyan-500/25 text-cyan-700 text-xs font-semibold uppercase tracking-wider mb-4">
             <Scale className="w-3.5 h-3.5" />
             <span>Right to Information Act, 2005</span>
           </div>

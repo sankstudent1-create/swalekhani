@@ -172,7 +172,7 @@ export default function FormatsIndexPage() {
 
         {/* Hero Header */}
         <div className="text-center max-w-3xl mx-auto mb-12">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-semibold uppercase tracking-wider mb-4">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/25 text-emerald-700 text-xs font-semibold uppercase tracking-wider mb-4">
             <Layers className="w-3.5 h-3.5" />
             <span>Statutory & Administrative Standard Formats</span>
           </div>
@@ -239,7 +239,7 @@ export default function FormatsIndexPage() {
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-[#0d1017] via-[#0d1017]/40 to-transparent"></div>
                     <div className="absolute top-3.5 right-3.5">
-                      <span className="text-[10px] font-bold px-2.5 py-1 rounded-full border border-slate-200 bg-black/70 backdrop-blur-md text-emerald-300 uppercase tracking-wide shadow-md">
+                      <span className="text-[10px] font-bold px-2.5 py-1 rounded-full border border-slate-200 bg-black/70 backdrop-blur-md text-emerald-700 uppercase tracking-wide shadow-md">
                         {fmt.badge}
                       </span>
                     </div>
@@ -249,7 +249,7 @@ export default function FormatsIndexPage() {
                     <div className="w-12 h-12 rounded-2xl bg-white/[0.05] border border-slate-200 flex items-center justify-center">
                       <Icon className="w-6 h-6 text-emerald-400" />
                     </div>
-                    <span className="text-[10px] font-semibold px-2.5 py-1 rounded-full border border-emerald-500/30 bg-emerald-500/10 text-emerald-300 uppercase tracking-wide">
+                    <span className="text-[10px] font-semibold px-2.5 py-1 rounded-full border border-emerald-500/30 bg-emerald-500/10 text-emerald-700 uppercase tracking-wide">
                       {fmt.badge}
                     </span>
                   </div>
@@ -263,7 +263,7 @@ export default function FormatsIndexPage() {
                       </span>
                     </div>
 
-                    <h3 className="text-lg font-heading font-bold text-slate-900 group-hover:text-emerald-300 transition-colors">
+                    <h3 className="text-lg font-heading font-bold text-slate-900 group-hover:text-emerald-700 transition-colors">
                       {fmt.title}
                     </h3>
 
@@ -294,7 +294,7 @@ export default function FormatsIndexPage() {
                         </Link>
                         <Link
                           href={fmt.generatorUrl}
-                          className="py-2.5 px-4 rounded-xl bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 text-xs font-semibold border border-emerald-500/30 text-center transition-all flex items-center justify-center gap-1.5"
+                          className="py-2.5 px-4 rounded-xl bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-700 text-xs font-semibold border border-emerald-500/30 text-center transition-all flex items-center justify-center gap-1.5"
                         >
                           <Sparkles className="w-3.5 h-3.5" />
                           <span>Draft</span>
@@ -303,7 +303,7 @@ export default function FormatsIndexPage() {
                     ) : (
                       <Link
                         href={fmt.generatorUrl}
-                        className="w-full py-2.5 px-4 rounded-xl bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 text-xs font-semibold border border-emerald-500/30 text-center transition-all flex items-center justify-center gap-1.5"
+                        className="w-full py-2.5 px-4 rounded-xl bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-700 text-xs font-semibold border border-emerald-500/30 text-center transition-all flex items-center justify-center gap-1.5"
                       >
                         <Sparkles className="w-3.5 h-3.5" />
                         <span>Open in Studio & Draft</span>

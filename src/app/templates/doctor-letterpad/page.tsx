@@ -100,7 +100,7 @@ export default function DoctorLetterpadPage() {
 
         {/* Hero Header */}
         <div className="mb-10">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-rose-500/10 border border-rose-500/20 text-rose-400 text-xs font-semibold uppercase tracking-wider mb-4">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-rose-500/10 border border-rose-500/25 text-rose-700 text-xs font-semibold uppercase tracking-wider mb-4">
             <Stethoscope className="w-3.5 h-3.5" />
             <span>Healthcare & Medical Compliance</span>
           </div>
@@ -188,7 +188,7 @@ export default function DoctorLetterpadPage() {
               <div className="flex justify-between items-start border-b border-slate-200 pb-4 mb-4">
                 <div>
                   <h4 className="text-lg font-bold text-slate-900 tracking-wide">DR. AARAV SHARMA, MBBS, MD (MEDICINE)</h4>
-                  <p className="text-xs text-rose-300">Consultant Physician & Cardiologist</p>
+                  <p className="text-xs text-rose-700">Consultant Physician & Cardiologist</p>
                   <p className="text-xs text-slate-500">Reg. No: MMC-2015-08-3421 | CareWell Specialty Clinic</p>
                 </div>
                 <div className="text-right text-xs text-slate-500">

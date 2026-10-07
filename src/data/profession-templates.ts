@@ -306,7 +306,7 @@ export const PROFESSION_TEMPLATES: Record<string, ProfessionTemplate> = {
     fields: [
       { id: 'name', label: 'Institute Name', placeholder: 'e.g. Zenith Academy of Sciences', defaultValue: 'Zenith Academy of Sciences' },
       { id: 'subTitle', label: 'Course Offerings / Tagline', placeholder: 'IIT-JEE | NEET-UG | Foundation & Olympiads', defaultValue: 'Premier Institute for IIT-JEE, NEET-UG & Foundation Courses' },
-      { id: 'regNo', label: 'Govt / MSME Reg. No.', placeholder: 'e.g. Reg. No. MH/PUN/2019/00482', defaultValue: 'Regd. Under MSME: UDYAM-MH-26-0048192' },
+      { id: 'regNo', label: 'MSME / Registration No.', placeholder: 'e.g. UDYAM-MH-26-0048192', defaultValue: 'Regd. Under MSME: UDYAM-MH-26-0048192' },
       { id: 'branchAddress', label: 'Main Campus Address', placeholder: 'Campus Address, City, PIN', defaultValue: 'Central Campus: Knowledge Park, FC Road, Shivajinagar, Pune - 411005' },
       { id: 'phone', label: 'Student Helpline / Office', placeholder: '+91 20 2553 4400', defaultValue: '+91 20 2553 4400', type: 'tel' },
       { id: 'email', label: 'Admissions Email', placeholder: 'admissions@zenithacademy.in', defaultValue: 'info@zenithacademy.in', type: 'email' }
@@ -501,7 +501,7 @@ export const PROFESSION_TEMPLATES: Record<string, ProfessionTemplate> = {
     badge: '80G / 12A Compliant',
     targetKeyword: 'ngo letterhead format',
     shortDesc: 'Official letterhead format for NGOs, Non-Profit Organizations, Charitable Trusts, Foundations, and Societies with 80G, 12A, and NGO Darpan IDs.',
-    introText: 'Non-Governmental Organizations (NGOs), Section 8 Non-Profit Companies, and Charitable Public Trusts in India must maintain transparent stationery for donor acknowledgments, CSR grant applications, government representations, and tax exemption certificates. An official NGO letterhead must prominently display the Trust Registration Number, NITI Aayog NGO DARPAN Unique ID, Section 80G and 12A Income Tax Exemption approvals, and FCRA registration where applicable. Swalekhani provides compliant non-profit letterhead designs.',
+    introText: 'Non-Governmental Organizations (NGOs), Section 8 Non-Profit Companies, and Charitable Public Trusts in India must maintain transparent stationery for donor acknowledgments, CSR grant applications, and tax exemption certificates. A professional NGO letterhead must prominently display the Trust Registration Number, Section 80G and 12A Income Tax Exemption approvals, and FCRA registration where applicable. Swalekhani provides compliant non-profit letterhead designs.',
     theme: {
       primary: 'teal',
       primaryHex: '#0d9488',
@@ -553,7 +553,7 @@ export const PROFESSION_TEMPLATES: Record<string, ProfessionTemplate> = {
     ],
     formatGuide: [
       { title: 'Trust / Society Registration Details', rule: 'Must state Society Registration Act 1860 or Public Trust Act registration number.', importance: 'Legal Proof' },
-      { title: 'NITI Aayog NGO DARPAN ID', rule: 'Display Unique DARPAN ID for government grants and CSR eligibility.', importance: 'CSR Requirement' },
+      { title: 'Trust Registration & 80G Details', rule: 'Display trust registration number and 80G certification for donor confidence and CSR eligibility.', importance: 'CSR Requirement' },
       { title: 'Section 80G & 12A Approvals', rule: 'Quote 80G order numbers on all donor receipts and acknowledgments.', importance: 'Donor Tax Deduction' }
     ],
     faqs: [
@@ -571,7 +571,7 @@ export const PROFESSION_TEMPLATES: Record<string, ProfessionTemplate> = {
     badge: 'PWD / CPWD Registered',
     targetKeyword: 'contractor letterhead format',
     shortDesc: 'Heavy-duty commercial letterhead for Civil Contractors, Builders, Infrastructure Developers, Electrical Contractors, and PWD/CPWD Vendors.',
-    introText: 'Civil contractors, infrastructure developers, building contractors, and specialized engineering vendors require authoritative stationery for submitting government tender bids, technical bid quotations, work completion certificates, subcontractor agreements, and material procurement orders. A robust contractor letterhead features the company name, PWD / CPWD Contractor Class Registration, GSTIN, MSME Udyam ID, and engineering certifications. Swalekhani delivers high-clarity construction letterhead templates.',
+    introText: 'Civil contractors, infrastructure developers, building contractors, and specialized engineering vendors require authoritative stationery for submitting project bids, technical quotations, work completion certificates, subcontractor agreements, and material procurement orders. A robust contractor letterhead features the company name, contractor class registration, GSTIN, MSME Udyam ID, and engineering certifications. Swalekhani delivers high-clarity construction letterhead templates.',
     theme: {
       primary: 'amber',
       primaryHex: '#b45309',
@@ -582,7 +582,7 @@ export const PROFESSION_TEMPLATES: Record<string, ProfessionTemplate> = {
     },
     fields: [
       { id: 'name', label: 'Company / Firm Name', placeholder: 'e.g. Sahyadri Infracon & Developers', defaultValue: 'Sahyadri Infracon & Engineering Works' },
-      { id: 'subTitle', label: 'Contractor Category & Scope', placeholder: 'Govt. Approved Class-I Civil & Infra Contractor', defaultValue: 'Govt. Approved Class-I Civil, Road & Infrastructure Contractors' },
+      { id: 'subTitle', label: 'Contractor Category & Scope', placeholder: 'Class-I Civil & Infrastructure Contractor', defaultValue: 'Class-I Civil, Road & Infrastructure Contractors' },
       { id: 'pwdClass', label: 'PWD / CPWD / MES Class Reg.', placeholder: 'e.g. PWD Class-I (Super) Reg: PWD/MH/2021/448', defaultValue: 'PWD Maharashtra Class-I Reg. No: PWD/MH/2021/448' },
       { id: 'gstin', label: 'GSTIN Number', placeholder: 'e.g. 27AAGCS9912Q1ZN', defaultValue: 'GSTIN: 27AAGCS9912Q1ZN' },
       { id: 'address', label: 'Head Office Address', placeholder: 'Industrial Estate, City, PIN', defaultValue: 'Plot No. 18, MIDC Industrial Area, Satpur, Nashik - 422007' },
@@ -593,7 +593,7 @@ export const PROFESSION_TEMPLATES: Record<string, ProfessionTemplate> = {
     sampleLetters: [
       {
         title: 'Tender Quotation & Technical Bid Submission',
-        description: 'Official bid submission letter addressed to government executive engineers.',
+        description: 'Professional bid submission letter addressed to client project engineers and consultants.',
         recipient: 'To,\nThe Executive Engineer,\nPublic Works Division (PWD),\nCivil Lines, Nashik - 422001.',
         subject: 'SUBMISSION OF TECHNICAL & FINANCIAL BID FOR TENDER NO: PWD/NSK/ROAD/2026/08',
         fileNo: 'REF: SIEW/TENDER/2026/184',
@@ -603,7 +603,7 @@ export const PROFESSION_TEMPLATES: Record<string, ProfessionTemplate> = {
           '2. Earnest Money Deposit (EMD) of ₹2,50,000/- and tender fee have been submitted online vide Treasury Challan No. MH-990481.',
           '3. All required machinery ownership affidavits, asphalt batch mix plant certificates, and bar-chart work schedules are enclosed.'
         ],
-        signoff: 'Yours faithfully,\nFor Sahyadri Infracon & Engineering Works\n\n[Signature & Firm Seal]\nSanjay T. Deshmukh (Managing Partner)\nClass-I Govt. Contractor'
+        signoff: 'Yours faithfully,\nFor Sahyadri Infracon & Engineering Works\n\n[Signature & Firm Seal]\nSanjay T. Deshmukh (Managing Partner)\nClass-I Civil Contractor'
       },
       {
         title: 'Work Completion & Final Handover Certificate',
@@ -626,7 +626,7 @@ export const PROFESSION_TEMPLATES: Record<string, ProfessionTemplate> = {
     ],
     faqs: [
       { question: 'What details are required on a civil contractor letterhead?', answer: 'Contractor Name, Class Registration (PWD/CPWD/MES), GSTIN, MSME Udyam Number, Registered Office Address, Phone, and Email.' },
-      { question: 'Is this contractor format valid for government e-procurement tenders?', answer: 'Yes, the layout matches CPWD and State PWD technical bid submission standards.' }
+      { question: 'Is this contractor format suitable for tender bid submissions?', answer: 'Yes, the layout follows standard technical bid submission structure with firm credentials, work experience, and compliance declarations.' }
     ],
     relatedSlugs: ['real-estate-dealer', 'shop-letterpad', 'company-letterpad']
   },

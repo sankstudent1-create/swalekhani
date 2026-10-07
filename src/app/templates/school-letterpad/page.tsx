@@ -100,7 +100,7 @@ export default function SchoolLetterpadPage() {
 
         {/* Hero Header */}
         <div className="mb-10">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-semibold uppercase tracking-wider mb-4">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/25 text-emerald-700 text-xs font-semibold uppercase tracking-wider mb-4">
             <GraduationCap className="w-3.5 h-3.5" />
             <span>Academic & Institutional Format</span>
           </div>
@@ -186,7 +186,7 @@ export default function SchoolLetterpadPage() {
             </h3>
             <div className="p-6 rounded-2xl bg-white border border-slate-200 text-slate-800 text-sm leading-relaxed shadow-inner font-serif">
               <div className="text-center border-b border-slate-200 pb-4 mb-4">
-                <p className="text-xs text-amber-300 font-semibold">विद्या ददाति विनयं</p>
+                <p className="text-xs text-amber-700 font-semibold">विद्या ददाति विनयं</p>
                 <h4 className="text-lg font-bold text-slate-900 tracking-wide">DELHI MODEL PUBLIC ACADEMY</h4>
                 <p className="text-xs text-slate-500">(Affiliated to CBSE, New Delhi | Affiliation No: 2730198 | School Code: 85210)</p>
                 <p className="text-xs text-slate-500">Sector 12, Institutional Area, New Delhi - 110075 | Tel: 011-28080000</p>

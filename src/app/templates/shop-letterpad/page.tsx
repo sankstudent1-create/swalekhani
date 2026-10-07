@@ -100,7 +100,7 @@ export default function ShopLetterpadPage() {
 
         {/* Hero Header */}
         <div className="mb-10">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-amber-500/10 border border-amber-500/20 text-amber-400 text-xs font-semibold uppercase tracking-wider mb-4">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-amber-500/10 border border-amber-500/25 text-amber-700 text-xs font-semibold uppercase tracking-wider mb-4">
             <Store className="w-3.5 h-3.5" />
             <span>Retail & Commercial Trading</span>
           </div>
@@ -186,11 +186,11 @@ export default function ShopLetterpadPage() {
             </h3>
             <div className="p-6 rounded-2xl bg-white border border-slate-200 text-slate-800 text-sm leading-relaxed shadow-inner font-sans">
               <div className="text-center border-b border-slate-200 pb-4 mb-4">
-                <p className="text-xs text-amber-400 font-mono tracking-widest">|| श्री गणेशाय नमः ||</p>
+                <p className="text-xs text-amber-700 font-mono tracking-widest">|| श्री गणेशाय नमः ||</p>
                 <h4 className="text-lg font-bold text-slate-900 tracking-wide">SHREE GANESH COMMERCIAL TRADING CO.</h4>
                 <p className="text-xs text-slate-500">Wholesale & Retail Distributors | Electrical & Hardware Supplies</p>
                 <p className="text-xs text-slate-500">Shop No. 18, Central Market Yard, Pune - 411002 | GSTIN: 27AABCS1234F1Z8</p>
-                <p className="text-xs text-amber-300/80">Ph: +91-20-24450000 | Mob: +91-9822012345</p>
+                <p className="text-xs text-amber-700/80">Ph: +91-20-24450000 | Mob: +91-9822012345</p>
               </div>
 
               <div className="flex justify-between text-xs text-slate-500 mb-4 font-mono">

@@ -37,11 +37,11 @@ export default function GeneratorGuide() {
       <div className="mb-10 p-4 sm:p-5 rounded-2xl bg-amber-500/[0.07] border border-amber-500/25 flex items-start gap-3.5">
         <ShieldAlert className="w-5 h-5 text-amber-400 flex-shrink-0 mt-0.5" />
         <div className="text-sm leading-relaxed">
-          <p className="font-semibold text-amber-300 mb-1">Drafting aid — always review before sending</p>
+          <p className="font-semibold text-amber-700 mb-1">Drafting aid — always review before sending</p>
           <p className="text-slate-500">
             Swalekhani Studio creates <strong className="text-slate-700">AI-assisted drafts</strong> for your review.
             Always verify names, dates, amounts, and tone before printing or sending any letter.{' '}
-            <Link href="/disclaimer" className="underline decoration-amber-400/50 underline-offset-2 hover:text-amber-300">Read the Disclaimer</Link>.
+            <Link href="/disclaimer" className="underline decoration-amber-400/50 underline-offset-2 hover:text-amber-700">Read the Disclaimer</Link>.
           </p>
         </div>
       </div>

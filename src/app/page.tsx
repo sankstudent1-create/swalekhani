@@ -89,7 +89,7 @@ const FEATURED_PRESETS = [
     image: '/illustrations/leave-3d.jpg',
     color: 'from-emerald-500/20 to-teal-600/10',
     border: 'border-emerald-500/30',
-    accent: 'text-emerald-400'
+    accent: 'text-emerald-600'
   },
   {
     id: 'police',
@@ -112,7 +112,7 @@ const FEATURED_PRESETS = [
     icon: Building2,
     color: 'from-sky-500/20 to-blue-600/10',
     border: 'border-sky-500/30',
-    accent: 'text-sky-400'
+    accent: 'text-sky-600'
   },
   {
     id: 'doctor',
@@ -123,7 +123,7 @@ const FEATURED_PRESETS = [
     icon: Stethoscope,
     color: 'from-cyan-500/20 to-teal-600/10',
     border: 'border-cyan-500/30',
-    accent: 'text-cyan-400'
+    accent: 'text-cyan-600'
   }
 ];
 
@@ -211,6 +211,21 @@ export default function HomePage() {
             </Link>
           </div>
 
+          {/* Trust Badge Strip */}
+          <div className="flex flex-wrap items-center justify-center gap-2.5 sm:gap-3 mb-14">
+            {[
+              'Free forever',
+              'No sign-up needed',
+              'Private — runs in your browser',
+              'Unwatermarked PDF export',
+            ].map((label, i) => (
+              <span key={i} className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-white border border-slate-200 text-xs font-semibold text-slate-600 shadow-sm">
+                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
+                {label}
+              </span>
+            ))}
+          </div>
+
           {/* 4 Core Entry Gateway Cards */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 text-left max-w-6xl mx-auto">
             
@@ -282,13 +297,13 @@ export default function HomePage() {
               <div className="w-10 h-10 rounded-xl bg-emerald-500/15 border border-emerald-500/20 flex items-center justify-center mb-3 text-emerald-400">
                 <ShieldCheck className="w-5 h-5" />
               </div>
-              <h3 className="font-heading font-bold text-slate-900 text-base mb-1 group-hover:text-emerald-300 transition-colors">
+              <h3 className="font-heading font-bold text-slate-900 text-base mb-1 group-hover:text-emerald-700 transition-colors">
                 4. Statutory Formats
               </h3>
               <p className="text-xs text-slate-500 leading-relaxed">
                 RTI applications, HR leave requests, Office Orders, Complaints & Legal notices.
               </p>
-              <div className="mt-3 flex items-center gap-1 text-xs font-semibold text-emerald-400">
+              <div className="mt-3 flex items-center gap-1 text-xs font-semibold text-emerald-600">
                 <span>Explore Formats</span>
                 <ChevronRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
               </div>
@@ -315,7 +330,7 @@ export default function HomePage() {
               Experience Instant AI Drafting in Action
             </h2>
             <p className="text-sm sm:text-base text-slate-500">
-              Select a real-world scenario or type your prompt to see how Swalekhani structures formal business and official letters.
+              Select a real-world scenario or type your prompt to see how Swalekhani structures formal business and personal letters.
             </p>
           </div>
 
@@ -619,7 +634,7 @@ export default function HomePage() {
             ].map((feature, i) => {
               const Icon = feature.icon;
               return (
-                <div key={i} className="p-6 rounded-2xl bg-white border border-white/[0.05]">
+                <div key={i} className="p-6 rounded-2xl bg-white border border-slate-200 shadow-sm">
                   <Icon className="w-6 h-6 text-brand-orange mb-3" />
                   <h4 className="font-heading font-semibold text-slate-900 text-base mb-1">{feature.title}</h4>
                   <p className="text-xs text-slate-500 leading-relaxed">{feature.desc}</p>
@@ -628,6 +643,36 @@ export default function HomePage() {
             })}
           </div>
 
+        </div>
+      </section>
+
+      {/* SECTION: How It Works */}
+      <section className="relative z-10 py-16 sm:py-20 border-t border-slate-200">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center max-w-2xl mx-auto mb-12">
+            <h2 className="text-3xl sm:text-4xl font-heading font-bold text-slate-900 tracking-tight mb-3">
+              From Blank Page to Signed PDF in 3 Steps
+            </h2>
+            <p className="text-sm sm:text-base text-slate-500">
+              No design skills needed. No software to install.
+            </p>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
+            {[
+              { step: '1', Icon: Layers, title: 'Pick a template', desc: 'Choose from 14+ corporate, legal, medical, and personal letterhead layouts — or start blank with your own logo.' },
+              { step: '2', Icon: Sparkles, title: 'Draft with AI', desc: 'Describe your letter in plain words (English, Hindi, or Marathi). The AI structures it with proper subject, references, and formal tone.' },
+              { step: '3', Icon: Printer, title: 'Export & print', desc: 'Preview on a live A4 canvas and export a crisp, unwatermarked vector PDF — ready to print, sign, or email.' },
+            ].map((h, i) => (
+              <div key={i} className="relative p-6 rounded-2xl bg-white border border-slate-200 shadow-sm">
+                <span className="absolute top-5 right-6 text-4xl font-extrabold text-slate-100 select-none">{h.step}</span>
+                <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-brand-orange/20 to-brand-pink/20 border border-brand-orange/25 flex items-center justify-center mb-4">
+                  <h.Icon className="w-5 h-5 text-brand-orange" />
+                </div>
+                <h3 className="font-heading font-bold text-slate-900 text-lg mb-1.5">{h.title}</h3>
+                <p className="text-sm text-slate-500 leading-relaxed">{h.desc}</p>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 
@@ -679,11 +724,11 @@ export default function HomePage() {
       {/* SECTION: Bottom CTA Banner */}
       <section className="relative z-10 py-16 sm:py-24 border-t border-slate-200">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="p-8 sm:p-14 rounded-3xl bg-gradient-to-br from-brand-orange/20 via-brand-pink/15 to-brand-sky/20 border border-white/[0.15] text-center shadow-2xl relative overflow-hidden">
+          <div className="p-8 sm:p-14 rounded-3xl bg-gradient-to-br from-brand-orange/20 via-brand-pink/15 to-brand-sky/20 border border-slate-200 text-center shadow-2xl relative overflow-hidden">
             <div className="absolute top-0 right-0 w-64 h-64 bg-slate-50 rounded-full blur-3xl pointer-events-none"></div>
             
             <h3 className="text-3xl sm:text-4xl font-heading font-extrabold text-slate-900 mb-4 tracking-tight">
-              Ready to Draft Your Official Letter?
+              Ready to Draft Your Professional Letter?
             </h3>
             
             <p className="text-base sm:text-lg text-slate-600 max-w-xl mx-auto mb-8 font-normal">

@@ -67,12 +67,12 @@ export const DEFAULT_FORM: LetterForm = {
 export const DEFAULT_LOGO_POS: LogoPos = { x: 42, y: 14, w: 68, placed: false };
 
 export const TEMPLATE_INFO: Record<TemplateType, { label: string; desc: string }> = {
-  A: { label: 'Type-A · Classic DoP / Dak Bhavan', desc: 'FileNo left · Logo right · Stars divider' },
-  B: { label: 'Type-B · PM / Senior Official',     desc: 'Emblem center · Address top-right' },
-  C: { label: 'Type-C · MP / Sansad Member',       desc: 'Dual logos · Bilingual name center' },
-  D: { label: 'Type-D · MLA / State Assembly',     desc: 'Emblem left · Prominent name' },
-  E: { label: 'Type-E · Office Memorandum (OM)',   desc: 'No To-block · Wide distribution' },
-  F: { label: 'Type-F · Circular / General Order', desc: 'CIRCULAR badge · Numbered' },
+  A: { label: 'Type-A · Classic Corporate', desc: 'RefNo left · Logo right · Divider' },
+  B: { label: 'Type-B · Executive',         desc: 'Logo center · Address top-right' },
+  C: { label: 'Type-C · Dual Brand',        desc: 'Dual logos · Bilingual name center' },
+  D: { label: 'Type-D · Personal Name',      desc: 'Logo left · Prominent name' },
+  E: { label: 'Type-E · Office Memo',        desc: 'No To-block · Wide distribution' },
+  F: { label: 'Type-F · Circular / Notice',  desc: 'NOTICE badge · Numbered' },
 };
 
 export const FONT_OPTIONS: Array<{ key: string; label: string; style: CSSProperties }> = [

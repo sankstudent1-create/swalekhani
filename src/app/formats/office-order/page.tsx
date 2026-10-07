@@ -185,7 +185,7 @@ export default function OfficeOrderPage() {
             </h3>
             <div className="p-6 rounded-2xl bg-white border border-slate-200 text-slate-800 text-sm leading-relaxed shadow-inner font-serif">
               <div className="text-center border-b border-slate-200 pb-4 mb-4">
-                <p className="text-xs text-amber-300 font-semibold">APEX ENTERPRISE SOLUTIONS PVT. LTD.</p>
+                <p className="text-xs text-amber-700 font-semibold">APEX ENTERPRISE SOLUTIONS PVT. LTD.</p>
                 <h4 className="text-base font-bold text-slate-900 tracking-wide">HUMAN RESOURCES DEPARTMENT</h4>
                 <p className="text-xs text-slate-500">Level 5, Cyber Park, Bengaluru - 560100</p>
               </div>
@@ -221,7 +221,7 @@ export default function OfficeOrderPage() {
                 <ol className="list-decimal pl-5 space-y-1 text-xs">
                   <li>Officer concerned.</li>
                   <li>Drawing and Disbursing Officer (DDO), Administration Division.</li>
-                  <li>Pay & Accounts Office (PAO), North Block.</li>
+                  <li>Accounts & Finance Department, Head Office.</li>
                   <li>Personal File / Guard File.</li>
                 </ol>
               </div>

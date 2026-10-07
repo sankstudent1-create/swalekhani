@@ -73,8 +73,8 @@ export default function ShareButtons({ title, url, description }: ShareButtonsPr
         >
           {copied ? (
             <>
-              <Check className="w-3.5 h-3.5 text-emerald-400" />
-              <span className="text-emerald-400">Copied!</span>
+              <Check className="w-3.5 h-3.5 text-emerald-600" />
+              <span className="text-emerald-600">Copied!</span>
             </>
           ) : (
             <>

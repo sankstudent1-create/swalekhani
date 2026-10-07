@@ -69,13 +69,10 @@
   min-height: calc(100vh - 52px);
 }
 
-/* ── Sidebar column is scrollable on its own ─────────────────── */
+/* ── Sidebar column scrolls with the page (no trapped scroll) ── */
 .sidebarCol {
-  height: calc(100vh - 52px);
-  overflow-y: auto;
-  position: sticky;
-  top: 52px;
   background: var(--st-bg);
+  border-right: 1px solid var(--st-bar-border);
 }
 
 /* ── Preview area ────────────────────────────────────────────── */
@@ -86,7 +83,6 @@
   align-items: center;
   padding: 20px 16px 60px;
   gap: 12px;
-  overflow-y: auto;
   min-height: calc(100vh - 52px);
 }
 

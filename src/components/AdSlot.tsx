@@ -47,8 +47,8 @@ export default function AdSlot({ slotKey, label, variant = "banner" }: AdSlotPro
  <section className="mx-auto w-full max-w-7xl px-4 md:px-6">
  <div className={`my-4 overflow-hidden rounded-2xl border border-slate-200 dark:border-white/10 bg-white/[0.03] dark:bg-[#0f131d]/[0.03] p-3 ${minHeight}`}>
  <div className="mb-3 flex items-center justify-between gap-3 border-b border-slate-200 dark:border-white/10 pb-2">
- <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-400 dark:text-white/40">Ad Slot</p>
- <p className="text-[11px] uppercase tracking-[0.18em] text-slate-400 dark:text-white/40">{label}</p>
+ <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500 dark:text-white/60">Ad Slot</p>
+ <p className="text-[11px] uppercase tracking-[0.18em] text-slate-500 dark:text-white/60">{label}</p>
  </div>
  {client && slot ? (
  <ins

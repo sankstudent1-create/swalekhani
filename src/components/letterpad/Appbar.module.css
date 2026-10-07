@@ -1,127 +1,134 @@
-/* components/letterpad/Appbar.module.css */
+/* ── Swalekhani Studio · Appbar ──────────────────────────────
+   Fresh design: clean, confident, fully theme-aware. */
 
-/* ── Full bar ──────────────────────────────────────────────── */
 .bar {
   background: var(--st-bar-bg);
-  backdrop-filter: blur(12px);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
   border-bottom: 1px solid var(--st-bar-border);
   color: var(--st-text);
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: env(safe-area-inset-top, 0px) 14px 0 14px;
-  height: calc(52px + env(safe-area-inset-top, 0px));
+  padding: env(safe-area-inset-top, 0px) 16px 0 16px;
+  height: calc(56px + env(safe-area-inset-top, 0px));
   position: sticky;
   top: 0;
   z-index: 500;
   box-shadow: var(--st-bar-shadow);
-  gap: 8px;
+  gap: 10px;
 }
 
-/* ── Left group ─────────────────────────────────────────────── */
+/* ── Left: brand ── */
 .left {
   display: flex;
   align-items: center;
-  gap: 8px;
-  min-width: 0;        /* allow flex shrink */
+  gap: 10px;
+  min-width: 0;
   flex: 1;
 }
 
 .logo {
-  width: auto; height: 28px;
-  padding: 0 6px;
+  width: 34px; height: 34px;
   background: var(--st-accent);
-  border-radius: 4px;
-  display: flex; align-items: center; justify-content: center; gap: 2px;
-  font-family: 'Libre Baskerville', serif;
-  font-weight: 700; font-size: 14px; color: #fff;
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  color: #fff;
   flex-shrink: 0;
+  box-shadow: 0 3px 10px var(--st-accent-soft);
 }
 .brandText { display: flex; align-items: baseline; gap: 8px; min-width: 0; }
-.name { font-size: 14px; font-weight: 700; line-height: 1.1; white-space: nowrap; }
+.name { font-size: 15px; font-weight: 800; line-height: 1.1; white-space: nowrap; letter-spacing: -0.01em; }
 .swalekhaniName {
   font-family: var(--font-outfit), sans-serif;
   color: var(--st-text);
 }
 .marathiName {
   font-family: var(--font-yatra), serif;
-  color: var(--st-text);
+  color: var(--st-muted);
   font-size: 16px;
   transform: translateY(2px);
 }
-.tag  {
+.tag {
   background: var(--st-chip-bg);
   border: 1px solid var(--st-chip-border);
-  border-radius: 3px;
-  padding: 2px 7px;
-  font-size: 8.5px;
+  border-radius: 20px;
+  padding: 3px 10px;
+  font-size: 10px;
+  font-weight: 700;
   color: var(--st-chip-text);
-  letter-spacing: .05em;
+  letter-spacing: .06em;
   text-transform: uppercase;
   white-space: nowrap;
   flex-shrink: 0;
 }
 
-/* Model badge — shows which Groq model was used */
+/* Model badge */
 .modelBadge {
   background: var(--st-accent-soft);
   border: 1px solid var(--st-accent);
-  border-radius: 3px;
-  padding: 2px 7px;
-  font-size: 7px;
+  border-radius: 20px;
+  padding: 3px 10px;
+  font-size: 10px;
   font-family: 'DM Mono', monospace;
+  font-weight: 700;
   color: var(--st-accent);
-  letter-spacing: .04em;
+  letter-spacing: .03em;
   white-space: nowrap;
   flex-shrink: 0;
-  max-width: 120px;
+  max-width: 140px;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
-/* ── Right action buttons ───────────────────────────────────── */
+/* ── Right: actions ── */
 .right {
   display: flex;
-  gap: 4px;
+  gap: 6px;
   align-items: center;
   flex-shrink: 0;
 }
 .btn {
   display: inline-flex;
   align-items: center;
-  gap: 4px;
-  padding: 5px 10px;
-  border-radius: 3px;
+  gap: 5px;
+  padding: 7px 13px;
+  border-radius: 10px;
   font-family: 'DM Sans', sans-serif;
-  font-size: 11px;
-  font-weight: 600;
+  font-size: 12px;
+  font-weight: 700;
   cursor: pointer;
   border: none;
-  transition: all .13s;
+  transition: all .15s;
   white-space: nowrap;
 }
-.btnGhost { background: transparent; color: var(--st-text); border: 1.5px solid var(--st-chip-border); }
-.btnGhost:hover { background: var(--st-chip-bg); border-color: var(--st-border-strong); }
-.btnSaffron { background: var(--st-accent); color: #fff; }
-.btnSaffron:hover { filter: brightness(0.92); }
+.btn:disabled { opacity: .45; cursor: not-allowed; }
+.btnGhost {
+  background: transparent;
+  color: var(--st-muted);
+  border: 1.5px solid var(--st-border);
+}
+.btnGhost:hover { color: var(--st-text); border-color: var(--st-border-strong); background: var(--st-chip-bg); }
+.btnSaffron {
+  background: var(--st-accent);
+  color: #fff;
+  box-shadow: 0 3px 12px var(--st-accent-soft);
+}
+.btnSaffron:hover { filter: brightness(1.07); transform: translateY(-1px); }
+.btnSaffron:active { transform: translateY(0); }
 
-/* ── Responsive: hide non-essential items ───────────────────── */
-
-/* Tablet: hide "Back to Tools" text label, keep icon */
+/* ── Responsive ── */
 @media (max-width: 900px) {
-  .tag     { display: none; }
+  .tag { display: none; }
 }
 
-/* Mobile: collapsed bar */
 @media (max-width: 640px) {
-  .bar { padding: 0 8px; height: 48px; gap: 6px; }
-  .logo { width: 24px; height: 24px; font-size: 10px; }
-  .name { font-size: 11px; }
-  .modelBadge { max-width: 70px; font-size: 6.5px; padding: 2px 4px; border-radius: 2px; }
-  .btn  { padding: 4px 8px; font-size: 10px; }
-
-  /* On mobile hide Endorse/Copy buttons — they're in the Edit tab sidebar */
+  .bar { padding: 0 10px; height: 52px; gap: 8px; }
+  .logo { width: 30px; height: 30px; border-radius: 8px; }
+  .name { font-size: 13px; }
+  .marathiName { display: none; }
+  .modelBadge { max-width: 84px; font-size: 9px; padding: 2px 8px; }
+  .btn { padding: 6px 10px; font-size: 11px; }
   .btnGhost { display: none; }
-  /* But keep Print and PDF */
   .btnPrint, .btnSaffron { display: inline-flex !important; }
 }

@@ -90,7 +90,7 @@ export default function ShopLetterpadPage() {
 
  <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
  {/* Breadcrumb */}
- <nav className="flex items-center gap-2 text-xs font-medium text-slate-500 dark:text-white/60 mb-6">
+ <nav className="flex items-center gap-2 text-xs font-medium text-slate-600 dark:text-white/60 mb-6">
  <Link href="/" className="hover:text-slate-900 dark:hover:text-white transition-colors">Home</Link>
  <span>/</span>
  <Link href="/tools" className="hover:text-slate-900 dark:hover:text-white transition-colors">Templates</Link>
@@ -171,7 +171,7 @@ export default function ShopLetterpadPage() {
  <CheckCircle2 className="w-5 h-5 text-amber-400 flex-shrink-0 mt-0.5" />
  <div>
  <h4 className="text-sm font-semibold text-slate-900 dark:text-white">{item.title}</h4>
- <p className="text-xs text-slate-500 dark:text-white/60 mt-0.5">{item.desc}</p>
+ <p className="text-xs text-slate-600 dark:text-white/60 mt-0.5">{item.desc}</p>
  </div>
  </div>
  ))}
@@ -188,12 +188,12 @@ export default function ShopLetterpadPage() {
  <div className="text-center border-b border-slate-200 dark:border-white/10 pb-4 mb-4">
  <p className="text-xs text-amber-700 font-mono tracking-widest">|| श्री गणेशाय नमः ||</p>
  <h4 className="text-lg font-bold text-slate-900 dark:text-white tracking-wide">SHREE GANESH COMMERCIAL TRADING CO.</h4>
- <p className="text-xs text-slate-500 dark:text-white/60">Wholesale & Retail Distributors | Electrical & Hardware Supplies</p>
- <p className="text-xs text-slate-500 dark:text-white/60">Shop No. 18, Central Market Yard, Pune - 411002 | GSTIN: 27AABCS1234F1Z8</p>
+ <p className="text-xs text-slate-600 dark:text-white/60">Wholesale & Retail Distributors | Electrical & Hardware Supplies</p>
+ <p className="text-xs text-slate-600 dark:text-white/60">Shop No. 18, Central Market Yard, Pune - 411002 | GSTIN: 27AABCS1234F1Z8</p>
  <p className="text-xs text-amber-700/80">Ph: +91-20-24450000 | Mob: +91-9822012345</p>
  </div>
 
- <div className="flex justify-between text-xs text-slate-500 dark:text-white/60 mb-4 font-mono">
+ <div className="flex justify-between text-xs text-slate-600 dark:text-white/60 mb-4 font-mono">
  <span>Ref: SGT/QTN/2026/412</span>
  <span>Date: 23-Sep-2026</span>
  </div>
@@ -213,10 +213,10 @@ export default function ShopLetterpadPage() {
  </div>
 
  <div className="flex justify-between items-end text-xs pt-6">
- <p className="text-slate-400 dark:text-white/40">Terms: 18% GST Extra | Delivery within 48 Hrs</p>
+ <p className="text-slate-500 dark:text-white/60">Terms: 18% GST Extra | Delivery within 48 Hrs</p>
  <div className="text-right">
  <p className="font-semibold text-slate-900 dark:text-white">For Shree Ganesh Commercial Trading Co.</p>
- <p className="text-slate-500 dark:text-white/60">Authorized Proprietor</p>
+ <p className="text-slate-600 dark:text-white/60">Authorized Proprietor</p>
  </div>
  </div>
  </div>
@@ -245,7 +245,7 @@ export default function ShopLetterpadPage() {
  <h3 className="text-2xl sm:text-3xl font-heading font-bold text-slate-900 dark:text-white mb-3">
  Build Your Shop Letterhead Online
  </h3>
- <p className="text-sm sm:text-base text-slate-500 dark:text-white/60 max-w-xl mx-auto mb-6">
+ <p className="text-sm sm:text-base text-slate-600 dark:text-white/60 max-w-xl mx-auto mb-6">
  Enter your shop name, GST number, address, and generate commercial quotations with AI in seconds.
  </p>
  <Link

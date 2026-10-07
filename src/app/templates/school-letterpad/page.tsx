@@ -90,7 +90,7 @@ export default function SchoolLetterpadPage() {
 
  <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
  {/* Breadcrumb */}
- <nav className="flex items-center gap-2 text-xs font-medium text-slate-500 dark:text-white/60 mb-6">
+ <nav className="flex items-center gap-2 text-xs font-medium text-slate-600 dark:text-white/60 mb-6">
  <Link href="/" className="hover:text-slate-900 dark:hover:text-white transition-colors">Home</Link>
  <span>/</span>
  <Link href="/tools" className="hover:text-slate-900 dark:hover:text-white transition-colors">Templates</Link>
@@ -171,7 +171,7 @@ export default function SchoolLetterpadPage() {
  <CheckCircle2 className="w-5 h-5 text-emerald-400 flex-shrink-0 mt-0.5" />
  <div>
  <h4 className="text-sm font-semibold text-slate-900 dark:text-white">{item.title}</h4>
- <p className="text-xs text-slate-500 dark:text-white/60 mt-0.5">{item.desc}</p>
+ <p className="text-xs text-slate-600 dark:text-white/60 mt-0.5">{item.desc}</p>
  </div>
  </div>
  ))}
@@ -188,11 +188,11 @@ export default function SchoolLetterpadPage() {
  <div className="text-center border-b border-slate-200 dark:border-white/10 pb-4 mb-4">
  <p className="text-xs text-amber-700 font-semibold">विद्या ददाति विनयं</p>
  <h4 className="text-lg font-bold text-slate-900 dark:text-white tracking-wide">DELHI MODEL PUBLIC ACADEMY</h4>
- <p className="text-xs text-slate-500 dark:text-white/60">(Affiliated to CBSE, New Delhi | Affiliation No: 2730198 | School Code: 85210)</p>
- <p className="text-xs text-slate-500 dark:text-white/60">Sector 12, Institutional Area, New Delhi - 110075 | Tel: 011-28080000</p>
+ <p className="text-xs text-slate-600 dark:text-white/60">(Affiliated to CBSE, New Delhi | Affiliation No: 2730198 | School Code: 85210)</p>
+ <p className="text-xs text-slate-600 dark:text-white/60">Sector 12, Institutional Area, New Delhi - 110075 | Tel: 011-28080000</p>
  </div>
 
- <div className="flex justify-between text-xs text-slate-500 dark:text-white/60 mb-4 font-mono">
+ <div className="flex justify-between text-xs text-slate-600 dark:text-white/60 mb-4 font-mono">
  <span>Ref: DMPA/BON/2026/1042</span>
  <span>Date: 23-09-2026</span>
  </div>
@@ -211,10 +211,10 @@ export default function SchoolLetterpadPage() {
  </p>
 
  <div className="flex justify-between items-end text-xs pt-4">
- <p className="text-slate-400 dark:text-white/40">[School Round Seal]</p>
+ <p className="text-slate-500 dark:text-white/60">[School Round Seal]</p>
  <div className="text-right">
  <p className="font-bold text-slate-900 dark:text-white">Principal</p>
- <p className="text-slate-500 dark:text-white/60">Delhi Model Public Academy</p>
+ <p className="text-slate-600 dark:text-white/60">Delhi Model Public Academy</p>
  </div>
  </div>
  </div>
@@ -243,7 +243,7 @@ export default function SchoolLetterpadPage() {
  <h3 className="text-2xl sm:text-3xl font-heading font-bold text-slate-900 dark:text-white mb-3">
  Create Your School Letterhead Now
  </h3>
- <p className="text-sm sm:text-base text-slate-500 dark:text-white/60 max-w-xl mx-auto mb-6">
+ <p className="text-sm sm:text-base text-slate-600 dark:text-white/60 max-w-xl mx-auto mb-6">
  Customize school name, affiliation numbers, logos, and issue certificates in print-ready PDF format.
  </p>
  <Link

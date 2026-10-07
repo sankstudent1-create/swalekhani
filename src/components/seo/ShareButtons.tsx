@@ -40,7 +40,7 @@ export default function ShareButtons({ title, url, description }: ShareButtonsPr
  </div>
  <div>
  <h4 className="text-sm font-semibold text-slate-900 dark:text-white">Share this Template</h4>
- <p className="text-xs text-slate-500 dark:text-white/60">Help colleagues & officers format official letters faster</p>
+ <p className="text-xs text-slate-600 dark:text-white/60">Help colleagues & officers format official letters faster</p>
  </div>
  </div>
 

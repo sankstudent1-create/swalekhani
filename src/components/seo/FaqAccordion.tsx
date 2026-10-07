@@ -54,7 +54,7 @@ export default function FaqAccordion({
  <h3 className="text-2xl sm:text-3xl font-heading font-bold text-slate-900 dark:text-white mb-2">
  {title}
  </h3>
- <p className="text-sm text-slate-500 dark:text-white/60">
+ <p className="text-sm text-slate-600 dark:text-white/60">
  {subtitle}
  </p>
  </div>
@@ -80,7 +80,7 @@ export default function FaqAccordion({
  {item.question}
  </span>
  <div className={`w-8 h-8 rounded-xl bg-white dark:bg-[#0f131d] border border-slate-200 dark:border-white/10 flex items-center justify-center flex-shrink-0 transition-transform duration-300 ${isOpen ? "rotate-180 bg-slate-100 " : ""}`}>
- <ChevronDown className="w-4 h-4 text-slate-500 dark:text-white/60" />
+ <ChevronDown className="w-4 h-4 text-slate-600 dark:text-white/60" />
  </div>
  </button>
 

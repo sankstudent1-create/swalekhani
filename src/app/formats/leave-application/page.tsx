@@ -94,7 +94,7 @@ export default function LeaveApplicationPage() {
 
  <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
  {/* Breadcrumb */}
- <nav className="flex items-center gap-2 text-xs font-medium text-slate-500 dark:text-white/60 mb-6">
+ <nav className="flex items-center gap-2 text-xs font-medium text-slate-600 dark:text-white/60 mb-6">
  <Link href="/" className="hover:text-slate-900 dark:hover:text-white transition-colors">Home</Link>
  <span>/</span>
  <Link href="/tools" className="hover:text-slate-900 dark:hover:text-white transition-colors">Formats</Link>
@@ -175,7 +175,7 @@ export default function LeaveApplicationPage() {
  <CheckCircle2 className="w-5 h-5 text-emerald-400 flex-shrink-0 mt-0.5" />
  <div>
  <h4 className="text-sm font-semibold text-slate-900 dark:text-white">{item.title}</h4>
- <p className="text-xs text-slate-500 dark:text-white/60 mt-0.5">{item.desc}</p>
+ <p className="text-xs text-slate-600 dark:text-white/60 mt-0.5">{item.desc}</p>
  </div>
  </div>
  ))}
@@ -189,7 +189,7 @@ export default function LeaveApplicationPage() {
  Official Earned Leave Application Sample
  </h3>
  <div className="p-6 rounded-2xl bg-white dark:bg-[#0f131d] border border-slate-200 dark:border-white/10 text-slate-800 dark:text-white/90 text-sm leading-relaxed shadow-inner font-serif">
- <div className="flex justify-between text-xs text-slate-500 dark:text-white/60 mb-4 font-mono">
+ <div className="flex justify-between text-xs text-slate-600 dark:text-white/60 mb-4 font-mono">
  <span>Station: Nagpur</span>
  <span>Date: 23rd September, 2026</span>
  </div>
@@ -221,8 +221,8 @@ export default function LeaveApplicationPage() {
  <p className="font-bold text-slate-900 dark:text-white">Yours faithfully,</p>
  <p className="text-slate-700 dark:text-white/80">[Signature]</p>
  <p className="text-slate-600 dark:text-white/70">Name: Sandeep K. Deshmukh</p>
- <p className="text-slate-500 dark:text-white/60">Designation: Postal Assistant, Estt. Branch</p>
- <p className="text-slate-500 dark:text-white/60">Employee ID: 10048291</p>
+ <p className="text-slate-600 dark:text-white/60">Designation: Postal Assistant, Estt. Branch</p>
+ <p className="text-slate-600 dark:text-white/60">Employee ID: 10048291</p>
  </div>
  </div>
  </section>
@@ -250,7 +250,7 @@ export default function LeaveApplicationPage() {
  <h3 className="text-2xl sm:text-3xl font-heading font-bold text-slate-900 dark:text-white mb-3">
  Draft Your Leave Application in Seconds
  </h3>
- <p className="text-sm sm:text-base text-slate-500 dark:text-white/60 max-w-xl mx-auto mb-6">
+ <p className="text-sm sm:text-base text-slate-600 dark:text-white/60 max-w-xl mx-auto mb-6">
  Enter your leave dates and reason; Swalekhani formats an official leave letter ready for print or instant PDF download.
  </p>
  <Link

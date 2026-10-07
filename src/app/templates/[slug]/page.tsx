@@ -110,7 +110,7 @@ export default async function ProfessionTemplatePage({ params }: PageProps) {
  />
 
  {/* Breadcrumb */}
- <nav className="flex items-center gap-2 text-xs font-medium text-slate-400 dark:text-white/40 mb-8">
+ <nav className="flex items-center gap-2 text-xs font-medium text-slate-500 dark:text-white/60 mb-8">
  <Link href="/" className="hover:text-slate-900 dark:hover:text-white transition-colors">Home</Link>
  <span>/</span>
  <Link href="/templates" className="hover:text-slate-900 dark:hover:text-white transition-colors">Templates</Link>
@@ -127,7 +127,7 @@ export default async function ProfessionTemplatePage({ params }: PageProps) {
  <h1 className="font-heading font-extrabold text-3xl sm:text-4xl lg:text-[2.9rem] tracking-tight leading-[1.12] mb-4">
  {template.title}
  </h1>
- <p className="text-slate-500 dark:text-white/50 leading-relaxed mb-7">
+ <p className="text-slate-600 dark:text-white/50 leading-relaxed mb-7">
  {template.introText}
  </p>
  <div className="flex flex-wrap gap-3">
@@ -168,7 +168,7 @@ export default async function ProfessionTemplatePage({ params }: PageProps) {
  href={`/templates/${relSlug}`}
  className="group p-5 rounded-2xl bg-white dark:bg-[#11161f] border border-slate-200 dark:border-white/10 hover:border-brand-orange/40 hover:-translate-y-0.5 transition-all"
  >
- <p className="text-[11px] font-bold uppercase tracking-wider text-slate-400 dark:text-white/40 mb-1.5">{rel.category}</p>
+ <p className="text-[11px] font-bold uppercase tracking-wider text-slate-500 dark:text-white/60 mb-1.5">{rel.category}</p>
  <h3 className="font-heading font-bold group-hover:text-brand-orange transition-colors">{rel.profession}</h3>
  </Link>
  );

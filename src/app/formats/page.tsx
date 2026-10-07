@@ -164,7 +164,7 @@ export default function FormatsIndexPage() {
  <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
  
  {/* Breadcrumb */}
- <nav className="flex items-center gap-2 text-xs font-medium text-slate-500 dark:text-white/60 mb-6">
+ <nav className="flex items-center gap-2 text-xs font-medium text-slate-600 dark:text-white/60 mb-6">
  <Link href="/" className="hover:text-slate-900 dark:hover:text-white transition-colors">Home</Link>
  <span>/</span>
  <span className="text-slate-700 dark:text-white/80">Official Formats Library</span>
@@ -192,7 +192,7 @@ export default function FormatsIndexPage() {
  {/* Search & Filter Bar */}
  <div className="space-y-4 mb-10 max-w-3xl mx-auto">
  <div className="relative">
- <Search className="w-5 h-5 text-slate-400 dark:text-white/40 absolute left-4 top-1/2 -translate-y-1/2" />
+ <Search className="w-5 h-5 text-slate-500 dark:text-white/60 absolute left-4 top-1/2 -translate-y-1/2" />
  <input
  type="text"
  value={searchQuery}
@@ -258,7 +258,7 @@ export default function FormatsIndexPage() {
  <div className="p-6 space-y-4 flex-1 flex flex-col justify-between">
  <div className="space-y-3">
  <div className="flex items-center justify-between">
- <span className="text-[11px] font-semibold text-slate-500 dark:text-white/60 uppercase tracking-wider font-mono">
+ <span className="text-[11px] font-semibold text-slate-600 dark:text-white/60 uppercase tracking-wider font-mono">
  {fmt.category}
  </span>
  </div>
@@ -267,7 +267,7 @@ export default function FormatsIndexPage() {
  {fmt.title}
  </h3>
 
- <p className="text-xs text-slate-500 dark:text-white/60 leading-relaxed line-clamp-2">
+ <p className="text-xs text-slate-600 dark:text-white/60 leading-relaxed line-clamp-2">
  {fmt.desc}
  </p>
  </div>
@@ -275,7 +275,7 @@ export default function FormatsIndexPage() {
  {/* Tags */}
  <div className="flex flex-wrap gap-1.5 pt-2">
  {fmt.tags.slice(0, 3).map((tag, idx) => (
- <span key={idx} className="text-[10px] text-slate-400 dark:text-white/40 bg-white/[0.03] dark:bg-[#0f131d]/[0.03] px-2 py-0.5 rounded-md border border-white/[0.04]">
+ <span key={idx} className="text-[10px] text-slate-500 dark:text-white/60 bg-white/[0.03] dark:bg-[#0f131d]/[0.03] px-2 py-0.5 rounded-md border border-white/[0.04]">
  #{tag}
  </span>
  ))}
@@ -289,7 +289,7 @@ export default function FormatsIndexPage() {
  href={fmt.guideUrl}
  className="flex-1 py-2.5 px-3 rounded-xl bg-white/[0.05] dark:bg-[#0f131d]/[0.05] hover:bg-white/[0.1] text-slate-900 dark:text-white text-xs font-semibold border border-slate-200 dark:border-white/10 text-center transition-all flex items-center justify-center gap-1.5"
  >
- <BookOpen className="w-3.5 h-3.5 text-slate-500 dark:text-white/60" />
+ <BookOpen className="w-3.5 h-3.5 text-slate-600 dark:text-white/60" />
  <span>Read Guide</span>
  </Link>
  <Link
@@ -320,7 +320,7 @@ export default function FormatsIndexPage() {
  {/* Empty State */}
  {filteredFormats.length === 0 && (
  <div className="text-center py-16 p-8 rounded-3xl bg-white dark:bg-[#0f131d] border border-slate-200 dark:border-white/10">
- <p className="text-slate-500 dark:text-white/60 text-sm">No formats matched &quot;{searchQuery}&quot;.</p>
+ <p className="text-slate-600 dark:text-white/60 text-sm">No formats matched &quot;{searchQuery}&quot;.</p>
  <button
  onClick={() => { setSearchQuery(""); setSelectedCategory("All"); }}
  className="mt-4 px-4 py-2 rounded-xl bg-white text-black text-xs font-semibold"
@@ -336,7 +336,7 @@ export default function FormatsIndexPage() {
  <h2 className="text-2xl sm:text-3xl font-heading font-bold text-slate-900 dark:text-white mb-2">
  Frequently Asked Questions on Official Formats
  </h2>
- <p className="text-sm text-slate-500 dark:text-white/60">
+ <p className="text-sm text-slate-600 dark:text-white/60">
  Guidance on statutory compliance, Marathi / Hindi Devanagari drafting, and legal standards.
  </p>
  </div>
@@ -361,7 +361,7 @@ export default function FormatsIndexPage() {
  <HelpCircle className="w-5 h-5 text-emerald-400 flex-shrink-0 mt-0.5" />
  <span>{faq.q}</span>
  </h3>
- <p className="text-sm text-slate-500 dark:text-white/60 pl-7 leading-relaxed">{faq.a}</p>
+ <p className="text-sm text-slate-600 dark:text-white/60 pl-7 leading-relaxed">{faq.a}</p>
  </div>
  ))}
  </div>

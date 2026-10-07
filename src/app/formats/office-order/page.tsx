@@ -89,7 +89,7 @@ export default function OfficeOrderPage() {
 
  <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
  {/* Breadcrumb */}
- <nav className="flex items-center gap-2 text-xs font-medium text-slate-500 dark:text-white/60 mb-6">
+ <nav className="flex items-center gap-2 text-xs font-medium text-slate-600 dark:text-white/60 mb-6">
  <Link href="/" className="hover:text-slate-900 dark:hover:text-white transition-colors">Home</Link>
  <span>/</span>
  <Link href="/tools" className="hover:text-slate-900 dark:hover:text-white transition-colors">Formats</Link>
@@ -170,7 +170,7 @@ export default function OfficeOrderPage() {
  <CheckCircle2 className="w-5 h-5 text-violet-400 flex-shrink-0 mt-0.5" />
  <div>
  <h4 className="text-sm font-semibold text-slate-900 dark:text-white">{item.title}</h4>
- <p className="text-xs text-slate-500 dark:text-white/60 mt-0.5">{item.desc}</p>
+ <p className="text-xs text-slate-600 dark:text-white/60 mt-0.5">{item.desc}</p>
  </div>
  </div>
  ))}
@@ -187,10 +187,10 @@ export default function OfficeOrderPage() {
  <div className="text-center border-b border-slate-200 dark:border-white/10 pb-4 mb-4">
  <p className="text-xs text-amber-700 font-semibold">APEX ENTERPRISE SOLUTIONS PVT. LTD.</p>
  <h4 className="text-base font-bold text-slate-900 dark:text-white tracking-wide">HUMAN RESOURCES DEPARTMENT</h4>
- <p className="text-xs text-slate-500 dark:text-white/60">Level 5, Cyber Park, Bengaluru - 560100</p>
+ <p className="text-xs text-slate-600 dark:text-white/60">Level 5, Cyber Park, Bengaluru - 560100</p>
  </div>
 
- <div className="flex justify-between text-xs text-slate-500 dark:text-white/60 mb-4 font-mono">
+ <div className="flex justify-between text-xs text-slate-600 dark:text-white/60 mb-4 font-mono">
  <span>File No. A-22012/1/2026-Estt.(A)</span>
  <span>Dated: 23rd September, 2026</span>
  </div>
@@ -212,8 +212,8 @@ export default function OfficeOrderPage() {
 
  <div className="text-right text-xs pt-2">
  <p className="font-bold text-slate-900 dark:text-white">[S. K. Mukherjee]</p>
- <p className="text-slate-500 dark:text-white/60">Head of Human Resources</p>
- <p className="text-slate-500 dark:text-white/60">Tel: +91-80-41234567</p>
+ <p className="text-slate-600 dark:text-white/60">Head of Human Resources</p>
+ <p className="text-slate-600 dark:text-white/60">Tel: +91-80-41234567</p>
  </div>
 
  <div className="border-t border-slate-200 dark:border-white/10 mt-6 pt-4 text-xs font-sans text-slate-600 dark:text-white/70">
@@ -251,7 +251,7 @@ export default function OfficeOrderPage() {
  <h3 className="text-2xl sm:text-3xl font-heading font-bold text-slate-900 dark:text-white mb-3">
  Draft an Office Order in Minutes
  </h3>
- <p className="text-sm sm:text-base text-slate-500 dark:text-white/60 max-w-xl mx-auto mb-6">
+ <p className="text-sm sm:text-base text-slate-600 dark:text-white/60 max-w-xl mx-auto mb-6">
  Preloaded with professional typography, endorsement copy-to lists, and AI instant order composition.
  </p>
  <Link

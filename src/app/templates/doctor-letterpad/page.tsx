@@ -90,7 +90,7 @@ export default function DoctorLetterpadPage() {
 
  <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
  {/* Breadcrumb */}
- <nav className="flex items-center gap-2 text-xs font-medium text-slate-500 dark:text-white/60 mb-6">
+ <nav className="flex items-center gap-2 text-xs font-medium text-slate-600 dark:text-white/60 mb-6">
  <Link href="/" className="hover:text-slate-900 dark:hover:text-white transition-colors">Home</Link>
  <span>/</span>
  <Link href="/tools" className="hover:text-slate-900 dark:hover:text-white transition-colors">Templates</Link>
@@ -171,7 +171,7 @@ export default function DoctorLetterpadPage() {
  <CheckCircle2 className="w-5 h-5 text-rose-400 flex-shrink-0 mt-0.5" />
  <div>
  <h4 className="text-sm font-semibold text-slate-900 dark:text-white">{item.title}</h4>
- <p className="text-xs text-slate-500 dark:text-white/60 mt-0.5">{item.desc}</p>
+ <p className="text-xs text-slate-600 dark:text-white/60 mt-0.5">{item.desc}</p>
  </div>
  </div>
  ))}
@@ -189,9 +189,9 @@ export default function DoctorLetterpadPage() {
  <div>
  <h4 className="text-lg font-bold text-slate-900 dark:text-white tracking-wide">DR. AARAV SHARMA, MBBS, MD (MEDICINE)</h4>
  <p className="text-xs text-rose-700">Consultant Physician & Cardiologist</p>
- <p className="text-xs text-slate-500 dark:text-white/60">Reg. No: MMC-2015-08-3421 | CareWell Specialty Clinic</p>
+ <p className="text-xs text-slate-600 dark:text-white/60">Reg. No: MMC-2015-08-3421 | CareWell Specialty Clinic</p>
  </div>
- <div className="text-right text-xs text-slate-500 dark:text-white/60">
+ <div className="text-right text-xs text-slate-600 dark:text-white/60">
  <p>OPD Timings: 10 AM - 2 PM, 6 PM - 9 PM</p>
  <p>Ph: +91-9820012345</p>
  </div>
@@ -217,10 +217,10 @@ export default function DoctorLetterpadPage() {
  </p>
 
  <div className="flex justify-between items-end text-xs pt-4">
- <p className="text-slate-400 dark:text-white/40">[Clinic Seal]</p>
+ <p className="text-slate-500 dark:text-white/60">[Clinic Seal]</p>
  <div className="text-right">
  <p className="font-bold text-slate-900 dark:text-white">Dr. Aarav Sharma</p>
- <p className="text-slate-500 dark:text-white/60">Reg. No: MMC-2015-08-3421</p>
+ <p className="text-slate-600 dark:text-white/60">Reg. No: MMC-2015-08-3421</p>
  </div>
  </div>
  </div>
@@ -249,7 +249,7 @@ export default function DoctorLetterpadPage() {
  <h3 className="text-2xl sm:text-3xl font-heading font-bold text-slate-900 dark:text-white mb-3">
  Generate Your Doctor Letterhead Now
  </h3>
- <p className="text-sm sm:text-base text-slate-500 dark:text-white/60 max-w-xl mx-auto mb-6">
+ <p className="text-sm sm:text-base text-slate-600 dark:text-white/60 max-w-xl mx-auto mb-6">
  Input doctor name, council registration number, clinic schedule, and print crisp prescription pads instantly.
  </p>
  <Link

@@ -242,7 +242,7 @@ export default function TemplatesGalleryPage() {
  <div className="text-center max-w-2xl mx-auto mb-10">
  <p className="text-xs font-bold uppercase tracking-[0.18em] text-brand-orange mb-2">Template library</p>
  <h1 className="font-heading font-extrabold text-4xl sm:text-5xl tracking-tight mb-4">Pick your letterhead.</h1>
- <p className="text-slate-500 dark:text-white/50 leading-relaxed">
+ <p className="text-slate-600 dark:text-white/50 leading-relaxed">
  Professionally structured letterheads for advocates, CAs, doctors, businesses, and freelancers — ready to customize in the Studio.
  </p>
  </div>
@@ -270,7 +270,7 @@ export default function TemplatesGalleryPage() {
  className={`px-4 py-2 rounded-full text-xs font-bold border transition-all ${
  selectedCategory === cat
  ? 'bg-slate-900 dark:bg-white text-white dark:text-slate-900 border-slate-900 dark:border-white'
- : 'bg-white dark:bg-white/5 text-slate-500 dark:text-white/60 border-slate-200 dark:border-white/10 hover:border-slate-300 dark:hover:border-white/25'
+ : 'bg-white dark:bg-white/5 text-slate-600 dark:text-white/60 border-slate-200 dark:border-white/10 hover:border-slate-300 dark:hover:border-white/25'
  }`}
  >
  {cat}
@@ -303,12 +303,12 @@ export default function TemplatesGalleryPage() {
  </span>
  </div>
  <div className="p-6 pt-4 flex-1 flex flex-col">
- <p className="text-[11px] font-bold uppercase tracking-wider text-slate-400 dark:text-white/40 mb-1">{tpl.category}</p>
+ <p className="text-[11px] font-bold uppercase tracking-wider text-slate-500 dark:text-white/60 mb-1">{tpl.category}</p>
  <h3 className="font-heading font-bold text-lg mb-2 group-hover:text-brand-orange transition-colors">{tpl.name}</h3>
- <p className="text-[13px] text-slate-500 dark:text-white/50 leading-relaxed line-clamp-2 mb-4">{tpl.description}</p>
+ <p className="text-[13px] text-slate-600 dark:text-white/50 leading-relaxed line-clamp-2 mb-4">{tpl.description}</p>
  <div className="flex flex-wrap gap-1.5 mb-5">
  {tpl.tags.slice(0, 3).map((tag, idx) => (
- <span key={idx} className="text-[10px] font-medium text-slate-400 dark:text-white/40 bg-slate-100 dark:bg-white/5 px-2 py-0.5 rounded-md">#{tag}</span>
+ <span key={idx} className="text-[10px] font-medium text-slate-500 dark:text-white/60 bg-slate-100 dark:bg-white/5 px-2 py-0.5 rounded-md">#{tag}</span>
  ))}
  </div>
  <div className="mt-auto pt-4 border-t border-slate-100 dark:border-white/10 flex gap-2.5">
@@ -334,7 +334,7 @@ export default function TemplatesGalleryPage() {
  {/* Empty State */}
  {filteredTemplates.length === 0 && (
  <div className="text-center py-16 px-8 rounded-3xl bg-white dark:bg-[#11161f] border border-slate-200 dark:border-white/10">
- <p className="text-slate-500 dark:text-white/50 text-sm mb-4">No templates matched &ldquo;{searchQuery}&rdquo;.</p>
+ <p className="text-slate-600 dark:text-white/50 text-sm mb-4">No templates matched &ldquo;{searchQuery}&rdquo;.</p>
  <button
  onClick={() => { setSearchQuery(""); setSelectedCategory("All"); }}
  className="px-5 py-2.5 rounded-xl bg-slate-900 dark:bg-white text-white dark:text-slate-900 text-xs font-bold"
@@ -354,7 +354,7 @@ export default function TemplatesGalleryPage() {
  <div key={b.title} className="p-6 rounded-2xl bg-white dark:bg-[#11161f] border border-slate-200 dark:border-white/10">
  <CheckCircle2 className="w-5 h-5 text-emerald-600 mb-3" />
  <h4 className="font-bold text-sm mb-1.5">{b.title}</h4>
- <p className="text-xs text-slate-500 dark:text-white/50 leading-relaxed">{b.desc}</p>
+ <p className="text-xs text-slate-600 dark:text-white/50 leading-relaxed">{b.desc}</p>
  </div>
  ))}
  </div>

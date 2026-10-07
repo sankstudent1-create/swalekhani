@@ -134,7 +134,7 @@ export default function ProfessionTemplateClient({ template }: Props) {
  Interactive A4 Canvas Preview
  </span>
  </div>
- <div className="text-xs text-slate-400 dark:text-white/40 font-mono">210mm × 297mm (Standard A4)</div>
+ <div className="text-xs text-slate-500 dark:text-white/60 font-mono">210mm × 297mm (Standard A4)</div>
  </div>
 
  {/* Printable Letterpad Canvas Container */}
@@ -237,7 +237,7 @@ export default function ProfessionTemplateClient({ template }: Props) {
  </div>
 
  {/* Letterhead Footer Ribbon */}
- <div className="absolute bottom-4 left-6 right-6 border-t border-slate-200 dark:border-white/10 pt-2 flex justify-between text-[9.5px] text-slate-400 dark:text-white/40 font-mono">
+ <div className="absolute bottom-4 left-6 right-6 border-t border-slate-200 dark:border-white/10 pt-2 flex justify-between text-[9.5px] text-slate-500 dark:text-white/60 font-mono">
  <span>Powered by Swalekhani • Official Letterpad Engine</span>
  <span>Confidential & Official Document</span>
  </div>
@@ -290,7 +290,7 @@ export default function ProfessionTemplateClient({ template }: Props) {
  <Palette className="w-5 h-5 text-brand-orange" />
  Customize Letterpad Fields
  </h3>
- <p className="text-xs text-slate-500 dark:text-white/60 mt-1">
+ <p className="text-xs text-slate-600 dark:text-white/60 mt-1">
  Edit inputs below to update the live preview canvas in real-time.
  </p>
  </div>
@@ -379,7 +379,7 @@ export default function ProfessionTemplateClient({ template }: Props) {
  }`}
  >
  <div className="font-semibold text-slate-900 dark:text-white">{s.title}</div>
- <div className="text-[11px] text-slate-500 dark:text-white/60 truncate mt-0.5">{s.description}</div>
+ <div className="text-[11px] text-slate-600 dark:text-white/60 truncate mt-0.5">{s.description}</div>
  </button>
  ))}
  </div>
@@ -417,9 +417,9 @@ export default function ProfessionTemplateClient({ template }: Props) {
  <div className="inline-block px-2.5 py-1 rounded-lg bg-white/[0.05] dark:bg-[#0f131d]/[0.05] text-brand-orange font-mono text-xs font-semibold">
  Sample {idx + 1}: {sample.title}
  </div>
- <p className="text-xs text-slate-500 dark:text-white/60">{sample.description}</p>
+ <p className="text-xs text-slate-600 dark:text-white/60">{sample.description}</p>
  <div className="p-4 rounded-xl bg-black/40 border border-white/[0.05] text-xs font-mono text-slate-700 dark:text-white/80 space-y-2 max-h-48 overflow-y-auto">
- <div className="text-slate-500 dark:text-white/60">Subject: {sample.subject}</div>
+ <div className="text-slate-600 dark:text-white/60">Subject: {sample.subject}</div>
  <div className="text-slate-600 dark:text-white/70 text-[11px] whitespace-pre-line">{sample.body[0]}</div>
  </div>
  </div>
@@ -465,7 +465,7 @@ export default function ProfessionTemplateClient({ template }: Props) {
  </span>
  </div>
  <h3 className="text-sm font-semibold text-slate-900 dark:text-white pt-1">{guide.title}</h3>
- <p className="text-xs text-slate-500 dark:text-white/60 leading-relaxed">{guide.rule}</p>
+ <p className="text-xs text-slate-600 dark:text-white/60 leading-relaxed">{guide.rule}</p>
  </div>
  ))}
  </div>
@@ -493,7 +493,7 @@ export default function ProfessionTemplateClient({ template }: Props) {
  <Layers className="w-5 h-5 text-brand-orange" />
  Related Profession Letterheads
  </h2>
- <Link href="/templates" className="text-xs text-slate-500 dark:text-white/60 hover:text-slate-900 dark:hover:text-white flex items-center gap-1">
+ <Link href="/templates" className="text-xs text-slate-600 dark:text-white/60 hover:text-slate-900 dark:hover:text-white flex items-center gap-1">
  <span>View All Templates</span>
  <ArrowRight className="w-3.5 h-3.5" />
  </Link>
@@ -515,7 +515,7 @@ export default function ProfessionTemplateClient({ template }: Props) {
  <h4 className="text-sm font-semibold text-slate-900 dark:text-white group-hover:text-brand-orange transition-colors">
  {rel.profession}
  </h4>
- <p className="text-xs text-slate-500 dark:text-white/60 line-clamp-2 mt-1">
+ <p className="text-xs text-slate-600 dark:text-white/60 line-clamp-2 mt-1">
  {rel.shortDesc}
  </p>
  </Link>
@@ -530,7 +530,7 @@ export default function ProfessionTemplateClient({ template }: Props) {
  <h3 className="text-2xl sm:text-3xl font-heading font-bold text-slate-900 dark:text-white mb-3">
  Draft Your Official {template.profession} Letterhead with AI
  </h3>
- <p className="text-sm sm:text-base text-slate-500 dark:text-white/60 max-w-xl mx-auto mb-6">
+ <p className="text-sm sm:text-base text-slate-600 dark:text-white/60 max-w-xl mx-auto mb-6">
  Say goodbye to complex Word templates. Swalekhani formats and styles your official letterhead to perfection in seconds.
  </p>
  <Link

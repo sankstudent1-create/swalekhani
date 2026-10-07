@@ -90,7 +90,7 @@ export default function CompanyLetterpadPage() {
 
  <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
  {/* Breadcrumb */}
- <nav className="flex items-center gap-2 text-xs font-medium text-slate-500 dark:text-white/60 mb-6">
+ <nav className="flex items-center gap-2 text-xs font-medium text-slate-600 dark:text-white/60 mb-6">
  <Link href="/" className="hover:text-slate-900 dark:hover:text-white transition-colors">Home</Link>
  <span>/</span>
  <Link href="/tools" className="hover:text-slate-900 dark:hover:text-white transition-colors">Templates</Link>
@@ -171,7 +171,7 @@ export default function CompanyLetterpadPage() {
  <CheckCircle2 className="w-5 h-5 text-brand-sky flex-shrink-0 mt-0.5" />
  <div>
  <h4 className="text-sm font-semibold text-slate-900 dark:text-white">{item.title}</h4>
- <p className="text-xs text-slate-500 dark:text-white/60 mt-0.5">{item.desc}</p>
+ <p className="text-xs text-slate-600 dark:text-white/60 mt-0.5">{item.desc}</p>
  </div>
  </div>
  ))}
@@ -188,8 +188,8 @@ export default function CompanyLetterpadPage() {
  <div className="flex justify-between items-start border-b border-slate-200 dark:border-white/10 pb-4 mb-4">
  <div>
  <h4 className="text-lg font-bold text-slate-900 dark:text-white tracking-wide">APEX ENTERPRISE SOLUTIONS PVT. LTD.</h4>
- <p className="text-xs text-slate-500 dark:text-white/60">CIN: U72900KA2021PTC123456 | GSTIN: 29AABCU9603R1Z7</p>
- <p className="text-xs text-slate-500 dark:text-white/60">Level 5, Cyber Park, Electronic City, Bengaluru - 560100</p>
+ <p className="text-xs text-slate-600 dark:text-white/60">CIN: U72900KA2021PTC123456 | GSTIN: 29AABCU9603R1Z7</p>
+ <p className="text-xs text-slate-600 dark:text-white/60">Level 5, Cyber Park, Electronic City, Bengaluru - 560100</p>
  </div>
  <div className="text-right text-xs text-brand-sky font-medium">
  <p>contact@apexsolutions.in</p>
@@ -197,7 +197,7 @@ export default function CompanyLetterpadPage() {
  </div>
  </div>
 
- <div className="flex justify-between text-xs text-slate-500 dark:text-white/60 mb-4">
+ <div className="flex justify-between text-xs text-slate-600 dark:text-white/60 mb-4">
  <span>Ref: AES/HR/OFFER/2026/089</span>
  <span>Date: September 23, 2026</span>
  </div>
@@ -218,8 +218,8 @@ export default function CompanyLetterpadPage() {
 
  <div className="text-right text-xs mt-6 space-y-1">
  <p className="font-semibold text-slate-900 dark:text-white">For Apex Enterprise Solutions Pvt. Ltd.</p>
- <p className="text-slate-500 dark:text-white/60">[Authorized Signatory]</p>
- <p className="text-slate-500 dark:text-white/60">Director of Human Resources</p>
+ <p className="text-slate-600 dark:text-white/60">[Authorized Signatory]</p>
+ <p className="text-slate-600 dark:text-white/60">Director of Human Resources</p>
  </div>
  </div>
  </section>
@@ -247,7 +247,7 @@ export default function CompanyLetterpadPage() {
  <h3 className="text-2xl sm:text-3xl font-heading font-bold text-slate-900 dark:text-white mb-3">
  Build Your Corporate Letterhead in Minutes
  </h3>
- <p className="text-sm sm:text-base text-slate-500 dark:text-white/60 max-w-xl mx-auto mb-6">
+ <p className="text-sm sm:text-base text-slate-600 dark:text-white/60 max-w-xl mx-auto mb-6">
  Enter your company details, upload your logo, write with AI, and download a ready-to-print vector PDF.
  </p>
  <Link

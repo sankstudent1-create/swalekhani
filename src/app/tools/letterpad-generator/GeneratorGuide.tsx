@@ -38,7 +38,7 @@ export default function GeneratorGuide() {
  <ShieldAlert className="w-5 h-5 text-amber-400 flex-shrink-0 mt-0.5" />
  <div className="text-sm leading-relaxed">
  <p className="font-semibold text-amber-700 mb-1">Drafting aid — always review before sending</p>
- <p className="text-slate-500 dark:text-white/60">
+ <p className="text-slate-600 dark:text-white/60">
  Swalekhani Studio creates <strong className="text-slate-700 dark:text-white/80">AI-assisted drafts</strong> for your review.
  Always verify names, dates, amounts, and tone before printing or sending any letter.{' '}
  <Link href="/disclaimer" className="underline decoration-amber-400/50 underline-offset-2 hover:text-amber-700">Read the Disclaimer</Link>.
@@ -56,7 +56,7 @@ export default function GeneratorGuide() {
  <h2 className="text-2xl sm:text-3xl font-heading font-bold text-slate-900 dark:text-white mb-2">
  How to Write a Formal Letter in India
  </h2>
- <p className="text-sm text-slate-500 dark:text-white/60">
+ <p className="text-sm text-slate-600 dark:text-white/60">
  The anatomy of a proper formal letter — from sender block to sign-off — and what each field in Swalekhani Studio means.
  </p>
  </div>

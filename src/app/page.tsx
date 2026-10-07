@@ -157,7 +157,7 @@ function LetterVisual() {
       <div className="relative bg-white dark:bg-[#11161f] rounded-2xl border border-slate-200 dark:border-white/10 shadow-[0_24px_60px_-12px_rgba(0,0,0,0.18)] p-6 sm:p-8 rotate-1 hover:rotate-0 transition-transform duration-500">
         <div className="text-center border-b-2 border-slate-900 dark:border-white pb-4 mb-4">
           <p className="font-heading font-bold text-lg text-slate-900 dark:text-white tracking-wide">VOLTEDGE HOME APPLIANCES</p>
-          <p className="text-[10px] text-slate-500 dark:text-white/50 tracking-[0.2em] uppercase mt-1">Private Limited · Pune · Mumbai</p>
+          <p className="text-[10px] text-slate-600 dark:text-white/50 tracking-[0.2em] uppercase mt-1">Private Limited · Pune · Mumbai</p>
         </div>
         <p className="text-[11px] font-semibold text-slate-900 dark:text-white mb-3">Subject: Offer of Employment — Software Engineer.</p>
         <div className="space-y-2" aria-hidden>
@@ -171,14 +171,14 @@ function LetterVisual() {
             <span className="w-2 h-2 rounded-full bg-brand-pink" />
             <span className="w-2 h-2 rounded-full bg-brand-sky" />
           </div>
-          <p className="text-[10px] text-slate-400 dark:text-white/40 font-medium">A4 · Vector PDF</p>
+          <p className="text-[10px] text-slate-500 dark:text-white/60 font-medium">A4 · Vector PDF</p>
         </div>
       </div>
       <div className="absolute -bottom-5 -left-5 bg-white dark:bg-[#11161f] rounded-xl border border-slate-200 dark:border-white/10 shadow-lg px-4 py-3 flex items-center gap-2.5 -rotate-2">
         <CheckCircle2 className="w-5 h-5 text-emerald-600" />
         <div>
           <p className="text-xs font-bold text-slate-900 dark:text-white">PDF exported</p>
-          <p className="text-[10px] text-slate-500 dark:text-white/50">No watermark · Print-ready</p>
+          <p className="text-[10px] text-slate-600 dark:text-white/50">No watermark · Print-ready</p>
         </div>
       </div>
     </div>
@@ -237,7 +237,7 @@ export default function HomePage() {
               </div>
               <div className="flex flex-wrap gap-x-6 gap-y-2">
                 {['Free forever', 'No sign-up needed', 'Runs in your browser'].map((t) => (
-                  <span key={t} className="inline-flex items-center gap-1.5 text-[13px] font-medium text-slate-500 dark:text-white/50">
+                  <span key={t} className="inline-flex items-center gap-1.5 text-[13px] font-medium text-slate-600 dark:text-white/50">
                     <CheckCircle2 className="w-4 h-4 text-emerald-600" />
                     {t}
                   </span>
@@ -276,7 +276,7 @@ export default function HomePage() {
                   <t.Icon className="w-5 h-5 text-brand-orange group-hover:text-white transition-colors" />
                 </div>
                 <h3 className="font-heading font-bold text-lg mb-1.5">{t.name}</h3>
-                <p className="text-sm text-slate-500 dark:text-white/50 leading-relaxed mb-4">{t.desc}</p>
+                <p className="text-sm text-slate-600 dark:text-white/50 leading-relaxed mb-4">{t.desc}</p>
                 <span className="inline-flex items-center gap-1 text-[13px] font-semibold text-brand-orange">
                   Use template <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
                 </span>
@@ -292,7 +292,7 @@ export default function HomePage() {
           <div className="text-center max-w-2xl mx-auto mb-12">
             <p className="text-xs font-bold uppercase tracking-[0.18em] text-brand-orange mb-2">How it works</p>
             <h2 className="font-heading font-bold text-3xl sm:text-4xl tracking-tight mb-3">Blank page to signed PDF in three steps</h2>
-            <p className="text-slate-500 dark:text-white/50">No design skills. Nothing to install.</p>
+            <p className="text-slate-600 dark:text-white/50">No design skills. Nothing to install.</p>
           </div>
           <div className="grid sm:grid-cols-3 gap-5 max-w-5xl mx-auto">
             {[
@@ -304,7 +304,7 @@ export default function HomePage() {
                 <span className="font-heading font-extrabold text-5xl text-slate-200 dark:text-white/10 absolute top-5 right-6 select-none">{s.n}</span>
                 <s.Icon className="w-6 h-6 text-brand-orange mb-4" />
                 <h3 className="font-heading font-bold text-lg mb-2">{s.title}</h3>
-                <p className="text-sm text-slate-500 dark:text-white/50 leading-relaxed">{s.desc}</p>
+                <p className="text-sm text-slate-600 dark:text-white/50 leading-relaxed">{s.desc}</p>
               </div>
             ))}
           </div>
@@ -317,7 +317,7 @@ export default function HomePage() {
           <div className="text-center max-w-2xl mx-auto mb-12">
             <p className="text-xs font-bold uppercase tracking-[0.18em] text-brand-orange mb-2">Try it now</p>
             <h2 className="font-heading font-bold text-3xl sm:text-4xl tracking-tight mb-3">Watch AI draft a real letter</h2>
-            <p className="text-slate-500 dark:text-white/50">Pick a scenario — this is exactly how the Studio structures your draft.</p>
+            <p className="text-slate-600 dark:text-white/50">Pick a scenario — this is exactly how the Studio structures your draft.</p>
           </div>
           <div className="grid lg:grid-cols-12 gap-6 max-w-6xl mx-auto items-start">
             <div className="lg:col-span-5 space-y-3">
@@ -336,7 +336,7 @@ export default function HomePage() {
                     <span className="text-[11px] font-semibold text-brand-orange">{sample.category}</span>
                   </div>
                   <h4 className="text-sm font-bold mb-1">{sample.title}</h4>
-                  <p className="text-xs text-slate-500 dark:text-white/50 line-clamp-2">&ldquo;{sample.prompt}&rdquo;</p>
+                  <p className="text-xs text-slate-600 dark:text-white/50 line-clamp-2">&ldquo;{sample.prompt}&rdquo;</p>
                 </button>
               ))}
               <div className="p-4 rounded-2xl bg-white dark:bg-[#11161f] border border-slate-200 dark:border-white/10">
@@ -365,18 +365,18 @@ export default function HomePage() {
                     <span className="w-2.5 h-2.5 rounded-full bg-rose-400" />
                     <span className="w-2.5 h-2.5 rounded-full bg-amber-400" />
                     <span className="w-2.5 h-2.5 rounded-full bg-emerald-500" />
-                    <span className="text-[11px] text-slate-400 dark:text-white/40 font-mono ml-2">Live preview</span>
+                    <span className="text-[11px] text-slate-500 dark:text-white/60 font-mono ml-2">Live preview</span>
                   </div>
                   <button
                     onClick={handleCopy}
-                    className="flex items-center gap-1.5 text-xs font-semibold text-slate-500 dark:text-white/60 hover:text-slate-900 dark:hover:text-white px-3 py-1.5 rounded-lg hover:bg-slate-100 dark:hover:bg-white/10 transition-all"
+                    className="flex items-center gap-1.5 text-xs font-semibold text-slate-600 dark:text-white/60 hover:text-slate-900 dark:hover:text-white px-3 py-1.5 rounded-lg hover:bg-slate-100 dark:hover:bg-white/10 transition-all"
                   >
                     {copied ? <Check className="w-3.5 h-3.5 text-emerald-600" /> : <Copy className="w-3.5 h-3.5" />}
                     {copied ? 'Copied' : 'Copy text'}
                   </button>
                 </div>
                 <div className="p-6 sm:p-8">
-                  <p className="text-[11px] font-bold uppercase tracking-wider text-slate-400 dark:text-white/40 mb-1">Subject</p>
+                  <p className="text-[11px] font-bold uppercase tracking-wider text-slate-500 dark:text-white/60 mb-1">Subject</p>
                   <p className="text-sm font-bold mb-5">{currentPrompt.subject}</p>
                   <p className="text-sm text-slate-600 dark:text-white/70 leading-[1.9]">{currentPrompt.preview}</p>
                   <div className="mt-6 pt-5 border-t border-slate-100 dark:border-white/10 flex flex-wrap gap-3">
@@ -386,7 +386,7 @@ export default function HomePage() {
                     >
                       <Sparkles className="w-4 h-4" /> Open in Studio
                     </Link>
-                    <span className="inline-flex items-center gap-1.5 text-xs text-slate-400 dark:text-white/40 font-medium self-center">
+                    <span className="inline-flex items-center gap-1.5 text-xs text-slate-500 dark:text-white/60 font-medium self-center">
                       <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" /> Private — drafts never leave your browser
                     </span>
                   </div>
@@ -418,7 +418,7 @@ export default function HomePage() {
               >
                 <f.Icon className="w-6 h-6 text-brand-orange mb-4" />
                 <h3 className="font-heading font-bold mb-1.5">{f.name}</h3>
-                <p className="text-[13px] text-slate-500 dark:text-white/50 leading-relaxed">{f.desc}</p>
+                <p className="text-[13px] text-slate-600 dark:text-white/50 leading-relaxed">{f.desc}</p>
               </Link>
             ))}
           </div>
@@ -439,7 +439,7 @@ export default function HomePage() {
                   <HelpCircle className="w-5 h-5 text-brand-orange flex-shrink-0 mt-0.5" />
                   {faq.q}
                 </h3>
-                <p className="text-sm text-slate-500 dark:text-white/50 leading-relaxed pl-[30px]">{faq.a}</p>
+                <p className="text-sm text-slate-600 dark:text-white/50 leading-relaxed pl-[30px]">{faq.a}</p>
               </div>
             ))}
           </div>

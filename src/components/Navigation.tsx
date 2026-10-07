@@ -33,22 +33,22 @@ export default function Navigation() {
  />
  </div>
  <span className="font-heading font-semibold text-2xl tracking-tight text-slate-900 dark:text-white flex items-center">
- Swa<span className="text-slate-400 dark:text-white/50 font-light ml-0.5">lekhani</span>
+ Swa<span className="text-slate-500 dark:text-white/70 font-light ml-0.5">lekhani</span>
  </span>
  </Link>
 
  {/* Desktop Nav */}
  <nav className="hidden md:flex items-center space-x-1.5 p-1.5 rounded-full bg-white dark:bg-white/[0.03] border border-slate-200 dark:border-white/10 shadow-sm">
- <Link href="/tools/letterpad-generator" className={`px-5 py-2 rounded-full text-sm font-medium transition-all duration-300 ${pathname === "/tools/letterpad-generator" || pathname === "/" ? "bg-slate-100 dark:bg-white/10 text-slate-900 dark:text-white border border-slate-200 dark:border-white/10" : "text-slate-500 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-white/5"}`}>
+ <Link href="/tools/letterpad-generator" className={`px-5 py-2 rounded-full text-sm font-medium transition-all duration-300 ${pathname === "/tools/letterpad-generator" || pathname === "/" ? "bg-slate-100 dark:bg-white/10 text-slate-900 dark:text-white border border-slate-200 dark:border-white/10" : "text-slate-600 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-white/5"}`}>
  Studio
  </Link>
- <Link href="/templates" className={`px-5 py-2 rounded-full text-sm font-medium transition-all duration-300 ${pathname.startsWith("/templates") ? "bg-slate-100 dark:bg-white/10 text-slate-900 dark:text-white border border-slate-200 dark:border-white/10" : "text-slate-500 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-white/5"}`}>
+ <Link href="/templates" className={`px-5 py-2 rounded-full text-sm font-medium transition-all duration-300 ${pathname.startsWith("/templates") ? "bg-slate-100 dark:bg-white/10 text-slate-900 dark:text-white border border-slate-200 dark:border-white/10" : "text-slate-600 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-white/5"}`}>
  Templates
  </Link>
- <Link href="/formats" className={`px-5 py-2 rounded-full text-sm font-medium transition-all duration-300 ${pathname.startsWith("/formats") ? "bg-slate-100 dark:bg-white/10 text-slate-900 dark:text-white border border-slate-200 dark:border-white/10" : "text-slate-500 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-white/5"}`}>
+ <Link href="/formats" className={`px-5 py-2 rounded-full text-sm font-medium transition-all duration-300 ${pathname.startsWith("/formats") ? "bg-slate-100 dark:bg-white/10 text-slate-900 dark:text-white border border-slate-200 dark:border-white/10" : "text-slate-600 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-white/5"}`}>
  Formats
  </Link>
- <Link href="/about" className={`px-5 py-2 rounded-full text-sm font-medium transition-all duration-300 ${pathname === "/about" ? "bg-slate-100 dark:bg-white/10 text-slate-900 dark:text-white border border-slate-200 dark:border-white/10" : "text-slate-500 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-white/5"}`}>
+ <Link href="/about" className={`px-5 py-2 rounded-full text-sm font-medium transition-all duration-300 ${pathname === "/about" ? "bg-slate-100 dark:bg-white/10 text-slate-900 dark:text-white border border-slate-200 dark:border-white/10" : "text-slate-600 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-white/5"}`}>
  About
  </Link>
  </nav>
@@ -76,28 +76,28 @@ export default function Navigation() {
  <Link 
  href="/tools/letterpad-generator" 
  onClick={() => setIsOpen(false)} 
- className={`p-4 rounded-2xl text-xl font-medium transition-colors ${pathname === "/tools/letterpad-generator" || pathname === "/" ? "bg-white/[0.05] text-slate-900 border border-white/[0.05]" : "text-slate-500 hover:text-slate-900 hover:bg-white"}`}
+ className={`p-4 rounded-2xl text-xl font-medium transition-colors ${pathname === "/tools/letterpad-generator" || pathname === "/" ? "bg-slate-900/[0.04] dark:bg-white/[0.08] text-slate-900 dark:text-white border border-slate-200 dark:border-white/10" : "text-slate-600 dark:text-white/70 hover:text-slate-900 dark:hover:text-white hover:bg-white dark:hover:bg-white/5"}`}
  >
  Studio
  </Link>
  <Link 
  href="/templates" 
  onClick={() => setIsOpen(false)} 
- className={`p-4 rounded-2xl text-xl font-medium transition-colors ${pathname.startsWith("/templates") ? "bg-white/[0.05] text-slate-900 border border-white/[0.05]" : "text-slate-500 hover:text-slate-900 hover:bg-white"}`}
+ className={`p-4 rounded-2xl text-xl font-medium transition-colors ${pathname.startsWith("/templates") ? "bg-slate-900/[0.04] dark:bg-white/[0.08] text-slate-900 dark:text-white border border-slate-200 dark:border-white/10" : "text-slate-600 dark:text-white/70 hover:text-slate-900 dark:hover:text-white hover:bg-white dark:hover:bg-white/5"}`}
  >
  Templates
  </Link>
  <Link 
  href="/formats" 
  onClick={() => setIsOpen(false)} 
- className={`p-4 rounded-2xl text-xl font-medium transition-colors ${pathname.startsWith("/formats") ? "bg-white/[0.05] text-slate-900 border border-white/[0.05]" : "text-slate-500 hover:text-slate-900 hover:bg-white"}`}
+ className={`p-4 rounded-2xl text-xl font-medium transition-colors ${pathname.startsWith("/formats") ? "bg-slate-900/[0.04] dark:bg-white/[0.08] text-slate-900 dark:text-white border border-slate-200 dark:border-white/10" : "text-slate-600 dark:text-white/70 hover:text-slate-900 dark:hover:text-white hover:bg-white dark:hover:bg-white/5"}`}
  >
  Formats
  </Link>
  <Link 
  href="/about" 
  onClick={() => setIsOpen(false)} 
- className={`p-4 rounded-2xl text-xl font-medium transition-colors ${pathname === "/about" ? "bg-white/[0.05] text-slate-900 border border-white/[0.05]" : "text-slate-500 hover:text-slate-900 hover:bg-white"}`}
+ className={`p-4 rounded-2xl text-xl font-medium transition-colors ${pathname === "/about" ? "bg-slate-900/[0.04] dark:bg-white/[0.08] text-slate-900 dark:text-white border border-slate-200 dark:border-white/10" : "text-slate-600 dark:text-white/70 hover:text-slate-900 dark:hover:text-white hover:bg-white dark:hover:bg-white/5"}`}
  >
  About
  </Link>

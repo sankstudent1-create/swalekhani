@@ -82,7 +82,7 @@ export default function ComplaintLetterPage() {
 
  <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
  {/* Breadcrumb */}
- <nav className="flex items-center gap-2 text-xs font-medium text-slate-500 dark:text-white/60 mb-6">
+ <nav className="flex items-center gap-2 text-xs font-medium text-slate-600 dark:text-white/60 mb-6">
  <Link href="/" className="hover:text-slate-900 dark:hover:text-white transition-colors">Home</Link>
  <span>/</span>
  <Link href="/formats" className="hover:text-slate-900 dark:hover:text-white transition-colors">Formats</Link>
@@ -163,7 +163,7 @@ export default function ComplaintLetterPage() {
  <CheckCircle2 className="w-5 h-5 text-orange-500 flex-shrink-0 mt-0.5" />
  <div>
  <h4 className="text-sm font-semibold text-slate-900 dark:text-white">{item.title}</h4>
- <p className="text-xs text-slate-500 dark:text-white/60 mt-0.5">{item.desc}</p>
+ <p className="text-xs text-slate-600 dark:text-white/60 mt-0.5">{item.desc}</p>
  </div>
  </div>
  ))}
@@ -177,7 +177,7 @@ export default function ComplaintLetterPage() {
  Sample: Defective Product Complaint
  </h3>
  <div className="p-6 rounded-2xl bg-white dark:bg-[#0f131d] border border-slate-200 dark:border-white/10 text-slate-800 dark:text-white/90 text-sm leading-relaxed shadow-sm font-serif">
- <div className="flex justify-between text-xs text-slate-500 dark:text-white/60 mb-4 font-mono">
+ <div className="flex justify-between text-xs text-slate-600 dark:text-white/60 mb-4 font-mono">
  <span>Date: 7th October, 2026</span>
  <span>Place: Pune</span>
  </div>
@@ -204,8 +204,8 @@ export default function ComplaintLetterPage() {
  <p className="font-bold text-slate-900 dark:text-white">Yours faithfully,</p>
  <p className="text-slate-700 dark:text-white/80">[Signature]</p>
  <p className="text-slate-600 dark:text-white/70">Name: Amit Deshmukh</p>
- <p className="text-slate-500 dark:text-white/60">Address: B-704, Green Acres, Baner, Pune - 411045</p>
- <p className="text-slate-500 dark:text-white/60">Mobile: +91-9822012345</p>
+ <p className="text-slate-600 dark:text-white/60">Address: B-704, Green Acres, Baner, Pune - 411045</p>
+ <p className="text-slate-600 dark:text-white/60">Mobile: +91-9822012345</p>
  </div>
  </div>
  </section>
@@ -233,7 +233,7 @@ export default function ComplaintLetterPage() {
  <h3 className="text-2xl sm:text-3xl font-heading font-bold text-slate-900 dark:text-white mb-3">
  Draft Your Complaint with AI
  </h3>
- <p className="text-sm sm:text-base text-slate-500 dark:text-white/60 max-w-xl mx-auto mb-6">
+ <p className="text-sm sm:text-base text-slate-600 dark:text-white/60 max-w-xl mx-auto mb-6">
  Describe the problem in simple words; Swalekhani structures it into a firm, professional complaint letter.
  </p>
  <Link

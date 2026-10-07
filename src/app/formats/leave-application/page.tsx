@@ -7,13 +7,13 @@ import FaqAccordion, { FaqItem } from '@/components/seo/FaqAccordion';
 import AdSlot from '@/components/AdSlot';
 
 export const metadata: Metadata = {
-  title: 'Leave Application Format | Official Government & Office Leave Letter Maker',
-  description: 'Download and generate official Leave Application Formats online. Standard formats for Casual Leave (CL), Earned Leave (EL), Medical Leave, Maternity Leave, and Child Care Leave (CCL) for government employees and corporate staff.',
+  title: 'Leave Application Format | Corporate HR & Office Leave Letter Maker',
+  description: 'Download and generate Leave Application Formats online. Standard formats for Casual Leave (CL), Earned Leave (EL), Medical Leave, Maternity Leave, and Sick Leave for corporate staff and professionals.',
   keywords: [
     'leave application format',
-    'sarkari leave application format',
+    'leave application format for office employees',
     'casual leave application format in english',
-    'earned leave application format for government employees',
+    'earned leave application format for employees',
     'medical leave application letter',
     'office leave application format'
   ],
@@ -21,24 +21,24 @@ export const metadata: Metadata = {
     canonical: '/formats/leave-application',
   },
   openGraph: {
-    title: 'Leave Application Format | Official Government & Office Leave Letter Maker',
-    description: 'Create standard Casual Leave, Earned Leave, and Medical Leave applications for government and private offices.',
+    title: 'Leave Application Format | Corporate HR & Office Leave Letter Maker',
+    description: 'Create standard Casual Leave, Earned Leave, and Medical Leave applications for corporate and private offices.',
     url: 'https://swalekhani.vercel.app/formats/leave-application',
     images: ['/og/leave-application.svg'],
     type: 'article',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Leave Application Format | Official Government & Office Leave Letter Maker',
-    description: 'Official leave application letter generator with charge handover and AI drafting.',
+    title: 'Leave Application Format | Corporate HR & Office Leave Letter Maker',
+    description: 'Leave application letter generator with charge handover and AI drafting.',
     images: ['/og/leave-application.svg'],
   },
 };
 
 const FAQ_ITEMS: FaqItem[] = [
   {
-    question: "What are the essential details required in a government leave application?",
-    answer: "A government leave application under CCS (Leave) Rules must specify the exact Category of Leave (Casual Leave, Earned Leave, Commuted Leave, Half Pay Leave), exact dates from and to, reason for leave, station leaving permission (if traveling outside headquarters), contact address during leave, and name of the relieving officer taking charge."
+    question: "What are the essential details required in a professional leave application?",
+    answer: "A professional leave application should specify the exact category of leave (Casual Leave, Earned Leave, Sick Leave), exact dates from and to, reason for leave, contact address during leave, and the name of the colleague taking charge of your duties."
   },
   {
     question: "How is Casual Leave (CL) different from Earned Leave (EL)?",
@@ -46,7 +46,7 @@ const FAQ_ITEMS: FaqItem[] = [
   },
   {
     question: "What is Station Leave Permission and when is it required?",
-    answer: "Station Leave Permission is a mandatory clause in government leave applications when an employee plans to leave the municipal limits or geographical headquarters of their posting during their leave period or over the weekend."
+    answer: "Some organisations require employees to inform their manager when travelling out of station during leave. Check your company HR policy — mentioning your travel plans and a reachable contact address is good practice."
   },
   {
     question: "Can medical certificates be referenced or attached in this format?",
@@ -54,27 +54,27 @@ const FAQ_ITEMS: FaqItem[] = [
   },
   {
     question: "What is Prefix and Suffix of holidays in leave calculations?",
-    answer: "Prefix refers to holidays/Sundays immediately preceding the commencement of leave, while Suffix refers to holidays/Sundays immediately following the end of leave. In Casual Leave and Earned Leave, intervening and prefix/suffix rules differ under CCS Leave rules."
+    answer: "Prefix refers to holidays/Sundays immediately preceding the commencement of leave, while Suffix refers to holidays/Sundays immediately following the end of leave. How prefix/suffix days are counted differs by company leave policy — check your HR handbook."
   },
   {
     question: "What is Commuted Leave and how does it affect Half Pay Leave (HPL)?",
     answer: "Commuted Leave is leave granted on medical certificate where twice the amount of Half Pay Leave (HPL) is debited against the employee's leave balance, allowing full salary during the medical absence."
   },
   {
-    question: "Can leave be claimed as a matter of right in government service?",
-    answer: "No. Rule 7 of the CCS (Leave) Rules explicitly states that leave cannot be claimed as a matter of right. The competent sanctioning authority reserves the discretion to refuse or revoke leave in the interest of public service."
+    question: "Can leave be claimed as a matter of right?",
+    answer: "No. Leave is generally not a matter of right — the sanctioning manager reserves the discretion to refuse or revoke leave based on business requirements and team workload."
   },
   {
     question: "What is Child Care Leave (CCL) and who is eligible?",
-    answer: "Under Central Government rules, women employees and single male employees can be granted Child Care Leave for up to 730 days during their entire service for taking care of up to two eldest surviving children under 18 years of age."
+    answer: "Many organisations offer Child Care Leave as per company policy and applicable labour law, typically for employees caring for young children. Check your company's HR policy for eligibility and duration."
   },
   {
     question: "Can I generate leave applications in Hindi (अवकाश हेतु प्रार्थना पत्र)?",
-    answer: "Yes, Swalekhani natively supports official Hindi leave applications formatted according to Central Government Rajbhasha guidelines."
+    answer: "Yes, Swalekhani natively supports Hindi leave applications (अवकाश हेतु प्रार्थना पत्र) with proper formal formatting."
   },
   {
     question: "What is the procedure for joining duty after Medical Leave?",
-    answer: "An employee returning from Medical Leave must submit a formal 'Joining Report' along with a Medical Fitness Certificate issued by an Authorized Medical Attendant (AMA) or Registered Medical Practitioner."
+    answer: "An employee returning from Medical Leave must submit a formal resumption notice along with a Medical Fitness Certificate issued by a Registered Medical Practitioner."
   },
   {
     question: "Can I export my leave application as a PDF or Print directly?",
@@ -106,7 +106,7 @@ export default function LeaveApplicationPage() {
         <div className="mb-10">
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-semibold uppercase tracking-wider mb-4">
             <Calendar className="w-3.5 h-3.5" />
-            <span>CCS Leave Rules & HR Compliance</span>
+            <span>HR Leave Policies & Compliance</span>
           </div>
 
           <h1 className="text-3xl sm:text-4xl lg:text-5xl font-heading font-bold text-white tracking-tight mb-4 leading-tight">
@@ -114,13 +114,13 @@ export default function LeaveApplicationPage() {
           </h1>
 
           <p className="text-base sm:text-lg text-white/70 leading-relaxed">
-            Standard format for Casual Leave (CL), Earned Leave (EL), Medical Leave, and Special Casual Leave. Compliant with Central Civil Services (CCS) Leave Rules and corporate HR policies.
+            Standard format for Casual Leave (CL), Earned Leave (EL), Medical Leave, and Special Leave. Aligned with standard corporate HR policies.
           </p>
 
           {/* Main Action Bar */}
           <div className="mt-8 flex flex-wrap items-center gap-4">
             <Link
-              href="/tools/letterpad-generator?preset=leave&sub=Application%20for%20Sanction%20of%20Earned%20Leave%20(EL)&tpl=A"
+              href="/tools/letterpad-generator?preset=personal&sub=Application%20for%20Sanction%20of%20Earned%20Leave%20(EL)&tpl=A"
               className="inline-flex items-center gap-2.5 px-7 py-3.5 rounded-xl bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-500 text-white font-semibold text-base shadow-[0_10px_30px_rgba(16,185,129,0.25)] hover:shadow-[0_15px_40px_rgba(16,185,129,0.35)] hover:-translate-y-0.5 transition-all"
             >
               <Sparkles className="w-5 h-5" />
@@ -150,7 +150,7 @@ export default function LeaveApplicationPage() {
               Guidelines for Submitting Official Leave Applications
             </h2>
             <p>
-              In government administration, public sector undertakings, and corporate organizations, leave is governed by statutory provisions (such as the <strong>Central Civil Services (CCS) Leave Rules 1972</strong>). Under these rules, leave cannot be claimed as a matter of absolute right; formal advance sanction is mandatory for planned absences.
+              In corporate organizations, leave is governed by company HR policies and applicable labour law. Leave generally cannot be claimed as a matter of absolute right; formal advance sanction is the standard practice for planned absences.
             </p>
             <p>
               A formal leave application must provide full clarity on the <strong>nature of leave requested, exact calendar dates, prefix and suffix holidays, station leave permission</strong> (if traveling out of headquarters), and charge handover arrangements to ensure uninterrupted administrative workflow.
@@ -242,7 +242,7 @@ export default function LeaveApplicationPage() {
         <FaqAccordion
           items={FAQ_ITEMS}
           title="Leave Application FAQs"
-          subtitle="Procedural answers for government and corporate leave applications."
+          subtitle="Procedural answers for corporate and professional leave applications."
         />
 
         {/* Bottom CTA Card */}
@@ -254,7 +254,7 @@ export default function LeaveApplicationPage() {
             Enter your leave dates and reason; Swalekhani formats an official leave letter ready for print or instant PDF download.
           </p>
           <Link
-            href="/tools/letterpad-generator?preset=leave&sub=Application%20for%20Sanction%20of%20Earned%20Leave%20(EL)&tpl=A"
+            href="/tools/letterpad-generator?preset=personal&sub=Application%20for%20Sanction%20of%20Earned%20Leave%20(EL)&tpl=A"
             className="inline-flex items-center gap-2 px-8 py-3.5 rounded-xl bg-white text-black font-semibold hover:bg-white/90 hover:scale-105 transition-all shadow-[0_0_25px_rgba(255,255,255,0.2)]"
           >
             <Sparkles className="w-4 h-4 text-emerald-500" />

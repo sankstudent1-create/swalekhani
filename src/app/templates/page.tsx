@@ -3,9 +3,9 @@
 import React, { useState, useMemo } from 'react';
 import Link from 'next/link';
 import { 
-  Search, Sparkles, Building, Landmark, Scale, Briefcase, 
+  Search, Sparkles, Building, Scale, Briefcase, 
   Stethoscope, GraduationCap, Home, Users, ArrowRight, CheckCircle2,
-  ShieldCheck, FileText, UtensilsCrossed, HardHat, Code2
+  FileText, UtensilsCrossed, HardHat, Code2
 } from 'lucide-react';
 import { PROFESSION_TEMPLATES } from '@/data/profession-templates';
 import AdSlot from '@/components/AdSlot';
@@ -26,20 +26,7 @@ interface GalleryTemplate {
 }
 
 const ALL_GALLERY_TEMPLATES: GalleryTemplate[] = [
-  // 5 Core Established Templates
-  {
-    slug: 'government-letterpad',
-    name: 'Government Office & Ministry Letterhead',
-    category: 'Public',
-    badge: 'GoI Rajbhasha Standard',
-    description: 'Bilingual letterhead with Ashoka Lion Capital, Ministry header, file number alignment, and numbered paragraphing.',
-    href: '/templates/government-letterpad',
-    generatorHref: '/tools/letterpad-generator?preset=dop&tpl=A',
-    icon: Landmark,
-    accentColor: '#38bdf8',
-    bgGlow: 'bg-sky-500/10',
-    tags: ['Government', 'Ministry', 'Bilingual', 'Ashoka Emblem', 'Central Gov']
-  },
+  // 4 Core Established Templates
   {
     slug: 'advocate',
     name: 'Advocate & Legal Practitioner Letterhead',
@@ -211,32 +198,6 @@ const ALL_GALLERY_TEMPLATES: GalleryTemplate[] = [
     tags: ['Housing Society', 'CHS', 'RWA', 'Apartment', 'Society NOC']
   },
   {
-    slug: 'political-leader',
-    name: 'Public Representative / लोकप्रतिनिधी',
-    category: 'Public',
-    badge: 'Constituency Standard',
-    description: PROFESSION_TEMPLATES['political-leader'].shortDesc,
-    href: '/templates/political-leader',
-    generatorHref: '/tools/letterpad-generator?template=political-leader',
-    icon: ShieldCheck,
-    accentColor: '#ea580c',
-    bgGlow: 'bg-orange-500/10',
-    tags: ['Public Representative', 'Corporator', 'Lokpratinidhi', 'Constituency', 'Bilingual']
-  },
-  {
-    slug: 'gram-panchayat',
-    name: 'Gram Panchayat & Village Administration',
-    category: 'Public',
-    badge: 'Panchayati Raj Standard',
-    description: PROFESSION_TEMPLATES['gram-panchayat'].shortDesc,
-    href: '/templates/gram-panchayat',
-    generatorHref: '/tools/letterpad-generator?template=gram-panchayat',
-    icon: Landmark,
-    accentColor: '#d97706',
-    bgGlow: 'bg-amber-500/10',
-    tags: ['Gram Panchayat', 'Sarpanch', 'Gram Sevak', 'Tricolor', 'Devanagari', 'Village']
-  },
-  {
     slug: 'freelancer',
     name: 'Freelancer & Digital Consultant',
     category: 'Business',
@@ -294,7 +255,7 @@ export default function TemplatesGalleryPage() {
           </h1>
 
           <p className="text-base sm:text-lg text-white/70 leading-relaxed">
-            Choose from authentic, legally structured letterhead templates tailored for Indian advocates, CAs, doctors, businesses, gram panchayats, and government ministries.
+            Choose from authentic, professionally structured letterhead templates tailored for Indian advocates, CAs, doctors, businesses, clinics, and freelancers.
           </p>
         </div>
 
@@ -454,7 +415,7 @@ export default function TemplatesGalleryPage() {
                 <span>Statutory Compliance</span>
               </h4>
               <p className="text-xs text-white/50 leading-relaxed">
-                Pre-formatted for Bar Council, ICAI, RERA, NMC Medical, PWD, and Panchayati Raj regulations.
+                Pre-formatted for Bar Council, ICAI, RERA, and NMC Medical regulations.
               </p>
             </div>
             <div className="space-y-2">
@@ -463,7 +424,7 @@ export default function TemplatesGalleryPage() {
                 <span>Devanagari Bilingual</span>
               </h4>
               <p className="text-xs text-white/50 leading-relaxed">
-                Full Rajbhasha Hindi and Marathi font engine with bilingual ministry and local government layouts.
+                Full Hindi and Marathi font engine with bilingual corporate and professional layouts.
               </p>
             </div>
             <div className="space-y-2">

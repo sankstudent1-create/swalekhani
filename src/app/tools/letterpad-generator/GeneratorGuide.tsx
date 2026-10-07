@@ -5,24 +5,24 @@ import FaqAccordion, { FaqItem } from '@/components/seo/FaqAccordion';
 
 const GUIDE_FAQS: FaqItem[] = [
   {
-    question: 'What paper size should I use for official letters in India?',
-    answer: 'The standard is A4 (210 × 297 mm) for all government, court, and corporate correspondence in India. Swalekhani Studio renders a pixel-perfect A4 canvas, and the Export PDF button produces a true vector A4 file — no scaling needed at print time. Avoid US Letter size; Indian offices uniformly expect A4.'
+    question: 'What paper size should I use for formal letters in India?',
+    answer: 'The standard is A4 (210 × 297 mm) for all corporate, legal, and personal correspondence in India. Swalekhani Studio renders a pixel-perfect A4 canvas, and the Export PDF button produces a true vector A4 file — no scaling needed at print time. Avoid US Letter size; Indian offices uniformly expect A4.'
   },
   {
     question: 'Can I print on pre-printed company letterhead paper?',
     answer: 'Yes. If your office already has printed letterhead stationery, switch the Studio header to the minimal layout, leave the top margin generous (at least 4 cm), and print only the body. Use the live preview to align the first line below your printed header before committing to a full run.'
   },
   {
-    question: 'Are bilingual (Hindi & English) headers mandatory?',
-    answer: 'For Central Government ministries and subordinate offices, yes — the Official Languages Act, 1963 and the CSMOP require bilingual headers with Devanagari on top or left. For private companies, schools, and professionals, bilingual headers are optional but common in Hindi-speaking states. Swalekhani supports Devanagari typography natively.'
+    question: 'Are bilingual (Hindi & English) headers needed?',
+    answer: 'For private companies, schools, and professionals, bilingual headers are optional but common in Hindi-speaking states. Swalekhani supports Devanagari typography natively, so you can add Hindi lines above your English header whenever it suits your audience.'
   },
   {
-    question: 'Can I use the Ashoka emblem or a ministry logo on my draft?',
-    answer: 'The State Emblem of India is protected by the State Emblem of India (Prohibition of Improper Use) Act — only authorised government bodies may use it on genuine communications. Swalekhani drafts are unofficial design mockups for practice and layout reference; never present them as real official documents or use them to impersonate any authority.'
+    question: 'Can I use my company logo on my draft?',
+    answer: 'Yes — upload your own company or clinic logo in the Studio header settings. Use only logos you own or are authorised to use; never use another organisation\'s branding or any national emblem on your drafts.'
   },
   {
-    question: 'How do I number paragraphs in an official letter?',
-    answer: 'Government letters use sequentially numbered paragraphs (1., 2., 3.) for the substantive body, each making one point. In Swalekhani Studio, use the numbered-paragraph insert button in the toolbar — it keeps numbering consistent even when you reorder text, matching CSMOP convention.'
+    question: 'How do I number paragraphs in a formal letter?',
+    answer: 'Formal business letters use sequentially numbered paragraphs (1., 2., 3.) for the substantive body, each making one point. In Swalekhani Studio, use the numbered-paragraph insert button in the toolbar — it keeps numbering consistent even when you reorder text.'
   },
   {
     question: 'Is the AI-drafted text final and ready to send?',
@@ -33,15 +33,14 @@ const GUIDE_FAQS: FaqItem[] = [
 export default function GeneratorGuide() {
   return (
     <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pb-20">
-      {/* Unofficial draft safeguard */}
+      {/* Draft safeguard */}
       <div className="mb-10 p-4 sm:p-5 rounded-2xl bg-amber-500/[0.07] border border-amber-500/25 flex items-start gap-3.5">
         <ShieldAlert className="w-5 h-5 text-amber-400 flex-shrink-0 mt-0.5" />
         <div className="text-sm leading-relaxed">
-          <p className="font-semibold text-amber-300 mb-1">Unofficial draft tool — not issued by any authority</p>
+          <p className="font-semibold text-amber-300 mb-1">Drafting aid — always review before sending</p>
           <p className="text-white/65">
-            Swalekhani Studio creates <strong className="text-white/85">unofficial design drafts</strong> for practice, study, and layout reference only.
-            Output is not issued by any government, court, or institution and must never be presented as a genuine official document
-            or used to impersonate officials. Misuse is the user&apos;s sole responsibility.{' '}
+            Swalekhani Studio creates <strong className="text-white/85">AI-assisted drafts</strong> for your review.
+            Always verify names, dates, amounts, and tone before printing or sending any letter.{' '}
             <Link href="/disclaimer" className="underline decoration-amber-400/50 underline-offset-2 hover:text-amber-300">Read the Disclaimer</Link>.
           </p>
         </div>
@@ -55,18 +54,18 @@ export default function GeneratorGuide() {
             <span>Writing Guide</span>
           </div>
           <h2 className="text-2xl sm:text-3xl font-heading font-bold text-white mb-2">
-            How to Write an Official Letter in India
+            How to Write a Formal Letter in India
           </h2>
           <p className="text-sm text-white/60">
-            The anatomy of a proper Indian official letter — from sender block to endorsement — and what each field in Swalekhani Studio means.
+            The anatomy of a proper formal letter — from sender block to sign-off — and what each field in Swalekhani Studio means.
           </p>
         </div>
 
         <section className="space-y-4 mb-8">
           <h3 className="text-xl font-heading font-semibold text-white">1. The sender block and header</h3>
           <p>
-            Every official letter opens with the issuing office&apos;s identity: organisation name, department, address, phone, and email.
-            In government correspondence this header is bilingual (Hindi above English) and carries the institutional emblem.
+            Every formal letter opens with the sender&apos;s identity: organisation name, department, address, phone, and email.
+            Bilingual headers (Hindi above English) are common in Indian business correspondence and supported natively.
             In Swalekhani Studio, the <strong className="text-white/90">header fields (e1, e2, ofc, ph, em)</strong> control exactly this block —
             fill them once per template and every new letter inherits a consistent identity.
           </p>

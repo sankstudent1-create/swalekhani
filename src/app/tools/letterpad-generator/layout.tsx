@@ -2,31 +2,31 @@ import { Metadata } from 'next';
 import GeneratorGuide from './GeneratorGuide';
 
 export const metadata: Metadata = {
-  title: 'Official AI Letterpad Studio & Document Generator',
-  description: 'Swalekhani is India\'s premier AI-powered official letterpad generator. Draft perfectly formatted Government of India, bilingual Hindi-English, and professional letters instantly with Groq AI and direct vector PDF export.',
+  title: 'Professional AI Letterpad Studio & Document Generator',
+  description: 'Swalekhani is India\'s premier AI-powered letterpad generator. Draft perfectly formatted corporate, bilingual Hindi-English, and professional letters instantly with Groq AI and direct vector PDF export.',
   keywords: [
     "swalekhani",
-    "official letterpad generator",
-    "government letter format maker",
+    "letterpad generator",
+    "business letter format maker",
     "ai letter writer",
     "bilingual hindi letter generator",
-    "india post letterpad",
+    "company letterhead maker",
     "sw infosystems"
   ],
   alternates: {
     canonical: '/tools/letterpad-generator'
   },
   openGraph: {
-    title: 'Official AI Letterpad Studio & Generator',
-    description: 'AI-powered official letterpad and document generator. Draft perfectly formatted official, government, and bilingual letters instantly.',
+    title: 'Professional AI Letterpad Studio & Generator',
+    description: 'AI-powered letterpad and document generator. Draft perfectly formatted corporate, business, and bilingual letters instantly.',
     url: 'https://swalekhani.vercel.app/tools/letterpad-generator',
     images: ['/icon-512.png'],
     type: 'website'
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Official AI Letterpad Studio & Generator',
-    description: 'AI-powered official letterpad and document generator with print-ready PDF export.',
+    title: 'Professional AI Letterpad Studio & Generator',
+    description: 'AI-powered letterpad and document generator with print-ready PDF export.',
     images: ['/icon-512.png']
   }
 };

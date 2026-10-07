@@ -231,8 +231,6 @@ export default function LetterPaper({
   const isDoctor = officeType === 'doctor' || officeType === 'clinic';
   const isAdvocate = officeType === 'advocate';
   const isNGO = officeType === 'ngo-trust';
-  const isPanchayat = officeType === 'gram-panchayat';
-  const isPublicRep = officeType === 'political-leader';
   const isSociety = officeType === 'housing-society';
 
   const addr = [form.ofc, form.city, form.pin ? '– ' + form.pin : ''].filter(Boolean).join(', ');
@@ -266,21 +264,21 @@ export default function LetterPaper({
           <div className={styles.hACenter}>
             {(form.h1 || form.h2) && (
               <div className={styles.hAHi}>
-                {E('h1', '', 'span', state.officeType === 'custom' ? 'Hindi Heading 1' : 'भारत सरकार')}
-                {form.h2 && <> / {E('h2', '', 'span', state.officeType === 'custom' ? 'Hindi Heading 2' : 'विभाग')}</>}
+                {E('h1', '', 'span', 'Hindi Heading 1')}
+                {form.h2 && <> / {E('h2', '', 'span', 'Hindi Heading 2')}</>}
               </div>
             )}
             {(form.e1 || form.e2) && (
               <div className={styles.hAEn}>
-                {E('e1', '', 'span', state.officeType === 'custom' ? 'Heading 1' : 'Government of India')}
-                {form.e2 && <> / {E('e2', '', 'span', state.officeType === 'custom' ? 'Heading 2' : 'Ministry')}</>}
+                {E('e1', '', 'span', 'Heading 1')}
+                {form.e2 && <> / {E('e2', '', 'span', 'Heading 2')}</>}
               </div>
             )}
             <div className={styles.hADept}>
-              {E('dept', '', 'span', state.officeType === 'custom' ? 'Title / Company Name' : 'Department')}
+              {E('dept', '', 'span', 'Title / Company Name')}
               {tpl === 'F' && <span className={styles.circularBadge}>CIRCULAR</span>}
             </div>
-            {E('divn', styles.hADiv, 'div', state.officeType === 'custom' ? 'Subtitle / Branch' : 'Division / Section')}
+            {E('divn', styles.hADiv, 'div', 'Subtitle / Branch')}
             {form.enrolmentNo && (
               <div className={styles.advocateEnrolment}>
                 {E('enrolmentNo', '', 'span', 'Reg / Enrolment No.')}
@@ -554,8 +552,8 @@ export default function LetterPaper({
           multiline
         />
 
-        {/* Closing + Signature — right-aligned per GoI format */}
-        {!(isPanchayat && form.sc?.trim()) ? (
+        {/* Closing + Signature — right-aligned */}
+        {
           <div className={styles.closingAndSig}>
             <div className={`${styles.closingBlock} ${!form.cls?.trim() ? styles.hideIfEmptyPrint : ''}`}>
               <Editable
@@ -587,25 +585,7 @@ export default function LetterPaper({
               )}
             </div>
           </div>
-        ) : (
-          /* Dual Signatures for Gram Panchayat / Joint Authorities */
-          <div className={styles.dualSigRow}>
-            <div className={styles.dualSigBlock}>
-              <div className={styles.sigSpace}>
-                {sigUrl && <img src={sigUrl} className={styles.sigImg} alt="signature" />}
-              </div>
-              <div className={styles.dualSigLine} />
-              <div className={styles.sigName}>{form.sn || 'ग्रामसेवक / सचिव'}</div>
-              <div className={styles.sigDesig}>{form.sd || 'ग्रामपंचायत कार्यालय'}</div>
-            </div>
-            <div className={styles.dualSigBlock}>
-              <div className={styles.sigSpace} />
-              <div className={styles.dualSigLine} />
-              <div className={styles.sigName}>{form.sc || 'सरपंच / अध्यक्ष'}</div>
-              <div className={styles.sigDesig}>ग्रामपंचायत शिंदेवाडी</div>
-            </div>
-          </div>
-        )}
+        }
 
         {/* Doctor Medico-Legal Warning */}
         {isDoctor && (
@@ -703,9 +683,7 @@ export default function LetterPaper({
             <div className={styles.footerExecInner}>
               <div className={styles.footerExecTop}>
                 <span className={styles.footerDeptBold}>
-                  {state.officeType === 'custom' 
-                    ? (form.dept || '') 
-                    : (form.dept ? (form.dept.toLowerCase().includes('government of india') ? form.dept : `${form.dept} · Government of India`) : 'Government of India')}
+                  {form.dept || ''}
                 </span>
                 <span className={styles.footerLoc}>
                   {[form.city, form.pin ? `PIN: ${form.pin}` : ''].filter(Boolean).join(' – ')}
@@ -720,7 +698,7 @@ export default function LetterPaper({
             <div className={styles.footerMinimalInner}>
               <span>
                 {[
-                  state.officeType === 'custom' ? form.dept : (form.dept ? (form.dept.toLowerCase().includes('government of india') ? form.dept : `${form.dept} · Government of India`) : 'Government of India'),
+                  form.dept || '',
                   [form.city, form.pin ? `PIN: ${form.pin}` : ''].filter(Boolean).join(' – '),
                   [form.ph ? `Tel: ${form.ph}` : '', form.em, form.wb].filter(Boolean).join(' · ')
                 ].filter(Boolean).join('   •   ')}
@@ -729,11 +707,7 @@ export default function LetterPaper({
           ) : (
             <div className={styles.footerGrid}>
               <span className={styles.footerDept}>
-                {state.officeType === 'custom' ? (
-                  form.dept || ''
-                ) : (
-                  (form.dept || 'Government of India') + (form.dept && !form.dept.toLowerCase().includes('government of india') ? ' · Government of India' : '')
-                )}
+                {form.dept || ''}
               </span>
               <span className={styles.footerLoc}>
                 {[form.city, form.pin ? `PIN: ${form.pin}` : ''].filter(Boolean).join(' – ')}

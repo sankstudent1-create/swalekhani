@@ -72,9 +72,6 @@ function LetterpadGeneratorInner() {
         if (lower === 'clinic') {
           defaultSignatory = 'Dr. Aarav Sharma, MBBS, MD (Med)';
           defaultDesig = 'Consulting Physician & Medical Director';
-        } else if (lower === 'political-leader') {
-          defaultSignatory = 'Shri Amit V. Deshmukh';
-          defaultDesig = 'Public Representative / Member, Municipal Council';
         }
 
         const regField = prof.fields.find(f => 
@@ -416,7 +413,7 @@ function LetterpadGeneratorInner() {
               onToggleEndorse={toggleEndorse}
               onToggleFooter={toggleFooter}
               isPersonal={state.officeType === 'personal'}
-              onTogglePersonal={() => applyOfficePreset(state.officeType === 'personal' ? 'custom' : 'personal')}
+              onTogglePersonal={() => applyOfficePreset(state.officeType === 'personal' ? 'corporate' : 'personal')}
               onPrint={doPrint}
               onPDF={generatePDF}
               onPNG={generatePNG}

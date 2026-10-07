@@ -7,7 +7,7 @@ import React, { useRef, useState } from 'react';
 import type { AppState, LetterForm, TemplateType, FontClass, LogoSide, AILetterData } from '@/types/letterpad';
 import {
   OFFICE_PRESETS, TEMPLATE_INFO, FONT_OPTIONS,
-  SALUTATION_OPTIONS, CLOSING_OPTIONS, AI_LETTER_TYPES, svgToDataUri
+  SALUTATION_OPTIONS, CLOSING_OPTIONS, AI_LETTER_TYPES
 } from '@/lib/letterpad/constants';
 import { buildPrompt, generateLetterWithAI } from '@/lib/letterpad/aiService';
 import SignaturePad from './SignaturePad';
@@ -47,7 +47,7 @@ export default function Sidebar({
   const { form, tpl, font, officeType, logoL, logoR } = state;
 
   // AI state
-  const [aiType, setAiType]     = useState('office_order');
+  const [aiType, setAiType]     = useState('corporate');
   const [aiLang, setAiLang]     = useState('en');
   const [aiPrompt, setAiPrompt] = useState('');
   const [aiMode, setAiMode]     = useState<'content' | 'full'>('content');
@@ -76,7 +76,7 @@ export default function Sidebar({
         ? { ...form, dept: '', divn: '', ofc: '', city: '', pin: '', ph: '', em: '', wb: '', h1: '', h2: '', e1: '', e2: '' } 
         : form;
 
-      const briefText = aiPrompt.trim() || form.sub || 'Draft a complete official letter';
+      const briefText = aiPrompt.trim() || form.sub || 'Draft a complete formal letter';
       const result = await generateLetterWithAI(
         briefText,
         aiType,
@@ -141,14 +141,14 @@ export default function Sidebar({
             className={styles.textarea}
             rows={4}
             value={aiPrompt}
-            placeholder="e.g. Reminder to all postmasters in Nagpur region to submit monthly cash accounts by 5th. Mention penalty for delay. From PMG Nagpur."
+            placeholder="e.g. Follow-up with a client on pending invoice #1234 due last week. Mention late-fee clause. From Accounts Manager."
             onChange={e => setAiPrompt(e.target.value)}
           />
         </Field>
 
         <Field label="Language">
           <select className={styles.select} value={aiLang} onChange={e => setAiLang(e.target.value)}>
-            <option value="en">English (Official CSMOP)</option>
+            <option value="en">English (Formal Business)</option>
             <option value="mr">मराठी (Marathi - अस्सल मराठी)</option>
             <option value="hi">हिन्दी (Hindi - राजभाषा)</option>
             <option value="bi">Bilingual (English + मराठी / हिन्दी)</option>
@@ -181,10 +181,10 @@ export default function Sidebar({
         <SectionTitle>Office / Authority</SectionTitle>
         <div className={styles.officeGrid}>
           {[
-            ['dop','🏛️','DoP'], ['pm','🇮🇳','PM / CM'], ['minister','🏢','Minister'],
-            ['mla','📜','MLA / Assembly'], ['district','🏢','District Office'],
-            ['rms','🚂','RMS / Mail'], ['savings','₹','Savings Bank'], ['custom','✨','Custom / Private'],
-            ['personal','🎓','Personal (No Header)']
+            ['corporate','🏢','Corporate'], ['startup','🚀','Startup'], ['personal','👤','Personal'],
+            ['legal','⚖️','Legal'], ['healthcare','🏥','Healthcare'], ['complaint','📢','Complaint'],
+            ['rti','📄','RTI'], ['company','🏭','Company'], ['school','🎓','School'],
+            ['doctor','🩺','Doctor'], ['shop','🏪','Shop']
           ].map(([key, icon, label]) => (
             <button
               key={key}
@@ -240,25 +240,14 @@ export default function Sidebar({
         </div>
         <label className={styles.label}>Quick Presets</label>
         <div className={styles.presets}>
-          {[
-            ['ashoka','L','🏛 Ashoka→L'], ['ashoka','R','🏛 Ashoka→R'],
-            ['ip','L','📮 India Post→L'], ['ip','R','📮 IP→R'],
-            ['sansad','L','🗳 Sansad→L'], ['sansad','R','🗳 Sansad→R'],
-            ['mh','L','🌀 MH→L'],
-          ].map(([key, side, lbl]) => (
-            <button key={`${key}-${side}`} className={styles.presetBtn}
-              onClick={() => onLogo(side as LogoSide, svgToDataUri(key))}>
-              {lbl}
-            </button>
-          ))}
           <button className={styles.presetBtn} onClick={() => onLogo('L', null)}>✕ Clear L</button>
           <button className={styles.presetBtn} onClick={() => onLogo('R', null)}>✕ Clear R</button>
         </div>
       </div>
 
-      {/* ── MINISTRY/OFFICE ── */}
+      {/* ── COMPANY/OFFICE ── */}
       <div className={styles.section}>
-        <SectionTitle>Ministry / Office Details</SectionTitle>
+        <SectionTitle>Company / Office Details</SectionTitle>
         <Field label="Hindi Line 1">{inp(form.h1,'h1')}</Field>
         <Field label="Hindi Line 2">{inp(form.h2,'h2')}</Field>
         <Field label="English Line 1">{inp(form.e1,'e1')}</Field>

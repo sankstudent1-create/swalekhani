@@ -149,7 +149,7 @@ export default function ShopLetterpadPage() {
               In Indian trade and commerce, a shop letterpad is indispensable for issuing official price estimates, authorization letters for delivery agents, guarantee certificates, supply inquiries, and bank current account documentation.
             </p>
             <p>
-              Displaying your <strong>GSTIN, Trade License / Shop Establishment Number, and Verified WhatsApp Contact</strong> on every formal correspondence protects your business against commercial disputes and establishes immediate credibility with corporate buyers and government purchasers.
+              Displaying your <strong>GSTIN, Trade License / Shop Establishment Number, and Verified WhatsApp Contact</strong> on every formal correspondence protects your business against commercial disputes and establishes immediate credibility with corporate buyers and institutional clients.
             </p>
           </section>
 

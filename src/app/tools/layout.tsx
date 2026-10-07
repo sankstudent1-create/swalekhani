@@ -2,29 +2,29 @@ import type { Metadata } from "next";
 import AdSlot from "@/components/AdSlot";
 
 export const metadata: Metadata = {
-  title: "Official Letterpad Templates & Format Library",
-  description: "Browse official Government of India, India Post, State Secretariat, Legislative, and Corporate letterhead templates. Draft instantly with Groq AI and export print-ready PDFs.",
+  title: "Professional Letterpad Templates & Format Library",
+  description: "Browse corporate, startup, legal, healthcare, and personal letterhead templates. Draft instantly with Groq AI and export print-ready PDFs.",
   keywords: [
-    "official letterpad templates",
-    "government letterhead format library",
+    "letterpad templates",
+    "corporate letterhead format library",
     "bilingual letterhead presets",
-    "india post letterpad format",
+    "business letterhead maker",
     "corporate letterhead maker"
   ],
   alternates: {
     canonical: "/tools",
   },
   openGraph: {
-    title: "Official Letterpad Templates & Format Library",
-    description: "Browse and customize authentic government, academic, and business letterpads with AI drafting.",
+    title: "Professional Letterpad Templates & Format Library",
+    description: "Browse and customize corporate, academic, and business letterpads with AI drafting.",
     url: "https://swalekhani.vercel.app/tools",
     images: ["/icon-512.png"],
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Official Letterpad Templates Library",
-    description: "Authentic government and business letterhead templates.",
+    title: "Professional Letterpad Templates Library",
+    description: "Corporate and business letterhead templates.",
     images: ["/icon-512.png"],
   },
 };

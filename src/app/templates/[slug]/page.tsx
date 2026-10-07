@@ -2,7 +2,7 @@ import React from 'react';
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
-import { Sparkles, Layers, ShieldCheck, ShieldAlert, ArrowRight } from 'lucide-react';
+import { Sparkles, Layers, ShieldCheck, ArrowRight } from 'lucide-react';
 import { PROFESSION_TEMPLATES, ALL_PROFESSION_SLUGS } from '@/data/profession-templates';
 import ProfessionTemplateClient from '@/components/templates/ProfessionTemplateClient';
 import AdSlot from '@/components/AdSlot';
@@ -158,22 +158,6 @@ export default async function ProfessionTemplatePage({ params }: PageProps) {
             </Link>
           </div>
         </div>
-
-        {/* Unofficial Draft Notice — shown on authority-impersonation-risk templates */}
-        {(slug === 'gram-panchayat' || slug === 'political-leader') && (
-          <div className="mb-8 p-4 sm:p-5 rounded-2xl bg-amber-500/[0.07] border border-amber-500/25 flex items-start gap-3.5">
-            <ShieldAlert className="w-5 h-5 text-amber-400 flex-shrink-0 mt-0.5" />
-            <div className="text-sm leading-relaxed">
-              <p className="font-semibold text-amber-300 mb-1">Unofficial draft tool — not an official document</p>
-              <p className="text-white/65">
-                This template creates <strong className="text-white/85">unofficial design drafts</strong> for practice, study, and layout reference only.
-                It is not issued by any Gram Panchayat, elected representative, or public authority, and must never be presented
-                as a genuine official certificate or used to misrepresent authority. Misuse is the user&apos;s sole responsibility.
-                See our <Link href="/disclaimer" className="underline decoration-amber-400/50 underline-offset-2 hover:text-amber-300">Disclaimer</Link>.
-              </p>
-            </div>
-          </div>
-        )}
 
         {/* In-article Ad Slot */}
         {adsEnabled && <AdSlot slotKey="content-top" label="Sponsored Content" />}

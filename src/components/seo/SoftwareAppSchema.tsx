@@ -8,7 +8,7 @@ export default function SoftwareAppSchema() {
     "alternateName": ["Swalekhani Letterpad Studio", "स्व-लेखनी"],
     "applicationCategory": "BusinessApplication",
     "operatingSystem": "All (Web Browser, Windows, macOS, Android, iOS)",
-    "description": "India's official AI-powered letterpad generator and document drafting platform. Generate Government of India, departmental, bilingual Hindi-English, and professional letterpads with instant PDF export.",
+    "description": "India's professional AI-powered letterpad generator and document drafting platform. Generate corporate, legal, bilingual Hindi-English, and personal letterpads with instant PDF export.",
     "url": "https://swalekhani.vercel.app/tools/letterpad-generator",
     "image": "https://swalekhani.vercel.app/icon-512.png",
     "author": {
@@ -22,9 +22,8 @@ export default function SoftwareAppSchema() {
       "priceCurrency": "INR"
     },
     "featureList": [
-      "AI Official Letter Drafting in English, Hindi & Marathi",
-      "Official Government of India & State Secretariat Templates",
-      "India Post, Sansad, Ministry & Institutional Letterheads",
+      "AI Business Letter Drafting in English, Hindi & Marathi",
+      "Corporate, Startup & Institutional Letterhead Templates",
       "Devanagari Bilingual Typography Support",
       "Endorsement & Copy-To Section Controls",
       "Integrated Digital Signature Pad",

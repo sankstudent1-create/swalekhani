@@ -4,7 +4,7 @@ export default function manifest(): MetadataRoute.Manifest {
   return {
     name: "Swalekhani - AI Letterpad Generator",
     short_name: "Swalekhani",
-    description: "AI-powered official letterpad and document generator for government, business, and official letters.",
+    description: "AI-powered letterpad and document generator for corporate, business, and personal letters.",
     start_url: "/",
     display: "standalone",
     background_color: "#07090f",

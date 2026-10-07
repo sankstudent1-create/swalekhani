@@ -143,7 +143,7 @@ export default function ProfessionTemplateClient({ template }: Props) {
             className="w-full bg-[#fcfcfc] text-slate-900 rounded-2xl shadow-2xl p-6 sm:p-10 border border-white/20 transition-all font-sans relative overflow-hidden"
             style={{ minHeight: '680px' }}
           >
-            {/* Special Tricolor Top Border Ribbon for Gram Panchayat */}
+            {/* Optional Tricolor Top Border Ribbon (theme-driven) */}
             {template.theme.headerLayout === 'tricolor' && (
               <div className="absolute top-0 left-0 right-0 h-2.5 flex">
                 <div className="flex-1 bg-[#ff9933]"></div>
@@ -171,9 +171,9 @@ export default function ProfessionTemplateClient({ template }: Props) {
               </h2>
 
               {/* Sub-header / Qualifications / Designation */}
-              {(fieldValues.subTitle || fieldValues.qualifications || fieldValues.designation || fieldValues.panchayatSamiti) && (
+              {(fieldValues.subTitle || fieldValues.qualifications || fieldValues.designation) && (
                 <p className="text-xs sm:text-sm text-slate-700 font-medium text-center mt-1">
-                  {fieldValues.subTitle || fieldValues.qualifications || fieldValues.designation || fieldValues.panchayatSamiti}
+                  {fieldValues.subTitle || fieldValues.qualifications || fieldValues.designation}
                 </p>
               )}
 

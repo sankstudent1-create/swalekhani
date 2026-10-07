@@ -75,7 +75,7 @@ const values = [
   {
     icon: HeartIcon,
     title: "Standardized Formats",
-    description: "Crafted following official Government of India, departmental, and institutional letterpad typographical standards.",
+    description: "Crafted following professional corporate, legal, and institutional letterpad typographical standards.",
   },
   {
     icon: UsersIcon,
@@ -128,7 +128,7 @@ export default function AboutPage() {
             <div className="space-y-4">
               <h2 className="text-3xl md:text-4xl font-bold">Our Mission</h2>
               <p className="text-lg text-foreground/75 leading-relaxed">
-                Drafting official correspondence, departmental endorsements, RTI responses, and formal letterpads shouldn't require complex Word formatting or guesswork. Swalekhani combines AI intelligence with authentic Indian departmental formats to make professional drafting effortless for government officers, employees, professionals, and citizens.
+                Drafting formal business correspondence, complaint letters, RTI applications, and professional letterpads shouldn't require complex Word formatting or guesswork. Swalekhani combines AI intelligence with professional Indian business formats to make drafting effortless for companies, professionals, and individuals.
               </p>
             </div>
 
@@ -193,12 +193,12 @@ export default function AboutPage() {
                   desc: "Intelligent prompts allow you to generate complete official letters, request drafts, or replies in seconds using cutting-edge LLMs.",
                 },
                 {
-                  title: "Official Government & Departmental Formats",
-                  desc: "Preconfigured templates for Government of India, India Post, State Secretariats, Educational Institutes, and Corporate Letterheads.",
+                  title: "Corporate & Professional Formats",
+                  desc: "Preconfigured templates for Companies, Startups, Law Chambers, Clinics, Educational Institutes, and Personal letterheads.",
                 },
                 {
-                  title: "Bilingual Header & Emblem Alignment",
-                  desc: "Effortlessly place National Emblems, Department Logos, and dual Hindi/English header titles with proper typographical balance.",
+                  title: "Bilingual Header & Logo Alignment",
+                  desc: "Effortlessly place your company logo and dual Hindi/English header titles with proper typographical balance.",
                 },
                 {
                   title: "Endorsement & Copy-To Section Controls",

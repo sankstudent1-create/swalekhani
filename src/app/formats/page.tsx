@@ -12,7 +12,7 @@ import AdSlot from '@/components/AdSlot';
 interface FormatItem {
   slug: string;
   title: string;
-  category: 'Government & Admin' | 'HR & Office' | 'Legal & Public' | 'Banking & Utility';
+  category: 'Corporate & Admin' | 'HR & Office' | 'Legal & Public' | 'Banking & Utility';
   badge: string;
   desc: string;
   guideUrl?: string;
@@ -26,16 +26,16 @@ interface FormatItem {
 const OFFICIAL_FORMATS: FormatItem[] = [
   {
     slug: 'leave-application',
-    title: 'Official Leave Application (CL / EL / Medical)',
+    title: 'Leave Application (CL / EL / Medical)',
     category: 'HR & Office',
-    badge: 'CCS Leave Rules 1972',
-    desc: 'Standard administrative leave application for Casual Leave, Earned Leave, and Medical absence with station leave permission.',
+    badge: 'HR Standard',
+    desc: 'Standard leave application for Casual Leave, Earned Leave, and Medical absence with charge handover.',
     guideUrl: '/formats/leave-application',
-    generatorUrl: '/tools/letterpad-generator?preset=leave&sub=Application%20for%20Sanction%20of%20Earned%20Leave%20(EL)&tpl=A',
+    generatorUrl: '/tools/letterpad-generator?preset=personal&sub=Application%20for%20Sanction%20of%20Earned%20Leave%20(EL)&tpl=A',
     icon: Clock,
     image: '/illustrations/leave-3d.jpg',
     gradient: 'from-emerald-500/20 to-teal-500/10',
-    tags: ['Leave Application', 'Casual Leave', 'Earned Leave', 'Medical', 'Govt Employee', 'Corporate HR']
+    tags: ['Leave Application', 'Casual Leave', 'Earned Leave', 'Medical', 'Employee', 'Corporate HR']
   },
   {
     slug: 'police-complaint',
@@ -43,7 +43,7 @@ const OFFICIAL_FORMATS: FormatItem[] = [
     category: 'Legal & Public',
     badge: 'CrPC / BNSS Compliant',
     desc: 'Formal representation to Station House Officer (SHO / Police Inspector) for non-cognizable loss, cyber harassment, or nuisance complaints.',
-    generatorUrl: '/tools/letterpad-generator?preset=custom&sub=Complaint%20Regarding%20Lost%20Documents%20/%20Public%20Nuisance',
+    generatorUrl: '/tools/letterpad-generator?preset=complaint&sub=Complaint%20Regarding%20Lost%20Documents%20/%20Public%20Nuisance',
     icon: Shield,
     image: '/illustrations/police-3d.jpg',
     gradient: 'from-blue-500/20 to-amber-500/10',
@@ -63,15 +63,15 @@ const OFFICIAL_FORMATS: FormatItem[] = [
   },
   {
     slug: 'office-order',
-    title: 'Official Office Order & Admin Circular Format',
-    category: 'Government & Admin',
-    badge: 'Central Secretariat CSMOP',
-    desc: 'Formal administrative Office Order for transfers, duty allocations, pay fixations, and departmental committees.',
+    title: 'Office Order & Admin Circular Format',
+    category: 'Corporate & Admin',
+    badge: 'Corporate Standard',
+    desc: 'Formal administrative Office Order for transfers, duty allocations, and internal committees.',
     guideUrl: '/formats/office-order',
-    generatorUrl: '/tools/letterpad-generator?preset=dop&sub=OFFICE%20ORDER%20-%20Administrative%20Sanction&tpl=A',
+    generatorUrl: '/tools/letterpad-generator?preset=corporate&sub=OFFICE%20ORDER%20-%20Administrative%20Sanction&tpl=A',
     icon: Award,
     gradient: 'from-sky-500/20 to-blue-500/10',
-    tags: ['Office Order', 'CSMOP', 'Transfer Order', 'Admin Directive', 'Bilingual']
+    tags: ['Office Order', 'Transfer Order', 'Admin Directive', 'Bilingual']
   },
   {
     slug: 'rti-application',
@@ -80,21 +80,21 @@ const OFFICIAL_FORMATS: FormatItem[] = [
     badge: 'RTI Act 2005 (Sec 6(1))',
     desc: 'Statutory Right to Information (RTI) application format for Central and State Public Information Officers (PIO) in English & Marathi.',
     guideUrl: '/formats/rti-application',
-    generatorUrl: '/tools/letterpad-generator?preset=custom&sub=Application%20under%20Section%206(1)%20of%20RTI%20Act%202005&tpl=A',
+    generatorUrl: '/tools/letterpad-generator?preset=rti&sub=Application%20under%20Section%206(1)%20of%20RTI%20Act%202005&tpl=A',
     icon: Shield,
     gradient: 'from-indigo-500/20 to-purple-500/10',
     tags: ['RTI', 'Right to Information', 'Section 6(1)', 'PIO', 'BPO', 'माहिती अधिकार']
   },
   {
-    slug: 'gram-panchayat-complaint',
-    title: 'Gram Panchayat Public Representation / तक्रार अर्ज',
-    category: 'Government & Admin',
-    badge: 'Panchayati Raj Act',
-    desc: 'Formal public application format to Sarpanch and Gram Sevak for village infrastructure, street lights, water supply, and road repair.',
-    generatorUrl: '/tools/letterpad-generator?template=gram-panchayat&sub=%E0%A4%B0%E0%A4%B8%E0%A5%8D%E0%A4%A4%E0%A4%BE%20%E0%A4%B5%20%E0%A4%AA%E0%A4%A5%E0%A4%A6%E0%A4%BF%E0%A4%B5%E0%A5%87%20%E0%A4%A6%E0%A5%81%E0%A4%B0%E0%A5%81%E0%A4%B8%E0%A5%8D%E0%A4%A4%E0%A5%80%E0%A4%AC%E0%A4%BE%E0%A4%AC%E0%A4%A4%20%E0%A4%85%E0%A4%B0%E0%A5%8D%E0%A4%9C',
+    slug: 'consumer-complaint',
+    title: 'Consumer Complaint Letter',
+    category: 'Legal & Public',
+    badge: 'Consumer Rights Format',
+    desc: 'Formal complaint format for defective products, poor service, billing disputes, and warranty claims.',
+    generatorUrl: '/tools/letterpad-generator?preset=complaint&sub=Complaint%20Regarding%20Defective%20Product%20/%20Deficient%20Service',
     icon: Landmark,
     gradient: 'from-amber-600/20 to-orange-500/10',
-    tags: ['Gram Panchayat', 'Sarpanch', 'Gram Sevak', 'Village Grievance', 'मराठी अर्ज']
+    tags: ['Consumer Complaint', 'Defective Product', 'Warranty Claim', 'Service Grievance']
   },
   {
     slug: 'bank-representation',
@@ -102,21 +102,21 @@ const OFFICIAL_FORMATS: FormatItem[] = [
     category: 'Banking & Utility',
     badge: 'Banking Ombudsman Format',
     desc: 'Official bank manager correspondence for account transfer, signature modification, stop cheque, and loan documentation.',
-    generatorUrl: '/tools/letterpad-generator?preset=custom&sub=Application%20for%20Change%20of%20Address%20and%20Contact%20Details%20in%20Bank%20Account',
+    generatorUrl: '/tools/letterpad-generator?preset=personal&sub=Application%20for%20Change%20of%20Address%20and%20Contact%20Details%20in%20Bank%20Account',
     icon: Building2,
     gradient: 'from-cyan-500/20 to-blue-500/10',
     tags: ['Bank Application', 'KYC Update', 'Branch Manager', 'Account Transfer', 'Cheque Stop']
   },
   {
-    slug: 'mahavitaran-electricity',
-    title: 'Electricity Board / Mahavitaran Complaint Letter',
+    slug: 'electricity-complaint',
+    title: 'Electricity Complaint Letter',
     category: 'Banking & Utility',
-    badge: 'Electricity Consumer Code',
-    desc: 'Application to Assistant Engineer (MSEDCL / Electricity Board) regarding faulty meters, excessive billing, and new power connection.',
-    generatorUrl: '/tools/letterpad-generator?preset=custom&sub=Application%20for%20Rectification%20of%20Faulty%20Electricity%20Meter%20and%20Billing',
+    badge: 'Consumer Grievance Format',
+    desc: 'Application to the electricity provider regarding faulty meters, excessive billing, and new power connection.',
+    generatorUrl: '/tools/letterpad-generator?preset=complaint&sub=Application%20for%20Rectification%20of%20Faulty%20Electricity%20Meter%20and%20Billing',
     icon: FileCheck,
     gradient: 'from-yellow-500/20 to-amber-500/10',
-    tags: ['Mahavitaran', 'Electricity Board', 'Meter Dispute', 'Consumer Grievance', 'Power Connection']
+    tags: ['Electricity Complaint', 'Meter Dispute', 'Consumer Grievance', 'Power Connection']
   },
   {
     slug: 'school-bonafide',
@@ -131,7 +131,7 @@ const OFFICIAL_FORMATS: FormatItem[] = [
   }
 ];
 
-const CATEGORIES = ["All", "Government & Admin", "HR & Office", "Legal & Public", "Banking & Utility"];
+const CATEGORIES = ["All", "Corporate & Admin", "HR & Office", "Legal & Public", "Banking & Utility"];
 
 export default function FormatsIndexPage() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -181,7 +181,7 @@ export default function FormatsIndexPage() {
           </h1>
 
           <p className="text-base sm:text-lg text-white/70 leading-relaxed">
-            Standardized, legally compliant formats for Government applications, RTI, Leave letters, Office Orders, and Public Representations with instant AI drafting.
+            Standardized formats for Corporate applications, RTI, Leave letters, Office Orders, and Complaint letters with instant AI drafting.
           </p>
         </div>
 
@@ -196,7 +196,7 @@ export default function FormatsIndexPage() {
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search formats (e.g. Leave, RTI, Gram Panchayat, Office Order, Police)..."
+              placeholder="Search formats (e.g. Leave, RTI, Complaint, Office Order, Police)..."
               className="w-full pl-12 pr-4 py-3.5 rounded-2xl bg-white/[0.04] border border-white/[0.1] text-sm text-white placeholder-white/40 focus:outline-none focus:border-emerald-400 transition-colors shadow-lg"
             />
           </div>
@@ -343,8 +343,8 @@ export default function FormatsIndexPage() {
           <div className="space-y-4">
             {[
               {
-                q: "What makes Swalekhani's official formats compliant with Indian government rules?",
-                a: "All formats follow the Central Secretariat Manual of Office Procedure (CSMOP) and State Government Rajbhasha guidelines, including standard file numbering, Subject-Reference alignment, numbered paragraphs, and appropriate closing endorsements."
+                q: "What makes Swalekhani's formats professional and compliant?",
+                a: "All formats follow standard Indian business correspondence conventions, including standard file numbering, Subject-Reference alignment, numbered paragraphs, and appropriate closing endorsements."
               },
               {
                 q: "Can I draft applications directly in Marathi (मराठी) or Hindi (हिन्दी)?",

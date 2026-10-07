@@ -9,7 +9,7 @@ import { DEFAULT_FORM, DEFAULT_LOGO_POS, OFFICE_PRESETS, svgToDataUri } from '@/
 const INITIAL_STATE: AppState = {
   tpl: 'A',
   font: '',
-  officeType: 'dop',
+  officeType: 'corporate',
   logoL: null,
   logoR: null,
   posL: { ...DEFAULT_LOGO_POS, x: 42, y: 48, w: 96 },
@@ -131,38 +131,9 @@ export function useLetterState() {
         newLogoR = null;
         targetTpl = 'A';
       } else if (isFull) {
-        if (detectedType === 'om') {
-          targetTpl = 'E'; // CSMOP Office Memorandum layout
-          newLogoL = null;
-          newLogoR = svgToDataUri('ashoka');
-        } else if (detectedType === 'do') {
-          targetTpl = 'B'; // Demi-Official layout
-          newLogoL = svgToDataUri('ashoka');
-          newLogoR = null;
-        } else {
-          const fullDeptStr = [
-            data.department, data.dept,
-            data.dept_english_1, data.e1,
-            data.dept_english_2, data.e2
-          ].filter(Boolean).join(' ').toLowerCase();
-
-          if (fullDeptStr.includes('post') || fullDeptStr.includes('dak') || fullDeptStr.includes('mail')) {
-            newLogoL = svgToDataUri('ip');
-            newLogoR = svgToDataUri('ashoka');
-          } else if (fullDeptStr.includes('prime minister') || fullDeptStr.includes('pm ')) {
-            newLogoL = svgToDataUri('ashoka');
-            newLogoR = null;
-          } else if (fullDeptStr.includes('parliament') || fullDeptStr.includes('sansad')) {
-            newLogoL = svgToDataUri('sansad');
-            newLogoR = svgToDataUri('ashoka');
-          } else if (fullDeptStr.includes('maharashtra')) {
-            newLogoL = svgToDataUri('mh');
-            newLogoR = null;
-          } else if (fullDeptStr.includes('government of india') || fullDeptStr.includes('ministry') || fullDeptStr.includes('department')) {
-            newLogoL = null;
-            newLogoR = svgToDataUri('ashoka');
-          }
-        }
+        // Corporate refocus: no automatic emblem assignment.
+        // Government emblems (ashoka/ip/sansad/mh) removed — logos stay
+        // cleared on full AI fills; users upload their own branding.
       }
 
       const enclVal = data.encl ?? (Array.isArray(data.enclList) ? data.enclList.join(', ') : '');
@@ -171,7 +142,7 @@ export function useLetterState() {
       return {
         ...s,
         tpl: targetTpl,
-        officeType: isPersonal ? 'personal' : (isFull ? 'custom' : s.officeType),
+        officeType: isPersonal ? 'personal' : (isFull ? 'corporate' : s.officeType),
         logoL: newLogoL,
         logoR: newLogoR,
         showEncl: isPersonal ? false : (enclVal.trim().length > 0),

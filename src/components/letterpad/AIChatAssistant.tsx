@@ -15,20 +15,19 @@ interface AIChatAssistantProps {
 }
 
 const QUICK_CHIPS = [
-  { label: '🚩 मराठी नागरिक अर्ज', text: 'गंगामासला येथील पोस्टमास्तर यांना मुदत ठेव खात्याचे थकीत व्याज बचत खात्यात जमा करण्याबाबत श्रीमती राधा धारपडे यांचा मराठीत सविनय अर्ज लिहा' },
-  { label: '🏛️ महाराष्ट्र शासन आदेश', text: 'महाराष्ट्र शासन सामान्य प्रशासन विभाग अंतर्गत अधिकृत परिपत्रक व शासकीय आदेश मराठीत तयार करा' },
-  { label: '📜 मराठी ना-हरकत (NOC)', text: 'कर्मचाऱ्यास पारपत्र (पासपोर्ट) काढण्यासाठी कार्यालयाचे मराठीत ना-हरकत प्रमाणपत्र (NOC)' },
+  { label: '🚩 मराठी ग्राहक तक्रार', text: 'दोषपूर्ण उत्पादनाबाबत कंपनीकडे मराठीत औपचारिक ग्राहक तक्रार पत्र लिहा — बदली किंवा परताव्याची मागणी करा' },
+  { label: '🏢 Corporate Circular', text: 'Draft a formal corporate circular to all department heads regarding office attendance and compliance' },
+  { label: '📜 मराठी ना-हरकत (NOC)', text: 'कर्मचाऱ्यास पारपत्र (पासपोर्ट) काढण्यासाठी कंपनीचे मराठीत ना-हरकत प्रमाणपत्र (NOC)' },
   { label: '🎓 मराठी रजेचा अर्ज', text: 'शाळेच्या / महाविद्यालयाच्या प्राचार्यांना आजारपणाच्या रजेसाठी विद्यार्थ्याचा सविनय विनंती अर्ज मराठीत' },
   { label: '💌 मराठी भावस्पर्शी पत्र', text: 'वडिलांना / आईस / आप्तस्वकीयांना सस्नेह नमस्कार करणारे मराठीतील आपुलकीचे पत्र' },
-  { label: '🇮🇳 हिंदी आवेदन पत्र', text: 'डाकपाल महोदय को बचत खाते में लंबित ब्याज जमा करने हेतु औपचारिक हिंदी आवेदन पत्र लिखें' },
-  { label: '🏛️ Formal CSMOP', text: 'Polite and strict official Government of India CSMOP administrative tone' },
-  { label: '📝 Citizen Application', text: 'Write a formal citizen application to an authority (e.g. Postmaster, Bank Manager, Municipal Officer, Collector)' },
-  { label: '📜 Employee NOC', text: 'Issue an official No Objection Certificate (NOC) for employee applying for passport or higher education' },
-  { label: '💌 Romantic Love Letter', text: 'Write a deeply romantic, emotional love letter for my sweetheart (remove all govt headers)' },
-  { label: '📢 Administrative Circular', text: 'Issue an administrative circular regarding office attendance and compliance to all HODs' },
-  { label: '📋 Convert to OM', text: 'Convert this to Office Memorandum style: 3rd person ("The undersigned is directed to..."), no salutation, no closing' },
-  { label: '🤝 D.O. Letter', text: 'Convert to Demi-Official (D.O.) format with personal salutation ("Dear Shri...") and subscription ("Yours sincerely")' },
-  { label: '⚠️ Show Cause Notice', text: 'Restructure into a statutory Show Cause Notice with WHEREAS and NOW THEREFORE clauses' },
+  { label: '🇮🇳 हिंदी शिकायत पत्र', text: 'दोषपूर्ण उत्पाद के संबंध में कंपनी को औपचारिक हिंदी शिकायत पत्र लिखें — प्रतिस्थापन या धनवापसी का अनुरोध करें' },
+  { label: '🏢 Formal Business Tone', text: 'Polite and strict formal corporate business tone' },
+  { label: '📝 Citizen Application', text: 'Write a formal citizen application to an authority (e.g. Bank Manager, Municipal Officer, Collector)' },
+  { label: '📜 Employee NOC', text: 'Issue a No Objection Certificate (NOC) for an employee applying for passport or higher education' },
+  { label: '💌 Romantic Love Letter', text: 'Write a deeply romantic, emotional love letter for my sweetheart (remove all headers)' },
+  { label: '📢 Corporate Circular', text: 'Issue a corporate circular regarding office attendance and compliance to all department heads' },
+  { label: '🤝 Semi-Official Letter', text: 'Convert to a warm semi-official format with personal salutation ("Dear Mr./Ms. ...") and subscription ("Yours sincerely")' },
+  { label: '⚠️ Show Cause Notice', text: 'Restructure into a formal Show Cause Notice with WHEREAS and NOW THEREFORE clauses' },
   { label: '⏳ Urgent Reminder', text: 'Add an expedited reminder paragraph referencing previous communication awaiting reply' },
   { label: '🎓 Student Application', text: 'Format as respectful student application to Principal with Class, Roll No., and "Yours obediently"' },
 ];
@@ -149,16 +148,16 @@ export default function AIChatAssistant({ state, onSetForm, onFillAI }: AIChatAs
           citizen_app: 'Citizen Application to Authority (Formal Request)',
           noc: 'No Objection Certificate (NOC)',
           circular: 'Administrative Circular',
-          notification: 'Statutory Gazette Notification',
+          corporate: 'Corporate Business Letter',
+          complaint: 'Complaint Letter',
+          rti: 'RTI Application',
           romantic: 'Heartfelt Love Letter (Headers removed)',
           student_app: 'Student Application to Principal',
           heritage_personal: 'Traditional Family Letter',
-          scn: 'Show Cause Notice (Quasi-Judicial Format)',
-          om: 'Office Memorandum (3rd Person CSMOP Format)',
-          do: 'Demi-Official (D.O.) Letter',
+          scn: 'Show Cause Notice',
           reminder: 'Urgent Reminder Letter',
           appreciation: 'Letter of Appreciation',
-          office_order: 'Official Order'
+          personal: 'Personal Letter'
         };
         const label = typeNameMap[json.data.detected_type] || 'complete letter';
         setMessages(prev => [...prev, { 

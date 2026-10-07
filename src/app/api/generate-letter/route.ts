@@ -112,7 +112,7 @@ export async function POST(request: NextRequest) {
     const body = (await request.json()) as LetterGenerationRequest;
     const { 
       description, 
-      letterType = 'office_order', 
+      letterType = 'corporate', 
       language = 'en', 
       templatePreset = '',
       currentForm = {},
@@ -181,7 +181,6 @@ CRITICAL GROUND TRUTH & ANTI-HALLUCINATION RULES:
 2. PROFESSION-AUTHENTIC VOICE:
    - Advocate / Legal: Write in rigorous legal tone (statutory notices, Section 138 NI Act, demand notices, caveat intimations, counsel representations).
    - Clinic / Doctor: Write in authentic medical clinical tone (patient clinical history, diagnosis, treatment recommendation, medical fitness / leave certificates).
-   - Gram Panchayat / Public Representative: Write in authentic civic tone (public grievance representations to Municipal Commissioner/BDO, village council resolutions, character/residence certificates).
    - CA / Tax / Auditor: Write in strict ICAI auditing and financial certification tone.
    - Non-Profit / NGO: Write in formal charitable, CSR funding, or 80G acknowledgment tone.
    - Company / Commercial: Write in crisp executive corporate tone.

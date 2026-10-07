@@ -7,12 +7,11 @@ import FaqAccordion, { FaqItem } from '@/components/seo/FaqAccordion';
 import AdSlot from '@/components/AdSlot';
 
 export const metadata: Metadata = {
-  title: 'Office Order Format & Official Administrative Order Maker',
-  description: 'Download and create official Office Order Formats online. Standard formats for Government of India ministries, PSUs, and corporate companies for Employee Transfers, Postings, Sanctions, and Promotions.',
+  title: 'Office Order Format & Corporate Administrative Order Maker',
+  description: 'Download and create Office Order Formats online. Standard formats for corporate companies and organizations for Employee Transfers, Postings, Sanctions, and Promotions.',
   keywords: [
     'office order format',
-    'sarkari office order format',
-    'government transfer office order format',
+    'office order format for employee transfer',
     'office order format for employee promotion',
     'office order format in hindi and english',
     'sample office order format pdf'
@@ -21,24 +20,24 @@ export const metadata: Metadata = {
     canonical: '/formats/office-order',
   },
   openGraph: {
-    title: 'Office Order Format & Official Administrative Order Maker',
-    description: 'Create standardized government and corporate office orders with endorsement copies and AI drafting.',
+    title: 'Office Order Format & Corporate Administrative Order Maker',
+    description: 'Create standardized corporate office orders with endorsement copies and AI drafting.',
     url: 'https://swalekhani.vercel.app/formats/office-order',
     images: ['/og/office-order.svg'],
     type: 'article',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Office Order Format & Official Administrative Order Maker',
-    description: 'Official office order format generator for government ministries, departments, and corporate offices.',
+    title: 'Office Order Format & Corporate Administrative Order Maker',
+    description: 'Office order format generator for corporate offices and organizations.',
     images: ['/og/office-order.svg'],
   },
 };
 
 const FAQ_ITEMS: FaqItem[] = [
   {
-    question: "What is an Office Order and when is it issued in government offices?",
-    answer: "An Office Order (कार्यालय आदेश) is an internal administrative instruction issued by a competent authority to convey decisions relating to internal establishment administration, employee appointments, transfers, postings, grant of leave, work allocation, disciplinary sanctions, and promotions."
+    question: "What is an Office Order and when is it issued?",
+    answer: "An Office Order (कार्यालय आदेश) is an internal administrative instruction issued by a competent authority to convey decisions relating to internal administration, employee appointments, transfers, postings, grant of leave, work allocation, disciplinary actions, and promotions."
   },
   {
     question: "How does an Office Order differ from an Office Memorandum (OM)?",
@@ -46,14 +45,14 @@ const FAQ_ITEMS: FaqItem[] = [
   },
   {
     question: "Why does an Office Order have no salutation or conversational closing?",
-    answer: "Under the Central Secretariat Manual of Office Procedure (CSMOP), an Office Order is a direct executive directive. It opens immediately with the operative command and ends with the issuing officer's designation without 'Dear Sir' or 'Yours faithfully'."
+    answer: "An Office Order is a direct executive directive. It opens immediately with the operative command and ends with the issuing officer's designation without 'Dear Sir' or 'Yours faithfully'."
   },
   {
-    question: "Is an Endorsement (पृष्ठांकन) block mandatory on an Office Order?",
-    answer: "Yes, an Office Order almost always ends with an Endorsement block ('Copy forwarded for information and necessary action to:') distributing official copies to the concerned official, accounts branch (DDO), pay & accounts office (PAO), and personal/guard files."
+    question: "Is an Endorsement (पृष्ठांकन) block used on an Office Order?",
+    answer: "An Office Order commonly ends with a distribution block ('Copy forwarded for information and necessary action to:') listing the concerned employee, HR/accounts, and file copies."
   },
   {
-    question: "How is an Office Order serial numbered in government departments?",
+    question: "How is an Office Order serial numbered?",
     answer: "Order numbers typically follow the pattern: File No. [Section Code]/[Year]/[Order No.] (e.g. Office Order No. 45/2026 under File No. A-22012/1/2026-Estt.)."
   },
   {
@@ -106,17 +105,17 @@ export default function OfficeOrderPage() {
           </div>
 
           <h1 className="text-3xl sm:text-4xl lg:text-5xl font-heading font-bold text-white tracking-tight mb-4 leading-tight">
-            Official Office Order Format & Generator
+            Corporate Office Order Format & Generator
           </h1>
 
           <p className="text-base sm:text-lg text-white/70 leading-relaxed">
-            Standard format for government and corporate office orders covering transfers, postings, promotions, work allocations, and sanctions with auto-formatted endorsement blocks.
+            Standard format for corporate office orders covering transfers, postings, promotions, work allocations, and sanctions with auto-formatted endorsement blocks.
           </p>
 
           {/* Main Action Bar */}
           <div className="mt-8 flex flex-wrap items-center gap-4">
             <Link
-              href="/tools/letterpad-generator?preset=office_order&sub=OFFICE%20ORDER%20NO.%2012/2026&tpl=A"
+              href="/tools/letterpad-generator?preset=corporate&sub=OFFICE%20ORDER%20NO.%2012/2026&tpl=A"
               className="inline-flex items-center gap-2.5 px-7 py-3.5 rounded-xl bg-gradient-to-r from-violet-500 via-purple-500 to-pink-500 text-white font-semibold text-base shadow-[0_10px_30px_rgba(139,92,246,0.25)] hover:shadow-[0_15px_40px_rgba(139,92,246,0.35)] hover:-translate-y-0.5 transition-all"
             >
               <Sparkles className="w-5 h-5" />
@@ -143,10 +142,10 @@ export default function OfficeOrderPage() {
           <section className="space-y-4">
             <h2 className="text-2xl font-heading font-bold text-white flex items-center gap-2.5">
               <Building className="w-6 h-6 text-violet-400" />
-              Structure & Rules of an Official Office Order
+              Structure & Rules of an Office Order
             </h2>
             <p>
-              In Central and State Government secretariats, public sector undertakings, and corporate establishments, an <strong>Office Order (कार्यालय आदेश)</strong> is the authoritative instrument used to regulate personnel administration.
+              In corporate establishments and organizations, an <strong>Office Order (कार्यालय आदेश)</strong> is the authoritative instrument used to regulate personnel administration.
             </p>
             <p>
               Unlike a conversational business letter, an Office Order is written in the <strong>third person (passive voice)</strong> and opens directly with the operative decision (e.g. <em>"Sanction of the Competent Authority is hereby conveyed for..."</em>). It does not include formal salutations ("Sir/Madam") or conversational closings ("Yours faithfully"), concluding instead with the issuing authority's designation and an endorsement block.
@@ -160,12 +159,12 @@ export default function OfficeOrderPage() {
             </h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 not-prose">
               {[
-                { title: "Header & File Number", desc: "Issuing Ministry/Department header with specific order serial number." },
+                { title: "Header & File Number", desc: "Issuing company/department header with specific order serial number." },
                 { title: "Bold Center Title", desc: "Prominent 'OFFICE ORDER' / 'कार्यालय आदेश' title centered on the page." },
                 { title: "Direct Operative Text", desc: "No salutation; starts immediately with the sanction or transfer order." },
-                { title: "Competent Authority Citation", desc: "Mentions prior approval from the Secretary, Director, or Board." },
-                { title: "Issuing Officer Block", desc: "Signature, Name, Designation, and official phone/email of the officer." },
-                { title: "Endorsement Block (पृष्ठांकन)", desc: "Numbered list of internal and external departments receiving copies." },
+                { title: "Competent Authority Citation", desc: "Mentions prior approval from the Director, Board, or HR Head." },
+                { title: "Issuing Officer Block", desc: "Signature, Name, Designation, and official phone/email of the issuer." },
+                { title: "Endorsement Block (पृष्ठांकन)", desc: "Numbered list of internal teams and recipients receiving copies." },
               ].map((item, idx) => (
                 <div key={idx} className="p-4 rounded-xl bg-white/[0.02] border border-white/[0.06] flex items-start gap-3">
                   <CheckCircle2 className="w-5 h-5 text-violet-400 flex-shrink-0 mt-0.5" />
@@ -186,9 +185,9 @@ export default function OfficeOrderPage() {
             </h3>
             <div className="p-6 rounded-2xl bg-[#0d1017] border border-white/[0.1] text-white/90 text-sm leading-relaxed shadow-inner font-serif">
               <div className="text-center border-b border-white/[0.1] pb-4 mb-4">
-                <p className="text-xs text-amber-300 font-semibold">भारत सरकार / GOVERNMENT OF INDIA</p>
-                <h4 className="text-base font-bold text-white tracking-wide">कार्मिक एवं प्रशिक्षण विभाग / DEPARTMENT OF PERSONNEL & TRAINING</h4>
-                <p className="text-xs text-white/60">North Block, New Delhi - 110001</p>
+                <p className="text-xs text-amber-300 font-semibold">APEX ENTERPRISE SOLUTIONS PVT. LTD.</p>
+                <h4 className="text-base font-bold text-white tracking-wide">HUMAN RESOURCES DEPARTMENT</h4>
+                <p className="text-xs text-white/60">Level 5, Cyber Park, Bengaluru - 560100</p>
               </div>
 
               <div className="flex justify-between text-xs text-white/60 mb-4 font-mono">
@@ -213,8 +212,8 @@ export default function OfficeOrderPage() {
 
               <div className="text-right text-xs pt-2">
                 <p className="font-bold text-white">[S. K. Mukherjee]</p>
-                <p className="text-white/60">Under Secretary to the Government of India</p>
-                <p className="text-white/50">Tel: 011-23092000</p>
+                <p className="text-white/60">Head of Human Resources</p>
+                <p className="text-white/50">Tel: +91-80-41234567</p>
               </div>
 
               <div className="border-t border-white/[0.1] mt-6 pt-4 text-xs font-sans text-white/70">
@@ -234,7 +233,7 @@ export default function OfficeOrderPage() {
         {/* Social Share Bar */}
         <ShareButtons
           title="Office Order Format & Generator - Swalekhani"
-          description="Create government and corporate office orders with endorsement blocks in seconds."
+          description="Create corporate office orders with endorsement blocks in seconds."
         />
 
         {/* In-article Ad Slot */}
@@ -244,19 +243,19 @@ export default function OfficeOrderPage() {
         <FaqAccordion
           items={FAQ_ITEMS}
           title="Office Order FAQs"
-          subtitle="Key procedural rules for drafting and issuing official office orders."
+          subtitle="Key procedural rules for drafting and issuing office orders."
         />
 
         {/* Bottom CTA Card */}
         <div className="mt-14 p-8 sm:p-10 rounded-3xl bg-gradient-to-br from-violet-500/15 via-white/[0.02] to-pink-500/10 border border-white/[0.1] text-center">
           <h3 className="text-2xl sm:text-3xl font-heading font-bold text-white mb-3">
-            Draft an Official Office Order in Minutes
+            Draft an Office Order in Minutes
           </h3>
           <p className="text-sm sm:text-base text-white/65 max-w-xl mx-auto mb-6">
-            Preloaded with government typography, endorsement copy-to lists, and AI instant order composition.
+            Preloaded with professional typography, endorsement copy-to lists, and AI instant order composition.
           </p>
           <Link
-            href="/tools/letterpad-generator?preset=office_order&sub=OFFICE%20ORDER%20NO.%2012/2026&tpl=A"
+            href="/tools/letterpad-generator?preset=corporate&sub=OFFICE%20ORDER%20NO.%2012/2026&tpl=A"
             className="inline-flex items-center gap-2 px-8 py-3.5 rounded-xl bg-white text-black font-semibold hover:bg-white/90 hover:scale-105 transition-all shadow-[0_0_25px_rgba(255,255,255,0.2)]"
           >
             <Sparkles className="w-4 h-4 text-violet-400" />

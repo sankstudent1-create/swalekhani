@@ -14,25 +14,22 @@ export function buildPrompt(
   tpl: TemplateType
 ): string {
   const tMap: Record<string, string> = {
-    office_order:      'Office Order (ACC / Departmental)',
-    om:                'Office Memorandum (OM)',
-    do:                'Demi-Official (D.O.) Letter',
-    circular:          'Circular / Standing Directive',
+    corporate:         'Corporate Business Letter',
+    complaint:         'Complaint Letter',
+    rti:               'RTI Application',
+    circular:          'Circular / Internal Directive',
     reminder:          'Reminder Letter',
     forwarding:        'Forwarding / Endorsement Note',
     scn:               'Show Cause Notice',
     noc:               'No Objection Certificate (NOC)',
     appreciation:      'Letter of Appreciation',
-    tour:              'Tour Programme Communication',
-    notification:      'Public Notification (Gazette Format)',
-    advisory:          'Advisory / Policy Guideline',
+    notice:            'Notice Announcement',
+    advisory:          'Advisory / Guidelines',
     student_app:       'Student Application to Principal',
     heritage_personal: 'Heritage / Traditional Family Letter',
     romantic:          'Romantic / Heartfelt Personal Letter',
-    pm_do:             'Prime Ministerial personal DO letter',
-    mp_letter:         'MP Constituency Letter',
-    personal:          'Personal / Unofficial Letter',
-    custom:            'Official Government Letter',
+    personal:          'Personal Letter',
+    custom:            'Custom Letter',
   };
 
   const langNote =
@@ -45,14 +42,16 @@ export function buildPrompt(
   const isOfficial = !isPersonalType && type !== 'custom';
   
   let styleNote = 'Standard formal letter with numbered paragraphs for clarity.';
-  if (type === 'om') {
-    styleNote = 'Strict CSMOP Office Memorandum: Written strictly in the third person starting "The undersigned is directed to convey...". NO salutation ("Sir/Madam") and NO subscription ("Yours faithfully").';
-  } else if (type === 'do' || type === 'pm_do' || tpl === 'B') {
-    styleNote = 'Strict CSMOP Demi-Official (D.O.) Letter: Peer-to-peer correspondence between officers of equivalent rank. Salutation must be "Dear Shri [Last Name]" or "Dear Dr. [Last Name]". Subscription must be "Yours sincerely" or "With warm regards". Do NOT use rigid numbered paragraphs.';
-  } else if (type === 'scn') {
+  if (type === 'scn') {
     styleNote = 'Strict Show Cause Notice (SCN): Structured with legal preamble "WHEREAS...", "AND WHEREAS...", and operative command "NOW THEREFORE, the undersigned hereby calls upon... to show cause within [X] days...".';
   } else if (type === 'reminder') {
-    styleNote = 'Official Reminder Letter: Must specifically cite previous unanswered communication number and date. Starts "I am directed to invite your attention to this Ministry\'s communication of even number dated... A reply in this regard is still awaited."';
+    styleNote = 'Formal Reminder Letter: Must specifically cite the previous unanswered communication number and date. Starts "This is to invite your attention to our earlier communication of even number dated... A reply in this regard is still awaited."';
+  } else if (type === 'complaint') {
+    styleNote = 'Formal Complaint Letter: Clearly state the grievance with dates and facts, specify the resolution sought, and keep a firm but courteous tone. Include any reference/ticket numbers.';
+  } else if (type === 'rti') {
+    styleNote = 'RTI Application (RTI Act, 2005): Plain citizen application addressed to the Public Information Officer. State the information sought in numbered points, mention the application fee payment mode, and keep the format simple — no letterhead.';
+  } else if (type === 'corporate') {
+    styleNote = 'Professional Corporate Business Letter: Formal business tone on company letterhead. Clear subject line, structured numbered paragraphs, and professional closing "Yours faithfully" or "Best regards" as appropriate.';
   } else if (type === 'student_app') {
     styleNote = 'Academic Student Application: Respectful, humble tone addressed to Principal/Dean. Salutation: "Respected Sir / Madam" or "Respected Principal". Closing: "Yours obediently". Mention Class, Roll No., and reason clearly. DO NOT use govt headers.';
   } else if (type === 'heritage_personal') {
@@ -60,22 +59,20 @@ export function buildPrompt(
   } else if (type === 'romantic') {
     styleNote = 'Romantic & Heartfelt Personal Letter: Emotionally rich, expressive, poetic personal letter between intimate partners. Completely free of any bureaucratic headers, file numbers, or administrative jargon.';
   } else if (type === 'noc') {
-    styleNote = 'Official No Objection Certificate (NOC): Formal certification stating the office has no objection to the employee applying for passport / exam / higher studies, confirming vigilance clearance.';
-  } else if (type === 'notification') {
-    styleNote = 'Official Public Notification: Statutory format published in Gazette of India / State Gazette under relevant act provisions.';
+    styleNote = 'No Objection Certificate (NOC): Formal certification stating the issuing office has no objection to the stated purpose (e.g. passport application, higher studies, event permission).';
   } else if (type === 'appreciation') {
-    styleNote = 'Ministerial / Government Letter of Appreciation: High statecraft tone conveying commendation for exceptional public service.';
+    styleNote = 'Professional Letter of Appreciation: Warm, formal tone conveying commendation for exceptional service or achievement.';
   }
 
-  return `Generate a complete ${isOfficial ? 'Government of India ' : ''}${tMap[type] ?? 'letter'} with all fields based ONLY on this brief.
+  return `Generate a complete ${tMap[type] ?? 'letter'} with all fields based ONLY on this brief.
 
 User Brief: "${brief || 'Generate a complete realistic example letter'}"
 
 Letter Style & Protocol: ${styleNote}
 Language: ${langNote}
 
-CRITICAL RULES & STATE EMBLEM ACT (2005) COMPLIANCE:
-1. ${isPersonalType ? 'LEAVE ALL GOVERNMENT HEADERS EMPTY (h1, h2, e1, e2, dept, divn, ofc). Private citizens, students, and romantic letters MUST NOT display State Emblems or Government mastheads.' : 'Derive realistic Ministry/Department and Office matching the sender context.'}
+CRITICAL RULES:
+1. ${isPersonalType ? 'LEAVE ALL HEADER FIELDS EMPTY (h1, h2, e1, e2, dept, divn, ofc). Private citizens, students, and personal letters use plain formatting with no institutional masthead.' : 'Derive a realistic company / department and office matching the sender context.'}
 2. Recipient fields (toD, toA): Must logically correspond to the recipient in the brief.
 3. Body: Must strictly follow the specified correspondence protocol above.
 4. ${isOfficial ? 'copy_to: 2-3 realistic recipients if applicable. encl: 1-2 realistic enclosures if applicable.' : 'DO NOT add "copy_to" or "encl" fields unless specifically relevant.'}

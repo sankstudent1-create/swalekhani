@@ -24,36 +24,34 @@ interface SamplePrompt {
 
 const SAMPLE_PROMPTS: SamplePrompt[] = [
   {
-    id: 'marathi-gram',
-    lang: 'मराठी',
-    category: 'ग्रामपंचायत / स्थानिक प्रशासन',
-    title: 'पथदिवे व रस्ता दुरुस्तीबाबत अर्ज',
-    prompt: 'ग्रामपंचायत कार्यालयाला वॉर्ड क्र. ३ मधील पथदिवे (स्ट्रीट लाईट) दुरुस्ती आणि पावसाळ्यापूर्वी रस्ता दुरुस्तीबाबत तातडीने अर्ज',
-    subject: 'वॉर्ड क्र. ३ मधील नादुरुस्त पथदिवे आणि रस्ता डांबरीकरण / दुरुस्ती करणेबाबत.',
-    preset: 'custom',
-    template: 'gram-panchayat',
-    preview: 'महोदय, उपरोक्त विषयान्वये सविनय सादर करण्यात येते की आमच्या वॉर्ड क्रमांक ३ मधील मुख्य मार्गावरील पथदिवे गेल्या १५ दिवसांपासून बंद अवस्थेत आहेत. तसेच आगामी पावसाळा लक्षात घेता रस्त्यावरील खड्डे त्वरित बुजविणे अत्यंत गरजेचे आहे. तरी जनहितास्तव सदर कामे तातडीने मार्गी लावावीत ही नम्र विनंती.'
-  },
-  {
-    id: 'hindi-nagar',
-    lang: 'हिन्दी',
-    category: 'नगर पालिका / शिकायत पत्र',
-    title: 'पेयजल एवं जल भराव समस्या हेतु',
-    prompt: 'नगर निगम आयुक्त को वार्ड में दूषित पेयजल आपूर्ति और जल भराव की समस्या समाधान हेतु औपचारिक पत्र',
-    subject: 'वार्ड क्रमांक १२ में दूषित पेयजल आपूर्ति एवं जल निकासी व्यवस्था दुरुस्त करने के संबंध में।',
-    preset: 'district',
-    preview: 'महोदय, सविनय निवेदन है कि हमारे क्षेत्र में पिछले एक सप्ताह से पेयजल आपूर्ति अत्यंत दूषित आ रही है, जिससे नागरिकों में संक्रामक बीमारियों का खतरा बढ़ गया है। अतः आपसे विनम्र अनुरोध है कि संबंधित अभियंताओं को त्वरित निरीक्षण एवं पाइपलाइन मरम्मत हेतु निर्देशित करने की कृपा करें।'
-  },
-  {
-    id: 'eng-leave',
+    id: 'corporate-hr',
     lang: 'English',
-    category: 'Govt & HR / CCS Leave',
-    title: 'Earned Leave (EL) Application',
-    prompt: 'Application for 5 days Earned Leave on private affairs with Station Leave Permission and charge handover',
-    subject: 'Application for Sanction of 05 Days Earned Leave (EL) on Private Affairs — Reg.',
-    preset: 'dop',
-    template: 'A',
-    preview: 'Respected Sir, I have the honour to submit that due to urgent domestic affairs, I am unable to attend official duties from 28th Sept to 02nd Oct (05 days) with permission to leave headquarters. Shri R. K. Joshi has kindly consented to look after my routine branch duties during my absence.'
+    category: 'Corporate / HR',
+    title: 'Job Offer Letter',
+    prompt: 'Formal job offer letter for a software engineer role with joining date, CTC breakup, and probation terms',
+    subject: 'Offer of Employment — Software Engineer.',
+    preset: 'corporate',
+    preview: 'Dear Candidate, We are pleased to offer you the position of Software Engineer at our organisation. Your annual cost-to-company (CTC) will be as per the annexure, with a probation period of six months from your date of joining. Please confirm your acceptance by signing and returning a copy of this letter.'
+  },
+  {
+    id: 'client-complaint',
+    lang: 'English',
+    category: 'Consumer / Complaint',
+    title: 'Defective Product Complaint',
+    prompt: 'Formal complaint to a retailer about a defective appliance delivered last week, seeking replacement under warranty',
+    subject: 'Complaint Regarding Defective Product — Request for Replacement.',
+    preset: 'complaint',
+    preview: 'Dear Sir/Madam, I am writing to bring to your attention that the appliance delivered to my address on the above date stopped working within three days of installation. As the product is under warranty, I request an immediate replacement or a full refund of the purchase amount.'
+  },
+  {
+    id: 'vendor-payment',
+    lang: 'English',
+    category: 'Business / Vendor',
+    title: 'Vendor Payment Follow-up',
+    prompt: 'Polite but firm follow-up letter to a vendor regarding long-pending invoice payment',
+    subject: 'Follow-up: Payment Against Invoice No. 4821.',
+    preset: 'corporate',
+    preview: 'Dear Sir/Madam, This is to follow up on our invoice No. 4821 dated last month, which remains unpaid despite two earlier reminders. We request you to release the outstanding payment within seven working days to avoid any disruption in ongoing supplies.'
   },
   {
     id: 'legal-notice',
@@ -62,7 +60,7 @@ const SAMPLE_PROMPTS: SamplePrompt[] = [
     title: 'Legal Notice (Cheque Dishonour / Sec 138)',
     prompt: 'Statutory demand notice under Section 138 of Negotiable Instruments Act for cheque return due to insufficient funds',
     subject: 'Statutory Demand Notice under Section 138 of the Negotiable Instruments Act, 1881.',
-    preset: 'custom',
+    preset: 'legal',
     template: 'advocate',
     preview: 'Under instructions from and on behalf of my client, I hereby serve upon you this formal legal notice calling upon you to make payment of the cheque amount within 15 days of receipt of this notice, failing which criminal proceedings will be instituted.'
   }
@@ -83,9 +81,9 @@ const FEATURED_PRESETS = [
   },
   {
     id: 'leave',
-    name: 'Official Leave Application',
-    badge: 'CCS Leave Rules',
-    desc: 'Standard administrative leave format for CL, EL, Medical, and Station Leaving.',
+    name: 'Leave Application',
+    badge: 'HR Standard',
+    desc: 'Standard leave format for casual, earned, medical, and sick leave requests.',
     href: '/formats/leave-application',
     icon: Clock,
     image: '/illustrations/leave-3d.jpg',
@@ -106,26 +104,15 @@ const FEATURED_PRESETS = [
     accent: 'text-blue-400'
   },
   {
-    id: 'dop',
-    name: 'India Post / Central Ministry',
-    badge: 'Rajbhasha Standard',
-    desc: 'Bilingual Ashoka emblem letterhead with file numbering and numbered paragraphing.',
-    href: '/tools/letterpad-generator?preset=dop&tpl=A',
-    icon: Landmark,
+    id: 'corporate',
+    name: 'Corporate Letterhead',
+    badge: 'Business Standard',
+    desc: 'Professional company letterhead with registered office block and clean typography.',
+    href: '/tools/letterpad-generator?preset=corporate&tpl=A',
+    icon: Building2,
     color: 'from-sky-500/20 to-blue-600/10',
     border: 'border-sky-500/30',
     accent: 'text-sky-400'
-  },
-  {
-    id: 'gram-panchayat',
-    name: 'Gram Panchayat & Sarpanch',
-    badge: 'Panchayati Raj',
-    desc: 'Authentic village administration letterhead in Devanagari with Tricolor emblem header.',
-    href: '/tools/letterpad-generator?template=gram-panchayat',
-    icon: Building2,
-    color: 'from-amber-500/20 to-orange-600/10',
-    border: 'border-amber-500/30',
-    accent: 'text-amber-400'
   },
   {
     id: 'doctor',
@@ -187,13 +174,13 @@ export default function HomePage() {
           <h1 className="text-4xl sm:text-6xl lg:text-7xl font-heading font-extrabold tracking-tight text-white mb-6 leading-[1.1]">
             Draft, Format & Print <br className="hidden sm:inline" />
             <span className="bg-gradient-to-r from-brand-orange via-brand-pink to-brand-sky bg-clip-text text-transparent">
-              Official Indian Letters
+              Professional Business Letters
             </span> in Seconds.
           </h1>
 
           {/* Subtitle */}
           <p className="text-base sm:text-xl text-white/65 max-w-3xl mx-auto mb-10 font-normal leading-relaxed">
-            Create authentic bilingual letterheads for Government, Panchayati Raj, Legal, Corporate, and Citizen communications. Generate structured, formal drafts with Groq AI in <strong className="text-white">मराठी, हिन्दी & English</strong>.
+            Create professional bilingual letterheads for Corporate, Legal, Healthcare, and Personal communications. Generate structured, formal drafts with Groq AI in <strong className="text-white">मराठी, हिन्दी & English</strong>.
           </p>
 
           {/* Primary CTA Buttons */}
@@ -239,7 +226,7 @@ export default function HomePage() {
                 1. Make Your Letterpad
               </h3>
               <p className="text-xs text-white/55 leading-relaxed">
-                Design official stationery with Ashoka Lion, state insignia, department emblems, or company logos.
+                Design professional stationery with your own logos, emblems, and branding.
               </p>
               <div className="mt-3 flex items-center gap-1 text-xs font-semibold text-brand-orange">
                 <span>Start Studio</span>
@@ -279,7 +266,7 @@ export default function HomePage() {
                 3. 17+ Profession Presets
               </h3>
               <p className="text-xs text-white/55 leading-relaxed">
-                Pre-formatted layouts for Advocates, CAs, Doctors, Gram Panchayats, Housing Societies & Shops.
+                Pre-formatted layouts for Advocates, CAs, Doctors, Housing Societies, Companies & Shops.
               </p>
               <div className="mt-3 flex items-center gap-1 text-xs font-semibold text-brand-sky">
                 <span>View Templates</span>
@@ -299,7 +286,7 @@ export default function HomePage() {
                 4. Statutory Formats
               </h3>
               <p className="text-xs text-white/55 leading-relaxed">
-                RTI Form A, CCS Leave Applications, Office Orders, Police Complaints & Mahavitaran grievances.
+                RTI applications, HR leave requests, Office Orders, Complaints & Legal notices.
               </p>
               <div className="mt-3 flex items-center gap-1 text-xs font-semibold text-emerald-400">
                 <span>Explore Formats</span>
@@ -328,7 +315,7 @@ export default function HomePage() {
               Experience Instant AI Drafting in Action
             </h2>
             <p className="text-sm sm:text-base text-white/60">
-              Select a real-world scenario or type your prompt to see how Swalekhani structures formal Rajbhasha and official letters.
+              Select a real-world scenario or type your prompt to see how Swalekhani structures formal business and official letters.
             </p>
           </div>
 
@@ -435,7 +422,7 @@ export default function HomePage() {
                 <div className="flex flex-wrap items-center justify-between gap-4 pt-4 border-t border-white/[0.06]">
                   <div className="text-xs text-white/50 flex items-center gap-1.5">
                     <CheckCircle2 className="w-4 h-4 text-emerald-400" />
-                    <span>Formatted with Rajbhasha & CSMOP standards</span>
+                    <span>Formatted with professional Indian business standards</span>
                   </div>
 
                   <Link
@@ -616,8 +603,8 @@ export default function HomePage() {
               },
               {
                 icon: Landmark,
-                title: "Rajbhasha & CSMOP Ready",
-                desc: "Strictly aligns with Indian Central Secretariat and State Government typographical rules."
+                title: "Bilingual Hindi–English Ready",
+                desc: "Professional bilingual typography with Devanagari and English layouts for Indian business correspondence."
               },
               {
                 icon: Printer,
@@ -661,7 +648,7 @@ export default function HomePage() {
             {[
               {
                 q: "Is Swalekhani completely free to use?",
-                a: "Yes. Swalekhani is free for citizens, students, advocates, government employees, and small business owners to generate official letterheads, draft letters, and export unwatermarked A4 PDFs."
+                a: "Yes. Swalekhani is free for professionals, students, advocates, and small business owners to generate professional letterheads, draft letters, and export unwatermarked A4 PDFs."
               },
               {
                 q: "Can I print directly onto pre-printed letterhead bond paper?",
@@ -669,7 +656,7 @@ export default function HomePage() {
               },
               {
                 q: "How accurate is the Marathi and Hindi AI letter drafting?",
-                a: "Swalekhani is optimized with specialized Indian administrative prompts, ensuring proper Rajbhasha salutations (मा. महोदय / सविनय सादर), Subject-Reference format, and grammatically precise closing endorsements."
+                a: "Swalekhani is optimized with specialized Indian business-writing prompts, ensuring proper formal salutations, Subject-Reference format, and grammatically precise closing endorsements in English, Hindi, and Marathi."
               },
               {
                 q: "Are my confidential letters or personal details stored?",

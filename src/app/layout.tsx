@@ -60,18 +60,18 @@ export const metadata: Metadata = {
     canonical: "/",
   },
   title: {
-    default: "Swalekhani | Official AI Letterpad Generator",
+    default: "Swalekhani | Professional AI Letterpad Generator",
     template: "%s | Swalekhani",
   },
-  description: "Swalekhani is a premium, AI-powered official letterpad generator. Generate perfectly formatted Government of India, personal, and official letters instantly in English, Hindi, and bilingual formats using advanced AI.",
+  description: "Swalekhani is a premium, AI-powered letterpad generator. Generate perfectly formatted corporate, personal, legal, and complaint letters instantly in English, Hindi, and bilingual formats using advanced AI.",
   keywords: [
     "Swalekhani",
     "Swalekhani letterpad generator",
-    "official letter generator",
-    "government letter format",
+    "business letter generator",
+    "corporate letterhead format",
     "AI letter writer",
     "Hindi letter generator",
-    "India Post letter format",
+    "company letterhead maker",
     "Sanket Wanve Infosystems",
   ],
   icons: {
@@ -92,15 +92,15 @@ export const metadata: Metadata = {
     title: "Swalekhani",
   },
   openGraph: {
-    title: "Swalekhani | Official AI Letterpad Generator",
-    description: "AI-powered official letterpad and document generator. Draft perfectly formatted official, government, and bilingual letters instantly.",
+    title: "Swalekhani | Professional AI Letterpad Generator",
+    description: "AI-powered letterpad and document generator. Draft perfectly formatted corporate, business, and bilingual letters instantly.",
     images: ["/icon-512.png"],
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Swalekhani | Official AI Letterpad Generator",
-    description: "AI-powered official letterpad and document generator for government, business, and official letters.",
+    title: "Swalekhani | Professional AI Letterpad Generator",
+    description: "AI-powered letterpad and document generator for corporate, business, and personal letters.",
     images: ["/icon-512.png"],
   },
   other: {

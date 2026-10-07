@@ -4,27 +4,26 @@
 
 export type TemplateType = 'A' | 'B' | 'C' | 'D' | 'E' | 'F';
 export type OfficeType =
-  | 'dop' | 'pm' | 'minister' | 'mp' | 'mla'
-  | 'district' | 'rms' | 'savings' | 'custom' | 'personal'
-  | 'company' | 'school' | 'doctor' | 'shop' | 'office_order' | 'rti' | 'leave'
+  | 'corporate' | 'startup' | 'personal' | 'legal' | 'healthcare'
+  | 'complaint' | 'rti' | 'company' | 'school' | 'doctor' | 'shop'
   | 'advocate' | 'ca-accountant' | 'real-estate-dealer' | 'coaching-classes'
   | 'clinic' | 'restaurant-hotel' | 'ngo-trust' | 'contractor-builder'
-  | 'housing-society' | 'political-leader' | 'gram-panchayat' | 'freelancer'
+  | 'housing-society' | 'freelancer'
   | string;
 export type FontClass = '' | 'fg' | 'fs' | 'fd2' | 'ft' | 'fn';
 export type SigMode = 'draw' | 'type' | 'upload';
 export type LogoSide = 'L' | 'R';
 export type AILetterType =
-  | 'office_order' | 'om' | 'do' | 'circular' | 'reminder'
-  | 'forwarding' | 'scn' | 'noc' | 'appreciation' | 'tour'
-  | 'notice' | 'advisory' | 'notification' | 'student_app'
+  | 'corporate' | 'complaint' | 'rti' | 'circular' | 'reminder'
+  | 'forwarding' | 'scn' | 'noc' | 'appreciation' | 'notice'
+  | 'advisory' | 'student_app'
   | 'heritage_personal' | 'romantic' | 'citizen_app' | 'personal'
-  | 'pm_do' | 'mp_letter' | 'custom' | 'auto';
+  | 'custom' | 'auto';
 export type AILanguage = 'en' | 'hi' | 'mr' | 'bi';
 
 // ── Letter form state (all sidebar fields) ──────────────
 export interface LetterForm {
-  // Ministry/Office
+  // Company/Office
   h1: string;       // Hindi line 1
   h2: string;       // Hindi line 2
   e1: string;       // English line 1

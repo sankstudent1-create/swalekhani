@@ -67,8 +67,8 @@ export default function FaqAccordion({
  key={idx}
  className={`rounded-2xl border transition-all duration-300 overflow-hidden ${
  isOpen 
- ? "bg-white dark:bg-[#0f131d] border-white/[0.15] shadow-[0_10px_30px_rgba(0,0,0,0.3)]" 
- : "bg-white/[0.015] dark:bg-[#0f131d]/[0.015] border-slate-200 dark:border-white/10 hover:bg-white/[0.03] hover:border-white/[0.1]"
+ ? "bg-white dark:bg-[#0f131d] border-slate-200 dark:border-white/[0.15] shadow-[0_10px_30px_rgba(0,0,0,0.08)] dark:shadow-[0_10px_30px_rgba(0,0,0,0.3)]" 
+ : "bg-white dark:bg-[#0f131d]/[0.015] border-slate-200 dark:border-white/10 hover:border-slate-300 dark:hover:border-white/[0.1] hover:shadow-sm"
  }`}
  >
  <button
@@ -85,7 +85,7 @@ export default function FaqAccordion({
  </button>
 
  {isOpen && (
- <div className="px-5 sm:px-6 pb-5 pt-1 text-sm sm:text-base text-slate-600 dark:text-white/70 leading-relaxed border-t border-white/[0.04] animate-fadeIn">
+ <div className="px-5 sm:px-6 pb-5 pt-1 text-sm sm:text-base text-slate-600 dark:text-white/70 leading-relaxed border-t border-slate-100 dark:border-white/[0.04] animate-fadeIn">
  <p>{item.answer}</p>
  </div>
  )}

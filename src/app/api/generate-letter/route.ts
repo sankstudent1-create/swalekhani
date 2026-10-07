@@ -140,29 +140,26 @@ export async function POST(request: NextRequest) {
 
     const targetPreset = templatePreset || (currentContext as any).template || '';
 
-    // Language detection
+    // Language detection — Devanagari script aware
     let targetLang = (language || 'en').toLowerCase();
     const descLower = (description || '').toLowerCase();
+    const hasDevanagari = /[\u0900-\u097F]/.test(description || '');
 
     const isMarathi =
       targetLang === 'mr' ||
       descLower.includes('marathi') ||
-      descLower.includes('मराठी') ||
-      descLower.includes('मध्ये') ||
-      descLower.includes('अर्ज') ||
-      descLower.includes('पत्र लिहा') ||
-      descLower.includes('विनंती अर्ज') ||
-      /\b(liha|patra|arja|pahije|dya|baddal|karave|namaskar|mahoday)\b/i.test(description);
+      /(मराठी|मध्ये|पत्र लिहा|विनंती अर्ज|रजा अर्ज|महोदय)/.test(description || '') ||
+      /\b(liha|patra|arja|pahije|baddal|karave)\b/i.test(description || '');
 
+    // Any Devanagari text that isn't Marathi is treated as Hindi (covers
+    // बिजली बिल, शिकायत पत्र, छुट्टी आवेदन etc. without keyword lists)
     const isHindi =
       !isMarathi && (
         targetLang === 'hi' ||
+        hasDevanagari ||
         descLower.includes('hindi') ||
-        descLower.includes('हिंदी') ||
-        descLower.includes('हिन्दी') ||
-        descLower.includes('आवेदन') ||
-        descLower.includes('पत्र लिखें') ||
-        /\b(likhe|kripya|chahiye|aavedan)\b/i.test(description)
+        /(आवेदन|पत्र लिखें|शिकायत|बिजली|छुट्टी)/.test(description || '') ||
+        /\b(likhe|kripya|chahiye|aavedan)\b/i.test(description || '')
       );
 
     if (isMarathi) {
@@ -202,14 +199,20 @@ CRITICAL GROUND TRUTH & ANTI-HALLUCINATION RULES:
 5. FORMAT PROTOCOL:
    - Return ONLY a valid JSON object matching the required schema. No markdown backticks, no conversational preamble.
 
+MANDATORY FIELD RULES (never skip):
+- "sub": ALWAYS generate a concise formal subject line derived from the user's request (e.g. "Request for Sick Leave — 2 Days.", "Complaint Regarding Defective Smartphone — Refund Request."). NEVER leave empty. If the user already typed a subject, keep or polish it — never blank it.
+- "toD": ALWAYS infer the most likely recipient designation + organisation from the request (e.g. "Customer Service Manager, Flipkart Internet Pvt. Ltd." for a Flipkart complaint, "The Municipal Commissioner" for civic issues, "The Branch Manager" for bank letters). NEVER leave empty unless the request is a personal letter.
+- "sal" and "cls" must strictly match the target language (see rules 3).
+- "body": no [bracket] placeholders for core facts the user already gave (dates, names, amounts they mentioned must appear as real text). Only use ______ blanks for genuinely unknown details like order numbers.
+
 JSON SCHEMA:
 {
   "detected_type": "string",
   "is_personal": false,
-  "fno": "File or Reference Number (or keep existing)",
-  "toD": "Recipient Designation & Organization",
+  "fno": "File or Reference Number (or empty)",
+  "toD": "Recipient Designation & Organization (always infer, never empty for formal letters)",
   "toA": "Recipient Address (or empty)",
-  "sub": "Clear formal subject line",
+  "sub": "Clear formal subject line (ALWAYS generate, never empty)",
   "ref": "Reference line if applicable (or empty)",
   "sal": "Salutation matching language",
   "body": "Single complete letter body with distinct paragraphs separated by \\n\\n",
@@ -262,9 +265,13 @@ INSTRUCTIONS:
     const letterData = JSON.parse(cleanedResponse.trim());
 
     // Ensure we don't overwrite user's ground-truth fields if they had them
+    // Synthesize a subject from the description if the model left it empty
+    const synthSub = (!letterData.sub && description)
+      ? description.trim().charAt(0).toUpperCase() + description.trim().slice(1).replace(/\s+/g, ' ').slice(0, 90)
+      : '';
     const finalData = {
       ...letterData,
-      sub: letterData.sub || form.sub || '',
+      sub: letterData.sub || form.sub || synthSub,
       sal: letterData.sal || form.sal || (targetLang === 'mr' ? 'महोदय,' : targetLang === 'hi' ? 'महोदय,' : 'Sir/Madam,'),
       cls: letterData.cls || form.cls || (targetLang === 'mr' ? 'आपला नम्र,' : targetLang === 'hi' ? 'भवदीय,' : 'Yours faithfully,'),
       sn: form.sn ? form.sn : (letterData.sn || ''),

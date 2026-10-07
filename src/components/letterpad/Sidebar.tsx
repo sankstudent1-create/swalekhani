@@ -13,6 +13,15 @@ import { buildPrompt, generateLetterWithAI } from '@/lib/letterpad/aiService';
 import SignaturePad from './SignaturePad';
 import styles from './Sidebar.module.css';
 
+const QUICK_PROMPTS = [
+  'Sick leave application for 2 days',
+  'Complaint about defective product, seeking refund',
+  'Follow-up on pending invoice payment',
+  'RTI application for road repair status',
+  'Job application for accountant post',
+  'Request for bank statement',
+];
+
 interface SidebarProps {
  state: AppState;
  onUpdateForm: <K extends keyof LetterForm>(key: K, val: LetterForm[K]) => void;
@@ -136,6 +145,13 @@ export default function Sidebar({
  </select>
  </Field>
 
+ <div className={styles.presets} style={{ marginBottom: 8 }}>
+   {QUICK_PROMPTS.map((q) => (
+     <button key={q} type="button" className={styles.presetBtn} onClick={() => setAiPrompt(q)}>
+       {q}
+     </button>
+   ))}
+ </div>
  <Field label="Describe what you need">
  <textarea
  className={styles.textarea}

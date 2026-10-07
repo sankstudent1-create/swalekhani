@@ -126,6 +126,11 @@ CORRESPONDENCE & PROTOCOL INTELLIGENCE:
      * Rewrite and translate all relevant letter fields into pure, formal Rajbhasha HINDI (Devanagari script).
      * sub: "विषय: ... संदर्भ में।", sal: "महोदय,", cls: "भवदीय,", toD: "सेवा में,".
 
+FIELD HYGIENE RULES:
+- 'sub' must contain ONLY the subject line text (e.g. "Request for Sick Leave — 2 Days."). NEVER merge reference numbers, dates, or labels like "Reference No.:" into 'sub' — those belong in 'ref' / 'fno'.
+- 'ref' holds reference numbers or prior-letter citations only.
+- Never invent official names, departments, or contact details the user didn't provide.
+
 CRITICAL: Respond with ONLY a valid JSON object. No markdown, no code fences, no explanations.`;
 
     const userPrompt = `CURRENT LETTER DATA (JSON):

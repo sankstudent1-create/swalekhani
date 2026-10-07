@@ -269,11 +269,14 @@ INSTRUCTIONS:
     const synthSub = (!letterData.sub && description)
       ? description.trim().charAt(0).toUpperCase() + description.trim().slice(1).replace(/\s+/g, ' ').slice(0, 90)
       : '';
+    // Strip trailing commas from sal/cls — the paper renderer appends its own comma
+    const cleanSal = (letterData.sal || '').trim().replace(/,+\s*$/, '');
+    const cleanCls = (letterData.cls || '').trim().replace(/,+\s*$/, '');
     const finalData = {
       ...letterData,
       sub: letterData.sub || form.sub || synthSub,
-      sal: letterData.sal || form.sal || (targetLang === 'mr' ? 'महोदय,' : targetLang === 'hi' ? 'महोदय,' : 'Sir/Madam,'),
-      cls: letterData.cls || form.cls || (targetLang === 'mr' ? 'आपला नम्र,' : targetLang === 'hi' ? 'भवदीय,' : 'Yours faithfully,'),
+      sal: cleanSal || form.sal.replace(/,+\s*$/, '') || (targetLang === 'mr' ? 'महोदय' : targetLang === 'hi' ? 'महोदय' : 'Sir/Madam'),
+      cls: cleanCls || form.cls.replace(/,+\s*$/, '') || (targetLang === 'mr' ? 'आपला नम्र' : targetLang === 'hi' ? 'भवदीय' : 'Yours faithfully'),
       sn: form.sn ? form.sn : (letterData.sn || ''),
       sd: form.sd ? form.sd : (letterData.sd || ''),
       sh: letterData.sh || form.sh || '',

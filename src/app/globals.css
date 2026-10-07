@@ -63,6 +63,11 @@
   --site-combo-cool: linear-gradient(120deg, #7fb6ff, #c97bb7);
 }
 
+.dark {
+  --background: #0a0d13;
+  --foreground: #f1f5f9;
+}
+
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -450,10 +455,6 @@ h1, h2, h3, h4, h5, h6 {
   .animate-fade-in-up {
     animation: none !important;
   }
-}
-
-p {
-  color: rgba(229, 233, 246, 0.92);
 }
 
 /* Scrollbar styling */

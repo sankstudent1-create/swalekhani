@@ -311,7 +311,7 @@ JSON SCHEMA (return header/contact fields when the ground truth gives them; in B
   "h2": "Hindi heading line 2 (or empty)",
   "e1": "English heading line 1 (or empty)",
   "e2": "English heading line 2 (or empty)",
-  "dept": "Department (or empty)",
+  "dept": "Department / office line (e.g. Office of the …) — never repeat the government/organisation name from e1, and never repeat the bare signatory designation from sd (or empty)",
   "divn": "Division / Section (or empty)",
   "ofc": "Office / Building (or empty)",
   "city": "City (or empty)",
@@ -381,7 +381,7 @@ CONTEXT & GROUND TRUTH FIELDS:
 
 INSTRUCTIONS:
 - Draft a complete, realistic letter body tailored strictly to this context.
-${generationMode === 'full' ? '- ENTIRE LETTERHEAD MODE: Fill header fields (e1, dept) and signatory designation (sd) from the SENDER named in the brief itself, even if the form fields are empty. Do not leave sd/e1/dept blank when the brief names a sender office/designation (for example, a brief saying "from Deputy Chief Minister, Government of Maharashtra" must produce that designation and that government as the letterhead). Leave phone, email, city, PIN, and street address blank if not given — never invent them, and never add an emblem/seal.' : ''}
+${generationMode === 'full' ? '- ENTIRE LETTERHEAD MODE: Fill header fields (e1, dept) and signatory designation (sd) from the SENDER named in the brief itself, even if the form fields are empty. Do not leave sd/e1/dept blank when the brief names a sender office/designation (for example, a brief saying "from Deputy Chief Minister, Government of Maharashtra" must produce that designation and that government as the letterhead). dept must be the OFFICE (e.g. "Office of the Deputy Chief Minister") — never the government name alone (that is e1) and never the bare designation alone (that is sd). Leave phone, email, city, PIN, and street address blank if not given — never invent them, and never add an emblem/seal.' : ''}
 - Use the typed name "${gt.sn || ''}" directly without hallucinating different officials.
 - Do NOT copy the previous subject or previous recipient above into this letter unless the new brief is about the same topic and names the same recipient. Generate a fresh subject and a fresh recipient from the new brief.
 - Do NOT generate fake @nic.in or @gov.in emails.
@@ -562,16 +562,49 @@ ${generationMode === 'full' ? '- ENTIRE LETTERHEAD MODE: Fill header fields (e1,
       }
     }
 
+    // Header-duplication normalisation (Full mode only; Body-Only
+    // keeps ground truth exactly). The model is unreliable about
+    // which header slot a sender phrase belongs in: one run put the
+    // government name in dept (header printed it twice), another
+    // put the bare designation in dept (it then printed twice under
+    // the signature, next to the sd line). dept is a single field
+    // used in BOTH the header and the signature block, so it must
+    // differ from every other line it could duplicate: the heading
+    // lines, the signatory designation, and the designation-only
+    // part of sd. A duplicated dept is replaced with the
+    // brief-derived office ("Office of the …") when one exists,
+    // otherwise dropped — never left duplicating another line.
+    const normDup = (s: string) => s.toLowerCase().replace(/[^a-z0-9]/g, '');
+    const sdVal = gt.sd ? gt.sd : (str(letterData.sd) || briefSender.sd || '');
+    const e1Val = pickHeader(letterData.e1, gt.e1, false, briefSender.e1);
+    const e2Val = pickHeader(letterData.e2, gt.e2, false);
+    const h1Val = pickHeader(letterData.h1, gt.h1, false);
+    const h2Val = pickHeader(letterData.h2, gt.h2, false);
+    const deptRaw = pickHeader(letterData.dept, gt.dept, false, briefSender.dept);
+    let deptVal = deptRaw;
+    if (generationMode === 'full' && deptRaw) {
+      const designationOnly = sdVal.split(',')[0].trim();
+      const duplicates = [e1Val, e2Val, h1Val, h2Val, sdVal, designationOnly, briefSender.e1 || '']
+        .some((other) => other.trim() && normDup(deptRaw) === normDup(other));
+      if (duplicates) {
+        deptVal = (briefSender.dept
+          && normDup(briefSender.dept) !== normDup(e1Val)
+          && normDup(briefSender.dept) !== normDup(designationOnly))
+          ? briefSender.dept
+          : '';
+      }
+    }
+
     const finalData = {
       ...letterData,
       detected_type: detected,
       letter_type: resolved,
       is_personal: protocol.isPersonal,
-      h1: pickHeader(letterData.h1, gt.h1, false),
-      h2: pickHeader(letterData.h2, gt.h2, false),
-      e1: pickHeader(letterData.e1, gt.e1, false, briefSender.e1),
-      e2: pickHeader(letterData.e2, gt.e2, false),
-      dept: pickHeader(letterData.dept, gt.dept, false, briefSender.dept),
+      h1: h1Val,
+      h2: h2Val,
+      e1: e1Val,
+      e2: e2Val,
+      dept: deptVal,
       divn: pickHeader(letterData.divn, gt.divn, false),
       ofc: pickHeader(letterData.ofc, gt.ofc, false),
       city: pickHeader(letterData.city, gt.city, false),
@@ -591,7 +624,9 @@ ${generationMode === 'full' ? '- ENTIRE LETTERHEAD MODE: Fill header fields (e1,
       // brief-derived sender (Full mode only) — so the sidebar Full
       // path and the chat-modal Full path now agree, instead of the
       // modal filling a designation the sidebar left blank.
-      sd: gt.sd ? gt.sd : (str(letterData.sd) || briefSender.sd || ''),
+      // (sdVal is computed above, before dept normalisation, which
+      // compares dept against it.)
+      sd: sdVal,
       sh: str(letterData.sh) || gt.sh,
       toD: toDVal,
       toA: str(letterData.toA) || gt.toA,

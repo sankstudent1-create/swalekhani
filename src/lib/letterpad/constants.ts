@@ -86,6 +86,12 @@ export const FONT_OPTIONS: Array<{ key: string; label: string; style: CSSPropert
 
 export const SALUTATION_OPTIONS = [
   'Sir', 'Madam', 'Sir/Madam', 'Dear Sir', 'Dear Shri',
+  // English "Respected Sir" was missing even though the appreciation
+  // protocol generates it: after an appreciation generation the
+  // form held "Respected Sir" but the <select> had no matching
+  // option, so the control could not display the paper's salutation.
+  // "Respected Sir/Madam" covers the student-application protocol.
+  'Respected Sir', 'Respected Sir/Madam',
   'महोदय', 'महोदया', 'आदरणीय महोदय', 'सस्नेह नमस्कार', 'प्रति / सेवा में', 'पूज्य / तीर्थरूप', 'प्रिय'
 ];
 export const CLOSING_OPTIONS = [

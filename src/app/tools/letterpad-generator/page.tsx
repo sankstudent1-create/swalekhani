@@ -142,6 +142,18 @@ function LetterpadGeneratorInner() {
  // accidental click can never wipe a draft. resetLetter() itself
  // (draft deletion + DEFAULT_FORM reset) is unchanged.
  const [newConfirmArmed, setNewConfirmArmed] = useState(false);
+ // Visible countdown so the armed state never expires silently: the
+ // button shows how many seconds are left to confirm, and its title
+ // says the confirmation expires. (The live test noted the confirm
+ // state expiring with no hint; the window itself is still 4 seconds
+ // — only the visibility of it changes here.)
+ const [newConfirmSeconds, setNewConfirmSeconds] = useState(0);
+ useEffect(() => {
+   if (!newConfirmArmed) { setNewConfirmSeconds(0); return; }
+   setNewConfirmSeconds(4);
+   const id = setInterval(() => setNewConfirmSeconds((s) => Math.max(0, s - 1)), 1000);
+   return () => clearInterval(id);
+ }, [newConfirmArmed]);
  const newConfirmTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
  useEffect(() => () => {
    if (newConfirmTimer.current) clearTimeout(newConfirmTimer.current);
@@ -441,10 +453,10 @@ function LetterpadGeneratorInner() {
  <button
  className={styles.clearBtn}
  onClick={handleNewLetter}
- title={newConfirmArmed ? 'Click again to confirm clearing this letter' : 'Start a new letter'}
+ title={newConfirmArmed ? 'Click again to confirm clearing this letter — this confirmation expires in a few seconds, then the button returns to New' : 'Start a new letter'}
  aria-pressed={newConfirmArmed}
  >
- {newConfirmArmed ? '⚠ Click again to clear' : '✦ New'}
+ {newConfirmArmed ? `⚠ Click again to clear (${newConfirmSeconds}s)` : '✦ New'}
  </button>
  {newConfirmArmed && (
  <button

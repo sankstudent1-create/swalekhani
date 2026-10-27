@@ -12,6 +12,7 @@ import {
   computeMissingFields,
   protocolPrompt,
   stripPlaceholders,
+  extractSenderFromBrief,
   isPlaceholderValue,
   type AILang,
   type KnownLetterType,
@@ -302,7 +303,7 @@ MANDATORY FIELD RULES (never skip):
 - "sal" and "cls" must strictly match the target language and letter type (see rules 3 and the type protocol above).
 - "body": no [bracket] placeholders for core facts the user already gave (dates, names, amounts they mentioned must appear as real text). Only use ______ blanks for genuinely unknown details like order numbers.
 
-JSON SCHEMA (return header/contact fields when the ground truth gives them; in Body-Only mode return them exactly as ground truth, never invented):
+JSON SCHEMA (return header/contact fields when the ground truth gives them; in Body-Only mode return them exactly as ground truth, never invented; in Entire Letterhead mode derive e1/dept/sd from the SENDER named in the brief itself when the form is empty — never invent phone, email, city, PIN, address, or an emblem/seal):
 {
   "detected_type": "string",
   "is_personal": false,
@@ -380,6 +381,7 @@ CONTEXT & GROUND TRUTH FIELDS:
 
 INSTRUCTIONS:
 - Draft a complete, realistic letter body tailored strictly to this context.
+${generationMode === 'full' ? '- ENTIRE LETTERHEAD MODE: Fill header fields (e1, dept) and signatory designation (sd) from the SENDER named in the brief itself, even if the form fields are empty. Do not leave sd/e1/dept blank when the brief names a sender office/designation (for example, a brief saying "from Deputy Chief Minister, Government of Maharashtra" must produce that designation and that government as the letterhead). Leave phone, email, city, PIN, and street address blank if not given — never invent them, and never add an emblem/seal.' : ''}
 - Use the typed name "${gt.sn || ''}" directly without hallucinating different officials.
 - Do NOT copy the previous subject or previous recipient above into this letter unless the new brief is about the same topic and names the same recipient. Generate a fresh subject and a fresh recipient from the new brief.
 - Do NOT generate fake @nic.in or @gov.in emails.
@@ -434,10 +436,21 @@ INSTRUCTIONS:
     // Full mode may complete organisation fields from the model, but
     // a real phone/email from ground truth always wins over a model
     // invention, and placeholder values are never accepted.
-    const pickHeader = (aiVal: unknown, gtVal: string, isContact: boolean): string => {
+    // Brief-derived sender (Full mode only, see extractSenderFromBrief):
+    // if neither the model nor the user-filled form gives a header or
+    // designation, the sender named in the brief itself fills it —
+    // that is how Entire Letterhead mode keeps its promise without
+    // inventing anything. Order: model > user-filled form > brief
+    // sender. Phone/email/address/city/PIN are never brief-derived.
+    const briefSender = generationMode === 'full'
+      ? extractSenderFromBrief(description)
+      : {};
+    const pickHeader = (aiVal: unknown, gtVal: string, isContact: boolean, senderVal?: string): string => {
       const ai = str(aiVal).trim();
       if (generationMode === 'full' && !isContact) {
         if (ai && !isPlaceholderValue(ai)) return ai;
+        if (gtVal) return gtVal;
+        if (senderVal) return senderVal;
         return gtVal;
       }
       if (isContact && gtVal) return gtVal;
@@ -465,6 +478,18 @@ INSTRUCTIONS:
         if (gt.sal && isDevanagari(gt.sal)) return gt.sal.replace(/,+\s*$/, '');
         return langSal;
       }
+      // Appreciation / congratulatory letters prefer the warmer
+      // protocol salutation. The generic defaults 'Sir' / 'Sir/Madam'
+      // (the form's untouched defaults) do not count as an explicit
+      // user choice, and a generic model salutation does not either:
+      // a non-generic model value, or a non-generic form value the
+      // user actually picked, still wins over the protocol default.
+      if (resolved === 'appreciation') {
+        const gtSal = gt.sal.replace(/,+\s*$/, '');
+        if (ai && ai !== 'Sir' && ai !== 'Sir/Madam') return ai;
+        if (gtSal && gtSal !== 'Sir' && gtSal !== 'Sir/Madam') return gtSal;
+        return langSal;
+      }
       return ai || gt.sal.replace(/,+\s*$/, '') || langSal;
     };
     const enforceCls = (ai: string): string => {
@@ -472,6 +497,12 @@ INSTRUCTIONS:
       if (isNonEnglishGen) {
         if (ai && isDevanagari(ai)) return ai;
         if (gt.cls && isDevanagari(gt.cls)) return gt.cls.replace(/,+\s*$/, '');
+        return langCls;
+      }
+      if (resolved === 'appreciation') {
+        const gtCls = gt.cls.replace(/,+\s*$/, '');
+        if (ai && ai !== 'Yours faithfully') return ai;
+        if (gtCls && gtCls !== 'Yours faithfully') return gtCls;
         return langCls;
       }
       return ai || gt.cls.replace(/,+\s*$/, '') || langCls;
@@ -538,9 +569,9 @@ INSTRUCTIONS:
       is_personal: protocol.isPersonal,
       h1: pickHeader(letterData.h1, gt.h1, false),
       h2: pickHeader(letterData.h2, gt.h2, false),
-      e1: pickHeader(letterData.e1, gt.e1, false),
+      e1: pickHeader(letterData.e1, gt.e1, false, briefSender.e1),
       e2: pickHeader(letterData.e2, gt.e2, false),
-      dept: pickHeader(letterData.dept, gt.dept, false),
+      dept: pickHeader(letterData.dept, gt.dept, false, briefSender.dept),
       divn: pickHeader(letterData.divn, gt.divn, false),
       ofc: pickHeader(letterData.ofc, gt.ofc, false),
       city: pickHeader(letterData.city, gt.city, false),
@@ -556,7 +587,11 @@ INSTRUCTIONS:
       sal: salVal,
       cls: clsVal,
       sn: gt.sn ? gt.sn : str(letterData.sn),
-      sd: gt.sd ? gt.sd : str(letterData.sd),
+      // Designation: user-filled form wins, then the model, then the
+      // brief-derived sender (Full mode only) — so the sidebar Full
+      // path and the chat-modal Full path now agree, instead of the
+      // modal filling a designation the sidebar left blank.
+      sd: gt.sd ? gt.sd : (str(letterData.sd) || briefSender.sd || ''),
       sh: str(letterData.sh) || gt.sh,
       toD: toDVal,
       toA: str(letterData.toA) || gt.toA,

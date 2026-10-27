@@ -137,11 +137,18 @@ export const TYPE_PROTOCOLS: Record<KnownLetterType, TypeProtocol> = {
     label: 'Letter of Appreciation',
     isPersonal: false,
     recipientFallback: '______ (Name of the person being appreciated)',
-    structure: ['Commendation and the specific achievement or service', 'Impact of that work', 'Encouragement / thanks'],
-    required: ['specific achievement'],
+    // Congratulatory letters (birthday wishes, felicitations) use a
+    // warmer salutation/closing than the generic formal default. The
+    // route only applies these when neither the model nor an explicit
+    // user choice supplies a different, non-generic value — see
+    // route.ts. Marathi/Hindi values stay in their own language and
+    // never cross (Marathi closing is never Hindi भवदीय).
+    structure: ['Warm congratulations / good wishes, naming the occasion', 'Commendation and the specific achievement or service (or, for a birthday, good wishes for health and success)', 'Encouragement / thanks'],
+    required: ['occasion (birthday, felicitation, achievement)', 'specific achievement or good wishes'],
     mustNot: [...COMMON_MUST_NOT, 'an achievement, award, or date not in the brief'],
     subjectPrefix: 'Letter of Appreciation',
-    salutation: {}, closing: {},
+    salutation: { en: 'Respected Sir', mr: 'आदरणीय महोदय', hi: 'आदरणीय महोदय', bi: 'Respected Sir' },
+    closing: { en: 'With warm regards', mr: 'सस्नेह', hi: 'सस्नेह', bi: 'With warm regards' },
   },
   advisory: {
     label: 'Advisory / Guidelines',
@@ -252,6 +259,15 @@ export function detectLetterType(
   if (has(/circular/, /all department/, /all staff/, /परिपत्रक/)) return 'circular';
   if (has(/notice/, /announcement/, /सूचना/)) return 'notice';
   if (has(/advisory/, /guidelines/, /मार्गदर्शक/)) return 'advisory';
+  // Congratulatory / birthday letters are appreciation letters, not
+  // generic corporate letters. This must run before romantic /
+  // heritage / personal, so "happy birthday wishes" from an office
+  // holder to another office holder is not silently reported as a
+  // Corporate Business Letter. The chat modal sends letterType='auto',
+  // so without these keywords it fell back to corporate — that was
+  // the live birthday-test defect, not a sidebar-type leak (the modal
+  // never receives the sidebar's Letter Type; it only sends 'auto').
+  if (has(/birthday/, /birth day/, /congratulat/, /felicitat/, /\bwishes\b/, /best wishes/, /greetings/, /वाढदिवस/, /जन्मदिन/, /बधाई/, /शुभकामना/, /शुभेच्छा/)) return 'appreciation';
   if (has(/appreciation/, /commend/, /congrat/, /अभिनंदन/)) return 'appreciation';
   if (has(/forward/, /endorsement/, /पृष्ठांकन/)) return 'forwarding';
   if (has(/love/, /sweetheart/, /beloved/, /प्रेमपत्र/)) return 'romantic';
@@ -299,6 +315,99 @@ export function inferRecipient(type: KnownLetterType, ctx: RecipientCtx): string
     return 'The Principal';
   }
   return TYPE_PROTOCOLS[type].recipientFallback;
+}
+
+// ── Sender extraction from the brief (Full-letterhead mode only) ──
+// When a user writes "Write a letter from deputy chief minister,
+// Government of Maharashtra to the Prime Minister for birthday
+// wishes", the sender office and designation ARE given — in the brief,
+// not in the form. The model was previously not told to derive a
+// header from the brief, so Entire Letterhead mode returned a blank
+// header (placeholders only) despite promising to replace headers.
+// This deterministic fallback fills sd/dept/e1 from the brief's own
+// words only: no person name, no phone, no email, no address, no
+// city/PIN, no emblem/seal, and nothing not present in the brief.
+// It is used only in Full mode, after the model output and after any
+// user-filled form value, so it can never overwrite real user data
+// or a model value with an invention.
+const DESIGNATION_SPELLING: Record<string, string> = {
+  minster: 'minister',
+  ministar: 'minister',
+  cheif: 'chief',
+  goverment: 'government',
+  prim: 'prime',
+};
+
+function titleCaseDesignation(raw: string): string {
+  return raw
+    .toLowerCase()
+    .replace(/[^a-z\s]/g, ' ')
+    .split(/\s+/)
+    .filter(Boolean)
+    .map((w) => DESIGNATION_SPELLING[w] || w)
+    .map((w) => (w === 'of' ? 'of' : w.charAt(0).toUpperCase() + w.slice(1)))
+    .join(' ')
+    .replace(/\s+Of\s+/g, ' of ')
+    .trim();
+}
+
+export interface BriefSender {
+  sd?: string;
+  dept?: string;
+  e1?: string;
+}
+
+export function extractSenderFromBrief(brief: string): BriefSender {
+  const text = (brief || '').trim();
+  if (!text) return {};
+  // "from <sender> to <recipient>" is the clearest pattern; fall back
+  // to "from <sender> for ..." / end of brief.
+  const fromTo = text.match(/from\s+(.+?)\s+to\s+/i);
+  const fromFor = text.match(/from\s+(.+?)\s+for\s+/i);
+  const fromEnd = text.match(/from\s+(.+?)\s*$/i);
+  const segmentRaw = (fromTo?.[1] || fromFor?.[1] || fromEnd?.[1] || '').trim();
+  if (!segmentRaw || segmentRaw.length > 80) return {};
+  // Split off "Government of X" / "gov of X" / "of X" at the end.
+  const govMatch = segmentRaw.match(/^(.*?)[,\s]+(?:gov(?:ernment)?|govt)\s+of\s+(.+)$/i)
+    || segmentRaw.match(/^(.*?)[,\s]+government\s+of\s+(.+)$/i);
+  let designationRaw = segmentRaw;
+  let govPlace = '';
+  if (govMatch) {
+    designationRaw = govMatch[1];
+    govPlace = govMatch[2];
+  } else {
+    const ofMatch = segmentRaw.match(/^(.*?)\s+of\s+([A-Za-z][A-Za-z\s]+)$/);
+    if (ofMatch) {
+      designationRaw = ofMatch[1];
+      govPlace = ofMatch[2];
+    }
+  }
+  designationRaw = designationRaw.replace(/^the\s+/i, '').trim();
+  govPlace = govPlace.replace(/,+$/, '').trim();
+  if (!designationRaw) return {};
+  // A comma inside the sender segment ("Collector, Pune District")
+  // separates designation from place — keep it as a comma, not a
+  // run-together phrase, and keep the office name designation-only.
+  const commaParts = designationRaw.split(',').map((p) => p.trim()).filter(Boolean);
+  const designation = commaParts.length > 1 && !govPlace
+    ? `${titleCaseDesignation(commaParts[0])}, ${titleCaseDesignation(commaParts.slice(1).join(' '))}`
+    : titleCaseDesignation(designationRaw);
+  if (!designation) return {};
+  // Only trust the segment if it looks like a designation/office:
+  // a known designation word, or a short office phrase. Anything
+  // longer or vaguer is left blank rather than guessed.
+  const known = /(chief minister|prime minister|minister|governor|collector|postmaster|manager|principal|secretary|director|mayor|chairman|chairperson|president|commissioner|officer|head)/i;
+  if (!known.test(designation) && designation.split(' ').length > 4) return {};
+  const govName = govPlace ? `Government of ${titleCaseDesignation(govPlace)}` : '';
+  const sd = govName ? `${designation}, ${govName}` : designation;
+  const officeName = commaParts.length > 1 && !govPlace
+    ? titleCaseDesignation(commaParts[0])
+    : designation;
+  return {
+    sd,
+    dept: `Office of the ${officeName}`,
+    e1: govName || undefined,
+  };
 }
 
 // ── Placeholder preset values (not real data) ──
@@ -528,6 +637,8 @@ export function protocolPrompt(type: KnownLetterType, lang: AILang, secondLang: 
     : '';
   return `LETTER TYPE: ${p.label}
 ${langNote}${rtiReplyMust}
+PREFERRED SALUTATION (use this unless the brief or the user explicitly chose another): ${salutationFor(type, lang)}.
+PREFERRED CLOSING (use this unless the brief or the user explicitly chose another): ${closingFor(type, lang)}.
 BODY STRUCTURE (follow in order): ${p.structure.join(' → ')}.
 REQUIRED IN THIS LETTER: ${p.required.length ? p.required.join('; ') : 'none beyond a complete body'}.
 NEVER INVENT: ${p.mustNot.join('; ')}.

@@ -188,12 +188,12 @@ export default function CompanyLetterpadPage() {
  <div className="flex justify-between items-start border-b border-slate-200 dark:border-white/10 pb-4 mb-4">
  <div>
  <h4 className="text-lg font-bold text-slate-900 dark:text-white tracking-wide">APEX ENTERPRISE SOLUTIONS PVT. LTD.</h4>
- <p className="text-xs text-slate-600 dark:text-white/60">CIN: U72900KA2021PTC123456 | GSTIN: 29AABCU9603R1Z7</p>
+ <p className="text-xs text-slate-600 dark:text-white/60">CIN: U00000KA2021PTC000000 | GSTIN: 29AAAAA0000A1Z5</p>
  <p className="text-xs text-slate-600 dark:text-white/60">Level 5, Cyber Park, Electronic City, Bengaluru - 560100</p>
  </div>
  <div className="text-right text-xs text-brand-sky font-medium">
  <p>contact@apexsolutions.in</p>
- <p>+91-80-41234567</p>
+ <p>+91-80-4000 0000</p>
  </div>
  </div>
 
@@ -203,8 +203,8 @@ export default function CompanyLetterpadPage() {
  </div>
 
  <div className="text-xs space-y-1 mb-4">
- <p className="font-semibold text-slate-900 dark:text-white">To: Mr. Rohit Verma</p>
- <p>Candidate ID: EMP-2026-441</p>
+ <p className="font-semibold text-slate-900 dark:text-white">To: Mr. Kabir Shah</p>
+ <p>Candidate ID: EMP-2026-000</p>
  </div>
 
  <p className="text-xs font-bold text-slate-900 dark:text-white mb-2">
@@ -212,7 +212,7 @@ export default function CompanyLetterpadPage() {
  </p>
 
  <div className="text-xs space-y-2 text-slate-700 dark:text-white/80">
- <p>Dear Rohit,</p>
+ <p>Dear Kabir,</p>
  <p>We are pleased to extend this offer of employment for the position of Senior Full Stack Engineer at Apex Enterprise Solutions Pvt. Ltd...</p>
  </div>
 

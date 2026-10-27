@@ -72,7 +72,7 @@ function LetterpadGeneratorInner() {
  let defaultDesig = prof.fields.find(f => f.id === 'subTitle' || f.id === 'qualifications' || f.id === 'designation')?.defaultValue || prof.profession;
 
  if (lower === 'clinic') {
- defaultSignatory = 'Dr. Aarav Sharma, MBBS, MD (Med)';
+ defaultSignatory = 'Dr. Neha Patil, MBBS, MD (Med)';
  defaultDesig = 'Consulting Physician & Medical Director';
  }
 

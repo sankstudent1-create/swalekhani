@@ -17,6 +17,7 @@ export function buildPrompt(
     corporate:         'Corporate Business Letter',
     complaint:         'Complaint Letter',
     rti:               'RTI Application',
+    rti_reply:         'RTI Reply / PIO Response',
     circular:          'Circular / Internal Directive',
     reminder:          'Reminder Letter',
     forwarding:        'Forwarding / Endorsement Note',
@@ -50,6 +51,8 @@ export function buildPrompt(
     styleNote = 'Formal Complaint Letter: Clearly state the grievance with dates and facts, specify the resolution sought, and keep a firm but courteous tone. Include any reference/ticket numbers.';
   } else if (type === 'rti') {
     styleNote = 'RTI Application (RTI Act, 2005): Plain citizen application addressed to the Public Information Officer. State the information sought in numbered points, mention the application fee payment mode, and keep the format simple — no letterhead.';
+  } else if (type === 'rti_reply') {
+    styleNote = 'RTI Reply / PIO Response (RTI Act, 2005): Formal reply from the Public Information Officer to the applicant. Number the points to match the application. State what information is enclosed (with page count in the enclosure list) under Section 7. Cite a Section 8 exemption ONLY when the brief states a ground for withholding — never invent one, and never invent facts, dates, or page counts the brief does not give. Always close with first-appeal information under Section 19(1): appeal within 30 days of receipt of this reply, with the First Appellate Authority named by designation. Sign as Public Information Officer with designation and office.';
   } else if (type === 'corporate') {
     styleNote = 'Professional Corporate Business Letter: Formal business tone on company letterhead. Clear subject line, structured numbered paragraphs, and professional closing "Yours faithfully" or "Best regards" as appropriate.';
   } else if (type === 'student_app') {
@@ -84,6 +87,8 @@ RESPOND WITH ONLY THE JSON OBJECT.`;
 export interface AILetterResult {
   data: AILetterData;
   model: string;    // e.g. "llama-3.3-70b-versatile" or a fallback
+  missingFields?: string[];
+  detectedType?: string;
 }
 
 // ── Main function — calls /api/generate-letter route ─
@@ -91,7 +96,11 @@ export async function generateLetterWithAI(
   prompt: string,
   letterType: string,
   language: string,
-  currentContext: { department?: string; office?: string; city?: string },
+  currentContext: {
+    department?: string; office?: string; city?: string;
+    officeType?: string; template?: string; tpl?: string;
+    mode?: 'content' | 'full'; form?: LetterForm;
+  },
   onStatus: (msg: string) => void,
   currentForm?: LetterForm,
   templatePreset?: string
@@ -116,6 +125,9 @@ export async function generateLetterWithAI(
     data?: Record<string, unknown>;
     error?: string;
     model?: string;
+    missing_fields?: string[];
+    detected_type?: string;
+    letter_type?: string;
   };
 
   if (!res.ok || json.error) {
@@ -126,6 +138,11 @@ export async function generateLetterWithAI(
   }
 
   const modelUsed = json.model || 'Groq AI';
+  const missingFields = Array.isArray(json.missing_fields)
+    ? (json.missing_fields as string[])
+    : (Array.isArray((json.data as Record<string, unknown> | undefined)?.missing_fields)
+      ? ((json.data as Record<string, unknown>).missing_fields as string[])
+      : []);
 
   // Map short-key Groq response → AILetterData
   const d = json.data;
@@ -188,10 +205,16 @@ export async function generateLetterWithAI(
       : Array.isArray(d.copy_to)
         ? d.copy_to as string[]
         : []) as string[],
+    missing_fields: missingFields,
   };
 
   const shortModel = modelUsed.split('/').pop() ?? modelUsed;
   onStatus(`✓ Letter generated! (via ${shortModel})`);
 
-  return { data, model: modelUsed };
+  return {
+    data,
+    model: modelUsed,
+    missingFields,
+    detectedType: (json.detected_type as string | undefined) || (d.detected_type as string | undefined),
+  };
 }

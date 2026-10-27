@@ -24,10 +24,10 @@ export const OFFICE_PRESETS: Record<string, OfficePreset> = {
   healthcare:{ h1:'Clinic / Hospital Name', h2:'', e1:'Multi-Speciality Clinic', e2:'', dept:'', divn:'', ofc:'Hospital Address', city:'', pin:'', ph:'+91-00000 00000', em:'', wb:'', ll:null, lr:null, t:'B' },
   complaint: { h1:'', h2:'', e1:'', e2:'', dept:'', divn:'', ofc:'', city:'', pin:'', ph:'', em:'', wb:'', ll:null, lr:null, t:'B' },
   rti:       { h1:'', h2:'', e1:'', e2:'', dept:'', divn:'', ofc:'', city:'', pin:'', ph:'', em:'', wb:'', ll:null, lr:null, t:'B' },
-  company:  { h1:'', h2:'', e1:'Apex Enterprise Solutions Pvt. Ltd.', e2:'Technology & Corporate Consulting', dept:'Headquarters', divn:'(Operations & Strategy)', ofc:'Level 5, Cyber Park', city:'Bengaluru', pin:'560 100', ph:'+91-80-41234567', em:'contact@apexsolutions.in', wb:'www.apexsolutions.in', ll:null, lr:null, t:'B' },
-  school:   { h1:'विद्या ददाति विनयं', h2:'ज्ञानं परमं बलम्', e1:'Delhi Model Public Academy', e2:'Affiliated to CBSE, New Delhi', dept:'Office of the Principal', divn:'(Academic Administration)', ofc:'Sector 12, Institutional Area', city:'New Delhi', pin:'110 075', ph:'011-28080000', em:'principal@delhimodel.edu.in', wb:'www.delhimodel.edu.in', ll:null, lr:null, t:'A' },
-  doctor:   { h1:'', h2:'', e1:'Dr. Aarav Sharma, MBBS, MD (Med)', e2:'Consultant Physician & Cardiologist', dept:'CareWell Medical Clinic', divn:'(Outpatient Dept)', ofc:'Plot 42, Health Plaza, Ring Road', city:'Mumbai', pin:'400 053', ph:'+91-9820012345', em:'dr.aarav@carewellclinic.in', wb:'Reg No: MMC-2015-08-3421', ll:null, lr:null, t:'B' },
-  shop:     { h1:'', h2:'', e1:'Shree Ganesh Commercial Trading Co.', e2:'Wholesale & Retail Distributors', dept:'Commercial Sales Department', divn:'', ofc:'Shop No. 18, Central Market', city:'Pune', pin:'411 002', ph:'+91-20-24450000', em:'orders@shreeganeshtraders.in', wb:'GSTIN: 27AABCS1234F1Z8', ll:null, lr:null, t:'A' },
+  company:  { h1:'', h2:'', e1:'Apex Enterprise Solutions Pvt. Ltd.', e2:'Technology & Corporate Consulting', dept:'Headquarters', divn:'(Operations & Strategy)', ofc:'Level 5, Cyber Park', city:'Bengaluru', pin:'560 100', ph:'+91-80-4000 0000', em:'contact@apexsolutions.in', wb:'www.apexsolutions.in', ll:null, lr:null, t:'B' },
+  school:   { h1:'विद्या ददाति विनयं', h2:'ज्ञानं परमं बलम्', e1:'Delhi Model Public Academy', e2:'Affiliated to CBSE, New Delhi', dept:'Office of the Principal', divn:'(Academic Administration)', ofc:'Sector 12, Institutional Area', city:'New Delhi', pin:'110 075', ph:'011-4000 0000', em:'principal@delhimodel.edu.in', wb:'www.delhimodel.edu.in', ll:null, lr:null, t:'A' },
+  doctor:   { h1:'', h2:'', e1:'Dr. Neha Patil, MBBS, MD (Med)', e2:'Consultant Physician & Cardiologist', dept:'CareWell Medical Clinic', divn:'(Outpatient Dept)', ofc:'Plot 42, Health Plaza, Ring Road', city:'Mumbai', pin:'400 053', ph:'+91-98765 43210', em:'dr.neha@carewellclinic.in', wb:'Reg No: MMC-0000-00-0000', ll:null, lr:null, t:'B' },
+  shop:     { h1:'', h2:'', e1:'Shree Ganesh Commercial Trading Co.', e2:'Wholesale & Retail Distributors', dept:'Commercial Sales Department', divn:'', ofc:'Shop No. 18, Central Market', city:'Pune', pin:'411 002', ph:'+91-20-4000 0000', em:'orders@shreeganeshtraders.in', wb:'GSTIN: 27AAAAA0000A1Z5', ll:null, lr:null, t:'A' },
 };
 
 // ── Default form values ───────────────────────
@@ -71,7 +71,7 @@ export const TEMPLATE_INFO: Record<TemplateType, { label: string; desc: string }
   B: { label: 'Type-B · Executive',         desc: 'Logo center · Address top-right' },
   C: { label: 'Type-C · Dual Brand',        desc: 'Dual logos · Bilingual name center' },
   D: { label: 'Type-D · Personal Name',      desc: 'Logo left · Prominent name' },
-  E: { label: 'Type-E · Office Memo',        desc: 'No To-block · Wide distribution' },
+  E: { label: 'Type-E · Office Memo',        desc: 'To-block + salutation when filled · Wide distribution' },
   F: { label: 'Type-F · Circular / Notice',  desc: 'NOTICE badge · Numbered' },
 };
 
@@ -97,6 +97,7 @@ export const AI_LETTER_TYPES: Array<{ value: string; label: string }> = [
   { value: 'corporate',          label: 'Corporate Business Letter' },
   { value: 'complaint',          label: 'Complaint Letter' },
   { value: 'rti',                label: 'RTI Application' },
+  { value: 'rti_reply',          label: 'RTI Reply / PIO Response' },
   { value: 'notice',             label: 'Notice Announcement' },
   { value: 'circular',           label: 'Circular / Internal Directive' },
   { value: 'reminder',           label: 'Reminder Letter (Urgent / Pending)' },

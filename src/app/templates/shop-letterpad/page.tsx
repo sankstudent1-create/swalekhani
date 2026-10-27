@@ -189,8 +189,8 @@ export default function ShopLetterpadPage() {
  <p className="text-xs text-amber-700 font-mono tracking-widest">|| श्री गणेशाय नमः ||</p>
  <h4 className="text-lg font-bold text-slate-900 dark:text-white tracking-wide">SHREE GANESH COMMERCIAL TRADING CO.</h4>
  <p className="text-xs text-slate-600 dark:text-white/60">Wholesale & Retail Distributors | Electrical & Hardware Supplies</p>
- <p className="text-xs text-slate-600 dark:text-white/60">Shop No. 18, Central Market Yard, Pune - 411002 | GSTIN: 27AABCS1234F1Z8</p>
- <p className="text-xs text-amber-700/80">Ph: +91-20-24450000 | Mob: +91-9822012345</p>
+ <p className="text-xs text-slate-600 dark:text-white/60">Shop No. 18, Central Market Yard, Pune - 411002 | GSTIN: 27AAAAA0000A1Z5</p>
+ <p className="text-xs text-amber-700/80">Ph: +91-20-4000 0000 | Mob: +91-98765 43210</p>
  </div>
 
  <div className="flex justify-between text-xs text-slate-600 dark:text-white/60 mb-4 font-mono">

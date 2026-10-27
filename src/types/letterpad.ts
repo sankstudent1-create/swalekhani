@@ -14,7 +14,7 @@ export type FontClass = '' | 'fg' | 'fs' | 'fd2' | 'ft' | 'fn';
 export type SigMode = 'draw' | 'type' | 'upload';
 export type LogoSide = 'L' | 'R';
 export type AILetterType =
-  | 'corporate' | 'complaint' | 'rti' | 'circular' | 'reminder'
+  | 'corporate' | 'complaint' | 'rti' | 'rti_reply' | 'circular' | 'reminder'
   | 'forwarding' | 'scn' | 'noc' | 'appreciation' | 'notice'
   | 'advisory' | 'student_app'
   | 'heritage_personal' | 'romantic' | 'citizen_app' | 'personal'
@@ -147,6 +147,7 @@ export interface AILetterData {
   enclList?: string[];
   copy_to?: string[];
   copyList?: string[];
+  missing_fields?: string[];
 }
 
 // ── Office preset data ──────────────────────────────────

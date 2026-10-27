@@ -1,6 +1,7 @@
 'use client';
 import React, { useState, useRef, useEffect } from 'react';
 import type { AppState, LetterForm, AILetterData } from '@/types/letterpad';
+import { MISSING_FIELD_LABELS } from '@/lib/letterpad/typeProtocols';
 import styles from './AIChatAssistant.module.css';
 
 interface Message {
@@ -130,9 +131,16 @@ export default function AIChatAssistant({ state, onSetForm, onFillAI }: AIChatAs
  headers: { 'Content-Type': 'application/json' },
  body: JSON.stringify({
  description: userText,
- letterType: 'auto', // Auto-detect NOC, Love Letter, Circular, OM, DO, Student App, etc.
+ letterType: 'auto', // Auto-detected in the route (typeProtocols), not corporate
  language: selectedLang === 'auto' ? undefined : selectedLang,
- currentContext: {} // Start fresh
+ // Previously {}: the route then had no sender/office context to
+ // infer a recipient from. Send the full current form as ground
+ // truth; the route's preserve rule keeps filled fields intact.
+ currentContext: {
+   officeType: state.officeType, template: state.tpl, mode: 'full', form: state.form,
+ },
+ currentForm: state.form,
+ generationMode: 'full',
  })
  });
 
@@ -151,18 +159,26 @@ export default function AIChatAssistant({ state, onSetForm, onFillAI }: AIChatAs
  corporate: 'Corporate Business Letter',
  complaint: 'Complaint Letter',
  rti: 'RTI Application',
+ rti_reply: 'RTI Reply / PIO Response',
+ notice: 'Notice Announcement',
+ advisory: 'Advisory / Guidelines',
+ forwarding: 'Forwarding / Endorsement Note',
  romantic: 'Heartfelt Love Letter (Headers removed)',
  student_app: 'Student Application to Principal',
  heritage_personal: 'Traditional Family Letter',
  scn: 'Show Cause Notice',
  reminder: 'Urgent Reminder Letter',
  appreciation: 'Letter of Appreciation',
- personal: 'Personal Letter'
+ personal: 'Personal Letter',
+ custom: 'Custom Letter'
  };
- const label = typeNameMap[json.data.detected_type] || 'complete letter';
- setMessages(prev => [...prev, { 
- role: 'assistant', 
- text: `✨ I have generated a complete ${label} with all necessary sections and authentic formatting!`
+ const detected = json.detected_type || json.data.detected_type;
+ const label = typeNameMap[detected] || 'complete letter';
+ const missing = Array.isArray(json.missing_fields) ? json.missing_fields as string[] : [];
+ setMessages(prev => [...prev, {
+ role: 'assistant',
+ text: `✨ I have generated a complete ${label} with all necessary sections and authentic formatting!` +
+   (missing.length ? ` Please fill in: ${missing.map((f: string) => MISSING_FIELD_LABELS[f] || f).join(', ')}.` : '')
  }]);
  } else {
  throw new Error('No data returned from AI');

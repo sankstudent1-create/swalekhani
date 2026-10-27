@@ -233,7 +233,17 @@ export default function LetterPaper({
  const isNGO = officeType === 'ngo-trust';
  const isSociety = officeType === 'housing-society';
 
- const addr = [form.ofc, form.city, form.pin ? '– ' + form.pin : ''].filter(Boolean).join(', ');
+ // Address, composed conditionally: empty parts are skipped (no dangling
+ // ', ' or ' – '), and a city that merely repeats the office line is not
+ // shown twice. PIN is joined with ' – ', not ', – '.
+ const addrParts = [form.ofc?.trim(), form.city?.trim()].filter(Boolean) as string[];
+ if (addrParts.length === 2 && addrParts[0].toLowerCase() === addrParts[1].toLowerCase()) addrParts.pop();
+ const addr = addrParts.join(', ') + (form.pin?.trim() ? (addrParts.length ? ` – ${form.pin.trim()}` : form.pin.trim()) : '');
+ // Station / Place beside the date: the sender's city is the station when
+ // no separate place was entered. Nothing is invented — an empty city
+ // simply yields no Place line.
+ const station = form.city?.trim() || '';
+ const headerCityDuplicatesOffice = Boolean(form.ofc?.trim() && form.city?.trim() && form.ofc.trim().toLowerCase() === form.city.trim().toLowerCase());
  const fontFamily = FONT_MAP[font] || FONT_MAP[''];
 
  // Helper: Editable with correct aiTick wired in
@@ -287,8 +297,12 @@ export default function LetterPaper({
  <div className={styles.hAStars}>★&nbsp;&nbsp;★&nbsp;&nbsp;★&nbsp;&nbsp;★</div>
  </div>
  <div className={styles.hAAddr}>
- {E('ofc', '', 'span', 'Office')}{', '}
- {E('city', '', 'span', 'City')}{' – '}
+ {E('ofc', '', 'span', 'Office')}
+ {/* Separators are print-hidden when a neighbour is empty, so print
+     never shows a dangling ', ' or ' – ' for a blank field. */}
+ <span className={(!form.ofc?.trim() || !form.city?.trim() || headerCityDuplicatesOffice) ? styles.hideIfEmptyPrint : ''}>{(!headerCityDuplicatesOffice && form.ofc?.trim() && form.city?.trim()) ? ', ' : ''}</span>
+ {!headerCityDuplicatesOffice && E('city', '', 'span', 'City')}
+ <span className={!(form.ofc?.trim() || form.city?.trim()) || !form.pin?.trim() ? styles.hideIfEmptyPrint : ''}>{(form.ofc?.trim() || form.city?.trim()) && form.pin?.trim() ? ' – ' : ''}</span>
  {E('pin', '', 'span', 'PIN')}<br/>
  <span className={styles.hideIfEmptyPrint}>{'Phone: '}{E('ph', '', 'span', 'Phone')}&emsp;</span>
  <span className={styles.hideIfEmptyPrint}>{E('em', '', 'span', 'email')}</span>
@@ -312,7 +326,7 @@ export default function LetterPaper({
  </div>
  <div className={styles.hBAddr}>
  {E('ofc', '', 'div', 'Office / Chamber')}<br/>
- {E('city', '', 'span', 'City')}{' – '}{E('pin', '', 'span', 'PIN')}<br/>
+ {E('city', '', 'span', 'City')}<span className={(!form.city?.trim() || !form.pin?.trim()) ? styles.hideIfEmptyPrint : ''}>{form.city?.trim() && form.pin?.trim() ? ' – ' : ''}</span>{E('pin', '', 'span', 'PIN')}<br/>
  <span className={!form.ph?.trim() ? styles.hideIfEmptyPrint : ''}>Tel: {E('ph', '', 'span', 'Phone')}<br/></span>
  <span className={!form.em?.trim() ? styles.hideIfEmptyPrint : ''}>{E('em', '', 'span', 'Email')}<br/></span>
  {E('dt', '', 'span', 'Date')}
@@ -357,7 +371,7 @@ export default function LetterPaper({
  <div className={styles.hDAddr}>
  {E('dept', styles.hDEn, 'div', 'Department')}<br/>
  {E('ofc', '', 'div', 'Office')}<br/>
- {E('city', '', 'span', 'City')}{' – '}{E('pin', '', 'span', 'PIN')}<br/>
+ {E('city', '', 'span', 'City')}<span className={(!form.city?.trim() || !form.pin?.trim()) ? styles.hideIfEmptyPrint : ''}>{form.city?.trim() && form.pin?.trim() ? ' – ' : ''}</span>{E('pin', '', 'span', 'PIN')}<br/>
  <div className={styles.hideIfEmptyPrint}>{E('ph', '', 'div', 'Phone')}</div>
  <div className={styles.hideIfEmptyPrint}>{E('em', '', 'div', 'email')}</div>
  </div>
@@ -469,16 +483,41 @@ export default function LetterPaper({
  </>
  )}
  <span className={!form.dt?.trim() ? styles.hideIfEmptyPrint : ''}>
- {state.officeType === 'personal' ? '' : 'Dated: '}
+ {state.officeType === 'personal' ? '' : (form.dt?.trim() && station ? `${station}, Dated: ` : 'Dated: ')}
  {E('dt', '', 'span', 'Date')}
+ </span>
+ </div>
+ )}
+
+ {/* Meta row for layouts B/C/D — previously these had no File No. slot
+     at all, so a filled File No. never appeared (including the RTI
+     preset, which is Type-B). B already shows the date in its header,
+     so B shows File No. + Place only; C/D show File No. + Place, Date.
+     The row renders only when at least one of its fields is filled. */}
+ {(tpl === 'B' || tpl === 'C' || tpl === 'D') && !isDoctor && (form.fno?.trim() || form.dt?.trim() || station) && (
+ <div className={`${styles.meta} ${state.officeType === 'personal' ? styles.metaPersonal : ''}`}>
+ {state.officeType !== 'personal' && (
+ <span className={!form.fno?.trim() ? styles.hideIfEmptyPrint : ''}>
+ {E('fno', '', 'span', 'F.No.')}
+ </span>
+ )}
+ <span className={!station && !(tpl !== 'B' && form.dt?.trim()) && !(tpl === 'B' && state.officeType === 'personal' && form.dt?.trim()) ? styles.hideIfEmptyPrint : ''}>
+ {tpl === 'B' ? (state.officeType === 'personal' ? (form.dt?.trim() ? 'Dated: ' : '') : station) : (station && form.dt?.trim() ? `${station}, ` : station)}
+ {tpl === 'B' && state.officeType === 'personal' && E('dt', '', 'span', 'Date')}
+ {tpl !== 'B' && (state.officeType === 'personal' ? '' : (form.dt?.trim() ? 'Dated: ' : ''))}
+ {tpl !== 'B' && E('dt', '', 'span', 'Date')}
  </span>
  </div>
  )}
 
  {/* Body */}
  <div className={styles.body}>
- {/* To block — each field is block-level inside a clear container */}
- {tpl !== 'E' && !isDoctor && (
+ {/* To block — each field is block-level inside a clear container.
+     Formerly guarded by `tpl !== 'E'`, so official letters on Type-E
+     lost their recipient entirely. It now renders in every layout
+     whenever To is filled; when both To fields are empty the print
+     stylesheet hides it, preserving the memo look. */}
+ {!isDoctor && (
  <div className={`${styles.toBlock} ${(!form.toD?.trim() && !form.toA?.trim()) ? styles.hideIfEmptyPrint : ''}`}>
  {!(state.officeType === 'personal' && (form.sal.toLowerCase().includes('dearest') || form.sal.toLowerCase().includes('darling') || form.sal.toLowerCase().includes('प्रियतम') || form.cls.toLowerCase().includes('forever') || form.sub.toLowerCase().includes('love') || form.sub.toLowerCase().includes('heart') || form.toD.toLowerCase().includes('love'))) && (
  <span className={styles.toLabel}>To</span>
@@ -533,8 +572,9 @@ export default function LetterPaper({
  </div>
  )}
 
- {/* Salutation */}
- {tpl !== 'E' && (
+ {/* Salutation — same fix as the To block: it used to be dropped
+     on Type-E even when the user had chosen one. */}
+ {(
  <div className={`${styles.salBlock} ${!form.sal?.trim() ? styles.hideIfEmptyPrint : ''}`}>
  {E('sal', '', 'span', isDoctor ? 'Patient Advice:' : state.officeType === 'personal' ? 'My Dearest' : 'Sir/Madam')}
  {form.sal?.trim() ? ',' : ''}
@@ -612,7 +652,12 @@ export default function LetterPaper({
  {/* Copy To */}
  {showCopy && (
  <div className={styles.copyBlock}>
- <div className={styles.copyHead}>Copy to:</div>
+ {/* Full official endorsement wording, per the studio's own guide.
+     Recipients are a numbered list — one recipient per line. The
+     <ol> already numbers them, so any "1. " typed by hand is stripped
+     on blur to avoid double numbering, and a pasted multi-line entry
+     is split into separate recipients. */}
+ <div className={styles.copyHead}>Copy forwarded for information and necessary action to:</div>
  <ol className={styles.copyList}>
  {(form.copyTo.length ? form.copyTo : ['']).map((item, i) => (
  <li
@@ -621,11 +666,17 @@ export default function LetterPaper({
  suppressContentEditableWarning
  style={{ outline: 'none' }}
  onBlur={e => {
+ const raw = e.currentTarget.textContent || '';
+ const lines = raw.split(/\n/).map(l => l.replace(/^\s*\d+[.)]\s*/, '').trim()).filter(Boolean);
  const updated = [...form.copyTo];
- updated[i] = e.currentTarget.textContent || '';
- onCopyChange(updated);
+ if (lines.length <= 1) {
+ updated[i] = lines[0] || '';
+ } else {
+ updated.splice(i, 1, ...lines);
+ }
+ onCopyChange(updated.filter((v, idx) => v.trim() || idx === updated.length - 1));
  }}
- >{item}</li>
+ >{item.replace(/^\s*\d+[.)]\s*/, '')}</li>
  ))}
  </ol>
  </div>

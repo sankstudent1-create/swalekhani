@@ -190,22 +190,22 @@ export default function ComplaintLetterPage() {
  </div>
 
  <p className="text-xs font-bold text-slate-900 dark:text-white mb-3">
- Subject: Complaint regarding defective 1.5-ton split air conditioner (Invoice No. VE/2026/88412) — request for replacement.
+ Subject: Complaint regarding defective 1.5-ton split air conditioner (Invoice No. VE/2026/XXXXX) — request for replacement.
  </p>
 
  <div className="text-xs space-y-2 text-slate-700 dark:text-white/80 font-sans leading-relaxed">
  <p>Respected Sir / Madam,</p>
- <p>I purchased a 1.5-ton split air conditioner (Model: VE-CoolPro 18K, Serial No. SN88412076) from your authorised dealer, Shree Electronics, Pune, on 14th August 2026 vide Invoice No. VE/2026/88412 for ₹38,500. The unit carries a 5-year comprehensive warranty.</p>
- <p>Within three weeks of installation, the unit stopped cooling and began leaking water indoors. Your service engineer visited on 20th September 2026 (Service Ticket No. ST-55231) and confirmed a manufacturing defect in the cooling coil, assuring replacement within 10 days. No replacement has been provided to date despite two follow-up calls.</p>
+ <p>I purchased a 1.5-ton split air conditioner (Model: VE-CoolPro 18K, Serial No. SNXXXXXXXX) from your authorised dealer, Shree Electronics, Pune, on 14th August 2026 vide Invoice No. VE/2026/XXXXX for ₹38,500. The unit carries a 5-year comprehensive warranty.</p>
+ <p>Within three weeks of installation, the unit stopped cooling and began leaking water indoors. Your service engineer visited on 20th September 2026 (Service Ticket No. ST-XXXXX) and confirmed a manufacturing defect in the cooling coil, assuring replacement within 10 days. No replacement has been provided to date despite two follow-up calls.</p>
  <p>I request a <strong>complete replacement of the unit within 10 days</strong> of receiving this letter. Copies of the invoice, warranty card, and service ticket are enclosed. If the matter is not resolved, I shall be constrained to approach the District Consumer Disputes Redressal Commission.</p>
  </div>
 
  <div className="text-right text-xs pt-6 space-y-1">
  <p className="font-bold text-slate-900 dark:text-white">Yours faithfully,</p>
  <p className="text-slate-700 dark:text-white/80">[Signature]</p>
- <p className="text-slate-600 dark:text-white/70">Name: Amit Deshmukh</p>
- <p className="text-slate-600 dark:text-white/60">Address: B-704, Green Acres, Baner, Pune - 411045</p>
- <p className="text-slate-600 dark:text-white/60">Mobile: +91-9822012345</p>
+ <p className="text-slate-600 dark:text-white/70">Name: Rahul Desai</p>
+ <p className="text-slate-600 dark:text-white/60">Address: Flat 101, Green Residency, Baner, Pune - 411045</p>
+ <p className="text-slate-600 dark:text-white/60">Mobile: +91-98765 43210</p>
  </div>
  </div>
  </section>

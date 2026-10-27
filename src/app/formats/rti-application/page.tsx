@@ -214,21 +214,21 @@ export default function RtiApplicationPage() {
  <p>Respected Sir / Madam,</p>
  <p>I, the undersigned, am a citizen of India. Please provide the following information under the RTI Act, 2005:</p>
  <ol className="list-decimal pl-5 space-y-1">
- <li>Certified copy of my evaluated Tier-II answer sheets for Roll No. 2201048921.</li>
+ <li>Certified copy of my evaluated Tier-II answer sheets for Roll No. XXXXXXXXXX.</li>
  <li>Category-wise cut-off marks for final selection under UR and OBC categories.</li>
  <li>Total number of vacancies reported and filled in the final result.</li>
  </ol>
  <p className="pt-2">
- <strong>Fee Details:</strong> An Indian Postal Order (IPO) of ₹10 (IPO No: 42F 981240) is attached herewith towards the statutory application fee.
+ <strong>Fee Details:</strong> An Indian Postal Order (IPO) of ₹10 (IPO No: XX XXXXXX) is attached herewith towards the statutory application fee.
  </p>
  </div>
 
  <div className="text-right text-xs pt-6 space-y-1">
  <p className="font-bold text-slate-900 dark:text-white">Yours faithfully,</p>
  <p className="text-slate-700 dark:text-white/80">[Applicant's Signature]</p>
- <p className="text-slate-600 dark:text-white/70">Name: Rohit Kumar Sharma</p>
- <p className="text-slate-600 dark:text-white/60">Address: Flat 204, Shanti Vihar, New Delhi - 110092</p>
- <p className="text-slate-600 dark:text-white/60">Mobile: +91-9876543210</p>
+ <p className="text-slate-600 dark:text-white/70">Name: Aditya Rao</p>
+ <p className="text-slate-600 dark:text-white/60">Address: Flat 101, Sunrise Apartments, New Delhi - 110001</p>
+ <p className="text-slate-600 dark:text-white/60">Mobile: +91-98765 43210</p>
  </div>
  </div>
  </section>

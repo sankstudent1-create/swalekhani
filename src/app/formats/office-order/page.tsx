@@ -65,7 +65,7 @@ const FAQ_ITEMS: FaqItem[] = [
  },
  {
  question: "How does Swalekhani's AI compose an office order from raw bullet points?",
- answer: "Simply type: 'Transfer of Shri Amit Kumar, Section Officer from Vigilance to Admin branch', and the AI formats the complete, numbered order citing Screening Committee recommendations."
+ answer: "Simply type: 'Transfer of Shri Anil Kumar, Section Officer from Vigilance to Admin branch', and the AI formats the complete, numbered order citing Screening Committee recommendations."
  },
  {
  question: "Can multiple employee transfer tables be added inside the order body?",
@@ -203,7 +203,7 @@ export default function OfficeOrderPage() {
 
  <div className="text-xs space-y-3 leading-relaxed text-slate-700 dark:text-white/80 mb-6 font-sans">
  <p>
- 1. Consequent upon the recommendations of the Departmental Screening Committee, the Competent Authority is pleased to order the transfer and posting of <strong>Shri Amit Kumar</strong>, Section Officer (Emp ID: 4920), from Vigilance Division to Administration Division with immediate effect.
+ 1. Consequent upon the recommendations of the Departmental Screening Committee, the Competent Authority is pleased to order the transfer and posting of <strong>Shri Anil Kumar</strong>, Section Officer (Emp ID: 0000), from Vigilance Division to Administration Division with immediate effect.
  </p>
  <p>
  2. The officer shall report to the Under Secretary (Admin) on or before 28th September 2026 (Forenoon).
@@ -211,9 +211,9 @@ export default function OfficeOrderPage() {
  </div>
 
  <div className="text-right text-xs pt-2">
- <p className="font-bold text-slate-900 dark:text-white">[S. K. Mukherjee]</p>
+ <p className="font-bold text-slate-900 dark:text-white">[R. S. Kapoor]</p>
  <p className="text-slate-600 dark:text-white/60">Head of Human Resources</p>
- <p className="text-slate-600 dark:text-white/60">Tel: +91-80-41234567</p>
+ <p className="text-slate-600 dark:text-white/60">Tel: +91-80-4000 0000</p>
  </div>
 
  <div className="border-t border-slate-200 dark:border-white/10 mt-6 pt-4 text-xs font-sans text-slate-600 dark:text-white/70">

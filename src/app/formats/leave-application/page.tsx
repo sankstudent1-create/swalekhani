@@ -210,19 +210,19 @@ export default function LeaveApplicationPage() {
  1. I have the honor to submit that due to urgent domestic affairs at my native place, I am unable to attend official duties from <strong>28th September 2026 to 02nd October 2026 (05 days)</strong> with permission to prefix Sunday (27th Sept) and suffix National Holiday (2nd Oct).
  </p>
  <p>
- 2. I also request kind permission to leave the headquarters during the said period. My contact address during leave will be: <em>At/Post: Wardha, Dist: Wardha - 442001 (Mob: 9876543210)</em>.
+ 2. I also request kind permission to leave the headquarters during the said period. My contact address during leave will be: <em>At/Post: [Native Place], Dist: [District] (Mob: 98765 43210)</em>.
  </p>
  <p>
- 3. Shri R. K. Joshi, Postal Assistant, has kindly agreed to look after my routine branch duties during my absence.
+ 3. Shri T. S. Rao, Postal Assistant, has kindly agreed to look after my routine branch duties during my absence.
  </p>
  </div>
 
  <div className="text-right text-xs pt-6 space-y-1">
  <p className="font-bold text-slate-900 dark:text-white">Yours faithfully,</p>
  <p className="text-slate-700 dark:text-white/80">[Signature]</p>
- <p className="text-slate-600 dark:text-white/70">Name: Sandeep K. Deshmukh</p>
+ <p className="text-slate-600 dark:text-white/70">Name: Suresh P. Jadhav</p>
  <p className="text-slate-600 dark:text-white/60">Designation: Postal Assistant, Estt. Branch</p>
- <p className="text-slate-600 dark:text-white/60">Employee ID: 10048291</p>
+ <p className="text-slate-600 dark:text-white/60">Employee ID: 00000</p>
  </div>
  </div>
  </section>

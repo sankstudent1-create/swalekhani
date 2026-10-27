@@ -82,43 +82,43 @@ export const PROFESSION_TEMPLATES: Record<string, ProfessionTemplate> = {
       headerLayout: 'classic'
     },
     fields: [
-      { id: 'name', label: 'Advocate Name', placeholder: 'e.g. Adv. Rajeshwar S. Deshmukh', defaultValue: 'Adv. Rajeshwar S. Deshmukh' },
+      { id: 'name', label: 'Advocate Name', placeholder: 'e.g. Adv. Kiran R. Patil', defaultValue: 'Adv. Kiran R. Patil' },
       { id: 'qualifications', label: 'Qualifications', placeholder: 'e.g. B.A., LL.M. (Constitutional Law)', defaultValue: 'B.A., LL.M. (Corporate & Criminal Laws)' },
-      { id: 'enrolmentNo', label: 'Bar Council Enrolment No.', placeholder: 'e.g. MAH/1842/2012', defaultValue: 'MAH/1842/2012' },
+      { id: 'enrolmentNo', label: 'Bar Council Enrolment No.', placeholder: 'e.g. MAH/0000/2012', defaultValue: 'MAH/0000/2012' },
       { id: 'court', label: 'Court / Chamber Jurisdiction', placeholder: 'e.g. Bombay High Court & District Courts', defaultValue: 'High Court of Judicature at Bombay & Sessions Court' },
       { id: 'chamberAddress', label: 'Chamber Address', placeholder: 'Chamber No., Bar Room, City, PIN', defaultValue: 'Chamber No. 14, 2nd Floor, Lawyers Chambers Block, High Court Complex, Fort, Mumbai - 400032' },
-      { id: 'phone', label: 'Contact Number', placeholder: '+91 98765 43210', defaultValue: '+91 98220 14890', type: 'tel' },
-      { id: 'email', label: 'Official Email', placeholder: 'adv.rajeshwar@lawchambers.in', defaultValue: 'chambers.deshmukh@lawyer.in', type: 'email' }
+      { id: 'phone', label: 'Contact Number', placeholder: '+91 98765 43210', defaultValue: '+91 98765 43210', type: 'tel' },
+      { id: 'email', label: 'Official Email', placeholder: 'adv.kiran@lawchambers.in', defaultValue: 'chambers.patil@lawyer.in', type: 'email' }
     ],
     languages: ['en'],
     sampleLetters: [
       {
         title: 'Statutory Legal Notice under Section 138 NI Act',
         description: 'Formal demand notice issued on behalf of client for dishonour of cheque.',
-        recipient: 'To,\nMr. Sunil Kumar Verma,\nProprietor, M/s Verma Enterprises,\nPlot No. 45, MIDC Area, Pune - 411018.',
+        recipient: 'To,\nMr. Vikram Singh,\nProprietor, M/s Singh Traders,\nPlot No. 45, MIDC Area, Pune - 411018.',
         subject: 'STATUTORY LEGAL DEMAND NOTICE UNDER SECTION 138 OF THE NEGOTIABLE INSTRUMENTS ACT, 1881',
         fileNo: 'REF: RD/LEGAL/2026/104',
         body: [
           'Under instructions from and on behalf of my client, M/s Horizon Buildcon Pvt. Ltd., having its registered office at Nariman Point, Mumbai, I hereby serve upon you this statutory demand notice:',
-          '1. That in discharge of your legally enforceable debt and liability for supply of raw construction material, you issued Cheque No. 448192 dated 10th February 2026 for ₹8,50,000/- drawn on State Bank of India in favour of my client.',
+          '1. That in discharge of your legally enforceable debt and liability for supply of raw construction material, you issued Cheque No. 123456 dated 10th February 2026 for ₹8,50,000/- drawn on State Bank of India in favour of my client.',
           '2. That on presentation for encashment, the said cheque was dishonoured and returned unpaid by the banker with memo dated 25th February 2026 stating "Funds Insufficient".',
           '3. You are hereby called upon to pay the aforesaid outstanding sum of ₹8,50,000/- (Rupees Eight Lakh Fifty Thousand Only) to my client within fifteen (15) days of the receipt of this notice, failing which my client shall initiate criminal prosecution against you under Section 138 of the Negotiable Instruments Act, 1881 entirely at your cost and risk.'
         ],
-        signoff: 'Yours faithfully,\n\n[Signature]\nAdv. Rajeshwar S. Deshmukh\nCounsel for the Complainant'
+        signoff: 'Yours faithfully,\n\n[Signature]\nAdv. Kiran R. Patil\nCounsel for the Complainant'
       },
       {
         title: 'Formal Reply to Legal Notice',
         description: 'Categorical denial and legal reply to baseless allegations.',
-        recipient: 'To,\nAdv. K. L. Mehra,\nChamber No. 302, District Court Compound,\nThane (West) - 400601.',
-        subject: 'REPLY TO YOUR NOTICE DATED 12.01.2026 ON BEHALF OF SH. ALOK VERMA',
+        recipient: 'To,\nAdv. P. Nair,\nChamber No. 302, District Court Compound,\nThane (West) - 400601.',
+        subject: 'REPLY TO YOUR NOTICE DATED 12.01.2026 ON BEHALF OF SH. SANJAY RAO',
         fileNo: 'REF: RD/REPLY/2026/088',
         body: [
-          'Under instructions from my client, Shri Alok Verma, resident of Thane, I hereby provide this categorical reply to your legal notice dated 12th January 2026 served on behalf of your client Shri Manish Gupta:',
+          'Under instructions from my client, Shri Sanjay Rao, resident of Thane, I hereby provide this categorical reply to your legal notice dated 12th January 2026 served on behalf of your client Shri Manoj Tiwari:',
           '1. That all allegations, claims, and demands raised in your notice are false, misconceived, and vehemently denied as if specifically set out and traversed herein.',
           '2. That your client has suppressed material contractual terms and has already received complete reconciliation for the completed scope of work as per voucher receipts dated 05.11.2025.',
           '3. Your client is hereby advised to withdraw the frivolous claims immediately. Should your client institute any unmerited litigation, the same shall be defended with exemplary costs.'
         ],
-        signoff: 'Yours faithfully,\n\n[Signature]\nAdv. Rajeshwar S. Deshmukh\nAdvocate for Respondent'
+        signoff: 'Yours faithfully,\n\n[Signature]\nAdv. Kiran R. Patil\nAdvocate for Respondent'
       }
     ],
     formatGuide: [
@@ -157,13 +157,13 @@ export const PROFESSION_TEMPLATES: Record<string, ProfessionTemplate> = {
       headerLayout: 'modern'
     },
     fields: [
-      { id: 'name', label: 'CA / Firm Name', placeholder: 'e.g. M/s K. S. Sharma & Associates', defaultValue: 'K. S. Sharma & Associates' },
+      { id: 'name', label: 'CA / Firm Name', placeholder: 'e.g. M/s S. Desai & Associates', defaultValue: 'S. Desai & Associates' },
       { id: 'subTitle', label: 'Designation / Specialty', placeholder: 'Chartered Accountants', defaultValue: 'Chartered Accountants' },
-      { id: 'membershipNo', label: 'ICAI Membership No. (FCA/ACA)', placeholder: 'e.g. FCA 104829', defaultValue: 'FCA No: 104829' },
-      { id: 'frn', label: 'Firm Registration No. (FRN)', placeholder: 'e.g. 128490W', defaultValue: 'FRN: 128490W' },
+      { id: 'membershipNo', label: 'ICAI Membership No. (FCA/ACA)', placeholder: 'e.g. FCA 000000', defaultValue: 'FCA No: 000000' },
+      { id: 'frn', label: 'Firm Registration No. (FRN)', placeholder: 'e.g. 000000W', defaultValue: 'FRN: 000000W' },
       { id: 'officeAddress', label: 'Office Address', placeholder: 'Suite / Office No, Building, City, PIN', defaultValue: 'Suite 402, Trade Square, Senapati Bapat Marg, Lower Parel, Mumbai - 400013' },
-      { id: 'phone', label: 'Office Telephone', placeholder: '+91 22 2490 1122', defaultValue: '+91 22 2490 1122', type: 'tel' },
-      { id: 'email', label: 'Official Audit Email', placeholder: 'ca.kssharma@icai.org', defaultValue: 'audit@kssharma.in', type: 'email' }
+      { id: 'phone', label: 'Office Telephone', placeholder: '+91 22 4000 0000', defaultValue: '+91 22 4000 0000', type: 'tel' },
+      { id: 'email', label: 'Official Audit Email', placeholder: 'ca.sdesai@icai.org', defaultValue: 'audit@sdesai.in', type: 'email' }
     ],
     languages: ['en'],
     sampleLetters: [
@@ -171,17 +171,17 @@ export const PROFESSION_TEMPLATES: Record<string, ProfessionTemplate> = {
         title: 'Net Worth Certificate for Bank / Visa Facility',
         description: 'Statutory certificate certifying verified asset valuation and net worth.',
         recipient: 'To Whomsoever It May Concern',
-        subject: 'NET WORTH CERTIFICATE OF SHRI VIKRAM ADITYA MEHTA',
-        fileNo: 'UDIN: 26104829BGTA9821',
+        subject: 'NET WORTH CERTIFICATE OF SHRI RAJESH MALHOTRA',
+        fileNo: 'UDIN: 00000000BGTA0000',
         body: [
-          'We have verified the books of accounts, title deeds, bank statements, and tax returns produced before us by Shri Vikram Aditya Mehta, resident of Mumbai, and certify that his Net Worth as on 31st December 2025 is as under:',
+          'We have verified the books of accounts, title deeds, bank statements, and tax returns produced before us by Shri Rajesh Malhotra, resident of Mumbai, and certify that his Net Worth as on 31st December 2025 is as under:',
           '1. Immovable Real Estate Properties (Fair Market Value): ₹4,20,00,000/-',
           '2. Movable Financial Assets (Shares, Mutual Funds, Bank FDs): ₹1,85,50,000/-',
           '3. Less: Liabilities & Bank Borrowings: (₹45,00,000/-)',
           'TOTAL NET WORTH CERTIFIED: ₹5,60,50,000/- (Rupees Five Crore Sixty Lakh Fifty Thousand Only).',
           'This certificate is issued at the specific request of the client for submission to banking authorities and is backed by registered valuer reports.'
         ],
-        signoff: 'For K. S. Sharma & Associates\nChartered Accountants\n\n[Signature & ICAI Seal]\nCA K. S. Sharma (Proprietor)\nMembership No: 104829\nUDIN: 26104829BGTA9821'
+        signoff: 'For S. Desai & Associates\nChartered Accountants\n\n[Signature & ICAI Seal]\nCA S. Desai (Proprietor)\nMembership No: 000000\nUDIN: 00000000BGTA0000'
       },
       {
         title: 'Statutory Audit Engagement Letter',
@@ -195,7 +195,7 @@ export const PROFESSION_TEMPLATES: Record<string, ProfessionTemplate> = {
           '2. Management is responsible for preparation of financial statements that give a true and fair view and for maintaining internal financial controls.',
           '3. We shall issue our Independent Auditor’s Report upon completion of substantive testing and verification.'
         ],
-        signoff: 'Yours faithfully,\nFor K. S. Sharma & Associates\nChartered Accountants\n\n[Signature]\nCA K. S. Sharma, FCA'
+        signoff: 'Yours faithfully,\nFor S. Desai & Associates\nChartered Accountants\n\n[Signature]\nCA S. Desai, FCA'
       }
     ],
     formatGuide: [
@@ -234,10 +234,10 @@ export const PROFESSION_TEMPLATES: Record<string, ProfessionTemplate> = {
     fields: [
       { id: 'name', label: 'Company / Agency Name', placeholder: 'e.g. Prime Habitat Realty Advisors', defaultValue: 'Prime Habitat Realty Advisors' },
       { id: 'subTitle', label: 'Agency Tagline / Scope', placeholder: 'RERA Registered Property Consultants', defaultValue: 'RERA Registered Real Estate Consultants & Channel Partners' },
-      { id: 'reraNo', label: 'MahaRERA / RERA Reg. No.', placeholder: 'e.g. A51900028491', defaultValue: 'RERA Reg No: A51900028491' },
-      { id: 'gstin', label: 'GSTIN Number', placeholder: 'e.g. 27AABCP1234F1Z8', defaultValue: 'GSTIN: 27AABCP1234F1Z8' },
+      { id: 'reraNo', label: 'MahaRERA / RERA Reg. No.', placeholder: 'e.g. A00000000000', defaultValue: 'RERA Reg No: A00000000000' },
+      { id: 'gstin', label: 'GSTIN Number', placeholder: 'e.g. 27AAAAA0000A1Z5', defaultValue: 'GSTIN: 27AAAAA0000A1Z5' },
       { id: 'address', label: 'Corporate Office Address', placeholder: 'Commercial Tower, Sector, City, PIN', defaultValue: 'Unit 305, Platina Heights, Golf Course Extension Road, Sector 56, Gurugram - 122011' },
-      { id: 'phone', label: 'Sales Helpline / WhatsApp', placeholder: '+91 98110 99887', defaultValue: '+91 98110 99887', type: 'tel' },
+      { id: 'phone', label: 'Sales Helpline / WhatsApp', placeholder: '+91 98765 43210', defaultValue: '+91 98765 43210', type: 'tel' },
       { id: 'email', label: 'Inquiry Email', placeholder: 'contact@primehabitat.in', defaultValue: 'deals@primehabitat.in', type: 'email' }
     ],
     languages: ['en'],
@@ -245,17 +245,17 @@ export const PROFESSION_TEMPLATES: Record<string, ProfessionTemplate> = {
       {
         title: 'Property Expression of Interest & Booking Confirmation',
         description: 'Formal allotment acknowledgment issued to prospective home buyers.',
-        recipient: 'To,\nMr. & Mrs. Sameer Kapoor,\nTower B, Flat 1204, Palm Greens,\nGurugram - 122002.',
+        recipient: 'To,\nMr. & Mrs. Rahul Kapoor,\nTower B, Flat 1204, Palm Greens,\nGurugram - 122002.',
         subject: 'BOOKING CONFIRMATION & EXPRESSION OF INTEREST FOR 3BHK RESIDENCY',
         fileNo: 'REF: PHR/BOOK/2026/192',
         body: [
           'We thank you for booking your dream home through Prime Habitat Realty Advisors in the prestigious project "Elysium Heights" developed by Apex Lifespaces (RERA No: RC/REP/HARERA/GGM/2024/45).',
           '1. Unit Details: Unit No. 1402, 14th Floor, Tower Emerald, Super Built-up Area: 1850 Sq. Ft.',
           '2. Total Agreed Consideration: ₹1,65,00,000/- (Rupees One Crore Sixty-Five Lakh Only) excluding stamp duty and registration.',
-          '3. Booking Amount Received: Cheque No. 589124 for ₹5,00,000/- dated 18.02.2026.',
+          '3. Booking Amount Received: Cheque No. 123456 for ₹5,00,000/- dated 18.02.2026.',
           'Formal Builder-Buyer Agreement (BBA) shall be executed within 21 days upon clearance of the initial installment.'
         ],
-        signoff: 'Warm regards,\nFor Prime Habitat Realty Advisors\n\n[Authorized Signatory]\nManish Goel (Principal Consultant)\nRERA No: A51900028491'
+        signoff: 'Warm regards,\nFor Prime Habitat Realty Advisors\n\n[Authorized Signatory]\nRohit Malhotra (Principal Consultant)\nRERA No: A00000000000'
       },
       {
         title: 'Exclusive Brokerage Representation Mandate',
@@ -306,9 +306,9 @@ export const PROFESSION_TEMPLATES: Record<string, ProfessionTemplate> = {
     fields: [
       { id: 'name', label: 'Institute Name', placeholder: 'e.g. Zenith Academy of Sciences', defaultValue: 'Zenith Academy of Sciences' },
       { id: 'subTitle', label: 'Course Offerings / Tagline', placeholder: 'IIT-JEE | NEET-UG | Foundation & Olympiads', defaultValue: 'Premier Institute for IIT-JEE, NEET-UG & Foundation Courses' },
-      { id: 'regNo', label: 'MSME / Registration No.', placeholder: 'e.g. UDYAM-MH-26-0048192', defaultValue: 'Regd. Under MSME: UDYAM-MH-26-0048192' },
+      { id: 'regNo', label: 'MSME / Registration No.', placeholder: 'e.g. UDYAM-MH-26-0000000', defaultValue: 'Regd. Under MSME: UDYAM-MH-26-0000000' },
       { id: 'branchAddress', label: 'Main Campus Address', placeholder: 'Campus Address, City, PIN', defaultValue: 'Central Campus: Knowledge Park, FC Road, Shivajinagar, Pune - 411005' },
-      { id: 'phone', label: 'Student Helpline / Office', placeholder: '+91 20 2553 4400', defaultValue: '+91 20 2553 4400', type: 'tel' },
+      { id: 'phone', label: 'Student Helpline / Office', placeholder: '+91 20 4000 0000', defaultValue: '+91 20 4000 0000', type: 'tel' },
       { id: 'email', label: 'Admissions Email', placeholder: 'admissions@zenithacademy.in', defaultValue: 'info@zenithacademy.in', type: 'email' }
     ],
     languages: ['en'],
@@ -316,7 +316,7 @@ export const PROFESSION_TEMPLATES: Record<string, ProfessionTemplate> = {
       {
         title: 'Merit Scholarship & Admission Offer Letter',
         description: 'Formal letter offering batch admission and tuition fee concession.',
-        recipient: 'To,\nMaster Aryan S. Patil (Roll No: ZAS-2026-904),\nFlat 102, Shivalik Towers, Kothrud, Pune.',
+        recipient: 'To,\nMaster Kabir Shah (Roll No: ZAS-2026-000),\nFlat 102, Shivalik Towers, Kothrud, Pune.',
         subject: 'ADMISSION OFFER & 40% MERIT SCHOLARSHIP — TWO-YEAR IIT-JEE BATCH',
         fileNo: 'REF: ZAS/ADM/2026/842',
         body: [
@@ -326,7 +326,7 @@ export const PROFESSION_TEMPLATES: Record<string, ProfessionTemplate> = {
           '3. Orientation Date: Classes commence on Monday, 07th April 2026 at FC Road Campus.',
           'Please submit required academic marksheets and fee installment before 25th March 2026 to confirm your seat.'
         ],
-        signoff: 'Yours sincerely,\nFor Zenith Academy of Sciences\n\n[Signature & Institute Seal]\nDr. P. V. Kulkarni (Academic Director)'
+        signoff: 'Yours sincerely,\nFor Zenith Academy of Sciences\n\n[Signature & Institute Seal]\nDr. S. V. Iyer (Academic Director)'
       },
       {
         title: 'Course Completion & Bonafide Certificate',
@@ -335,7 +335,7 @@ export const PROFESSION_TEMPLATES: Record<string, ProfessionTemplate> = {
         subject: 'BONAFIDE & ATTENDANCE CERTIFICATE',
         fileNo: 'REF: ZAS/BONA/2026/112',
         body: [
-          'This is to certify that Miss Ananya R. Joshi was a bonafide student of Zenith Academy of Sciences enrolled in the NEET-UG Intensive Test Series for academic session 2025-26.',
+          'This is to certify that Miss Ishita Rao was a bonafide student of Zenith Academy of Sciences enrolled in the NEET-UG Intensive Test Series for academic session 2025-26.',
           'During her tenure at the institute, her attendance in weekly mock simulations was 96.5% and her conduct was exemplary.',
           'We wish her the very best in all her medical entrance examinations.'
         ],
@@ -374,10 +374,10 @@ export const PROFESSION_TEMPLATES: Record<string, ProfessionTemplate> = {
     fields: [
       { id: 'name', label: 'Clinic / Diagnostic Name', placeholder: 'e.g. CareWell Multi-Specialty Clinic', defaultValue: 'CareWell Multi-Specialty Clinic & Diagnostics' },
       { id: 'subTitle', label: 'Departments / Specialists', placeholder: 'e.g. General Medicine | Pediatrics | Orthopedics', defaultValue: 'General Medicine | Cardiology | Pediatrics & Pathology' },
-      { id: 'ceaNo', label: 'Clinical Est. Reg. No. (CEA)', placeholder: 'e.g. CEA/MH/PUN/2022/918', defaultValue: 'Reg No: CEA/MH/PUN/2022/918' },
-      { id: 'doctorsList', label: 'Consulting Physicians', placeholder: 'Dr. A. Sharma MBBS MD | Dr. P. Rao MS', defaultValue: 'Dr. Aarav Sharma, MBBS, MD (Medicine) [MMC: 2011/04/1049]\nDr. Priya Rao, DNB (Pediatrics) [MMC: 2015/08/2190]' },
+      { id: 'ceaNo', label: 'Clinical Est. Reg. No. (CEA)', placeholder: 'e.g. CEA/MH/PUN/2022/000', defaultValue: 'Reg No: CEA/MH/PUN/2022/000' },
+      { id: 'doctorsList', label: 'Consulting Physicians', placeholder: 'Dr. N. Patil MBBS MD | Dr. A. Iyer MS', defaultValue: 'Dr. Neha Patil, MBBS, MD (Medicine) [MMC: 0000/00/0000]\nDr. Ananya Iyer, DNB (Pediatrics) [MMC: 0000/00/0000]' },
       { id: 'address', label: 'Clinic Address', placeholder: 'Floor, Complex, Road, City, PIN', defaultValue: 'Shop 10-12, Ground Floor, Sai Plaza, Opp Metro Pillar 44, Kothrud, Pune - 411038' },
-      { id: 'phone', label: 'Appointments & Emergency', placeholder: '+91 20 2544 9900', defaultValue: '+91 20 2544 9900 / +91 98221 00444', type: 'tel' },
+      { id: 'phone', label: 'Appointments & Emergency', placeholder: '+91 20 2544 9900', defaultValue: '+91 20 4000 0000 / +91 98765 43210', type: 'tel' },
       { id: 'timings', label: 'OPD Timings', placeholder: 'Mon-Sat: 9AM - 1PM & 5PM - 9PM', defaultValue: 'Mon-Sat: 09:00 AM - 01:00 PM & 05:30 PM - 09:30 PM (Sunday Closed)' }
     ],
     languages: ['en'],
@@ -389,11 +389,11 @@ export const PROFESSION_TEMPLATES: Record<string, ProfessionTemplate> = {
         subject: 'MEDICAL CERTIFICATE & FITNESS DECLARATION',
         fileNo: 'REF: CW/MED/2026/748',
         body: [
-          'This is to certify that Mr. Dinesh K. Bhosale, aged 38 years, residing at Pune, has been under my medical care and treatment for Acute Bronchitis and Febrile Illness from 10th February 2026 to 18th February 2026.',
+          'This is to certify that Mr. Arjun Nair, aged 38 years, residing at Pune, has been under my medical care and treatment for Acute Bronchitis and Febrile Illness from 10th February 2026 to 18th February 2026.',
           '1. In view of the clinical condition, the patient was advised complete bed rest and medication during the said period of nine (09) days.',
           '2. I have examined him today on 19th February 2026 and certify that he has clinically recovered and is now medically FIT to resume his normal official duties.'
         ],
-        signoff: 'Yours faithfully,\n\n[Signature & Medical Seal]\nDr. Aarav Sharma, MBBS, MD (Med)\nReg No: MMC 2011/04/1049'
+        signoff: 'Yours faithfully,\n\n[Signature & Medical Seal]\nDr. Neha Patil, MBBS, MD (Med)\nReg No: MMC 0000/00/0000'
       },
       {
         title: 'Diagnostic Lab Referral & Patient Summary',
@@ -402,7 +402,7 @@ export const PROFESSION_TEMPLATES: Record<string, ProfessionTemplate> = {
         subject: 'PATIENT CLINICAL REFERRAL — ADVANCED CARDIAC WORKUP',
         fileNo: 'REF: CW/REF/2026/092',
         body: [
-          'Referring Patient: Mrs. Nalini G. Deshpande, 56 Yrs / Female (OPD No: 44810).',
+          'Referring Patient: Mrs. Sunita R. Patil, 56 Yrs / Female (OPD No: 00000).',
           'Clinical Summary: Patient presents with exertional dyspnea (NYHA Class II) and atypical chest heaviness since 2 weeks. Resting ECG shows non-specific ST-T wave changes in inferior leads.',
           'Requested Investigations: 2D-Echocardiography with Doppler study, TMT (Treadmill Test), and Serum Lipid Profile.',
           'Kindly evaluate and share diagnostic reports for further therapeutic management.'
@@ -442,10 +442,10 @@ export const PROFESSION_TEMPLATES: Record<string, ProfessionTemplate> = {
     fields: [
       { id: 'name', label: 'Hotel / Restaurant Name', placeholder: 'e.g. The Grand Heritage Hotel & Suites', defaultValue: 'The Grand Heritage Hotel & Suites' },
       { id: 'subTitle', label: 'Cuisine / Facility Type', placeholder: 'Luxury Stay | Fine Dining | Banquet & Events', defaultValue: 'Luxury Accommodation | Fine Dining & Banquet Halls' },
-      { id: 'fssai', label: 'FSSAI License No.', placeholder: 'e.g. FSSAI Lic No: 11522044000192', defaultValue: 'FSSAI Lic No: 11522044000192' },
-      { id: 'gstin', label: 'GSTIN Number', placeholder: 'e.g. 27AAACG4419K1Z4', defaultValue: 'GSTIN: 27AAACG4419K1Z4' },
+      { id: 'fssai', label: 'FSSAI License No.', placeholder: 'e.g. FSSAI Lic No: 10000000000000', defaultValue: 'FSSAI Lic No: 10000000000000' },
+      { id: 'gstin', label: 'GSTIN Number', placeholder: 'e.g. 27AAAAA0000A1Z5', defaultValue: 'GSTIN: 27AAAAA0000A1Z5' },
       { id: 'address', label: 'Property Address', placeholder: 'Resort Road, City, PIN', defaultValue: 'Heritage Boulevard, Opp Lake View, Civil Lines, Jaipur - 302006' },
-      { id: 'phone', label: 'Concierge & Reservations', placeholder: '+91 141 2620 4400', defaultValue: '+91 141 2620 4400', type: 'tel' },
+      { id: 'phone', label: 'Concierge & Reservations', placeholder: '+91 141 4000 0000', defaultValue: '+91 141 4000 0000', type: 'tel' },
       { id: 'email', label: 'Reservations Email', placeholder: 'reservations@grandheritage.com', defaultValue: 'events@grandheritage.com', type: 'email' }
     ],
     languages: ['en'],
@@ -453,7 +453,7 @@ export const PROFESSION_TEMPLATES: Record<string, ProfessionTemplate> = {
       {
         title: 'Banquet & Wedding Event Booking Confirmation',
         description: 'Formal contract confirming banquet hall reservation and catering menu.',
-        recipient: 'To,\nMr. Virendra S. Shekhawat,\nB-44, Malviya Nagar, Jaipur.',
+        recipient: 'To,\nMr. Rajesh Singh,\nB-44, Malviya Nagar, Jaipur.',
         subject: 'BANQUET RESERVATION CONFIRMATION — ROYAL PALM BALLROOM (18TH APRIL 2026)',
         fileNo: 'REF: GHH/BANQ/2026/089',
         body: [
@@ -461,15 +461,15 @@ export const PROFESSION_TEMPLATES: Record<string, ProfessionTemplate> = {
           '1. Event Timings: 06:30 PM to 11:30 PM (Guaranteed Minimum Guests: 350 Persons).',
           '2. Menu Plan: Royal Heritage Multi-Cuisine Buffet with live chaat and dessert counters.',
           '3. Package Rate: ₹1,650/- per plate plus applicable GST.',
-          '4. Advance Deposit Received: ₹2,00,000/- vide Bank Transfer UTR: HDFC990148201.',
+          '4. Advance Deposit Received: ₹2,00,000/- vide Bank Transfer UTR: HDFC000000000.',
           'Our banquet coordinator shall assist with setup requirements and audio-visual arrangements.'
         ],
-        signoff: 'Warm regards,\nFor The Grand Heritage Hotel & Suites\n\n[Signature]\nVikramaditya Rathore (Banquet Sales Manager)'
+        signoff: 'Warm regards,\nFor The Grand Heritage Hotel & Suites\n\n[Signature]\nArjun Rathod (Banquet Sales Manager)'
       },
       {
         title: 'Corporate Room Booking & Tariff Quotation',
         description: 'Formal corporate rate agreement for business executives and conferences.',
-        recipient: 'To,\nThe Head - Corporate Travel,\nM/s Infosys Limited, Tech Park, Jaipur.',
+        recipient: 'To,\nThe Head - Corporate Travel,\nM/s TechVista Solutions Pvt. Ltd., Tech Park, Jaipur.',
         subject: 'SPECIAL CORPORATE TARIFF AGREEMENT — FY 2026-27',
         fileNo: 'REF: GHH/CORP/2026/14',
         body: [
@@ -513,10 +513,10 @@ export const PROFESSION_TEMPLATES: Record<string, ProfessionTemplate> = {
     fields: [
       { id: 'name', label: 'NGO / Trust Name', placeholder: 'e.g. Samarthya Foundation', defaultValue: 'Samarthya Rural Development Foundation' },
       { id: 'subTitle', label: 'Mission / Non-Profit Status', placeholder: 'Registered Charitable Public Trust', defaultValue: 'Registered Charitable Public Trust | Empowering Rural Communities' },
-      { id: 'trustReg', label: 'Trust / Society Reg. No.', placeholder: 'e.g. Trust Reg: E-34190/Pune', defaultValue: 'Regd. Under Bombay Public Trust Act (Reg: E-34190/Pune)' },
-      { id: 'darpanId', label: 'NGO DARPAN / 80G / 12A ID', placeholder: 'NITI Aayog DARPAN: MH/2020/024819', defaultValue: 'NITI Aayog DARPAN: MH/2020/024819 | 80G & 12A Approved' },
+      { id: 'trustReg', label: 'Trust / Society Reg. No.', placeholder: 'e.g. Trust Reg: E-00000/Pune', defaultValue: 'Regd. Under Bombay Public Trust Act (Reg: E-00000/Pune)' },
+      { id: 'darpanId', label: 'NGO DARPAN / 80G / 12A ID', placeholder: 'NITI Aayog DARPAN: MH/2020/000000', defaultValue: 'NITI Aayog DARPAN: MH/2020/000000 | 80G & 12A Approved' },
       { id: 'address', label: 'Registered Office Address', placeholder: 'Office Address, City, PIN', defaultValue: '401, Seva Sadan, Near Shivaji Chowk, Satara Road, Pune - 411037' },
-      { id: 'phone', label: 'Contact Phone / WhatsApp', placeholder: '+91 20 2422 5500', defaultValue: '+91 20 2422 5500 / +91 98500 11223', type: 'tel' },
+      { id: 'phone', label: 'Contact Phone / WhatsApp', placeholder: '+91 20 2422 5500', defaultValue: '+91 20 4000 0000 / +91 98765 43210', type: 'tel' },
       { id: 'email', label: 'Official Trust Email', placeholder: 'contact@samarthya.org', defaultValue: 'trust@samarthyafoundation.org', type: 'email' }
     ],
     languages: ['en'],
@@ -524,7 +524,7 @@ export const PROFESSION_TEMPLATES: Record<string, ProfessionTemplate> = {
       {
         title: 'CSR Grant Proposal & Project Request',
         description: 'Formal funding application submitted to corporate CSR committees.',
-        recipient: 'To,\nThe Head - Corporate Social Responsibility (CSR),\nM/s Bharat Forge Limited, Mundhwa, Pune.',
+        recipient: 'To,\nThe Head - Corporate Social Responsibility (CSR),\nM/s Nova Forge Industries Ltd., Mundhwa, Pune.',
         subject: 'PROJECT PROPOSAL FOR SOLAR-POWERED DRINKING WATER UNITS IN 10 VILLAGES',
         fileNo: 'REF: SRDF/CSR/2026/042',
         body: [
@@ -534,18 +534,18 @@ export const PROFESSION_TEMPLATES: Record<string, ProfessionTemplate> = {
           '3. Tax Exemption: Donations to our foundation are eligible for 50% deduction under Section 80G of the Income Tax Act, 1961.',
           'We request an opportunity to present this impactful initiative before your CSR review committee.'
         ],
-        signoff: 'Yours sincerely,\nFor Samarthya Rural Development Foundation\n\n[Signature]\nShri Mohan G. Kulkarni (Managing Trustee)'
+        signoff: 'Yours sincerely,\nFor Samarthya Rural Development Foundation\n\n[Signature]\nShri Prakash G. Desai (Managing Trustee)'
       },
       {
         title: 'Donation Acknowledgment & 80G Tax Exemption Letter',
         description: 'Official receipt and certification for philanthropic donations.',
-        recipient: 'To,\nMr. Aniket R. Joshi,\nDirector, M/s Joshi Infotech Solutions,\nBaner, Pune - 411045.',
+        recipient: 'To,\nMr. Rahul J. Mehta,\nDirector, M/s Mehta Tech Solutions,\nBaner, Pune - 411045.',
         subject: 'ACKNOWLEDGMENT OF CHARITABLE DONATION & 80G CERTIFICATION',
         fileNo: 'REF: SRDF/80G/2026/891',
         body: [
-          'We gratefully acknowledge the receipt of your generous philanthropic contribution of ₹1,00,000/- (Rupees One Lakh Only) received vide Cheque No. 441029 dated 15th January 2026 towards our Rural Education Scholarship Fund.',
-          '1. NGO PAN: AABTS4419E | 12A Registration No: PN/CIT/12A/2016-17/1049.',
-          '2. Section 80G Order No: PN/CIT(Exempt)/80G/2019-20/4482 valid indefinitely as per CBDT circulars.',
+          'We gratefully acknowledge the receipt of your generous philanthropic contribution of ₹1,00,000/- (Rupees One Lakh Only) received vide Cheque No. 123456 dated 15th January 2026 towards our Rural Education Scholarship Fund.',
+          '1. NGO PAN: AAAAA0000A | 12A Registration No: PN/CIT/12A/2016-17/0000.',
+          '2. Section 80G Order No: PN/CIT(Exempt)/80G/2019-20/0000 valid indefinitely as per CBDT circulars.',
           'Your support directly funds school kits, science laboratory equipment, and digital books for 50 underprivileged rural students.'
         ],
         signoff: 'With profound gratitude,\nFor Samarthya Rural Development Foundation\n\n[Signature & Trust Stamp]\nTreasurer / Secretary'
@@ -583,10 +583,10 @@ export const PROFESSION_TEMPLATES: Record<string, ProfessionTemplate> = {
     fields: [
       { id: 'name', label: 'Company / Firm Name', placeholder: 'e.g. Sahyadri Infracon & Developers', defaultValue: 'Sahyadri Infracon & Engineering Works' },
       { id: 'subTitle', label: 'Contractor Category & Scope', placeholder: 'Class-I Civil & Infrastructure Contractor', defaultValue: 'Class-I Civil, Road & Infrastructure Contractors' },
-      { id: 'pwdClass', label: 'PWD / CPWD / MES Class Reg.', placeholder: 'e.g. PWD Class-I (Super) Reg: PWD/MH/2021/448', defaultValue: 'PWD Maharashtra Class-I Reg. No: PWD/MH/2021/448' },
-      { id: 'gstin', label: 'GSTIN Number', placeholder: 'e.g. 27AAGCS9912Q1ZN', defaultValue: 'GSTIN: 27AAGCS9912Q1ZN' },
+      { id: 'pwdClass', label: 'PWD / CPWD / MES Class Reg.', placeholder: 'e.g. PWD Class-I (Super) Reg: PWD/MH/2021/000', defaultValue: 'PWD Maharashtra Class-I Reg. No: PWD/MH/2021/000' },
+      { id: 'gstin', label: 'GSTIN Number', placeholder: 'e.g. 27AAAAA0000A1Z5', defaultValue: 'GSTIN: 27AAAAA0000A1Z5' },
       { id: 'address', label: 'Head Office Address', placeholder: 'Industrial Estate, City, PIN', defaultValue: 'Plot No. 18, MIDC Industrial Area, Satpur, Nashik - 422007' },
-      { id: 'phone', label: 'Project Helpline / Phone', placeholder: '+91 253 2355 1100', defaultValue: '+91 253 2355 1100 / +91 94222 55660', type: 'tel' },
+      { id: 'phone', label: 'Project Helpline / Phone', placeholder: '+91 253 2355 1100', defaultValue: '+91 253 4000 0000 / +91 98765 43210', type: 'tel' },
       { id: 'email', label: 'Tenders & Billing Email', placeholder: 'tenders@sahyadriinfra.com', defaultValue: 'projects@sahyadriinfra.com', type: 'email' }
     ],
     languages: ['en'],
@@ -600,10 +600,10 @@ export const PROFESSION_TEMPLATES: Record<string, ProfessionTemplate> = {
         body: [
           'Sir, with reference to E-Tender Notice No. PWD/NSK/ROAD/2026/08 for the work of "Widening and Asphaltation of Trimbak-Nashik State Highway (Km 12/00 to 24/00)", we hereby submit our formal tender bid:',
           '1. We confirm that our firm holds valid PWD Class-I contractor registration and has completed similar infrastructure works exceeding ₹25 Crores in the last 3 financial years.',
-          '2. Earnest Money Deposit (EMD) of ₹2,50,000/- and tender fee have been submitted online vide Treasury Challan No. MH-990481.',
+          '2. Earnest Money Deposit (EMD) of ₹2,50,000/- and tender fee have been submitted online vide Treasury Challan No. MH-000000.',
           '3. All required machinery ownership affidavits, asphalt batch mix plant certificates, and bar-chart work schedules are enclosed.'
         ],
-        signoff: 'Yours faithfully,\nFor Sahyadri Infracon & Engineering Works\n\n[Signature & Firm Seal]\nSanjay T. Deshmukh (Managing Partner)\nClass-I Civil Contractor'
+        signoff: 'Yours faithfully,\nFor Sahyadri Infracon & Engineering Works\n\n[Signature & Firm Seal]\nRajesh P. Jadhav (Managing Partner)\nClass-I Civil Contractor'
       },
       {
         title: 'Work Completion & Final Handover Certificate',
@@ -650,11 +650,11 @@ export const PROFESSION_TEMPLATES: Record<string, ProfessionTemplate> = {
     },
     fields: [
       { id: 'name', label: 'Society Full Legal Name', placeholder: 'e.g. Gokuldham Co-op. Housing Society Ltd.', defaultValue: 'Gokuldham Co-operative Housing Society Ltd.' },
-      { id: 'regNo', label: 'Co-op. Registration Number', placeholder: 'e.g. BOM/HSG/TC/1290/2010', defaultValue: 'Regd. No. BOM/HSG/TC/1290/2010 (Dated: 14.06.2010)' },
+      { id: 'regNo', label: 'Co-op. Registration Number', placeholder: 'e.g. BOM/HSG/TC/0000/2010', defaultValue: 'Regd. No. BOM/HSG/TC/0000/2010 (Dated: 14.06.2010)' },
       { id: 'address', label: 'Society Premises Address', placeholder: 'Plot / Survey No, Sector, City, PIN', defaultValue: 'CTS No. 448/12, Off Link Road, Borivali (West), Mumbai - 400092' },
-      { id: 'officeBearers', label: 'Key Office Bearers', placeholder: 'Chairman | Secretary | Treasurer', defaultValue: 'Chairman: Shri A. K. Mehta | Hon. Secretary: Shri R. N. Sharma | Treasurer: Smt. S. P. Joshi' },
-      { id: 'email', label: 'Society Official Email', placeholder: 'gokuldham.chs@gmail.com', defaultValue: 'office@gokuldhamchs.in', type: 'email' },
-      { id: 'phone', label: 'Society Office Contact', placeholder: '+91 22 2890 4411', defaultValue: '+91 22 2890 4411', type: 'tel' }
+      { id: 'officeBearers', label: 'Key Office Bearers', placeholder: 'Chairman | Secretary | Treasurer', defaultValue: 'Chairman: Shri V. K. Rao | Hon. Secretary: Shri M. N. Patil | Treasurer: Smt. L. P. Desai' },
+      { id: 'email', label: 'Society Official Email', placeholder: 'society@example.in', defaultValue: 'office@gokuldhamchs.in', type: 'email' },
+      { id: 'phone', label: 'Society Office Contact', placeholder: '+91 22 4000 0000', defaultValue: '+91 22 4000 0000', type: 'tel' }
     ],
     languages: ['en'],
     sampleLetters: [
@@ -665,8 +665,8 @@ export const PROFESSION_TEMPLATES: Record<string, ProfessionTemplate> = {
         subject: 'NO-OBJECTION CERTIFICATE (NOC) FOR SALE OF FLAT NO. B-402',
         fileNo: 'REF: GCHS/NOC/2026/048',
         body: [
-          'This is to certify that Shri Arvind S. Kadam is the registered bonafide member and owner of Flat No. B-402 (Carpet Area: 720 Sq. Ft.) in Gokuldham Co-op Housing Society Ltd., holding Share Certificate No. 84 (Distinctive Nos. 416 to 420).',
-          '1. The society has NO OBJECTION to the transfer / sale of the said flat to the prospective purchaser Shri Nilesh V. Patil or mortgage with any scheduled commercial bank.',
+          'This is to certify that Shri Prakash S. Jadhav is the registered bonafide member and owner of Flat No. B-402 (Carpet Area: 720 Sq. Ft.) in Gokuldham Co-op Housing Society Ltd., holding Share Certificate No. 00 (Distinctive Nos. 000 to 000).',
+          '1. The society has NO OBJECTION to the transfer / sale of the said flat to the prospective purchaser Shri Amit V. Rao or mortgage with any scheduled commercial bank.',
           '2. All society maintenance charges, municipal taxes, and sinking fund dues have been cleared up to 31st March 2026 and no outstanding dues are pending against the said flat.'
         ],
         signoff: 'For Gokuldham Co-op Housing Society Ltd.\n\n[Signature]\nHon. Secretary\n\n[Signature]\nChairman'
@@ -716,13 +716,13 @@ export const PROFESSION_TEMPLATES: Record<string, ProfessionTemplate> = {
       headerLayout: 'minimal'
     },
     fields: [
-      { id: 'name', label: 'Your Full Name / Brand', placeholder: 'e.g. Neil Sharma', defaultValue: 'Neil Sharma' },
+      { id: 'name', label: 'Your Full Name / Brand', placeholder: 'e.g. Rohan Kapoor', defaultValue: 'Rohan Kapoor' },
       { id: 'subTitle', label: 'Professional Title', placeholder: 'Full Stack Engineer & Cloud Architect', defaultValue: 'Senior Full Stack Engineer & Cloud Consultant' },
-      { id: 'panGst', label: 'PAN / GST / MSME ID (Optional)', placeholder: 'e.g. PAN: ABCDE1234F', defaultValue: 'PAN: ABCDE1234F | Udyam-MH-26-009182' },
-      { id: 'portfolio', label: 'Portfolio / GitHub / LinkedIn', placeholder: 'neilsharma.dev', defaultValue: 'https://neilsharma.dev | github.com/neilsharma' },
+      { id: 'panGst', label: 'PAN / GST / MSME ID (Optional)', placeholder: 'e.g. PAN: ABCDE1234F', defaultValue: 'PAN: ABCDE1234F | Udyam-MH-26-000000' },
+      { id: 'portfolio', label: 'Portfolio / GitHub / LinkedIn', placeholder: 'rohankapoor.dev', defaultValue: 'https://rohankapoor.dev | github.com/rohankapoor' },
       { id: 'location', label: 'Location / City, Country', placeholder: 'Bengaluru, India (Remote Available)', defaultValue: 'Bengaluru, Karnataka, India - 560102' },
-      { id: 'phone', label: 'Direct Phone / WhatsApp', placeholder: '+91 98450 11223', defaultValue: '+91 98450 11223', type: 'tel' },
-      { id: 'email', label: 'Client Inquiries Email', placeholder: 'hello@neilsharma.dev', defaultValue: 'consulting@neilsharma.dev', type: 'email' }
+      { id: 'phone', label: 'Direct Phone / WhatsApp', placeholder: '+91 98765 43210', defaultValue: '+91 98765 43210', type: 'tel' },
+      { id: 'email', label: 'Client Inquiries Email', placeholder: 'hello@rohankapoor.dev', defaultValue: 'consulting@rohankapoor.dev', type: 'email' }
     ],
     languages: ['en'],
     sampleLetters: [
@@ -739,12 +739,12 @@ export const PROFESSION_TEMPLATES: Record<string, ProfessionTemplate> = {
           '3. Professional Fee: Flat fixed fee of ₹2,80,000/- ($3,400 USD) payable 40% upfront and 30% per milestone.',
           'Looking forward to engineering high-performance software for FinTech Nova.'
         ],
-        signoff: 'Best regards,\n\n[Digital Signature]\nNeil Sharma\nCloud & Full Stack Architect'
+        signoff: 'Best regards,\n\n[Digital Signature]\nRohan Kapoor\nCloud & Full Stack Architect'
       },
       {
         title: 'Project Completion & Intellectual Property (IP) Transfer',
         description: 'Formal signoff confirming deliverable handover and full copyright release.',
-        recipient: 'To,\nMr. David Miller,\nFounder & CEO, ScaleUp Media LLC.',
+        recipient: 'To,\nMr. Alex Carter,\nFounder & CEO, ScaleUp Media LLC.',
         subject: 'FINAL PROJECT HANDOVER & IP RELEASE CERTIFICATION',
         fileNo: 'REF: NS/IP/2026/08',
         body: [
@@ -752,7 +752,7 @@ export const PROFESSION_TEMPLATES: Record<string, ProfessionTemplate> = {
           '1. Full source code repository access and documentation have been transferred.',
           '2. Upon settlement of the final milestone invoice, all intellectual property rights and code ownership stand irrevocably transferred to ScaleUp Media LLC.'
         ],
-        signoff: 'Sincerely,\n\n[Signature]\nNeil Sharma'
+        signoff: 'Sincerely,\n\n[Signature]\nRohan Kapoor'
       }
     ],
     formatGuide: [

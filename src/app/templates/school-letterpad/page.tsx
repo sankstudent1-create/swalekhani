@@ -188,8 +188,8 @@ export default function SchoolLetterpadPage() {
  <div className="text-center border-b border-slate-200 dark:border-white/10 pb-4 mb-4">
  <p className="text-xs text-amber-700 font-semibold">विद्या ददाति विनयं</p>
  <h4 className="text-lg font-bold text-slate-900 dark:text-white tracking-wide">DELHI MODEL PUBLIC ACADEMY</h4>
- <p className="text-xs text-slate-600 dark:text-white/60">(Affiliated to CBSE, New Delhi | Affiliation No: 2730198 | School Code: 85210)</p>
- <p className="text-xs text-slate-600 dark:text-white/60">Sector 12, Institutional Area, New Delhi - 110075 | Tel: 011-28080000</p>
+ <p className="text-xs text-slate-600 dark:text-white/60">(Affiliated to CBSE, New Delhi | Affiliation No: 0000000 | School Code: 00000)</p>
+ <p className="text-xs text-slate-600 dark:text-white/60">Sector 12, Institutional Area, New Delhi - 110075 | Tel: 011-4000 0000</p>
  </div>
 
  <div className="flex justify-between text-xs text-slate-600 dark:text-white/60 mb-4 font-mono">
@@ -204,10 +204,10 @@ export default function SchoolLetterpadPage() {
  </div>
 
  <p className="text-xs leading-relaxed text-slate-700 dark:text-white/80 mb-4">
- This is to certify that <strong>Master Aarav Sharma</strong>, S/o Shri Rajesh Sharma, is a bonafide student of this institution currently studying in <strong>Class X, Section B</strong> (Admission No. 8924) during the academic year 2026-2027.
+ This is to certify that <strong>Master Arjun Mehta</strong>, S/o Shri Vijay Mehta, is a bonafide student of this institution currently studying in <strong>Class X, Section B</strong> (Admission No. 0000) during the academic year 2026-2027.
  </p>
  <p className="text-xs text-slate-700 dark:text-white/80 mb-6">
- As per school records, his date of birth is 14th August 2011. He bears good moral character and conduct.
+ As per school records, his date of birth is recorded in the school register. He bears good moral character and conduct.
  </p>
 
  <div className="flex justify-between items-end text-xs pt-4">

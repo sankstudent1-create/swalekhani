@@ -74,10 +74,17 @@ export function useLetterState() {
   }, []);
 
   // ── Start a fresh letter (clears draft + resets state) ──
+  // Defensive hardening (see audit note in the report): clear any
+  // pending autosave timer, bump aiTick so inline-editable paper fields
+  // re-sync even if one was focused, and clear the old model badge.
+  // The autosave effect's own cleanup already clears a pending timer
+  // on state change, so this is belt-and-braces, not the sole fix.
   const resetLetter = useCallback(() => {
     try { window.localStorage.removeItem(DRAFT_KEY); } catch { /* noop */ }
+    if (saveTimer.current) { clearTimeout(saveTimer.current); saveTimer.current = null; }
     const dt = new Date().toLocaleDateString('en-IN', { day: '2-digit', month: 'long', year: 'numeric' });
-    setState({ ...INITIAL_STATE, form: { ...DEFAULT_FORM, dt } });
+    setState(s => ({ ...INITIAL_STATE, form: { ...DEFAULT_FORM, dt }, aiTick: (s.aiTick || 0) + 1 }));
+    setLastModel(undefined);
     setDraftStatus('fresh');
   }, []);
 
@@ -164,12 +171,32 @@ export function useLetterState() {
   }, []);
 
   // ── AI fill — populates fields from AI response ───
+  // Preserve rule (fixes the "Generate wiped my office details" bug):
+  // the AI client maps every missing field to '' (see aiService.ts),
+  // so `??` never falls back — an omitted field used to overwrite a
+  // filled field with ''. Now a field is replaced ONLY when the AI
+  // explicitly supplies a non-blank value; otherwise the existing
+  // non-empty value survives, in both Body-Only and Full modes.
+  // Personal letters still clear masthead fields on purpose.
   const fillFromAI = useCallback((data: AILetterData, isFull: boolean = false, model?: string) => {
     if (model) setLastModel(model);
 
+    const has = (v?: string | null) => Boolean(v?.trim());
+    const keep = (ai: string | undefined, cur: string) => has(ai) ? ai as string : cur;
+    const stripLeadingSalutation = (body: string, sal: string) => {
+      if (!body) return body;
+      const lines = body.split('\n');
+      const first = lines[0].trim();
+      const salText = sal.trim().replace(/,+\s*$/, '');
+      const isSalLine =
+        (Boolean(salText) && first.replace(/,+\s*$/, '').toLowerCase() === salText.toLowerCase()) ||
+        /^(dear\s+[^,\n]{1,60},|sir,|madam,|sir\/madam,|महोदय,?|महोदया,?|आदरणीय\s+[^,\n]{1,60},?|respected\s+[^,\n]{1,60},?)$/i.test(first);
+      return isSalLine ? lines.slice(1).join('\n').replace(/^\n+/, '') : body;
+    };
+
     setState(s => {
       const detectedType = (data.detected_type || data.letter_type || '').toLowerCase();
-      const isPersonal = data.is_personal === true || 
+      const isPersonal = data.is_personal === true ||
         ['personal', 'romantic', 'student_app', 'heritage_personal', 'citizen_app'].includes(detectedType);
 
       let newLogoL = isFull ? null : s.logoL;
@@ -186,8 +213,13 @@ export function useLetterState() {
         // cleared on full AI fills; users upload their own branding.
       }
 
-      const enclVal = data.encl ?? (Array.isArray(data.enclList) ? data.enclList.join(', ') : '');
-      const copyVal = (data.copyList && data.copyList.length ? data.copyList : (data.copy_to && data.copy_to.length ? data.copy_to : []));
+      const aiEncl = data.encl ?? (Array.isArray(data.enclList) ? data.enclList.join(', ') : '');
+      const aiCopy = (data.copyList && data.copyList.length ? data.copyList : (data.copy_to && data.copy_to.length ? data.copy_to : []));
+      // The user's chosen salutation survives unless the AI supplies one.
+      const salVal = keep(data.sal ?? data.salutation, s.form.sal);
+      const bodyVal = stripLeadingSalutation(keep(data.body, s.form.body), salVal);
+      const enclVal = isPersonal ? '' : keep(aiEncl, s.form.encl);
+      const copyVal = isPersonal ? [] : (aiCopy.length > 0 ? aiCopy : s.form.copyTo);
 
       return {
         ...s,
@@ -195,39 +227,39 @@ export function useLetterState() {
         officeType: isPersonal ? 'personal' : (isFull ? 'corporate' : s.officeType),
         logoL: newLogoL,
         logoR: newLogoR,
-        showEncl: isPersonal ? false : (enclVal.trim().length > 0),
-        showCopy: isPersonal ? false : (copyVal.length > 0),
+        showEncl: isPersonal ? false : (enclVal.trim().length > 0 || s.showEncl),
+        showCopy: isPersonal ? false : (copyVal.length > 0 || s.showCopy),
         showEndorse: false,
         showFooter: !isPersonal,
         form: {
           ...s.form,
-          h1: isPersonal ? '' : (isFull ? (data.h1 ?? data.dept_hindi_1 ?? '') : (data.h1 ?? data.dept_hindi_1 ?? s.form.h1)),
-          h2: isPersonal ? '' : (isFull ? (data.h2 ?? data.dept_hindi_2 ?? '') : (data.h2 ?? data.dept_hindi_2 ?? s.form.h2)),
-          e1: isPersonal ? '' : (isFull ? (data.e1 ?? data.dept_english_1 ?? '') : (data.e1 ?? data.dept_english_1 ?? s.form.e1)),
-          e2: isPersonal ? '' : (isFull ? (data.e2 ?? data.dept_english_2 ?? '') : (data.e2 ?? data.dept_english_2 ?? s.form.e2)),
-          dept: isPersonal ? '' : (isFull ? (data.dept ?? data.department ?? '') : (data.dept ?? data.department ?? s.form.dept)),
-          divn: isPersonal ? '' : (isFull ? (data.divn ?? data.division ?? '') : (data.divn ?? data.division ?? s.form.divn)),
-          ofc:  isPersonal ? '' : (isFull ? (data.ofc ?? data.office ?? '') : (data.ofc ?? data.office ?? s.form.ofc)),
-          city: data.city !== undefined ? data.city : (isPersonal ? '' : (isFull ? '' : s.form.city)),
-          pin:  data.pin !== undefined ? data.pin : (isPersonal ? '' : (isFull ? '' : s.form.pin)),
-          ph:   isPersonal ? '' : (data.ph ?? data.phone ?? (isFull ? '' : s.form.ph)),
-          em:   isPersonal ? '' : (data.em ?? data.email ?? (isFull ? '' : s.form.em)),
-          wb:   isPersonal ? '' : (data.wb ?? data.website ?? (isFull ? '' : s.form.wb)),
-          fno:  isPersonal ? '' : (data.fno ?? data.file_no ?? (isFull ? '' : s.form.fno)),
-          toD:  data.toD ?? data.to_designation ?? (isFull ? '' : s.form.toD),
-          toA:  data.toA ?? data.to_address ?? (isFull ? '' : s.form.toA),
-          sub:  data.sub ?? data.subject ?? (isFull ? '' : s.form.sub),
-          ref:  isPersonal ? '' : (data.ref ?? data.reference ?? (isFull ? '' : s.form.ref)),
-          sal:  data.sal ?? data.salutation ?? '',
-          cls:  data.cls ?? data.closing ?? '',
-          sn:   data.sn ?? data.signatory_name ?? (isFull ? '' : s.form.sn),
-          sh:   isPersonal ? '' : (data.sh ?? data.signatory_hindi ?? (isFull ? '' : s.form.sh)),
-          sd:   isPersonal ? '' : (data.sd ?? data.signatory_designation ?? (isFull ? '' : s.form.sd)),
-          sp:   isPersonal ? '' : (data.sp ?? data.signatory_phone ?? (isFull ? '' : s.form.sp)),
-          sc:   isPersonal ? '' : (data.sc ?? data.constituency ?? (isFull ? '' : s.form.sc)),
-          body: data.body ?? (isFull ? '' : s.form.body),
-          encl: isPersonal ? '' : (enclVal || (isFull ? '' : s.form.encl)),
-          copyTo: isPersonal ? [] : (copyVal.length > 0 ? copyVal : (isFull ? [] : s.form.copyTo)),
+          h1: isPersonal ? '' : keep(data.h1 ?? data.dept_hindi_1, s.form.h1),
+          h2: isPersonal ? '' : keep(data.h2 ?? data.dept_hindi_2, s.form.h2),
+          e1: isPersonal ? '' : keep(data.e1 ?? data.dept_english_1, s.form.e1),
+          e2: isPersonal ? '' : keep(data.e2 ?? data.dept_english_2, s.form.e2),
+          dept: isPersonal ? '' : keep(data.dept ?? data.department, s.form.dept),
+          divn: isPersonal ? '' : keep(data.divn ?? data.division, s.form.divn),
+          ofc:  isPersonal ? '' : keep(data.ofc ?? data.office, s.form.ofc),
+          city: isPersonal ? '' : keep(data.city, s.form.city),
+          pin:  isPersonal ? '' : keep(data.pin, s.form.pin),
+          ph:   isPersonal ? '' : keep(data.ph ?? data.phone, s.form.ph),
+          em:   isPersonal ? '' : keep(data.em ?? data.email, s.form.em),
+          wb:   isPersonal ? '' : keep(data.wb ?? data.website, s.form.wb),
+          fno:  isPersonal ? '' : keep(data.fno ?? data.file_no, s.form.fno),
+          toD:  keep(data.toD ?? data.to_designation, s.form.toD),
+          toA:  keep(data.toA ?? data.to_address, s.form.toA),
+          sub:  keep(data.sub ?? data.subject, s.form.sub),
+          ref:  isPersonal ? '' : keep(data.ref ?? data.reference, s.form.ref),
+          sal:  salVal,
+          cls:  keep(data.cls ?? data.closing, s.form.cls),
+          sn:   keep(data.sn ?? data.signatory_name, s.form.sn),
+          sh:   isPersonal ? '' : keep(data.sh ?? data.signatory_hindi, s.form.sh),
+          sd:   isPersonal ? '' : keep(data.sd ?? data.signatory_designation, s.form.sd),
+          sp:   isPersonal ? '' : keep(data.sp ?? data.signatory_phone, s.form.sp),
+          sc:   isPersonal ? '' : keep(data.sc ?? data.constituency, s.form.sc),
+          body: bodyVal,
+          encl: enclVal,
+          copyTo: copyVal,
         },
         aiTick: (s.aiTick || 0) + 1,
       };

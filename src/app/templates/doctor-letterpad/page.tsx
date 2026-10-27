@@ -160,7 +160,7 @@ export default function DoctorLetterpadPage() {
  </h3>
  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 not-prose">
  {[
- { title: "Doctor's Name & Qualifications", desc: "e.g. Dr. Aarav Sharma, MBBS, MD (Medicine), DM (Cardio)." },
+ { title: "Doctor's Name & Qualifications", desc: "e.g. Dr. Neha Patil, MBBS, MD (Medicine), DM (Cardio)." },
  { title: "State Medical Council Reg. No.", desc: "Mandatory statutory registration (e.g. MMC / DMC Reg No)." },
  { title: "Clinic & Hospital Affiliation", desc: "Name of the clinic, department, and physical address." },
  { title: "Patient Vitals Header", desc: "Dedicated line for Patient Name, Age, Gender, Date, and BP/Weight." },
@@ -187,18 +187,18 @@ export default function DoctorLetterpadPage() {
  <div className="p-6 rounded-2xl bg-white dark:bg-[#0f131d] border border-slate-200 dark:border-white/10 text-slate-800 dark:text-white/90 text-sm leading-relaxed shadow-inner font-sans">
  <div className="flex justify-between items-start border-b border-slate-200 dark:border-white/10 pb-4 mb-4">
  <div>
- <h4 className="text-lg font-bold text-slate-900 dark:text-white tracking-wide">DR. AARAV SHARMA, MBBS, MD (MEDICINE)</h4>
+ <h4 className="text-lg font-bold text-slate-900 dark:text-white tracking-wide">DR. NEHA PATIL, MBBS, MD (MEDICINE)</h4>
  <p className="text-xs text-rose-700">Consultant Physician & Cardiologist</p>
- <p className="text-xs text-slate-600 dark:text-white/60">Reg. No: MMC-2015-08-3421 | CareWell Specialty Clinic</p>
+ <p className="text-xs text-slate-600 dark:text-white/60">Reg. No: MMC-0000-00-0000 | CareWell Specialty Clinic</p>
  </div>
  <div className="text-right text-xs text-slate-600 dark:text-white/60">
  <p>OPD Timings: 10 AM - 2 PM, 6 PM - 9 PM</p>
- <p>Ph: +91-9820012345</p>
+ <p>Ph: +91-98765 43210</p>
  </div>
  </div>
 
  <div className="border border-slate-200 dark:border-white/10 p-2.5 rounded-lg flex justify-between text-xs text-slate-600 dark:text-white/70 mb-4 font-mono">
- <span>Patient: Mr. Vikas Gupta</span>
+ <span>Patient: Mr. Rohan Mehta</span>
  <span>Age: 32 Yrs / Male</span>
  <span>Date: 23/09/2026</span>
  </div>
@@ -210,7 +210,7 @@ export default function DoctorLetterpadPage() {
  </div>
 
  <p className="text-xs leading-relaxed text-slate-700 dark:text-white/80 mb-3">
- This is to certify that I have carefully examined <strong>Mr. Vikas Gupta</strong>. He was suffering from Acute Viral Gastroenteritis and was under my active medical treatment from 18th Sept 2026 to 22nd Sept 2026.
+ This is to certify that I have carefully examined <strong>Mr. Rohan Mehta</strong>. He was suffering from Acute Viral Gastroenteritis and was under my active medical treatment from 18th Sept 2026 to 22nd Sept 2026.
  </p>
  <p className="text-xs text-slate-700 dark:text-white/80 mb-6">
  He has now fully recovered and is physically fit to resume his official duties with effect from 24th September 2026.
@@ -219,8 +219,8 @@ export default function DoctorLetterpadPage() {
  <div className="flex justify-between items-end text-xs pt-4">
  <p className="text-slate-500 dark:text-white/60">[Clinic Seal]</p>
  <div className="text-right">
- <p className="font-bold text-slate-900 dark:text-white">Dr. Aarav Sharma</p>
- <p className="text-slate-600 dark:text-white/60">Reg. No: MMC-2015-08-3421</p>
+ <p className="font-bold text-slate-900 dark:text-white">Dr. Neha Patil</p>
+ <p className="text-slate-600 dark:text-white/60">Reg. No: MMC-0000-00-0000</p>
  </div>
  </div>
  </div>

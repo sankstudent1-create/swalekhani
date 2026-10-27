@@ -10,6 +10,7 @@ import {
  SALUTATION_OPTIONS, CLOSING_OPTIONS, AI_LETTER_TYPES
 } from '@/lib/letterpad/constants';
 import { buildPrompt, generateLetterWithAI } from '@/lib/letterpad/aiService';
+import { MISSING_FIELD_LABELS } from '@/lib/letterpad/typeProtocols';
 import SignaturePad from './SignaturePad';
 import styles from './Sidebar.module.css';
 
@@ -81,8 +82,12 @@ export default function Sidebar({
  setAiLoading(true);
  setAiStatus('');
  try {
- const contextForm = aiMode === 'full' 
- ? { ...form, dept: '', divn: '', ofc: '', city: '', pin: '', ph: '', em: '', wb: '', h1: '', h2: '', e1: '', e2: '' } 
+ // Full mode blanks headers in the *fill* form so AI-completed headers
+ // can win, but the ORIGINAL form is always sent as ground truth in
+ // currentContext.form — previously Full mode sent currentContext={}
+ // and the route lost all profession/office context.
+ const contextForm = aiMode === 'full'
+ ? { ...form, dept: '', divn: '', ofc: '', city: '', pin: '', ph: '', em: '', wb: '', h1: '', h2: '', e1: '', e2: '' }
  : form;
 
  const briefText = aiPrompt.trim() || form.sub || 'Draft a complete formal letter';
@@ -90,13 +95,22 @@ export default function Sidebar({
  briefText,
  aiType,
  aiLang,
- aiMode === 'full' ? {} : { department: form.dept, office: form.ofc, city: form.city },
+ {
+   department: form.dept, office: form.ofc, city: form.city,
+   officeType: state.officeType, template: tpl, mode: aiMode, form,
+ },
  setAiStatus,
  contextForm,
  state.officeType
  );
  onFillAI(result.data, aiMode === 'full', result.model);
- setAiStatus(`✓ Generated via ${result.model.replace(/-versatile|-instant/gi,'').replace('llama-','L-')}`);
+ // Show the exact model the server returned — no lossy shortening
+ // (the old code turned e.g. llama-3.3-70b-versatile into "L-3.3-70b").
+ // Surface missing fields as a warning, not a silent partial letter.
+ const missing = (result.missingFields || []).filter(Boolean);
+ setAiStatus(missing.length
+   ? `✓ Generated via ${result.model} — please fill: ${missing.map(f => MISSING_FIELD_LABELS[f] || f).join(', ')}`
+   : `✓ Generated via ${result.model}`);
  } catch (err) {
  const msg = err instanceof Error ? err.message : String(err);
  setAiStatus('✗ ' + msg.slice(0, 100));
@@ -188,7 +202,7 @@ export default function Sidebar({
 
  {/* Groq-powered badge — no API key input needed */}
  <div className={styles.groqBadge}>
- <strong>⚡ Groq AI</strong> — Server-side · No API key needed · <strong>Auto-fallback chain</strong>: Llama 3.3 70B → Llama 4 Scout → Llama 3.1 8B Instant
+ <strong>⚡ Groq AI</strong> — Server-side · No API key needed · <strong>Auto-fallback chain</strong>: GPT-OSS 120B → GPT-OSS 20B → Qwen 27B → Llama 3.3 70B → Llama 3.1 8B (the badge after each generation shows the exact model actually used)
  </div>
  </div>
 
@@ -278,13 +292,13 @@ export default function Sidebar({
  <Field label="Phone">{inp(form.ph,'ph')}</Field>
  <Field label="Email">{inp(form.em,'em')}</Field>
  <Field label="Website / Reg Info">{inp(form.wb,'wb')}</Field>
- <Field label="Enrolment / Statutory Reg No.">{inp(form.enrolmentNo || '','enrolmentNo','e.g. MAH/1842/2012 or MMC-2011-04-1049')}</Field>
+ <Field label="Enrolment / Statutory Reg No.">{inp(form.enrolmentNo || '','enrolmentNo','e.g. MAH/0000/2012 or MMC-0000-00-0000')}</Field>
  </div>
 
  {/* ── SIGNATORY ── */}
  <div className={styles.section}>
  <SectionTitle>Signatory Officer / Professional</SectionTitle>
- <Field label="Name (with title)">{inp(form.sn,'sn','e.g. Adv. Rajeshwar S. Deshmukh / Dr. Aarav Sharma')}</Field>
+ <Field label="Name (with title)">{inp(form.sn,'sn','e.g. Adv. Kiran R. Patil / Dr. Neha Patil')}</Field>
  <Field label="Designation">{inp(form.sd,'sd','Designation / Council')}</Field>
  <Field label="Direct Phone / Extn.">{inp(form.sp,'sp','Extn. 2345')}</Field>
  <Field label="Hindi / Regional Name">{inp(form.sh,'sh','हिन्दी / मराठी नाव')}</Field>
@@ -345,6 +359,13 @@ export default function Sidebar({
  <button className={`${styles.toggleBtn} ${state.showEncl ? styles.toggleBtnOn : ''}`} onClick={onToggleEncl}>📎 Enclosure</button>
  <button className={`${styles.toggleBtn} ${state.showCopy ? styles.toggleBtnOn : ''}`} onClick={onToggleCopy}>📋 Copy To</button>
  <button className={`${styles.toggleBtn} ${state.showEndorse ? styles.toggleBtnOn : ''}`} onClick={onToggleEndorse}>📝 Endorsement</button>
+ </div>
+ {/* These sidebar rows are toggles only — there is deliberately no
+     text input here. After turning a section on, type in that block
+     on the paper itself (Copy To: one recipient per line, Enter for
+     the next; the paper numbers the list automatically). */}
+ <div style={{ marginTop: 8, fontSize: 12, opacity: 0.75 }}>
+ Tip: turn a section on, then type in its block on the paper.
  </div>
  </div>
 

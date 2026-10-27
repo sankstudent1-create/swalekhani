@@ -336,6 +336,22 @@ div.editable { display: block; }
 .copyHead   { font-weight: 700; text-decoration: underline; margin-bottom: 3px; }
 .copyList   { margin-left: 20px; list-style: decimal; }
 .copyList li{ margin-bottom: 1px; display: list-item; word-break: break-word; }
+/* Controlled copy-to inputs: look like paper text on screen, and the
+   blank typing row never prints (it is not a stored recipient). */
+.copyInput {
+  width: 100%; border: none; background: transparent; font: inherit;
+  color: inherit; padding: 0; outline: none; cursor: text;
+  border-bottom: 1.5px dashed transparent;
+}
+.copyInput:hover { border-bottom-color: rgba(6,3,141,.25); }
+.copyInput:focus { border-bottom-color: rgba(6,3,141,.5); }
+.copyInput::placeholder { color: #999; }
+@media print {
+  .copyInputBlank { display: none !important; }
+}
+:global(body[data-generating-pdf="true"]) .copyInputBlank {
+  display: none !important;
+}
 .endorseBlock {
   margin: 6px 42px; border: 1px solid #bbb; padding: 8px 12px;
   background: #f9f8f4; font-size: 12px; flex-shrink: 0;

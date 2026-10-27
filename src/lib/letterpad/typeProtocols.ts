@@ -331,9 +331,54 @@ export function stripPlaceholders(form: Record<string, unknown>): Record<string,
   return out;
 }
 
+// ── Topic matching: does a new brief belong to a previous subject? ──
+// Subject and recipient are TOPIC-DEPENDENT, unlike sender/office
+// identity (name, department, address), which is stable across letters.
+// A previous subject must only be reused when the new brief is empty,
+// generic ("Draft a complete formal letter"), or about the same topic.
+// Otherwise reusing it produces the live bug where a complaint letter
+// kept the previous sick-leave subject above a phone-complaint body.
+const STOPWORDS = new Set([
+  'a', 'an', 'the', 'for', 'to', 'of', 'on', 'in', 'about', 'regarding',
+  'please', 'write', 'draft', 'generate', 'prepare', 'letter', 'formal',
+  'application', 'request', 'reply', 'response',
+]);
+
+function briefTokens(text: string): string[] {
+  return (text || '').toLowerCase().replace(/[^a-z0-9\s]/g, ' ')
+    .split(/\s+/).filter((w) => w.length >= 3 && !STOPWORDS.has(w));
+}
+
+export function briefMatchesSubject(brief: string, subject?: string): boolean {
+  const b = (brief || '').trim();
+  if (!b) return true;
+  if (/^draft a complete formal letter$/i.test(b)) return true;
+  const sub = (subject || '').trim();
+  if (!sub) return false;
+  const bTokens = briefTokens(b);
+  const sTokens = new Set(briefTokens(sub));
+  if (bTokens.length === 0) return true;
+  // Same topic if every substantive brief word appears in the subject,
+  // or at least one substantive word overlaps (e.g. "sick leave" vs
+  // "Application for Sick Leave" overlaps on sick + leave).
+  if (bTokens.every((t) => sTokens.has(t))) return true;
+  return bTokens.some((t) => sTokens.has(t));
+}
+
+export function isDevanagari(v?: string | null): boolean {
+  return /[\u0900-\u097F]/.test(v || '');
+}
+
 // ── Subject fallback (server-side, model output is primary) ──
+// NOTE: existingSub is the PREVIOUS letter's subject, not ground truth
+// for this generation. It is reused only when the brief matches it
+// (see briefMatchesSubject); otherwise a fresh subject is synthesized
+// from the new brief. The AI-supplied subject, when present, always
+// wins over both — the route passes it before calling this.
 export function synthesizeSubject(type: KnownLetterType, brief: string, existingSub?: string): string {
-  if (existingSub && existingSub.trim()) return existingSub.trim();
+  if (existingSub && existingSub.trim() && briefMatchesSubject(brief, existingSub)) {
+    return existingSub.trim();
+  }
   let b = (brief || '').trim().replace(/\s+/g, ' ');
   b = b.replace(/^(please\s+)?(write|draft|generate|prepare)\s+(a\s+)?(formal\s+)?(letter\s+)?(about|for|regarding|on)\s+/i, '');
   // Avoid "Complaint Regarding — Complaint defective…" duplication:
@@ -432,6 +477,12 @@ export function computeMissingFields(
   const missing: string[] = [];
   const { type, toD, sn, sd, sal, body, brief } = args;
   if (!toD.trim() || toD.includes('______')) missing.push('toD');
+  // An RTI reply addressed only to the generic "The Applicant" is not
+  // a complete reply — a real reply goes to a named applicant. Flag it
+  // so the UI warns instead of presenting it as finished.
+  if (type === 'rti_reply' && toD.trim() === TYPE_PROTOCOLS.rti_reply.recipientFallback) {
+    if (!missing.includes('toD')) missing.push('toD');
+  }
   if (!sn.trim()) missing.push('sn');
   if (!TYPE_PROTOCOLS[type].isPersonal &&
     ['corporate', 'complaint', 'circular', 'notice', 'advisory', 'forwarding', 'scn', 'noc', 'appreciation', 'reminder', 'rti_reply'].includes(type) &&
@@ -443,6 +494,14 @@ export function computeMissingFields(
   const words = (brief || '').trim().split(/\s+/).filter(Boolean).length;
   if (words > 0 && words <= 5 && !TYPE_PROTOCOLS[type].isPersonal && type !== 'romantic') {
     missing.push('details');
+  }
+  // A body that still contains ______ blanks is not finished, whatever
+  // the model was or however long the brief was. This is the fix for
+  // the live RTI-reply case: its brief was long (so the ≤5-word rule
+  // did not fire), yet its body contained a blank — and no warning
+  // appeared. The warning must not depend on which model generated it.
+  if (body.includes('______') && !TYPE_PROTOCOLS[type].isPersonal) {
+    if (!missing.includes('details')) missing.push('details');
   }
   return missing;
 }
@@ -464,8 +523,11 @@ export function protocolPrompt(type: KnownLetterType, lang: AILang, secondLang: 
     lang === 'hi' ? 'MANDATORY: Write EVERYTHING in pure, formal Hindi (हिंदी - Devanagari script). Use formal Rajbhasha Hindi terminology (सेवा में, विषय, संदर्भ, महोदय, भवदीय/भवदीया).' :
     lang === 'bi' ? `BILINGUAL: Write the body in bilingual format — every English paragraph followed immediately by its ${secondLang === 'mr' ? 'Marathi (मराठी)' : 'Hindi (हिन्दी)'} equivalent, in the same order. Salutation and closing stay in English.` :
     'Write in formal English.';
+  const rtiReplyMust = type === 'rti_reply'
+    ? `\nMANDATORY CITATION: The appeal paragraph MUST contain the exact text 'Section 19(1)' — a paraphrase like 'first appeal within 30 days' without the section number is NOT sufficient. Name the First Appellate Authority by designation.`
+    : '';
   return `LETTER TYPE: ${p.label}
-${langNote}
+${langNote}${rtiReplyMust}
 BODY STRUCTURE (follow in order): ${p.structure.join(' → ')}.
 REQUIRED IN THIS LETTER: ${p.required.length ? p.required.join('; ') : 'none beyond a complete body'}.
 NEVER INVENT: ${p.mustNot.join('; ')}.

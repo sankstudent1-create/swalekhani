@@ -2,7 +2,7 @@
 // tools/letterpad-generator/page.tsx
 // ─────────────────────────────────────────────
 'use client';
-import React, { useCallback, useEffect, useState, Suspense } from 'react';
+import React, { useCallback, useEffect, useRef, useState, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Appbar from '@/components/letterpad/Appbar';
 import Sidebar from '@/components/letterpad/Sidebar';
@@ -130,6 +130,37 @@ function LetterpadGeneratorInner() {
  setForm(updates, true);
  }
  }, [searchParams, applyOfficePreset, setTemplate, setFont, setForm]);
+
+ // ── "New letter" two-step confirmation ──────────
+ // The old flow used window.confirm(), which many automation browsers
+ // auto-dismiss/cancel — so the click looked dead and no state ever
+ // changed, while real-user impact was unestablished. This flow uses
+ // no native dialog at all: first click arms the button ("Click again
+ // to clear", with a Cancel affordance), second click within 4 seconds
+ // calls resetLetter(); otherwise it reverts. It is a plain <button>,
+ // so it is keyboard- and automation-clickable, and a single
+ // accidental click can never wipe a draft. resetLetter() itself
+ // (draft deletion + DEFAULT_FORM reset) is unchanged.
+ const [newConfirmArmed, setNewConfirmArmed] = useState(false);
+ const newConfirmTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+ useEffect(() => () => {
+   if (newConfirmTimer.current) clearTimeout(newConfirmTimer.current);
+ }, []);
+ const handleNewLetter = useCallback(() => {
+   if (!newConfirmArmed) {
+     setNewConfirmArmed(true);
+     if (newConfirmTimer.current) clearTimeout(newConfirmTimer.current);
+     newConfirmTimer.current = setTimeout(() => setNewConfirmArmed(false), 4000);
+     return;
+   }
+   if (newConfirmTimer.current) clearTimeout(newConfirmTimer.current);
+   setNewConfirmArmed(false);
+   resetLetter();
+ }, [newConfirmArmed, resetLetter]);
+ const cancelNewLetter = useCallback(() => {
+   if (newConfirmTimer.current) clearTimeout(newConfirmTimer.current);
+   setNewConfirmArmed(false);
+ }, []);
 
  // ── Mobile tab: 'edit' | 'preview' ──────────
  const [mobileTab, setMobileTab] = useState<'edit' | 'preview'>('preview');
@@ -409,11 +440,21 @@ function LetterpadGeneratorInner() {
  )}
  <button
  className={styles.clearBtn}
- onClick={() => { if (window.confirm('Start a new letter? Your current draft will be cleared.')) resetLetter(); }}
- title="Start a new letter"
+ onClick={handleNewLetter}
+ title={newConfirmArmed ? 'Click again to confirm clearing this letter' : 'Start a new letter'}
+ aria-pressed={newConfirmArmed}
  >
- ✦ New
+ {newConfirmArmed ? '⚠ Click again to clear' : '✦ New'}
  </button>
+ {newConfirmArmed && (
+ <button
+ className={styles.clearBtn}
+ onClick={cancelNewLetter}
+ title="Keep this letter"
+ >
+ Cancel
+ </button>
+ )}
  <EditToolbar
  showEncl={state.showEncl}
  showCopy={state.showCopy}

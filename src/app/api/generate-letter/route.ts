@@ -6,6 +6,8 @@ import {
   salutationFor,
   closingFor,
   synthesizeSubject,
+  briefMatchesSubject,
+  isDevanagari,
   buildFallbackBody,
   computeMissingFields,
   protocolPrompt,
@@ -260,7 +262,8 @@ export async function POST(request: NextRequest) {
 
 CRITICAL GROUND TRUTH & ANTI-HALLUCINATION RULES:
 1. SENDER & SIGNATORY GROUND TRUTH:
-   - If user-filled signatory fields (Name 'sn', Designation 'sd', Department 'dept', Office 'ofc', City 'city', Subject 'sub') are provided in the prompt, treat them as IMMUTABLE GROUND TRUTH.
+   - If user-filled signatory fields (Name 'sn', Designation 'sd', Department 'dept', Office 'ofc', City 'city') are provided in the prompt, treat them as IMMUTABLE GROUND TRUTH.
+   - Subject and recipient are TOPIC-DEPENDENT and are NOT ground truth from a previous letter: a previous subject/recipient belongs to an earlier, possibly different letter. Generate both fresh from the NEW brief; copy the previous subject or recipient only if the new brief is about the same topic and names the same recipient.
    - NEVER overwrite or invent fake government officials (e.g. NEVER generate invented officials or bureaucrats).
    - NEVER invent fictional ministries, departments, or fake government email addresses (@nic.in, @gov.in). Empty contact fields MUST remain empty — DO NOT hallucinate phone numbers or emails.
    - NEVER invent a person, company, ministry, phone number, email, date, amount, or page count to fill a gap. Use ______ blanks for genuinely unknown details.
@@ -360,9 +363,9 @@ JSON SCHEMA (return header/contact fields when the ground truth gives them; in B
       `Constituency / Circle (sc): "${gt.sc || ''}"`,
       `File No. (fno): "${gt.fno || ''}"`,
       `Date (dt): "${gt.dt || ''}"`,
-      `Recipient (toD): "${gt.toD || ''}"`,
+      `Previous recipient from an earlier letter (NOT ground truth for this generation — do NOT copy it unless the new brief names the same recipient; generate a fresh recipient from the new brief): "${gt.toD || ''}"`,
       `Recipient Address (toA): "${gt.toA || ''}"`,
-      `Subject (sub): "${gt.sub || ''}"`,
+      `Previous subject from an earlier letter (NOT ground truth for this generation — do NOT copy it unless the new brief is about the same topic; generate a fresh subject from the new brief): "${gt.sub || ''}"`,
       `Reference (ref): "${gt.ref || ''}"`,
       `Salutation (sal): "${gt.sal || ''}"`,
       `Closing (cls): "${gt.cls || ''}"`,
@@ -377,7 +380,8 @@ CONTEXT & GROUND TRUTH FIELDS:
 
 INSTRUCTIONS:
 - Draft a complete, realistic letter body tailored strictly to this context.
-- Use the typed name "${gt.sn || ''}" and subject "${gt.sub || ''}" directly without hallucinating different officials.
+- Use the typed name "${gt.sn || ''}" directly without hallucinating different officials.
+- Do NOT copy the previous subject or previous recipient above into this letter unless the new brief is about the same topic and names the same recipient. Generate a fresh subject and a fresh recipient from the new brief.
 - Do NOT generate fake @nic.in or @gov.in emails.
 - Return ONLY the JSON object.`;
 
@@ -444,14 +448,88 @@ INSTRUCTIONS:
     // Strip trailing commas from sal/cls — the paper renderer appends its own comma
     const cleanSal = str(letterData.sal).trim().replace(/,+\s*$/, '');
     const cleanCls = str(letterData.cls).trim().replace(/,+\s*$/, '');
-    const salFallback = gt.sal ? gt.sal.replace(/,+\s*$/, '') : salutationFor(resolved, targetLang);
-    const clsFallback = gt.cls ? gt.cls.replace(/,+\s*$/, '') : closingFor(resolved, targetLang);
+    // Language enforcement (Defect 5): for an explicit Marathi/Hindi
+    // generation, an English form value must NOT win over the language
+    // protocol. Order: AI-supplied language-correct value, then a
+    // form value already in that language (an explicit Devanagari
+    // dropdown choice still wins over a default), then the language
+    // default. English generation keeps the old behaviour. Marathi
+    // closing is never Hindi भवदीय; a Hindi generation never keeps
+    // an English closing.
+    const isNonEnglishGen = targetLang === 'mr' || targetLang === 'hi';
+    const langSal = salutationFor(resolved, targetLang);
+    const langCls = closingFor(resolved, targetLang);
+    const enforceSal = (ai: string): string => {
+      if (isNonEnglishGen) {
+        if (ai && isDevanagari(ai)) return ai;
+        if (gt.sal && isDevanagari(gt.sal)) return gt.sal.replace(/,+\s*$/, '');
+        return langSal;
+      }
+      return ai || gt.sal.replace(/,+\s*$/, '') || langSal;
+    };
+    const enforceCls = (ai: string): string => {
+      if (targetLang === 'mr' && (ai === 'भवदीय' || ai === 'भवदीया')) return langCls;
+      if (isNonEnglishGen) {
+        if (ai && isDevanagari(ai)) return ai;
+        if (gt.cls && isDevanagari(gt.cls)) return gt.cls.replace(/,+\s*$/, '');
+        return langCls;
+      }
+      return ai || gt.cls.replace(/,+\s*$/, '') || langCls;
+    };
+    const salVal = enforceSal(cleanSal);
+    const clsVal = enforceCls(cleanCls);
     const rawBody = str(letterData.body).trim();
-    const bodyVal = rawBody.length >= 150
+    let bodyVal = rawBody.length >= 150
       ? rawBody
       : buildFallbackBody(resolved, description, targetLang, secondLang);
-    const subVal = synthesizeSubject(resolved, description, str(letterData.sub) || gt.sub);
-    const toDVal = str(letterData.toD) || gt.toD || recipientFallback;
+    // RTI-reply guarantee (Defect 4a): the appeal paragraph MUST cite
+    // "Section 19(1)" by number, whatever model generated the body
+    // (including a fallback model that paraphrased it away). Append a
+    // standard paragraph only if the citation is absent, using the
+    // First Appellate Authority designation from the brief when given.
+    if (resolved === 'rti_reply' && !/19\s*\(\s*1\s*\)/.test(bodyVal)) {
+      const faaMatch = description.match(/(?:first appellate authority|FAA)\s*:\s*([^.;\n]+)/i);
+      const faa = faaMatch ? faaMatch[1].trim() : '______ (First Appellate Authority)';
+      bodyVal += `\n\nYou are entitled to file a first appeal under Section 19(1) of the Right to Information Act, 2005, within thirty (30) days from the receipt of this reply, before the First Appellate Authority, ${faa}.`;
+    }
+    // Subject (Defect 2): the AI subject for THIS brief wins; otherwise
+    // synthesize from the brief. synthesizeSubject reuses the previous
+    // subject only when the brief matches it — a stale subject from a
+    // different topic is never carried over. Office/header fields keep
+    // the preserve rule; subject (and recipient below) are the
+    // documented exception because they are topic-dependent.
+    const subVal = str(letterData.sub).trim() || synthesizeSubject(resolved, description, gt.sub);
+    // Recipient: same topic rule. If the topic changed and the model
+    // merely copied the previous recipient, use the type fallback
+    // instead of the stale recipient.
+    const aiToD = str(letterData.toD).trim();
+    const topicChanged = Boolean(gt.sub) && !briefMatchesSubject(description, gt.sub);
+    const toDVal = aiToD && !(topicChanged && aiToD === gt.toD)
+      ? aiToD
+      : topicChanged
+        ? recipientFallback
+        : aiToD || gt.toD || recipientFallback;
+    // Enclosure contradiction (Defect 4, minor): an RTI reply that
+    // withholds an item must not also list that same item as an
+    // enclosure. Drop enclosure entries matching the withheld phrase
+    // from the brief (e.g. "withhold file notings" drops an entry
+    // containing "notings").
+    let enclListVal: unknown[] = Array.isArray(letterData.enclList)
+      ? (letterData.enclList as unknown[])
+      : [];
+    if (resolved === 'rti_reply') {
+      const withholdMatch = description.match(/withhold(?:ing|ed)?\s+(?:the\s+)?([^.;\n]+)/i);
+      if (withholdMatch) {
+        const keywords = withholdMatch[1].toLowerCase().split(/[^a-z]+/)
+          .filter((w) => w.length >= 4 && !['under', 'section', 'with', 'from'].includes(w));
+        if (keywords.length) {
+          enclListVal = enclListVal.filter((e) => {
+            const t = String(e).toLowerCase();
+            return !keywords.some((k) => t.includes(k));
+          });
+        }
+      }
+    }
 
     const finalData = {
       ...letterData,
@@ -475,8 +553,8 @@ INSTRUCTIONS:
       dt: pickHeader(letterData.dt, gt.dt, false),
       enrolmentNo: pickHeader(letterData.enrolmentNo, gt.enrolmentNo, false),
       sub: subVal,
-      sal: cleanSal || salFallback,
-      cls: cleanCls || clsFallback,
+      sal: salVal,
+      cls: clsVal,
       sn: gt.sn ? gt.sn : str(letterData.sn),
       sd: gt.sd ? gt.sd : str(letterData.sd),
       sh: str(letterData.sh) || gt.sh,
@@ -485,7 +563,11 @@ INSTRUCTIONS:
       fno: str(letterData.fno) || gt.fno,
       ref: str(letterData.ref) || gt.ref,
       body: bodyVal,
-      encl: Array.isArray(letterData.enclList) ? (letterData.enclList as unknown[]).join(', ') : (str(letterData.encl) || ''),
+      encl: enclListVal.length
+        ? enclListVal.join(', ')
+        : Array.isArray(letterData.enclList)
+          ? '' // List existed but was filtered (e.g. withheld item) — do not resurrect it via the string field.
+          : (str(letterData.encl) || ''),
       copy_to: Array.isArray(letterData.copyList) ? (letterData.copyList as unknown[]) : (letterData.copy_to || []),
     };
 

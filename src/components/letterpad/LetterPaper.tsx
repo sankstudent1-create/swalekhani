@@ -226,7 +226,66 @@ export default function LetterPaper({
 }: LetterPaperProps) {
  const { form, tpl, font, logoL, logoR, posL, posR, sigUrl, showEncl, showCopy, showEndorse, officeType } = state;
  const paperRef = useRef<HTMLDivElement>(null);
+ const copyInputRefs = useRef<Array<HTMLInputElement | null>>([]);
  const tick = state.aiTick;
+
+ // ── Copy-To: controlled inputs, one per recipient ──────────
+ // The old contentEditable <li> implementation was fragile: pressing
+ // Enter inside a contentEditable list item does not reliably produce
+ // a '\n' in textContent, so onBlur splitting merged recipients on
+ // reload ("1. PMO Divisional Commissioner"). Copy-To is therefore
+ // stored as a clean string array (no empty entries, no "1. " prefixes)
+ // and rendered as one controlled <input> per recipient plus one blank
+ // typing row. The blank row is never stored, so save → reload →
+ // render always yields exactly one numbered line per recipient.
+ const stripCopyPrefix = (v: string) => v.replace(/^\s*\d+[.)]\s*/, '');
+ const copyStored = form.copyTo.map((v) => stripCopyPrefix(v)).filter((v) => v.trim());
+ const copyDisplay = [...copyStored, ''];
+ const focusCopyInput = (idx: number) => {
+   setTimeout(() => {
+     const el = copyInputRefs.current[idx] ||
+       (paperRef.current?.querySelector(`[data-copy-index="${idx}"]`) as HTMLInputElement | null);
+     el?.focus();
+   }, 0);
+ };
+ const updateCopyItem = (idx: number, value: string) => {
+   const stripped = stripCopyPrefix(value);
+   const updated = [...copyStored];
+   if (idx < updated.length) {
+     if (!stripped.trim()) updated.splice(idx, 1);
+     else updated[idx] = stripped;
+   } else if (stripped.trim()) {
+     updated.push(stripped);
+   }
+   onCopyChange(updated);
+ };
+ const handleCopyKeyDown = (idx: number, e: React.KeyboardEvent<HTMLInputElement>) => {
+   if (e.key === 'Enter') {
+     e.preventDefault();
+     // Move to the next row; if this was the typing row and it now
+     // holds text, onChange already stored it, so a fresh typing row
+     // exists at the next index.
+     focusCopyInput(idx + 1);
+   } else if (e.key === 'Backspace' && !(e.currentTarget.value || '').trim() && idx < copyStored.length) {
+     e.preventDefault();
+     const updated = [...copyStored];
+     updated.splice(idx, 1);
+     onCopyChange(updated);
+     focusCopyInput(Math.max(0, idx - 1));
+   }
+ };
+ const handleCopyPaste = (idx: number, e: React.ClipboardEvent<HTMLInputElement>) => {
+   const text = e.clipboardData.getData('text');
+   if (!/\r?\n/.test(text)) return; // Single line: let the input handle it.
+   e.preventDefault();
+   const lines = text.split(/\r?\n/).map((l) => stripCopyPrefix(l).trim()).filter(Boolean);
+   if (!lines.length) return;
+   const updated = [...copyStored];
+   if (idx < updated.length) updated.splice(idx, 1, ...lines);
+   else updated.push(...lines);
+   onCopyChange(updated);
+   focusCopyInput(idx + lines.length - 1);
+ };
 
  const isDoctor = officeType === 'doctor' || officeType === 'clinic';
  const isAdvocate = officeType === 'advocate';
@@ -284,11 +343,18 @@ export default function LetterPaper({
  {form.e2 && <> / {E('e2', '', 'span', 'Heading 2')}</>}
  </div>
  )}
+ {/* Dept / division lines are only rendered when filled (or when no
+     organisation name is filled yet, so the field remains editable
+     on a blank letter). Otherwise their grey placeholders showed
+     under a filled organisation name — the minor Type-E defect. The
+     sidebar Department / Division fields still edit them. */}
+ {(form.dept?.trim() || !(form.e1?.trim() || form.e2?.trim())) && (
  <div className={styles.hADept}>
  {E('dept', '', 'span', 'Title / Company Name')}
  {tpl === 'F' && <span className={styles.circularBadge}>CIRCULAR</span>}
  </div>
- {E('divn', styles.hADiv, 'div', 'Subtitle / Branch')}
+ )}
+ {form.divn?.trim() && E('divn', styles.hADiv, 'div', 'Subtitle / Branch')}
  {form.enrolmentNo && (
  <div className={styles.advocateEnrolment}>
  {E('enrolmentNo', '', 'span', 'Reg / Enrolment No.')}
@@ -649,35 +715,34 @@ export default function LetterPaper({
  </div>
  )}
 
- {/* Copy To */}
+ {/* Copy To — one controlled input per recipient (see note above).
+     The <ol> numbers the lines; the inputs themselves carry no
+     numbers, so hand-typed "1. " prefixes are stripped on input and
+     pasted multi-line text is split into separate recipients. The
+     final blank row is a typing row only: it is never stored, so it
+     never prints and never survives a reload as a phantom recipient. */}
  {showCopy && (
  <div className={styles.copyBlock}>
- {/* Full official endorsement wording, per the studio's own guide.
-     Recipients are a numbered list — one recipient per line. The
-     <ol> already numbers them, so any "1. " typed by hand is stripped
-     on blur to avoid double numbering, and a pasted multi-line entry
-     is split into separate recipients. */}
  <div className={styles.copyHead}>Copy forwarded for information and necessary action to:</div>
  <ol className={styles.copyList}>
- {(form.copyTo.length ? form.copyTo : ['']).map((item, i) => (
- <li
- key={`copy-${i}-${tick || 0}`}
- contentEditable
- suppressContentEditableWarning
- style={{ outline: 'none' }}
- onBlur={e => {
- const raw = e.currentTarget.textContent || '';
- const lines = raw.split(/\n/).map(l => l.replace(/^\s*\d+[.)]\s*/, '').trim()).filter(Boolean);
- const updated = [...form.copyTo];
- if (lines.length <= 1) {
- updated[i] = lines[0] || '';
- } else {
- updated.splice(i, 1, ...lines);
- }
- onCopyChange(updated.filter((v, idx) => v.trim() || idx === updated.length - 1));
- }}
- >{item.replace(/^\s*\d+[.)]\s*/, '')}</li>
- ))}
+ {copyDisplay.map((item, i) => {
+   const isTypingRow = i === copyDisplay.length - 1;
+   return (
+ <li key={`copy-${i}`} className={isTypingRow ? styles.copyInputBlank : ''}>
+ <input
+ ref={(el) => { copyInputRefs.current[i] = el; }}
+ data-copy-index={i}
+ className={styles.copyInput}
+ value={item}
+ placeholder={isTypingRow ? 'Add recipient…' : 'Recipient'}
+ aria-label={`Copy recipient ${i + 1}`}
+ onChange={(e) => updateCopyItem(i, e.target.value)}
+ onKeyDown={(e) => handleCopyKeyDown(i, e)}
+ onPaste={(e) => handleCopyPaste(i, e)}
+ />
+ </li>
+   );
+ })}
  </ol>
  </div>
  )}

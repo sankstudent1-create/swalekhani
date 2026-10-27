@@ -107,7 +107,14 @@ export default function Sidebar({
  // Show the exact model the server returned — no lossy shortening
  // (the old code turned e.g. llama-3.3-70b-versatile into "L-3.3-70b").
  // Surface missing fields as a warning, not a silent partial letter.
+ // Belt-and-braces: a body that still contains ______ blanks warns
+ // even if the server's missing_fields list came back empty (e.g. a
+ // fallback-model generation) — the warning must not depend on the
+ // model that generated the letter.
  const missing = (result.missingFields || []).filter(Boolean);
+ if (String(result.data.body || '').includes('______') && !missing.includes('details')) {
+   missing.push('details');
+ }
  setAiStatus(missing.length
    ? `✓ Generated via ${result.model} — please fill: ${missing.map(f => MISSING_FIELD_LABELS[f] || f).join(', ')}`
    : `✓ Generated via ${result.model}`);

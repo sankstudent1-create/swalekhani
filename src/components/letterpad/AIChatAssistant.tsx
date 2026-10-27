@@ -175,6 +175,11 @@ export default function AIChatAssistant({ state, onSetForm, onFillAI }: AIChatAs
  const detected = json.detected_type || json.data.detected_type;
  const label = typeNameMap[detected] || 'complete letter';
  const missing = Array.isArray(json.missing_fields) ? json.missing_fields as string[] : [];
+ // Belt-and-braces, as in the Sidebar: blanks in the body warn even
+ // if missing_fields came back empty for this model.
+ if (String(json.data.body || '').includes('______') && !missing.includes('details')) {
+   missing.push('details');
+ }
  setMessages(prev => [...prev, {
  role: 'assistant',
  text: `✨ I have generated a complete ${label} with all necessary sections and authentic formatting!` +

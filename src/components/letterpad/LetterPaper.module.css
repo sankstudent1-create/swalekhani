@@ -331,7 +331,8 @@ div.editable { display: block; }
 .sigContact { font-size: 11px; color: #666; margin-top: 3px; font-family: 'DM Mono', monospace; }
 
 /* ── Encl / Copy / Endorse ────────────────────── */
-.enclBlock  { font-size: 12.5px; line-height: 1.9; padding: 0 46px; margin-bottom: 5px; flex-shrink: 0; }
+.enclBlock  { font-size: 12.5px; line-height: 1.9; padding: 0 46px; margin-bottom: 5px; flex-shrink: 0; display: flex; gap: 8px; align-items: baseline; }
+.enclLabel  { font-weight: 700; flex-shrink: 0; }
 .copyBlock  { font-size: 12.5px; line-height: 1.9; padding: 0 46px; margin-bottom: 5px; flex-shrink: 0; }
 .copyHead   { font-weight: 700; text-decoration: underline; margin-bottom: 3px; }
 .copyList   { margin-left: 20px; list-style: decimal; }
@@ -483,15 +484,19 @@ div.editable { display: block; }
   font-size: 8.5px;
   color: #64748b;
 }
+/* Footer cells WRAP (2026-10-28 NOC letter): the old ellipsis
+   truncation silently cut footer content on the paper while the
+   PDF wrapped it — the two could never match. Both now show the
+   full footer text, wrapping as needed. */
 .footerDeptBold {
   font-weight: 700;
   color: #0f172a;
   letter-spacing: 0.04em;
   text-transform: uppercase;
   min-width: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  overflow: visible;
+  white-space: normal;
+  word-break: break-word;
 }
 
 .footerMinimalInner {
@@ -503,25 +508,25 @@ div.editable { display: block; }
   font-weight: 600;
   color: #1e293b;
   min-width: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  overflow: visible;
+  white-space: normal;
+  word-break: break-word;
   text-align: left;
 }
 .footerLoc {
   color: #475569;
   min-width: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  overflow: visible;
+  white-space: normal;
+  word-break: break-word;
   text-align: center;
 }
 .footerContact {
   color: #64748b;
   min-width: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  overflow: visible;
+  white-space: normal;
+  word-break: break-word;
   text-align: right;
 }
 

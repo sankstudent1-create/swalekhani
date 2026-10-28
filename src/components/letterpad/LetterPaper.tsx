@@ -5,6 +5,7 @@
 'use client';
 import React, { useRef, useEffect, useCallback, useLayoutEffect } from 'react';
 import type { AppState, LetterForm, LogoSide } from '@/types/letterpad';
+import { headerLinesEqual, headerDeptRedundant } from '@/lib/letterpad/headerLines';
 import styles from './LetterPaper.module.css';
 
 interface LetterPaperProps {
@@ -324,19 +325,19 @@ export default function LetterPaper({
  // English personal letters keep the old bare-date behaviour.
  const isDevLetter = isHindiLetter || isMarathiLetter;
  const L = isMarathiLetter ? {
-   to: 'प्रति', sub: 'विषय:', ref: 'संदर्भ:', fno: 'पत्र क्र.', date: 'दिनांक',
+   to: 'प्रति', sub: 'विषय:', ref: 'संदर्भ:', fno: 'पत्र क्र.', date: 'दिनांक', encl: 'संलग्नके:',
    toDPh: 'प्राप्तकर्त्याचे पदनाम / नाव', toDPhPersonal: 'प्राप्तकर्ता (उदा. पोस्टमास्तर)',
    toAPh: 'प्राप्तकर्ता कार्यालय / चेंबर पत्ता', subPh: 'विषय',
    sdPh: 'पदनाम / नोंदणी', deptPh: 'विभाग / क्लिनिक', titlePh: 'शीर्षक / कंपनीचे नाव',
    footer: 'पादलेख:', salPh: 'महोदय', clsPh: 'आपला नम्र',
  } : isHindiLetter ? {
-   to: 'प्रति', sub: 'विषय:', ref: 'संदर्भ:', fno: 'पत्रांक', date: 'दिनांक',
+   to: 'प्रति', sub: 'विषय:', ref: 'संदर्भ:', fno: 'पत्रांक', date: 'दिनांक', encl: 'संलग्नक:',
    toDPh: 'प्राप्तकर्ता का पदनाम / नाम', toDPhPersonal: 'प्राप्तकर्ता (उदा. पोस्टमास्टर)',
    toAPh: 'प्राप्तकर्ता कार्यालय / चैंबर पता', subPh: 'विषय',
    sdPh: 'पदनाम / पंजीकरण', deptPh: 'विभाग / क्लिनिक', titlePh: 'शीर्षक / कंपनी का नाम',
    footer: 'पादलेख:', salPh: 'महोदय', clsPh: 'भवदीय',
  } : {
-   to: 'To', sub: 'Sub:', ref: 'Ref:', fno: 'F.No.', date: 'Date',
+   to: 'To', sub: 'Sub:', ref: 'Ref:', fno: 'F.No.', date: 'Date', encl: 'Enclosures:',
    toDPh: 'Recipient Designation / Name', toDPhPersonal: 'Recipient (e.g. The Postmaster)',
    toAPh: 'Recipient Office / Chamber Address', subPh: 'Subject',
    sdPh: 'Designation / Registration', deptPh: 'Department / Clinic', titlePh: 'Title / Company Name',
@@ -364,6 +365,16 @@ export default function LetterPaper({
  const deptDiffersFromSdB = Boolean(form.dept?.trim())
    && form.dept.trim().toLowerCase() !== (form.sd?.trim().toLowerCase() || '');
  const headerCityDuplicatesOffice = Boolean(form.ofc?.trim() && form.city?.trim() && form.ofc.trim().toLowerCase() === form.city.trim().toLowerCase());
+ // Header-line dedupe (2026-10-28 NOC letter): an AI that fills
+ // English Line 1 AND Line 2 (or Hindi Line 1 AND 2) with the
+ // identical value used to print the company name twice, and a
+ // dept line repeating the company name printed it a third time.
+ // Duplicates are hidden from the RENDERED header only — the form
+ // values stay intact and editable in the sidebar (and still
+ // appear in the signature block / footer where they belong).
+ const h1h2Dup = headerLinesEqual(form.h1, form.h2);
+ const e1e2Dup = headerLinesEqual(form.e1, form.e2);
+ const deptDupCompany = headerDeptRedundant(form.dept, [form.e1, form.e2]);
  const fontFamily = FONT_MAP[font] || FONT_MAP[''];
 
  // Helper: Editable with correct aiTick wired in
@@ -387,21 +398,27 @@ export default function LetterPaper({
  switch (tpl) {
  case 'A': case 'E': case 'F': return (
  <div className={styles.hA}>
+ {/* Blank File No. renders nothing (omit-empty, like the PDF):
+     the old unconditional row printed a bare "F.No." label twice
+     on the paper — once here, once in the meta row. The sidebar
+     File No. field remains the edit path. */}
+ {form.fno?.trim() && (
  <div className={styles.hATop}>
  {E('fno', styles.hAFno, 'div', L.fno)}
  <div className={styles.hARslot} />
  </div>
+ )}
  <div className={styles.hACenter}>
  {(form.h1 || form.h2) && (
  <div className={styles.hAHi}>
  {E('h1', '', 'span', 'Hindi Heading 1')}
- {form.h2 && <> / {E('h2', '', 'span', 'Hindi Heading 2')}</>}
+ {form.h2 && !h1h2Dup && <> / {E('h2', '', 'span', 'Hindi Heading 2')}</>}
  </div>
  )}
  {(form.e1 || form.e2) && (
  <div className={styles.hAEn}>
  {E('e1', '', 'span', 'Heading 1')}
- {form.e2 && <> / {E('e2', '', 'span', 'Heading 2')}</>}
+ {form.e2 && !e1e2Dup && <> / {E('e2', '', 'span', 'Heading 2')}</>}
  </div>
  )}
  {/* Dept / division lines are only rendered when filled (or when no
@@ -409,7 +426,7 @@ export default function LetterPaper({
      on a blank letter). Otherwise their grey placeholders showed
      under a filled organisation name — the minor Type-E defect. The
      sidebar Department / Division fields still edit them. */}
- {(form.dept?.trim() || !(form.e1?.trim() || form.e2?.trim())) && (
+ {((form.dept?.trim() && !deptDupCompany) || !(form.e1?.trim() || form.e2?.trim())) && (
  <div className={styles.hADept}>
  {E('dept', '', 'span', L.titlePh)}
  {tpl === 'F' && <span className={styles.circularBadge}>CIRCULAR</span>}
@@ -433,7 +450,10 @@ export default function LetterPaper({
      an unconditional hide-in-print class, which also suppressed
      FILLED phone/email from print. Sidebar fields still edit these
      values when the block is hidden. */}
- {(form.ofc?.trim() || form.city?.trim() || form.pin?.trim() || form.ph?.trim() || form.em?.trim()) && (
+ {/* Website belongs here too: the old block never rendered wb,
+     so the paper header showed phone + email while the PDF showed
+     phone + email + website for the same letter. */}
+ {(form.ofc?.trim() || form.city?.trim() || form.pin?.trim() || form.ph?.trim() || form.em?.trim() || form.wb?.trim()) && (
  <div className={styles.hAAddr}>
  {E('ofc', '', 'span', 'Office')}
  {/* Separators are print-hidden when a neighbour is empty, so print
@@ -444,6 +464,7 @@ export default function LetterPaper({
  {E('pin', '', 'span', 'PIN')}<br/>
  {form.ph?.trim() && (<span>{'Phone: '}{E('ph', '', 'span', 'Phone')}&emsp;</span>)}
  {form.em?.trim() && (<span>{E('em', '', 'span', 'email')}</span>)}
+ {form.wb?.trim() && (<span>{(form.ph?.trim() || form.em?.trim()) ? ' · ' : ''}{E('wb', '', 'span', 'Website')}</span>)}
  </div>
  )}
  </div>
@@ -464,8 +485,8 @@ export default function LetterPaper({
  {showOrgHeaderB && (
  <>
  {form.e1?.trim() && (<div className={styles.hBEn}>{E('e1', '', 'div', 'Organisation')}</div>)}
- {form.e2?.trim() && (<div className={styles.hBDg}>{E('e2', '', 'div', 'Organisation Line 2')}</div>)}
- {deptDiffersFromSdB && (<div className={styles.hBDg}>{E('dept', '', 'div', 'Department')}</div>)}
+ {form.e2?.trim() && !e1e2Dup && (<div className={styles.hBDg}>{E('e2', '', 'div', 'Organisation Line 2')}</div>)}
+ {deptDiffersFromSdB && !deptDupCompany && (<div className={styles.hBDg}>{E('dept', '', 'div', 'Department')}</div>)}
  </>
  )}
  {(!showOrgHeaderB || form.sn?.trim()) && !snSameAsE1 && E('sn', styles.hBEn, 'div', 'Name')}
@@ -481,6 +502,7 @@ export default function LetterPaper({
  {E('city', '', 'span', 'City')}<span className={(!form.city?.trim() || !form.pin?.trim()) ? styles.hideIfEmptyPrint : ''}>{form.city?.trim() && form.pin?.trim() ? ' – ' : ''}</span>{E('pin', '', 'span', 'PIN')}<br/>
  <span className={!form.ph?.trim() ? styles.hideIfEmptyPrint : ''}>Tel: {E('ph', '', 'span', 'Phone')}<br/></span>
  <span className={!form.em?.trim() ? styles.hideIfEmptyPrint : ''}>{E('em', '', 'span', 'Email')}<br/></span>
+ <span className={!form.wb?.trim() ? styles.hideIfEmptyPrint : ''}>{E('wb', '', 'span', 'Website')}<br/></span>
  {E('dt', '', 'span', L.date)}
  </div>
  </div>
@@ -521,11 +543,12 @@ export default function LetterPaper({
  )}
  </div>
  <div className={styles.hDAddr}>
- {E('dept', styles.hDEn, 'div', 'Department')}<br/>
+ {!deptDupCompany && (<>{E('dept', styles.hDEn, 'div', 'Department')}<br/></>)}
  {E('ofc', '', 'div', 'Office')}<br/>
  {E('city', '', 'span', 'City')}<span className={(!form.city?.trim() || !form.pin?.trim()) ? styles.hideIfEmptyPrint : ''}>{form.city?.trim() && form.pin?.trim() ? ' – ' : ''}</span>{E('pin', '', 'span', 'PIN')}<br/>
  <div className={styles.hideIfEmptyPrint}>{E('ph', '', 'div', 'Phone')}</div>
  <div className={styles.hideIfEmptyPrint}>{E('em', '', 'div', 'email')}</div>
+ <div className={styles.hideIfEmptyPrint}>{E('wb', '', 'div', 'Website')}</div>
  </div>
  </div>
  </div>
@@ -628,9 +651,11 @@ export default function LetterPaper({
  <div className={`${styles.meta} ${state.officeType === 'personal' ? styles.metaPersonal : ''}`}>
  {state.officeType !== 'personal' && (
  <>
- <span className={!form.fno?.trim() ? styles.hideIfEmptyPrint : ''}>
+ {form.fno?.trim() && (
+ <span>
  {E('fno', '', 'span', L.fno)}
  </span>
+ )}
  <span className={!addr?.trim() ? styles.hideIfEmptyPrint : ''}>{addr}</span>
  </>
  )}
@@ -652,8 +677,8 @@ export default function LetterPaper({
      The row renders only when at least one of its fields is filled. */}
  {(tpl === 'B' || tpl === 'C' || tpl === 'D') && !isDoctor && (form.fno?.trim() || form.dt?.trim() || station) && (
  <div className={`${styles.meta} ${state.officeType === 'personal' ? styles.metaPersonal : ''}`}>
- {state.officeType !== 'personal' && (
- <span className={!form.fno?.trim() ? styles.hideIfEmptyPrint : ''}>
+ {state.officeType !== 'personal' && form.fno?.trim() && (
+ <span>
  {E('fno', '', 'span', L.fno)}
  </span>
  )}
@@ -801,6 +826,9 @@ export default function LetterPaper({
  {/* Encl */}
  {showEncl && (
  <div className={styles.enclBlock}>
+ {/* Labelled like the PDF (which already prefixes "Enclosures:"):
+     the old paper showed bare enclosure text with no label. */}
+ <span className={styles.enclLabel}>{L.encl}</span>{' '}
  <Editable
  value={form.encl}
  onChange={v => onFormChange('encl', v)}

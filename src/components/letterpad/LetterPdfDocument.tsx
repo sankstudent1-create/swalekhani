@@ -81,6 +81,7 @@ import {
   pdf,
 } from '@react-pdf/renderer';
 import type { AppState, LetterForm, TemplateType } from '@/types/letterpad';
+import { dedupeHeaderLines, headerLinesEqual, headerDeptRedundant } from '@/lib/letterpad/headerLines';
 
 // ── Fonts (same pattern as Srot's registerPdfFonts: base='' in the
 // browser resolves to /fonts/… under public/; a node render check
@@ -336,9 +337,9 @@ const styles = StyleSheet.create({
   toLabel: { fontSize: 10, fontWeight: 700, textDecoration: 'underline', marginBottom: 2 },
   toName: { fontSize: 10, fontWeight: 700, marginBottom: 1 },
   toAddr: { fontSize: 10, color: '#333333', lineHeight: 1.85 },
-  subRow: {
-    flexDirection: 'row',
-    alignItems: 'baseline',
+  // Single-paragraph subject (see subject render below): label +
+  // text flow as one paragraph, exactly like the paper's inline row.
+  subPara: {
     borderBottomWidth: 1,
     borderBottomStyle: 'dashed',
     borderBottomColor: '#aaaaaa',
@@ -394,6 +395,13 @@ const styles = StyleSheet.create({
   footerExecutive: { borderTopWidth: 2, borderTopColor: '#1e293b', backgroundColor: '#f8fafc' },
   footerText: { fontSize: 8.5, color: '#475569' },
   footerPage: { fontSize: 8.5, color: '#666666' },
+  // Footer anti-collision (2026-10-28 NOC letter): the old row
+  // gave the page number no reserved space, so a long footer
+  // line wrapped straight into "Page 1 of 1". The text cell now
+  // flexes and wraps INSIDE its own cell, and the page number
+  // lives in a fixed-width cell that can never be overlapped.
+  footerTextCell: { flex: 1, flexShrink: 1, marginRight: 10 },
+  footerPageCell: { width: 74, flexShrink: 0, alignItems: 'flex-end' },
 });
 
 function Header({ state, fonts }: { state: AppState; fonts: { latin: string; deva: string } }) {
@@ -402,7 +410,14 @@ function Header({ state, fonts }: { state: AppState; fonts: { latin: string; dev
   const logoL = usableImage(state.logoL);
   const logoR = usableImage(state.logoR);
   const logo = logoL || logoR;
-  const hiLine = [form.h1?.trim(), form.h2?.trim()].filter(Boolean).join(' / ');
+  // Header dedupe, shared with the paper (headerLines.ts): an AI
+  // that fills Line 1 AND Line 2 identically used to print the
+  // company name twice, and a dept line repeating the company
+  // printed it a third time. Duplicates hide from the rendered
+  // header only; form values stay intact.
+  const hiLine = dedupeHeaderLines([form.h1, form.h2]).join(' / ');
+  const e1e2Dup = headerLinesEqual(form.e1, form.e2);
+  const deptDupCompany = headerDeptRedundant(form.dept, [form.e1, form.e2]);
   const addrParts = [form.ofc?.trim(), form.city?.trim()].filter(Boolean) as string[];
   if (addrParts.length === 2 && addrParts[0].toLowerCase() === addrParts[1].toLowerCase()) addrParts.pop();
   const addr = addrParts.join(', ') + (form.pin?.trim() ? (addrParts.length ? ` – ${form.pin.trim()}` : form.pin.trim()) : '');
@@ -422,7 +437,7 @@ function Header({ state, fonts }: { state: AppState; fonts: { latin: string; dev
       {form.sh?.trim() ? <SegText fonts={fonts} text={form.sh.trim()} style={styles.headerHiC} /> : null}
       {form.sn?.trim() ? <SegText fonts={fonts} text={form.sn.trim()} style={styles.headerEnC} /> : null}
       {form.sd?.trim() ? <SegText fonts={fonts} text={form.sd.trim()} style={styles.headerSubC} /> : null}
-      {form.dept?.trim() ? <SegText fonts={fonts} text={form.dept.trim()} style={styles.headerSubC} /> : null}
+      {form.dept?.trim() && !deptDupCompany ? <SegText fonts={fonts} text={form.dept.trim()} style={styles.headerSubC} /> : null}
       {form.sc?.trim() ? <SegText fonts={fonts} text={form.sc.trim()} style={styles.headerSubC} /> : null}
       {form.enrolmentNo?.trim() ? <SegText fonts={fonts} text={form.enrolmentNo.trim()} style={styles.headerSubC} /> : null}
     </View>
@@ -452,13 +467,14 @@ function Header({ state, fonts }: { state: AppState; fonts: { latin: string; dev
         {logoL ? <Image src={logoL} style={styles.headerLogoSide} /> : null}
         {personLinesD}
         <View style={styles.headerAddrD}>
-          {form.dept?.trim() ? <SegText fonts={fonts} text={form.dept.trim()} style={styles.headerAddrDDept} /> : null}
+          {form.dept?.trim() && !deptDupCompany ? <SegText fonts={fonts} text={form.dept.trim()} style={styles.headerAddrDDept} /> : null}
           {form.ofc?.trim() ? <SegText fonts={fonts} text={form.ofc.trim()} /> : null}
           {(form.city?.trim() || form.pin?.trim()) ? (
             <SegText fonts={fonts} text={[form.city?.trim(), form.pin?.trim()].filter(Boolean).join(' – ')} />
           ) : null}
           {form.ph?.trim() ? <SegText fonts={fonts} text={form.ph.trim()} /> : null}
           {form.em?.trim() ? <SegText fonts={fonts} text={form.em.trim()} /> : null}
+          {form.wb?.trim() ? <SegText fonts={fonts} text={form.wb.trim()} /> : null}
         </View>
       </View>
     );
@@ -486,6 +502,7 @@ function Header({ state, fonts }: { state: AppState; fonts: { latin: string; dev
             ) : null}
             {form.ph?.trim() ? <SegText fonts={fonts} text={`Tel: ${form.ph.trim()}`} /> : null}
             {form.em?.trim() ? <SegText fonts={fonts} text={form.em.trim()} /> : null}
+            {form.wb?.trim() ? <SegText fonts={fonts} text={form.wb.trim()} /> : null}
             {form.dt?.trim() ? <SegText fonts={fonts} text={form.dt.trim()} /> : null}
           </View>
         </View>
@@ -495,8 +512,8 @@ function Header({ state, fonts }: { state: AppState; fonts: { latin: string; dev
           {showOrg && (
             <>
               {form.e1?.trim() ? <SegText fonts={fonts} text={form.e1.trim()} style={styles.headerEn} /> : null}
-              {form.e2?.trim() ? <SegText fonts={fonts} text={form.e2.trim()} style={styles.headerSub} /> : null}
-              {deptDiffers ? <SegText fonts={fonts} text={form.dept.trim()} style={styles.headerSub} /> : null}
+              {form.e2?.trim() && !e1e2Dup ? <SegText fonts={fonts} text={form.e2.trim()} style={styles.headerSub} /> : null}
+              {deptDiffers && !deptDupCompany ? <SegText fonts={fonts} text={form.dept.trim()} style={styles.headerSub} /> : null}
             </>
           )}
           {(!showOrg || form.sn?.trim()) && !skipSn && form.sn?.trim() ? (
@@ -522,8 +539,8 @@ function Header({ state, fonts }: { state: AppState; fonts: { latin: string; dev
       {logo ? <Image src={logo} style={styles.headerLogoCenter} /> : null}
       {hiLine ? <SegText fonts={fonts} text={hiLine} style={styles.headerHi} /> : null}
       {form.e1?.trim() ? <SegText fonts={fonts} text={form.e1.trim()} style={styles.headerEn} /> : null}
-      {form.e2?.trim() ? <SegText fonts={fonts} text={form.e2.trim()} style={styles.headerSub} /> : null}
-      {form.dept?.trim() ? (
+      {form.e2?.trim() && !e1e2Dup ? <SegText fonts={fonts} text={form.e2.trim()} style={styles.headerSub} /> : null}
+      {form.dept?.trim() && !deptDupCompany ? (
         <Text style={styles.headerDept}>
           <SegText fonts={fonts} text={form.dept.trim()} />
           {tpl === 'F' ? <Text style={styles.circularBadge}> CIRCULAR </Text> : null}
@@ -584,7 +601,10 @@ export function LetterPdfDocument({ state }: { state: AppState }) {
   const dateLabel = lang === 'mr' || lang === 'hi' ? 'दिनांक: ' : 'Dated: ';
   const fileLabel = lang === 'mr' ? 'पत्र क्र.: ' : lang === 'hi' ? 'पत्रांक: ' : 'File No.: ';
   const toLabel = lang !== 'en' ? 'प्रति' : 'To';
-  const subLabel = lang !== 'en' ? 'विषय: ' : 'Subject: ';
+  // Subject label matches the paper ("Sub:" in English, "विषय:"
+  // in Devanagari) — the old PDF label "Subject:" was one of the
+  // preview-vs-PDF differences in the 2026-10-28 NOC letter.
+  const subLabel = lang !== 'en' ? 'विषय: ' : 'Sub: ';
   const refLabel = lang !== 'en' ? 'संदर्भ: ' : 'Ref: ';
   const copyHead = 'Copy forwarded for information and necessary action to:';
   const enclHead = lang === 'mr' ? 'संलग्नके: ' : lang === 'hi' ? 'संलग्नक: ' : 'Enclosures: ';
@@ -700,12 +720,17 @@ export function LetterPdfDocument({ state }: { state: AppState }) {
           </View>
         )}
 
-        {/* Subject — bold capitals, like the paper */}
+        {/* Subject — ONE paragraph Text (label + text flow inline,
+            like the paper's inline label + subject row). The old
+            flex-row split label and text into separate Text nodes,
+            which react-pdf laid out on different lines for long
+            subjects ("Subject:" on its own line, subject indented
+            below) — the mismatch in the 2026-10-28 NOC letter. */}
         {form.sub?.trim() ? (
-          <View style={styles.subRow}>
+          <Text style={styles.subPara}>
             {!romantic && <Text style={styles.subLabel}>{subLabel}</Text>}
             <SegText fonts={scriptFonts} text={form.sub.trim()} style={styles.subText} />
-          </View>
+          </Text>
         ) : null}
 
         {/* Reference (not for doctor — ref is Age/Sex in vitals) */}
@@ -796,40 +821,62 @@ export function LetterPdfDocument({ state }: { state: AppState }) {
             <View fixed style={[styles.footer, footerStyle, { fontFamily, flexDirection: 'column', alignItems: 'stretch', paddingHorizontal: 0, paddingTop: 0 }]}>
               <View style={styles.footerTricolorGreen} />
               <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingTop: 8, paddingHorizontal: 8 }}>
-                <SegText fonts={scriptFonts} text={footerContent} style={[styles.footerText, { fontFamily }]} />
-                <Text
-                  style={[styles.footerPage, { fontFamily }]}
-                  render={({ pageNumber, totalPages }) => `Page ${pageNumber} of ${totalPages}`}
-                />
-              </View>
-            </View>
-          ) : fDesign === 'executive' ? (
-              <View fixed style={[styles.footer, footerStyle, { fontFamily, flexDirection: 'column', alignItems: 'stretch' }]}>
-                <View style={{ flexDirection: 'row', justifyContent: 'space-between', borderBottomWidth: 0.5, borderBottomColor: '#e2e8f0', paddingBottom: 3 }}>
-                  <SegText fonts={scriptFonts} text={form.dept?.trim() || ''} style={[styles.footerText, { fontFamily, fontWeight: 700 }]} />
-                  <SegText fonts={scriptFonts} text={[form.city?.trim(), form.pin?.trim() ? `PIN: ${form.pin.trim()}` : ''].filter(Boolean).join(' – ')} style={[styles.footerText, { fontFamily }]} />
+                <View style={styles.footerTextCell}>
+                  <SegText fonts={scriptFonts} text={footerContent} style={[styles.footerText, { fontFamily }]} />
                 </View>
-                <View style={{ flexDirection: 'row', justifyContent: 'space-between', paddingTop: 3 }}>
-                  <SegText fonts={scriptFonts} text={[form.ph?.trim() ? `Tel: ${form.ph.trim()}` : '', form.em?.trim()].filter(Boolean).join(' · ')} style={[styles.footerText, { fontFamily }]} />
-                  <SegText fonts={scriptFonts} text={form.wb?.trim() || ''} style={[styles.footerText, { fontFamily }]} />
+                <View style={styles.footerPageCell}>
                   <Text
                     style={[styles.footerPage, { fontFamily }]}
                     render={({ pageNumber, totalPages }) => `Page ${pageNumber} of ${totalPages}`}
                   />
                 </View>
               </View>
+            </View>
+          ) : fDesign === 'executive' ? (
+              <View fixed style={[styles.footer, footerStyle, { fontFamily, flexDirection: 'column', alignItems: 'stretch' }]}>
+                <View style={{ flexDirection: 'row', justifyContent: 'space-between', borderBottomWidth: 0.5, borderBottomColor: '#e2e8f0', paddingBottom: 3 }}>
+                  <View style={styles.footerTextCell}>
+                    <SegText fonts={scriptFonts} text={form.dept?.trim() || ''} style={[styles.footerText, { fontFamily, fontWeight: 700 }]} />
+                  </View>
+                  <View style={{ flexShrink: 0 }}>
+                    <SegText fonts={scriptFonts} text={[form.city?.trim(), form.pin?.trim() ? `PIN: ${form.pin.trim()}` : ''].filter(Boolean).join(' – ')} style={[styles.footerText, { fontFamily }]} />
+                  </View>
+                </View>
+                <View style={{ flexDirection: 'row', justifyContent: 'space-between', paddingTop: 3 }}>
+                  <View style={styles.footerTextCell}>
+                    <SegText fonts={scriptFonts} text={[form.ph?.trim() ? `Tel: ${form.ph.trim()}` : '', form.em?.trim()].filter(Boolean).join(' · ')} style={[styles.footerText, { fontFamily }]} />
+                  </View>
+                  <View style={{ flexShrink: 0, marginRight: 10 }}>
+                    <SegText fonts={scriptFonts} text={form.wb?.trim() || ''} style={[styles.footerText, { fontFamily }]} />
+                  </View>
+                  <View style={styles.footerPageCell}>
+                    <Text
+                      style={[styles.footerPage, { fontFamily }]}
+                      render={({ pageNumber, totalPages }) => `Page ${pageNumber} of ${totalPages}`}
+                    />
+                  </View>
+                </View>
+              </View>
             ) : fDesign === 'minimal' ? (
               <View fixed style={[styles.footer, footerStyle, { fontFamily, justifyContent: 'center' }]}>
-                <SegText fonts={scriptFonts} text={footerContent} style={[styles.footerText, { fontFamily }]} />
-                <Text style={[styles.footerPage, { fontFamily, marginLeft: 8 }]} render={({ pageNumber, totalPages }) => `Page ${pageNumber} of ${totalPages}`} />
+                <View style={styles.footerTextCell}>
+                  <SegText fonts={scriptFonts} text={footerContent} style={[styles.footerText, { fontFamily, textAlign: 'center' }]} />
+                </View>
+                <View style={styles.footerPageCell}>
+                  <Text style={[styles.footerPage, { fontFamily }]} render={({ pageNumber, totalPages }) => `Page ${pageNumber} of ${totalPages}`} />
+                </View>
               </View>
             ) : (
               <View fixed style={[styles.footer, footerStyle, { fontFamily }]}>
-                <SegText fonts={scriptFonts} text={footerContent} style={[styles.footerText, { fontFamily }]} />
-                <Text
-                  style={[styles.footerPage, { fontFamily }]}
-                  render={({ pageNumber, totalPages }) => `Page ${pageNumber} of ${totalPages}`}
-                />
+                <View style={styles.footerTextCell}>
+                  <SegText fonts={scriptFonts} text={footerContent} style={[styles.footerText, { fontFamily }]} />
+                </View>
+                <View style={styles.footerPageCell}>
+                  <Text
+                    style={[styles.footerPage, { fontFamily }]}
+                    render={({ pageNumber, totalPages }) => `Page ${pageNumber} of ${totalPages}`}
+                  />
+                </View>
               </View>
             )
         ) : null}

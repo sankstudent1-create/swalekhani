@@ -11,7 +11,7 @@ import {
 } from '@/lib/letterpad/constants';
 import { buildPrompt, generateLetterWithAI } from '@/lib/letterpad/aiService';
 import { MISSING_FIELD_LABELS } from '@/lib/letterpad/typeProtocols';
-import { liveMissing } from '@/lib/letterpad/generationGuards';
+import { liveMissing, isRetryableAiError, AI_MAX_ATTEMPTS, AI_AUTO_RETRY_DELAY_MS } from '@/lib/letterpad/generationGuards';
 import SignaturePad from './SignaturePad';
 import styles from './Sidebar.module.css';
 
@@ -76,6 +76,10 @@ export default function Sidebar({
  const setAiMode = (m: 'content' | 'full') => { if (onAiMode) onAiMode(m); };
  const [aiLoading, setAiLoading] = useState(false);
  const [aiStatus, setAiStatus] = useState('');
+ // True after a failed generation: renders a Retry button that
+ // resends the SAME prompt (aiPrompt is never cleared on failure),
+ // so a transient "load failed" never forces retyping.
+ const [aiFailed, setAiFailed] = useState(false);
 
  // Defect 8: the "Describe what you need" box lives in this
  // component's local state, so resetLetter ("New") in the page
@@ -111,9 +115,14 @@ export default function Sidebar({
  }
 
  // ── AI generate (uses Groq server-side) ──────
+ // Retry policy (same as the modal): exactly ONE automatic retry
+ // of the same prompt for retryable failures (network / 5xx /
+ // 429 / model-availability), then a manual Retry button below.
+ // Never a loop, never after a validation error.
  async function handleGenerate() {
  setAiLoading(true);
  setAiStatus('');
+ setAiFailed(false);
  try {
  // Full mode blanks headers in the *fill* form so AI-completed headers
  // can win, but the ORIGINAL form is always sent as ground truth in
@@ -124,25 +133,44 @@ export default function Sidebar({
  : form;
 
  const briefText = aiPrompt.trim() || form.sub || 'Draft a complete formal letter';
- const result = await generateLetterWithAI(
- briefText,
- aiType,
- aiLang,
- {
-   department: form.dept, office: form.ofc, city: form.city,
-   officeType: state.officeType, template: tpl, mode: aiMode, form,
-   // Fields the user explicitly typed: the route preserves exactly
-   // these in Full mode and replaces everything else AI-owned, so a
-   // previous letter's header cannot leak into this one. Preset
-   // fields are sent too: the route preserves them only when the
-   // model gives nothing (Defect 6).
-   userEditedFields: state.userEditedFields || [],
-   presetFields: state.presetFields || [],
- },
- setAiStatus,
- contextForm,
- state.officeType
- );
+ // One automatic retry on retryable failures (see policy above);
+ // the prompt is unchanged between attempts.
+ let result: Awaited<ReturnType<typeof generateLetterWithAI>> | null = null;
+ let lastErr: unknown = null;
+ for (let attempt = 1; attempt <= AI_MAX_ATTEMPTS; attempt++) {
+   try {
+     result = await generateLetterWithAI(
+       briefText,
+       aiType,
+       aiLang,
+       {
+         department: form.dept, office: form.ofc, city: form.city,
+         officeType: state.officeType, template: tpl, mode: aiMode, form,
+         // Fields the user explicitly typed: the route preserves exactly
+         // these in Full mode and replaces everything else AI-owned, so a
+         // previous letter's header cannot leak into this one. Preset
+         // fields are sent too: the route preserves them only when the
+         // model gives nothing (Defect 6).
+         userEditedFields: state.userEditedFields || [],
+         presetFields: state.presetFields || [],
+       },
+       setAiStatus,
+       contextForm,
+       state.officeType
+     );
+     break;
+   } catch (e) {
+     lastErr = e;
+     const msg = e instanceof Error ? e.message : String(e);
+     if (attempt < AI_MAX_ATTEMPTS && isRetryableAiError(msg)) {
+       setAiStatus('↻ First attempt failed — retrying…');
+       await new Promise((r) => setTimeout(r, AI_AUTO_RETRY_DELAY_MS));
+       continue;
+     }
+     throw e;
+   }
+ }
+ if (!result) throw lastErr || new Error('AI generation failed');
  // The brief travels with the fill so fillFromAI can run its
  // client-side final-state scrub (a generated value identical to
  // the previous letter's is dropped unless typed/preset/named in
@@ -165,6 +193,7 @@ export default function Sidebar({
  } catch (err) {
  const msg = err instanceof Error ? err.message : String(err);
  setAiStatus('✗ ' + msg.slice(0, 100));
+ setAiFailed(true);
  } finally {
  setAiLoading(false);
  }
@@ -249,6 +278,13 @@ export default function Sidebar({
  <div className={`${styles.aiStatus} ${aiStatus.startsWith('✓') ? styles.aiStatusOk : aiStatus.startsWith('✗') ? styles.aiStatusErr : ''}`}>
  {aiStatus}
  </div>
+ )}
+ {/* Manual Retry after a failed generation: resends the same
+     prompt (aiPrompt is kept on failure) — no retyping. */}
+ {aiFailed && (
+ <button type="button" className={styles.aiRetryBtn} onClick={handleGenerate} disabled={aiLoading}>
+ ↻ Retry last prompt
+ </button>
  )}
  {/* Live missing-fields line (FAIL 2): the generation-time
      status above is a frozen snapshot — it can never clear when

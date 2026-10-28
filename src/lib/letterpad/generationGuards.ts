@@ -174,3 +174,21 @@ export function liveMissing(form: {
   if ((form.body || '').includes('______') && !missing.includes('details')) missing.push('details');
   return missing;
 }
+
+/** Retry policy for AI sends (modal + sidebar). Exactly ONE
+ *  automatic retry of the same prompt, then a persistent manual
+ *  Retry button — never a loop, never after a user-cancelled or
+ *  validation error. Retryable: network failures, HTTP 5xx, HTTP
+ *  429, and model-availability messages ("model does not exist",
+ *  "you do not have access", "load failed"). Plain 4xx client /
+ *  validation errors are NOT auto-retried (the same payload would
+ *  fail again); they still get a manual Retry button, because the
+ *  user may have fixed the input meanwhile. */
+export const AI_AUTO_RETRY_DELAY_MS = 900;
+export const AI_MAX_ATTEMPTS = 2;
+
+export function isRetryableAiError(message: string, status?: number): boolean {
+  if (status === 429 || (status !== undefined && status >= 500)) return true;
+  if (status !== undefined && status >= 400 && status < 500) return false;
+  return /load failed|failed to fetch|fetch failed|network|does not exist|do not have access|not have access|unavailable|timed? ?out|temporar|econnreset|socket hang up/i.test(message || '');
+}

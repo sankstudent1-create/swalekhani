@@ -121,6 +121,11 @@ export default function AIChatAssistant({ state, onSetForm, onFillAI }: AIChatAs
  const handleGenerateNew = async () => {
  if (!input.trim() || isLoading) return;
  const userText = input.trim();
+ // Captured BEFORE the fetch: the signatory on the paper right now,
+ // so the post-generation warning can tell a genuine signatory from
+ // one carried over from a previous letter (Defect 2).
+ const prevSn = (state.form.sn || '').trim();
+ const prevSnTyped = (state.userEditedFields || []).includes('sn');
  setInput('');
  setMessages(prev => [...prev, { role: 'user', text: userText }]);
  setIsLoading(true);
@@ -201,10 +206,23 @@ export default function AIChatAssistant({ state, onSetForm, onFillAI }: AIChatAs
  if (String(json.data.body || '').includes('______') && !missing.includes('details')) {
    missing.push('details');
  }
+ // Stale-signatory safety net (Defect 2): the route's missing list
+ // can only warn about a BLANK signatory. If the generated letter's
+ // signatory is byte-identical to the previous letter's, was NOT
+ // typed by the user, and the new brief does not name that person,
+ // it is a carry-over — it must not silently pass. This is a
+ // check-note, not a missing entry: the field is filled, but with
+ // the wrong letter's signatory. (A user-typed signatory is theirs
+ // by definition, so it never triggers this note.)
+ const genSn = String(_d.sn ?? _d.signatory_name ?? '').trim();
+ const snTokens = prevSn.toLowerCase().replace(/[^a-z0-9\u0900-\u097f\s]/g, ' ').split(/\s+/).filter((w) => w.length >= 3);
+ const briefNamesPrevSn = snTokens.some((t) => userText.toLowerCase().includes(t));
+ const staleSn = Boolean(prevSn) && !prevSnTyped && genSn === prevSn && !briefNamesPrevSn;
  setMessages(prev => [...prev, {
  role: 'assistant',
  text: `✨ I have generated a complete ${label} with all necessary sections and authentic formatting!` +
-   (missing.length ? ` Please fill in: ${missing.map((f: string) => MISSING_FIELD_LABELS[f] || f).join(', ')}.` : '')
+   (missing.length ? ` Please fill in: ${missing.map((f: string) => MISSING_FIELD_LABELS[f] || f).join(', ')}.` : '') +
+   (staleSn ? ' Note: the signatory carried over from the previous letter — please check it.' : '')
  }]);
  } else {
  throw new Error('No data returned from AI');

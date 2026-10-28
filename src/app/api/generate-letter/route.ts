@@ -409,6 +409,19 @@ JSON SCHEMA (return header/contact fields when the ground truth gives them; in B
       }
     }
 
+    // Previous-letter context hygiene (Defect 1): in Full mode the
+    // model must not be shown the previous letter's recipient,
+    // address, subject, salutation, or closing unless the user
+    // explicitly typed them — showing the exact previous recipient
+    // (notably the unlabelled toA line) invites the model to copy
+    // it into the new letter, and the topic gate below only rejects
+    // an exact copy when the subject also changed. Body-Only mode
+    // keeps full ground truth, as its promise requires. The
+    // recipient fallback line below stays: it is a fallback, not a
+    // previous letter's value.
+    const prevShown = (f: string, v: string) =>
+      (generationMode === 'full' && !userEdited.has(f) ? '' : v);
+
     const fullContextLines = [
       `Active Template / Profession: ${targetPreset || officeType || 'General Letter'}`,
       `Office Type: ${officeType || '(not set)'}`,
@@ -435,12 +448,12 @@ JSON SCHEMA (return header/contact fields when the ground truth gives them; in B
       `Constituency / Circle (sc): "${ctx.sc || ''}"`,
       `File No. (fno): "${ctx.fno || ''}"`,
       `Date (dt): "${gt.dt || ''}"`,
-      `Previous recipient from an earlier letter (NOT ground truth for this generation — do NOT copy it unless the new brief names the same recipient; generate a fresh recipient from the new brief): "${gt.toD || ''}"`,
-      `Recipient Address (toA): "${gt.toA || ''}"`,
-      `Previous subject from an earlier letter (NOT ground truth for this generation — do NOT copy it unless the new brief is about the same topic; generate a fresh subject from the new brief): "${gt.sub || ''}"`,
+      `Previous recipient from an earlier letter (NOT ground truth for this generation — do NOT copy it unless the new brief names the same recipient; generate a fresh recipient from the new brief): "${prevShown('toD', gt.toD || '')}"`,
+      `Recipient Address (toA): "${prevShown('toA', gt.toA || '')}"`,
+      `Previous subject from an earlier letter (NOT ground truth for this generation — do NOT copy it unless the new brief is about the same topic; generate a fresh subject from the new brief): "${prevShown('sub', gt.sub || '')}"`,
       `Reference (ref): "${ctx.ref || ''}"`,
-      `Salutation (sal): "${gt.sal || ''}"`,
-      `Closing (cls): "${gt.cls || ''}"`,
+      `Salutation (sal): "${prevShown('sal', gt.sal || '')}"`,
+      `Closing (cls): "${prevShown('cls', gt.cls || '')}"`,
       `Recipient fallback if the brief does not name one: "${recipientFallback}"`,
     ].join('\n- ');
 
@@ -668,7 +681,25 @@ ${generationMode === 'full' ? '- ENTIRE LETTERHEAD MODE: Fill header fields (e1,
     // missing model recipient becomes the type fallback (toD) or
     // blank (toA), unless the user typed it or a preset set it.
     // Body-Only mode keeps the old preserve rule exactly.
-    const aiToD = str(letterData.toD).trim();
+    // Copy-rejection guard (Defect 1): in Full mode, a model value
+    // identical to the previous letter's recipient/address is only
+    // kept if the new brief itself names that recipient (shares a
+    // substantive token with it) or the user typed/preset it. This
+    // closes the hole the topic gate left: the gate only rejected an
+    // exact copy when the previous SUBJECT also changed, so a copied
+    // recipient survived whenever the subject was empty or loosely
+    // matched. A genuine follow-up to the same recipient is safe:
+    // its brief names the recipient ("follow up with the manager"),
+    // so the grounding check passes and the value is kept.
+    const GROUND_STOPWORDS = new Set(['the', 'and', 'for', 'from', 'with', 'this', 'that', 'about', 'regarding', 'please', 'write', 'dear', 'sir', 'madam', 'respected', 'into', 'upon', 'under', 'over', 'your', 'yours', 'kindly', 'to', 'of', 'a', 'an', 'in', 'on', 'at', 'by', 'is', 'are', 'be']);
+    const groundedInBrief = (value: string, brief: string): boolean => {
+      const briefToks = new Set(tokensOf(brief).filter((t) => t.length >= 3 && !GROUND_STOPWORDS.has(t)));
+      return tokensOf(value).filter((t) => t.length >= 3 && !GROUND_STOPWORDS.has(t)).some((t) => briefToks.has(t));
+    };
+    const aiToDRaw = str(letterData.toD).trim();
+    const aiToD = (generationMode === 'full' && aiToDRaw && aiToDRaw === gt.toD
+      && !userEdited.has('toD') && !presetFields.has('toD') && !groundedInBrief(aiToDRaw, description))
+      ? '' : aiToDRaw;
     const topicChanged = Boolean(gt.sub) && !briefMatchesSubject(description, gt.sub);
     const toDVal = generationMode === 'full'
       ? (userEdited.has('toD') ? gt.toD
@@ -681,7 +712,10 @@ ${generationMode === 'full' ? '- ENTIRE LETTERHEAD MODE: Fill header fields (e1,
           : aiToD || gt.toD || recipientFallback);
     // Recipient address follows the same topic rule as the recipient:
     // a changed topic never inherits the previous letter's address.
-    const aiToA = str(letterData.toA).trim();
+    const aiToARaw = str(letterData.toA).trim();
+    const aiToA = (generationMode === 'full' && aiToARaw && aiToARaw === gt.toA
+      && !userEdited.has('toA') && !presetFields.has('toA') && !groundedInBrief(aiToARaw, description))
+      ? '' : aiToARaw;
     const toAVal = generationMode === 'full'
       ? (userEdited.has('toA') ? gt.toA
         : (aiToA && !(topicChanged && aiToA === gt.toA) ? aiToA

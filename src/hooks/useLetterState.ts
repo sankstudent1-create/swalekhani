@@ -29,6 +29,8 @@ const INITIAL_STATE: AppState = {
   presetFields: [],
   promptClearTick: 0,
   aiMode: 'content',
+  aiType: 'corporate',
+  aiLang: 'en',
 };
 
 export function useLetterState() {
@@ -143,6 +145,19 @@ export function useLetterState() {
   // behaviour; a plain reload restores the last saved mode.
   const setAiMode = useCallback((aiMode: 'content' | 'full') => {
     setState(s => ({ ...s, aiMode }));
+  }, []);
+
+  // ── AI Letter Type / Language (Defect 3) ─────────────
+  // Same persistence approach as aiMode: previously Sidebar local
+  // state, so a reload reset them to Corporate/English while the
+  // draft content (e.g. a Marathi student application) was
+  // restored. Now in AppState, so the draft autosave/restore keeps
+  // them; a confirmed New-clear resets them via INITIAL_STATE.
+  const setAiType = useCallback((aiType: string) => {
+    setState(s => ({ ...s, aiType }));
+  }, []);
+  const setAiLang = useCallback((aiLang: string) => {
+    setState(s => ({ ...s, aiLang }));
   }, []);
 
   // ── Font ─────────────────────────────────────────────
@@ -278,9 +293,21 @@ export function useLetterState() {
       // otherwise the field is blanked. A preset placeholder
       // ("Advocate Name", "Chamber Address") is not preserved as
       // literal text. Body-Only mode keeps the old preserve rule
-      // exactly. User-edited marks are never cleared here: a value
-      // the user typed stays theirs across later generations, while
-      // a value AI set stays replaceable.
+      // exactly.
+      // SINGLE-USE edited marks (Defect 1 leak): a typed value wins
+      // the Full generation it was typed for, but the mark must not
+      // live forever — otherwise a value typed for one letter (e.g.
+      // a principal recipient and a student signatory typed while
+      // setting up a Marathi student application) vetoes replacement
+      // in every later, unrelated Entire Letterhead generation, so
+      // only the body regenerates and To/signatory/header carry
+      // over. After a Full generation applies, the AI-owned fill
+      // keys are therefore removed from userEditedFields: the values
+      // are now this letter's content, not a standing veto, and the
+      // next Full generation replaces them unless the user re-types
+      // them for the new letter. (Body-Only generations do not
+      // consume marks — their preserve rule is unchanged. A value AI
+      // set stays replaceable, as before.)
       const edited = (k: string) => (s.userEditedFields || []).includes(k);
       const preset = (k: string) => (s.presetFields || []).includes(k);
       const fullVal = (key: string, ai: string | undefined, cur: string) =>
@@ -293,9 +320,18 @@ export function useLetterState() {
         ? (aiCopy.length > 0 ? aiCopy : s.form.copyTo)
         : edited('copyTo') ? s.form.copyTo : aiCopy);
 
+      // AI-owned fill keys whose edited marks a Full generation
+      // consumes (see the single-use note above). dt is excluded:
+      // it is system-seeded today, not a previous letter's value.
+      // body is excluded: it uses keep(), not the replace rule.
+      const CONSUMED_KEYS = ['h1', 'h2', 'e1', 'e2', 'dept', 'divn', 'ofc', 'city', 'pin', 'ph', 'em', 'wb', 'fno', 'ref', 'toD', 'toA', 'sub', 'sal', 'cls', 'sn', 'sh', 'sd', 'sp', 'sc', 'encl', 'copyTo'];
+
       return {
         ...s,
         tpl: targetTpl,
+        userEditedFields: isFull
+          ? (s.userEditedFields || []).filter((k) => !CONSUMED_KEYS.includes(k))
+          : s.userEditedFields,
         officeType: isPersonal ? 'personal' : (isFull ? 'corporate' : s.officeType),
         logoL: newLogoL,
         logoR: newLogoR,
@@ -357,6 +393,8 @@ export function useLetterState() {
     setTemplate,
     setFont,
     setAiMode,
+    setAiType,
+    setAiLang,
     applyOfficePreset,
     setLogo,
     setLogoPos,

@@ -24,6 +24,8 @@ function LetterpadGeneratorInner() {
  setTemplate,
  setFont,
  setAiMode,
+ setAiType,
+ setAiLang,
  applyOfficePreset,
  setLogo,
  setLogoPos,
@@ -464,6 +466,8 @@ function LetterpadGeneratorInner() {
  onSigApply={setSigUrl}
  onFillAI={fillFromAI}
  onAiMode={setAiMode}
+ onAiType={setAiType}
+ onAiLang={setAiLang}
  onToggleEncl={toggleEncl}
  onToggleCopy={toggleCopy}
  onToggleEndorse={toggleEndorse}

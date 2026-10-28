@@ -90,11 +90,16 @@ export interface AppState {
   aiTick?: number;
   // Sidebar AI Generation Mode ('content' = Body-Only, 'full' =
   // Entire Letterhead). Stored here — not in Sidebar local state —
-  // so the draft autosave/restore keeps it across a page reload,
-  // exactly like Letter Type, Language, Salutation and Closing.
-  // (Those three are still Sidebar-local and are out of scope here;
-  // only the mode was reported resetting to Body-Only on reload.)
+  // so the draft autosave/restore keeps it across a page reload.
   aiMode?: 'content' | 'full';
+  // Sidebar AI Letter Type and Language, stored here for the same
+  // reason as aiMode: previously they were Sidebar local state, so
+  // a reload reset them to Corporate/English even while the draft
+  // content (e.g. a Marathi student application) was restored —
+  // misrepresenting the restored draft. A confirmed New-clear
+  // resets them to the defaults via INITIAL_STATE, like aiMode.
+  aiType?: string;
+  aiLang?: string;
   // Fields the user explicitly typed in the sidebar or on the paper
   // this session. Fully-AI generation preserves exactly these fields
   // and replaces everything else AI-owned.

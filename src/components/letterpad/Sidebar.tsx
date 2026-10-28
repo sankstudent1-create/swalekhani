@@ -3,7 +3,7 @@
 // Converted from Claude API key to Groq (server-side, no client key needed)
 // ─────────────────────────────────────────────
 'use client';
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import type { AppState, LetterForm, TemplateType, FontClass, LogoSide, AILetterData } from '@/types/letterpad';
 import {
  OFFICE_PRESETS, TEMPLATE_INFO, FONT_OPTIONS,
@@ -64,6 +64,17 @@ export default function Sidebar({
  const [aiLoading, setAiLoading] = useState(false);
  const [aiStatus, setAiStatus] = useState('');
 
+ // Defect 8: the "Describe what you need" box lives in this
+ // component's local state, so resetLetter ("New") in the page
+ // cleared the letter but left the prompt text behind. The page
+ // bumps state.promptClearTick on every confirmed New; clearing
+ // here on that tick (and only on that tick — never after a
+ // generation, where the prompt is still useful) closes the gap.
+ useEffect(() => {
+   if ((state.promptClearTick || 0) > 0) setAiPrompt('');
+   // eslint-disable-next-line react-hooks/exhaustive-deps
+ }, [state.promptClearTick]);
+
  const upLRef = useRef<HTMLInputElement>(null);
  const upRRef = useRef<HTMLInputElement>(null);
  const upSigRef = useRef<HTMLInputElement>(null);
@@ -100,8 +111,11 @@ export default function Sidebar({
    officeType: state.officeType, template: tpl, mode: aiMode, form,
    // Fields the user explicitly typed: the route preserves exactly
    // these in Full mode and replaces everything else AI-owned, so a
-   // previous letter's header cannot leak into this one.
+   // previous letter's header cannot leak into this one. Preset
+   // fields are sent too: the route preserves them only when the
+   // model gives nothing (Defect 6).
    userEditedFields: state.userEditedFields || [],
+   presetFields: state.presetFields || [],
  },
  setAiStatus,
  contextForm,

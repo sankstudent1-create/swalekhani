@@ -102,8 +102,10 @@ export async function generateLetterWithAI(
     mode?: 'content' | 'full'; form?: LetterForm;
     // Forwarded whole to /api/generate-letter: fields the user
     // explicitly typed, which Full mode preserves while replacing
-    // everything else AI-owned.
+    // everything else AI-owned, plus preset-applied fields, which
+    // Full mode preserves only when the model gives nothing.
     userEditedFields?: string[];
+    presetFields?: string[];
   },
   onStatus: (msg: string) => void,
   currentForm?: LetterForm,
@@ -156,6 +158,7 @@ export async function generateLetterWithAI(
     is_personal:           Boolean(d.is_personal),
     file_no:               (d.fno  || d.file_no  || '') as string,
     fno:                   (d.fno  || d.file_no  || '') as string,
+    dt:                    (d.dt || '') as string,
     dept_hindi_1:          (d.h1   || d.dept_hindi_1 || '') as string,
     h1:                    (d.h1   || d.dept_hindi_1 || '') as string,
     dept_hindi_2:          (d.h2   || d.dept_hindi_2 || '') as string,

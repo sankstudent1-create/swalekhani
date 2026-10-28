@@ -317,6 +317,177 @@ export function resolveLetterType(
   return { resolved: detectLetterType(brief, officeType), detected: detectLetterType(brief, officeType) };
 }
 
+// ── Legal-notice detection (Defect 1/2) ───────────
+// A legal notice is NOT only the 'notice' letter type. The live
+// retest used Letter Type = Custom with the Legal preset, so
+// notice-protocol enforcement keyed on letterType missed it entirely
+// and the body invented grounds with a "Sir," salutation. A brief is
+// a legal notice when it says "legal notice", or when it says
+// "notice" in a legal/advocate context (tenant, vacate, evict) or
+// under the Legal/Advocate preset. SCN/RTI types are never overridden
+// by this — they have their own protocols.
+export function isLegalNotice(
+  brief: string,
+  officeType?: string,
+  requestedType?: string
+): boolean {
+  const b = (brief || '').toLowerCase();
+  if (!b) return false;
+  if (/legal notice/.test(b)) return true;
+  const legalPreset = officeType === 'legal' || officeType === 'advocate';
+  if (/notice/.test(b) && (legalPreset || /tenant|vacat|evict|advocate|legal/.test(b))) return true;
+  return false;
+}
+
+// ── Token helpers for the ungrounded-value guard ──
+const GENERIC_FILLER_TOKENS = new Set([
+  'office', 'department', 'dept', 'division', 'section', 'team',
+  'branch', 'headquarters', 'hq', 'group', 'unit', 'centre', 'center',
+  'services', 'bureau', 'cell', 'desk', 'wing', 'of', 'the', 'and', 'for',
+]);
+
+export function tokensOf(text: string): string[] {
+  return (text || '').toLowerCase()
+    .replace(/[^a-z0-9\u0900-\u097f\s]/g, ' ')
+    .split(/\s+/)
+    .filter(Boolean);
+}
+
+/**
+ * True when a model-supplied department/designation is grounded in
+ * nothing the user gave: none of its substantive (non-filler) words
+ * appears in the allowed vocabulary (brief + typed-field values +
+ * preset-field values). A value made only of filler words ("Office",
+ * "Corporate Office" with no "corporate" in the brief) is ungrounded.
+ * Callers exempt typed, preset, and brief-sender values — this guard
+ * is for model inventions only.
+ */
+export function isUngroundedValue(value: string, allowedTokens: Set<string>): boolean {
+  const substantive = tokensOf(value).filter((t) => !GENERIC_FILLER_TOKENS.has(t) && t.length >= 2);
+  if (substantive.length === 0) return true;
+  return !substantive.some((t) => allowedTokens.has(t));
+}
+
+// ── Invented legal-grounds sanitizer (Defect 1) ───
+// Model "example" grounds ("e.g. non-payment of rent, unauthorised
+// sub-letting, damage") smuggle invented allegations into a legal
+// notice even when the prompt-level ban is present. This is a
+// deterministic backstop, applied only to legal notices: any sentence
+// asserting an allegation whose trigger words do not appear in the
+// brief is replaced by a ______ grounds blank (first one per
+// paragraph) or dropped (subsequent ones). A ground the brief DOES
+// state (e.g. "for non-payment of rent") survives untouched.
+const ALLEGATION_GROUPS: Array<{ re: RegExp; triggers: string[] }> = [
+  { re: /non[\s-]?payment|unpaid|rent[^.]{0,30}due|arrears|fail(?:ed|ure) to pay|default(?:ed)? in (?:payment|rent)/i,
+    triggers: ['non-payment', 'nonpayment', 'unpaid', 'arrears', 'failed to pay', 'failure to pay', 'rent due', 'default'] },
+  { re: /sub[\s-]?let|subleas/i,
+    triggers: ['sub-let', 'sublet', 'sub-letting', 'subletting', 'sub-lease', 'sublease'] },
+  { re: /damage(?:d)? to|caused damage/i,
+    triggers: ['damage', 'damaged'] },
+  { re: /breach|violat|contravention/i,
+    triggers: ['breach', 'violation', 'violated', 'contravention'] },
+  { re: /nuisance|illegal (?:use|activity)/i,
+    triggers: ['nuisance', 'illegal'] },
+  { re: /unauthori[sz]ed (?:occupation|use|construction)/i,
+    triggers: ['unauthorised', 'unauthorized'] },
+];
+
+export function stripInventedLegalGrounds(body: string, brief: string): string {
+  const briefLower = (brief || '').toLowerCase();
+  const hasTrigger = (triggers: string[]) => triggers.some((t) => briefLower.includes(t));
+  // Protect abbreviations from the sentence splitter: without this,
+  // "Rs. 50,000" splits after "Rs" and "e.g. non-payment..." splits
+  // after "e", leaving stray fragments behind after replacement.
+  const protect = (t: string) => t
+    .replace(/\bRs\./g, 'Rs\u0001')
+    .replace(/\be\.g\./gi, 'eg\u0001')
+    .replace(/\bi\.e\./gi, 'ie\u0001')
+    .replace(/\bDr\./g, 'Dr\u0001')
+    .replace(/\bAdv\./g, 'Adv\u0001')
+    .replace(/\bMr\./g, 'Mr\u0001')
+    .replace(/\bMrs\./g, 'Mrs\u0001')
+    .replace(/\bMs\./g, 'Ms\u0001');
+  const restore = (t: string) => t.replace(/\u0001/g, '.');
+  const splitSentences = (text: string): string[] => {
+    const protectedText = protect(text);
+    const out = protectedText.match(/[^.!?]+[.!?]+["')\]]*\s*/g);
+    if (!out) return text ? [text] : [];
+    const joined = out.join('');
+    if (joined.length < protectedText.length) out.push(protectedText.slice(joined.length));
+    return out.map(restore);
+  };
+  return (body || '').split('\n\n').map((para) => {
+    let replaced = false;
+    const sentences = splitSentences(para);
+    const kept: string[] = [];
+    for (const sent of sentences) {
+      const group = ALLEGATION_GROUPS.find((g) => g.re.test(sent));
+      if (group && !hasTrigger(group.triggers)) {
+        if (!replaced) {
+          const num = sent.match(/^\s*\d+[.)]\s*/)?.[0] || '';
+          const trail = sent.match(/\s*$/)?.[0] || '';
+          kept.push(`${num}The grounds for this notice are: ______.${trail}`);
+          replaced = true;
+        }
+        // Subsequent invented-ground sentences are dropped, not blanked.
+        continue;
+      }
+      kept.push(sent);
+    }
+    return kept.join('').trim();
+  }).filter(Boolean).join('\n\n');
+}
+
+// ── Trailing-closing stripper (Defect 3) ──────────
+// The paper always renders the Closing field, so a generated body
+// that itself ends with a closing ("Yours faithfully,") prints TWO
+// closings. Strip trailing closing-only lines/paragraphs from the
+// body (and trailing signature lines matching the signatory, which
+// the paper also renders separately). A closing inside the body text
+// (not at the end) is untouched.
+const CLOSING_PHRASES = [
+  'yours faithfully', 'yours sincerely', 'yours obediently',
+  'yours affectionately', 'yours lovingly', 'yours truly',
+  'with warm regards', 'with warmest regards', 'warm regards',
+  'regards', 'sincerely', 'faithfully',
+  'भवदीय', 'भवदीया', 'आपला नम्र', 'आपली नम्र', 'सस्नेह',
+  'आपका आज्ञाकारी', 'आपला विश्वासू', 'कळावे, आपला नम्र',
+];
+
+export function stripTrailingClosing(body: string, signatureLines: string[] = []): string {
+  const norm = (s: string) => s.trim().replace(/[,.\s]+$/, '').toLowerCase();
+  const sigNorms = new Set(signatureLines.map(norm).filter(Boolean));
+  let paras = (body || '').trim().split(/\n\n+/);
+  let changed = true;
+  while (changed && paras.length) {
+    changed = false;
+    const last = paras[paras.length - 1];
+    const lines = last.split('\n');
+    // Pop trailing lines that are a closing phrase or a signature line.
+    while (lines.length) {
+      const tail = norm(lines[lines.length - 1]);
+      if (CLOSING_PHRASES.includes(tail) || (tail && sigNorms.has(tail))) {
+        lines.pop();
+        changed = true;
+      } else break;
+    }
+    if (lines.length === 0) {
+      paras.pop();
+      changed = true;
+      continue;
+    }
+    const rejoined = lines.join('\n').trim();
+    if (rejoined !== last.trim()) paras[paras.length - 1] = rejoined;
+    // Trailing closing as a final sentence ("... . Yours faithfully,").
+    const m = paras[paras.length - 1].match(/^(.*?[.!?])\s*([A-Za-z\u0900-\u097f][^.]*?)[,\s]*$/);
+    if (m && CLOSING_PHRASES.includes(norm(m[2]))) {
+      paras[paras.length - 1] = m[1].trim();
+      changed = true;
+    }
+  }
+  return paras.join('\n\n').trim();
+}
+
 // ── Recipient inference ────────────────────────
 export interface RecipientCtx {
   toD?: string;
@@ -577,15 +748,26 @@ const MONTH_ABBREV: Record<string, string> = {
   sept: 'september', oct: 'october', nov: 'november', dec: 'december',
 };
 
-/** "27 October 2026" → "२७ ऑक्टोबर २०२६" (mr) / "२७ अक्टूबर २०२६" (hi). Unmatched values pass through untouched. */
+/** "27 October 2026" → "२७ ऑक्टोबर २०२६" (mr) / "२७ अक्टूबर २०२६" (hi).
+ * Also handles "October 27, 2026". Unmatched values pass through
+ * untouched. The VALUE is converted, not just the label: an earlier
+ * pass localised only "दिनांक:" while the value stayed in English
+ * digits, because the client never applied the route's dt at all. */
 export function localiseDate(dt: string, lang: AILang): string {
   if (lang !== 'mr' && lang !== 'hi') return dt;
-  const m = (dt || '').trim().match(/^(\d{1,2})\s+([A-Za-z]+)\s+(\d{4})$/);
+  const raw = (dt || '').trim();
+  const m = raw.match(/^(\d{1,2})\s+([A-Za-z]+)\s+(\d{4})$/)
+    || raw.match(/^([A-Za-z]+)\s+(\d{1,2}),\s*(\d{4})$/);
   if (!m) return dt;
-  const monthKey = MONTH_ABBREV[m[2].toLowerCase()] || m[2].toLowerCase();
+  // m[1]/m[2] are day/month in the first form, month/day in the second.
+  const isMonthFirst = /^[A-Za-z]/.test(raw);
+  const day = isMonthFirst ? m[2] : m[1];
+  const monthWord = isMonthFirst ? m[1] : m[2];
+  const year = m[3];
+  const monthKey = MONTH_ABBREV[monthWord.toLowerCase()] || monthWord.toLowerCase();
   const month = MONTH_NAMES[monthKey];
   if (!month) return dt;
-  return `${toDevanagariDigits(m[1])} ${month[lang]} ${toDevanagariDigits(m[3])}`;
+  return `${toDevanagariDigits(day)} ${month[lang]} ${toDevanagariDigits(year)}`;
 }
 
 // ── Subject fallback (server-side, model output is primary) ──
@@ -753,5 +935,5 @@ BODY STRUCTURE (follow in order): ${p.structure.join(' → ')}.
 REQUIRED IN THIS LETTER: ${p.required.length ? p.required.join('; ') : 'none beyond a complete body'}.
 NEVER INVENT: ${p.mustNot.join('; ')}.
 SHORT-PROMPT RULE: The brief may be only 2–5 words. Expand it into a COMPLETE letter anyway — subject, recipient, salutation, closing, and a body of several paragraphs. Number paragraphs ONLY where the type protocol calls for numbered structure (formal office letters, RTI points, notices); appreciation/congratulatory letters and medical certificates use FLOWING PROSE, never numbered paragraphs, unless the brief explicitly asks for numbering. Use ______ blanks ONLY for details the brief genuinely does not give (dates, amounts, reference numbers, names); never invent a person, company, ministry, phone number, email, date, amount, or page count to fill a gap. If the recipient cannot be determined from the brief or the sender context, return toD as a clearly fillable placeholder (see recipient fallback), not a fake name.
-ANTI-HALLUCINATION (MATERIAL FACTS): Diagnosis, medical conditions, treatments, legal grounds, allegations, dates, amounts, and deadlines come ONLY from the brief — otherwise use ______ blanks. A medical certificate is flowing prose unless the brief asks otherwise, and must NEVER state a diagnosis the brief does not give. An office, department, or designation must come from a NAMED sender in the brief or a user-filled field — NEVER derive one from a date, month, or ordinal in the brief (e.g. "1st November" is a date, not an office).`;
+ANTI-HALLUCINATION (MATERIAL FACTS): Diagnosis, medical conditions, treatments, legal grounds, allegations, dates, amounts, and deadlines come ONLY from the brief — otherwise use ______ blanks. A medical certificate is flowing prose unless the brief asks otherwise, and must NEVER state a diagnosis the brief does not give. An office, department, or designation must come from a NAMED sender in the brief or a user-filled field — NEVER derive one from a date, month, or ordinal in the brief (e.g. "1st November" is a date, not an office). NEVER invent a department or designation the brief does not name (do NOT invent "Corporate Office", "HR Department", or any similar office — if the brief names no department/designation, leave it blank). A LEGAL NOTICE with no grounds in the brief must state its grounds as ______ — NEVER list example grounds ("e.g. non-payment of rent, unauthorised sub-letting, damage") to fill the gap; an example list is still an invented allegation. DATES: reproduce every date EXACTLY as given in the brief — never append a year, month, or day the brief does not give (a brief saying "1st November" must never become "1st November 2026"). CLOSING: the body must NOT end with a closing phrase — the paper renders the Closing field separately, so a body ending in "Yours faithfully," would print two closings.`;
 }

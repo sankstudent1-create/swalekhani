@@ -17,6 +17,11 @@ import {
   looksLikeDateFragment,
   localiseRecipient,
   localiseDate,
+  isLegalNotice,
+  stripInventedLegalGrounds,
+  stripTrailingClosing,
+  tokensOf,
+  isUngroundedValue,
   type AILang,
   type KnownLetterType,
 } from '@/lib/letterpad/typeProtocols';
@@ -34,6 +39,7 @@ interface LetterGenerationRequest {
   generationMode?: 'content' | 'full';
   currentForm?: Record<string, unknown>;
   userEditedFields?: string[];
+  presetFields?: string[];
   currentContext?: {
     department?: string;
     office?: string;
@@ -44,6 +50,7 @@ interface LetterGenerationRequest {
     mode?: 'content' | 'full';
     form?: Record<string, unknown>;
     userEditedFields?: string[];
+    presetFields?: string[];
   };
 }
 
@@ -224,13 +231,21 @@ export async function POST(request: NextRequest) {
     // inputs), sent by the client. This is what resolves the old
     // preserve-vs-replace conflict: a typed header is ground truth and
     // is never overwritten, while every other AI-owned field in Full
-    // mode is replaced (model value, brief sender, or blank) instead
-    // of silently keeping a previous letter's value. Office presets
-    // and previous AI output are NOT user-edited — they are samples
-    // and stale values, so Fully-AI correctly replaces them.
+    // mode is replaced (model value, brief sender, preset, or blank)
+    // instead of silently keeping a previous letter's value.
+    // Preset fields (Defect 6) are a distinct, lower tier than typed
+    // fields: clicking a Company/Doctor/Legal preset is an explicit
+    // user choice, so a preset value survives a Fully-AI generation
+    // when the model gives nothing for that field — but a model value
+    // or a brief-named sender still beats it, and previous AI output
+    // (not typed, not preset) is still replaced, never preserved.
     const userEdited = new Set<string>([
       ...(Array.isArray(body.userEditedFields) ? body.userEditedFields : []),
       ...(Array.isArray(currentContext.userEditedFields) ? currentContext.userEditedFields : []),
+    ].map((f) => String(f)));
+    const presetFields = new Set<string>([
+      ...(Array.isArray(body.presetFields) ? body.presetFields : []),
+      ...(Array.isArray(currentContext.presetFields) ? currentContext.presetFields : []),
     ].map((f) => String(f)));
     const officeType = currentContext.officeType || templatePreset || '';
     const template = currentContext.template || currentContext.tpl || '';
@@ -266,7 +281,19 @@ export async function POST(request: NextRequest) {
     const secondLang: 'mr' | 'hi' = isMarathi ? 'mr' : 'hi';
 
     // Type resolution: 'auto'/unknown never silently becomes corporate.
-    const { resolved, detected } = resolveLetterType(letterType, description, officeType);
+    let { resolved, detected } = resolveLetterType(letterType, description, officeType);
+    // Legal-notice override (Defects 1/2): a legal notice is not only
+    // the 'notice' letter type. A Custom letter under the Legal
+    // preset, or any legal-notice prompt, gets the notice protocol,
+    // its grounds ban, and its Dear Sir/Madam + Yours faithfully
+    // enforcement — otherwise the previous letterType-keyed checks
+    // missed it entirely. SCN/RTI and explicitly chosen non-notice
+    // types (appreciation, complaint, etc.) are never overridden.
+    const legalNotice = isLegalNotice(description, officeType, letterType);
+    if (legalNotice && (resolved === 'custom' || resolved === 'corporate' || resolved === 'notice')) {
+      resolved = 'notice';
+      detected = 'notice';
+    }
     const protocol = TYPE_PROTOCOLS[resolved];
     const recipientFallback = inferRecipient(resolved, {
       toD: gt.toD,
@@ -287,6 +314,10 @@ CRITICAL GROUND TRUTH & ANTI-HALLUCINATION RULES:
    - NEVER invent a person, company, ministry, phone number, email, date, amount, or page count to fill a gap. Use ______ blanks for genuinely unknown details.
    - NEVER derive an office, department, or designation from a date, month, or ordinal in the brief ("from 1st November" is a DATE, not an office — it must never become "Office of the St November" or any designation).
    - NEVER state a diagnosis, medical condition, treatment, legal ground, allegation, date, amount, or deadline the brief does not give. A medical certificate is flowing prose unless the brief asks for numbered points, and must never state a diagnosis the brief does not give. Office timings in a circular are stated exactly as given in the brief, or as ______ if not given — never vague prose in place of timings.
+   - NEVER invent a department or designation: use only words from the brief or from user-filled/preset fields. Do NOT invent "Corporate Office", "HR Department", or any similar office when the brief names none — leave it blank.
+   - LEGAL NOTICES: if the brief states no grounds, state the grounds as ______ — NEVER list example grounds ("e.g. non-payment of rent, unauthorised sub-letting, damage"). An example list is still an invented allegation.
+   - DATES: reproduce every date EXACTLY as given in the brief — never append a year, month, or day the brief does not give ("1st November" stays "1st November", never "1st November 2026").
+   - CLOSING: the body must NOT end with a closing phrase — the paper renders the Closing field separately, so a body ending in "Yours faithfully," would print two closings.
 2. PROFESSION-AUTHENTIC VOICE:
    - Advocate / Legal: Write in rigorous legal tone (statutory notices, Section 138 NI Act, demand notices, caveat intimations, counsel representations).
    - Clinic / Doctor: Write in authentic medical clinical tone (patient clinical history, diagnosis, treatment recommendation, medical fitness / leave certificates).
@@ -481,8 +512,12 @@ ${generationMode === 'full' ? '- ENTIRE LETTERHEAD MODE: Fill header fields (e1,
     // mode, per field: a field the user explicitly typed this session
     // (userEdited) is ground truth and always wins; otherwise the
     // model value wins; otherwise the brief-derived sender (header
-    // fields only); otherwise BLANK — never the previous letter's
-    // value. Body-Only mode is unchanged: ground truth wins exactly,
+    // fields only); otherwise a PRESET value for that field (Defect 6:
+    // clicking a preset is an explicit user choice, so it survives
+    // when the model gives nothing — but it sits BELOW model and
+    // brief-sender, so a new brief's sender still beats an old
+    // preset); otherwise BLANK — never the previous letter's value.
+    // Body-Only mode is unchanged: ground truth wins exactly,
     // because its promise is "keep my headers".
     // Brief-derived sender (Full mode only, see extractSenderFromBrief):
     // if neither the model nor a typed form value gives a header or
@@ -499,6 +534,10 @@ ${generationMode === 'full' ? '- ENTIRE LETTERHEAD MODE: Fill header fields (e1,
         if (userEdited.has(field)) return gtVal;
         if (ai && !isPlaceholderValue(ai)) return ai;
         if (!isContact && senderVal) return senderVal;
+        // Preset fallback (Defect 6): gt is placeholder-stripped, so
+        // a preset placeholder ("Advocate Name", "Chamber Address")
+        // is already '' here and cannot survive as literal text.
+        if (presetFields.has(field) && gtVal) return gtVal;
         return '';
       }
       if (isContact && gtVal) return gtVal;
@@ -590,6 +629,16 @@ ${generationMode === 'full' ? '- ENTIRE LETTERHEAD MODE: Fill header fields (e1,
         .map((para) => para.replace(/^\s*\d+[.)]\s+/, ''))
         .join('\n\n');
     }
+    // Legal-notice grounds sanitizer (Defect 1): prompt bans alone
+    // did not bite — a Custom + Legal-preset notice still asserted
+    // breaches as "e.g." examples. Deterministic backstop, applied
+    // ONLY to legal notices (not announcement notices): allegation
+    // sentences whose trigger words are absent from the brief become
+    // a ______ grounds blank (first per paragraph) or are dropped.
+    // Grounds the brief DOES state survive untouched.
+    if (legalNotice) {
+      bodyVal = stripInventedLegalGrounds(bodyVal, description);
+    }
     // RTI-reply guarantee (Defect 4a): the appeal paragraph MUST cite
     // "Section 19(1)" by number, whatever model generated the body
     // (including a fallback model that paraphrased it away). Append a
@@ -673,9 +722,10 @@ ${generationMode === 'full' ? '- ENTIRE LETTERHEAD MODE: Fill header fields (e1,
     const normDup = (s: string) => s.toLowerCase().replace(/[^a-z0-9]/g, '');
     // Designation follows the same Full-mode replace rule as headers:
     // a typed designation wins, otherwise the model, otherwise the
-    // brief sender — never the previous letter's designation.
+    // brief sender, otherwise a preset value — never the previous
+    // letter's designation.
     let sdVal = generationMode === 'full'
-      ? (userEdited.has('sd') ? gt.sd : (str(letterData.sd) || briefSender.sd || ''))
+      ? (userEdited.has('sd') ? gt.sd : (str(letterData.sd) || briefSender.sd || (presetFields.has('sd') ? gt.sd : '')))
       : (gt.sd ? gt.sd : str(letterData.sd));
     const e1Val = pickHeader('e1', letterData.e1, gt.e1, false, briefSender.e1);
     const e2Val = pickHeader('e2', letterData.e2, gt.e2, false);
@@ -718,6 +768,45 @@ ${generationMode === 'full' ? '- ENTIRE LETTERHEAD MODE: Fill header fields (e1,
       ? (userEdited.has('ref') ? gt.ref : str(letterData.ref))
       : (str(letterData.ref) || gt.ref);
     const dtVal = localiseDate(str(letterData.dt) || gt.dt, targetLang);
+    // Ungrounded dept/designation guard (Defect 7): a model-supplied
+    // dept/sd whose substantive words appear nowhere in the brief,
+    // in typed fields, or in preset fields is dropped (or replaced
+    // with the brief-derived sender office/designation where one
+    // exists). Typed, preset, and brief-sender values are exempt —
+    // the guard targets model inventions only ("Corporate Office",
+    // "HR Department" for a product-launch brief naming neither).
+    // TRADEOFF, documented: this also drops legitimate model
+    // inferences whose words happen to appear nowhere in the brief /
+    // typed / preset fields (e.g. inferring "Legal Department" from
+    // an "advocate" brief that never says "legal"). That is the
+    // intended price of the no-invention rule: a department the user
+    // wants can be typed or preset, and then it survives. The
+    // birthday sender case is unaffected — its dept/sd come from the
+    // brief sender (or from a model value whose words ARE in the
+    // brief), never from an ungrounded invention.
+    {
+      const allowed = new Set<string>(tokensOf(description));
+      for (const f of new Set([...userEdited, ...presetFields])) {
+        for (const t of tokensOf(gt[f] || '')) allowed.add(t);
+      }
+      const aiDept = str(letterData.dept).trim();
+      const aiSd = str(letterData.sd).trim();
+      if (!userEdited.has('dept') && aiDept && !isPlaceholderValue(aiDept) && deptVal === aiDept
+        && isUngroundedValue(deptVal, allowed)) {
+        deptVal = (briefSender.dept && normDup(briefSender.dept) !== normDup(e1Val)) ? briefSender.dept : '';
+      }
+      if (!userEdited.has('sd') && aiSd && sdVal === aiSd
+        && isUngroundedValue(sdVal, allowed)) {
+        sdVal = briefSender.sd || '';
+      }
+    }
+    // Duplicated closing (Defect 3): the paper always renders the
+    // Closing field, so a body ending in a closing phrase printed
+    // two closings (sidebar Fully-AI path). Strip trailing closing
+    // lines/paragraphs from the body — and trailing signature lines,
+    // which the paper also renders separately — in BOTH paths, for
+    // all types. A closing inside the body is untouched.
+    bodyVal = stripTrailingClosing(bodyVal, [snVal, sdVal]);
 
     const finalData = {
       ...letterData,

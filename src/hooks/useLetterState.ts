@@ -5,6 +5,7 @@
 import { useState, useCallback, useEffect, useRef } from 'react';
 import type { AppState, LetterForm, TemplateType, FontClass, LogoSide, SigMode, AILetterData } from '@/types/letterpad';
 import { DEFAULT_FORM, DEFAULT_LOGO_POS, OFFICE_PRESETS, svgToDataUri } from '@/lib/letterpad/constants';
+import { isPlaceholderValue } from '@/lib/letterpad/typeProtocols';
 
 const DRAFT_KEY = 'swalekhani-studio-draft-v1';
 
@@ -25,6 +26,8 @@ const INITIAL_STATE: AppState = {
   footerDesign: 'classic',
   form: { ...DEFAULT_FORM },
   userEditedFields: [],
+  presetFields: [],
+  promptClearTick: 0,
 };
 
 export function useLetterState() {
@@ -92,7 +95,7 @@ export function useLetterState() {
     // page.tsx, and this flag covers the save race as well.
     skipNextSave.current = true;
     const dt = new Date().toLocaleDateString('en-IN', { day: '2-digit', month: 'long', year: 'numeric' });
-    setState(s => ({ ...INITIAL_STATE, form: { ...DEFAULT_FORM, dt }, userEditedFields: [], aiTick: (s.aiTick || 0) + 1 }));
+    setState(s => ({ ...INITIAL_STATE, form: { ...DEFAULT_FORM, dt }, userEditedFields: [], presetFields: [], promptClearTick: (s.promptClearTick || 0) + 1, aiTick: (s.aiTick || 0) + 1 }));
     setLastModel(undefined);
     setDraftStatus('fresh');
   }, []);
@@ -100,9 +103,10 @@ export function useLetterState() {
   // ── Form field update ────────────────────────────────
   // Any value typed through updateForm/setForm (sidebar input, paper
   // inline edit, or an explicit edit instruction) counts as
-  // user-edited: Fully-AI generation will preserve it, while previous
-  // AI output and office presets (applied via setState in
-  // applyOfficePreset, deliberately NOT marked here) are replaced.
+  // user-edited: Fully-AI generation will preserve it. Preset fields
+  // are recorded separately by applyOfficePreset (see presetFields):
+  // they survive only when the model gives nothing, below typed
+  // fields and below model/brief-sender values.
   const updateForm = useCallback(<K extends keyof LetterForm>(key: K, value: LetterForm[K]) => {
     setState(s => ({
       ...s,
@@ -136,12 +140,23 @@ export function useLetterState() {
   }, []);
 
   // ── Office preset ────────────────────────────────────
+  // Defect 6: clicking a preset is an explicit user choice, so the
+  // fields it fills are recorded in presetFields — the lower tier of
+  // user-set fields (see types/letterpad.ts). In Full mode a preset
+  // value survives when the model gives nothing, while a model value
+  // or brief-named sender still beats it, and previous AI output
+  // (in neither list) is replaced. Only non-empty preset values are
+  // recorded; a preset placeholder ("Advocate Name") is not real
+  // data and is stripped by the route/client placeholder checks
+  // rather than preserved as literal text.
   const applyOfficePreset = useCallback((type: string) => {
     const preset = OFFICE_PRESETS[type];
     if (!preset) return;
 
     const logoL = preset.ll ? svgToDataUri(preset.ll) : null;
     const logoR = preset.lr ? svgToDataUri(preset.lr) : null;
+    const presetKeys = (['h1', 'h2', 'e1', 'e2', 'dept', 'divn', 'ofc', 'city', 'pin', 'ph', 'em', 'wb'] as const)
+      .filter((k) => Boolean(preset[k]));
 
     setState(s => ({
       ...s,
@@ -151,6 +166,7 @@ export function useLetterState() {
       logoR,
       posR: { ...s.posR, placed: false }, // trigger auto-placement
       showFooter: type !== 'personal',
+      presetFields: presetKeys as unknown as string[],
       form: {
         ...s.form,
         h1: preset.h1, h2: preset.h2,
@@ -245,14 +261,19 @@ export function useLetterState() {
       // fell back to the previous letter's value, so stale names,
       // designations, and cities survived "Entire Letterhead"
       // generations. In Full mode a field the user explicitly typed
-      // (userEditedFields) keeps its value; every other field takes
-      // the AI value even when blank. Body-Only mode keeps the old
-      // preserve rule exactly. User-edited marks are never cleared
-      // here: a value the user typed stays theirs across later
-      // generations, while a value AI set stays replaceable.
+      // (userEditedFields) keeps its value; otherwise the AI value
+      // wins; otherwise a PRESET value survives (Defect 6 — the
+      // route applies the same order, so the two halves agree);
+      // otherwise the field is blanked. A preset placeholder
+      // ("Advocate Name", "Chamber Address") is not preserved as
+      // literal text. Body-Only mode keeps the old preserve rule
+      // exactly. User-edited marks are never cleared here: a value
+      // the user typed stays theirs across later generations, while
+      // a value AI set stays replaceable.
       const edited = (k: string) => (s.userEditedFields || []).includes(k);
+      const preset = (k: string) => (s.presetFields || []).includes(k);
       const fullVal = (key: string, ai: string | undefined, cur: string) =>
-        !isFull ? keep(ai, cur) : edited(key) ? cur : (has(ai) ? (ai as string) : '');
+        !isFull ? keep(ai, cur) : edited(key) ? cur : (has(ai) ? (ai as string) : (preset(key) && cur && !isPlaceholderValue(cur) ? cur : ''));
       // The user's chosen salutation survives unless the AI supplies one.
       const salVal = fullVal('sal', data.sal ?? data.salutation, s.form.sal);
       const bodyVal = stripLeadingSalutation(keep(data.body, s.form.body), salVal);
@@ -286,6 +307,14 @@ export function useLetterState() {
           em:   isPersonal ? '' : fullVal('em', data.em ?? data.email, s.form.em),
           wb:   isPersonal ? '' : fullVal('wb', data.wb ?? data.website, s.form.wb),
           fno:  isPersonal ? '' : fullVal('fno', data.fno ?? data.file_no, s.form.fno),
+          // Date (Defect 5): the route returns dt already localised
+          // for Hindi/Marathi, but fillFromAI never applied it, so
+          // the paper kept the client-seeded English date while only
+          // the "दिनांक:" label was localised. Apply it in both
+          // modes — it is today (system-seeded), never a previous
+          // letter's date, and English letters are unaffected
+          // because localiseDate passes English through untouched.
+          dt:   has(data.dt) ? (data.dt as string) : s.form.dt,
           toD:  fullVal('toD', data.toD ?? data.to_designation, s.form.toD),
           toA:  fullVal('toA', data.toA ?? data.to_address, s.form.toA),
           sub:  fullVal('sub', data.sub ?? data.subject, s.form.sub),

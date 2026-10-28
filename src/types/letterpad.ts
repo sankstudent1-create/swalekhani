@@ -90,9 +90,19 @@ export interface AppState {
   aiTick?: number;
   // Fields the user explicitly typed in the sidebar or on the paper
   // this session. Fully-AI generation preserves exactly these fields
-  // and replaces everything else AI-owned; office presets and previous
-  // AI output are NOT in this list, so they are correctly replaced.
+  // and replaces everything else AI-owned.
   userEditedFields: string[];
+  // Fields applied by an office preset the user explicitly chose
+  // (Company/Doctor/Legal/...). Defect 6 resolution: preset fields
+  // are user-set, but a LOWER tier than typed fields — in Full mode
+  // a preset value survives when the model gives nothing for that
+  // field, while a model value or a brief-named sender still beats
+  // it. Previous AI output is in neither list, so it is replaced.
+  presetFields?: string[];
+  // Incremented by resetLetter ("New"). The sidebar watches it to
+  // clear the "Describe what you need" prompt box, which lives in
+  // Sidebar local state and otherwise survived a New-clear.
+  promptClearTick?: number;
 }
 
 // ── AI response JSON shape ──────────────────────────────
@@ -148,6 +158,7 @@ export interface AILetterData {
   constituency?: string;
   sc?: string;
   enrolmentNo?: string;
+  dt?: string; // Date as returned by /api/generate-letter (localised for Hindi/Marathi)
   encl?: string;
   enclList?: string[];
   copy_to?: string[];

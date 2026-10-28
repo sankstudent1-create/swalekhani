@@ -390,11 +390,10 @@ export default function LetterPaper({
  {E('enrolmentNo', '', 'span', 'Reg / Enrolment No.')}
  </div>
  )}
- {/* Stars are decoration for a real header, not a placeholder: they
-     only render when some header line is actually filled (Defect 7). */}
- {(form.h1?.trim() || form.h2?.trim() || form.e1?.trim() || form.e2?.trim() || form.dept?.trim()) && (
- <div className={styles.hAStars}>★&nbsp;&nbsp;★&nbsp;&nbsp;★&nbsp;&nbsp;★</div>
- )}
+ {/* Defect 4: the literal "★★★★" star row is removed entirely.
+     It was meant as decoration for a filled header, but it rendered
+     as literal placeholder text in generated headers. The real
+     decorative rules below (double/single divider lines) are kept. */}
  </div>
  {/* Address/contact block: omitted entirely when every field is
      empty, so a letter with no address never shows "Office City PIN"

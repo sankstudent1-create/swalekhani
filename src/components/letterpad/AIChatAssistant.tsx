@@ -139,6 +139,7 @@ export default function AIChatAssistant({ state, onSetForm, onFillAI }: AIChatAs
  currentContext: {
    officeType: state.officeType, template: state.tpl, mode: 'full', form: state.form,
    userEditedFields: state.userEditedFields || [],
+   presetFields: state.presetFields || [],
  },
  currentForm: state.form,
  generationMode: 'full',

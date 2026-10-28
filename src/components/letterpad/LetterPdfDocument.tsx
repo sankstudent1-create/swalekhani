@@ -35,12 +35,21 @@
 //    divider, like the paper; their signature shows the name only.
 //  * Doctor letters get the patient vitals strip instead of the
 //    To/meta rows, like the paper, plus the medico-legal note.
-//  * Logos/signatures: <Image> supports PNG/JPEG only — SVG preset
-//    logos are SKIPPED rather than breaking generation. Uploaded
-//    PNG/JPEG logos render in the header AND as the ghost watermark
-//    (only when a logo exists). Draggable logo positions from the
-//    paper are NOT reproduced — a PDF is a static export, so logos
-//    sit in their layout slots (centred / left / right).
+//  * Logos/signatures: <Image> supports PNG/JPEG only — so uploads
+//    are converted to PNG at upload time (Sidebar) and again at PDF
+//    time (page.tsx generatePDF), and SVG/WebP/GIF logos now render
+//    instead of vanishing. Uploaded logos render in the header AND
+//    as the ghost watermark (only when a logo exists). Draggable
+//    logo positions from the paper are NOT reproduced — a PDF is a
+//    static export, so logos sit in their layout slots
+//    (centred / left / right).
+//  * Signature space: the paper's fixed 60px sigSpace is reserved
+//    in the PDF too (45pt), so a printed letter always has room
+//    to sign, with or without a digital signature image.
+//  * Header spacing follows the paper's own numbers (header top
+//    padding, divider margins, Type-B min-height, body line-height
+//    2.1) — the old 40pt page top padding and 8pt divider bottom
+//    margins were the visible drift vs the preview.
 //  * Known gaps vs the paper (documented, not hidden): the advocate
 //    scales-of-justice emblem and curved band are not drawn (the
 //    divider falls back to a thin line); the NGO side bar is not
@@ -121,7 +130,13 @@ function resolvePdfFont(lang: 'en' | 'hi' | 'mr', fontClass: string): {
 } {
   if (lang === 'mr') {
     // Marathi override (see header note): Baloo 2 at a larger size
-    // for visual weight, whatever the paper font class is.
+    // for visual weight — EXCEPT when the user picked Poppins
+    // ('fd2', the Devanagari default): then the Poppins pairing
+    // wins (Noto Serif Devanagari for the script, Poppins Latin),
+    // so a chosen Poppins font actually looks like Poppins in PDF.
+    if (fontClass === 'fd2') {
+      return { family: 'NotoSerifDevanagari', bodySize: 11.5, bodyLineHeight: 1.9 };
+    }
     return { family: 'Baloo2', bodySize: 12, bodyLineHeight: 1.9 };
   }
   if (lang === 'hi') {
@@ -131,9 +146,9 @@ function resolvePdfFont(lang: 'en' | 'hi' | 'mr', fontClass: string): {
     return { family: 'NotoSansDevanagari', bodySize: 11.5, bodyLineHeight: 1.9 };
   }
   if (fontClass === 'fg' || fontClass === 'fs') {
-    return { family: 'LiberationSerif', bodySize: 10.5, bodyLineHeight: 2.0 };
+    return { family: 'LiberationSerif', bodySize: 10.5, bodyLineHeight: 2.1 };
   }
-  return { family: 'Poppins', bodySize: 10.5, bodyLineHeight: 2.0 };
+  return { family: 'Poppins', bodySize: 10.5, bodyLineHeight: 2.1 };
 }
 
 // ── Script-aware text ────────────────────────────────────
@@ -156,7 +171,12 @@ function resolvePdfScriptFonts(lang: 'en' | 'hi' | 'mr', fontClass: string): {
   latin: string; deva: string;
 } {
   const latin = fontClass === 'fg' || fontClass === 'fs' ? 'LiberationSerif' : 'Poppins';
-  if (lang === 'mr') return { latin: 'Baloo2', deva: 'Baloo2' };
+  if (lang === 'mr') {
+    // Poppins choice ('fd2') keeps Poppins Latin + Noto Serif
+    // Devanagari; every other Marathi font keeps Baloo 2.
+    if (fontClass === 'fd2') return { latin: 'Poppins', deva: 'NotoSerifDevanagari' };
+    return { latin: 'Baloo2', deva: 'Baloo2' };
+  }
   if (lang === 'hi') {
     const deva = fontClass === 'fd2' || fontClass === 'ft' ? 'NotoSerifDevanagari' : 'NotoSansDevanagari';
     return { latin, deva };
@@ -245,6 +265,11 @@ const styles = StyleSheet.create({
   },
   watermarkImg: { width: 280, height: 280, opacity: 0.07, transform: 'rotate(-18deg)' },
   // ── Headers ──
+  // Paper top rows: Type-A/E/F show the File No. at the top-left
+  // (hATop, 12px mono + 5px margin) — the PDF used to drop that
+  // row, so its header block started shorter than the preview's.
+  headerTopRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 4 },
+  headerTopFno: { fontSize: 9, fontFamily: 'Courier' },
   headerCenter: { alignItems: 'center', textAlign: 'center', lineHeight: 1.6, marginBottom: 6 },
   headerHi: { fontSize: 10.5, fontWeight: 700, marginBottom: 1 },
   headerHiC: { fontSize: 14.25, fontWeight: 700, color: BLUE, marginBottom: 1 },
@@ -268,10 +293,14 @@ const styles = StyleSheet.create({
   circularBadge: { backgroundColor: BLUE, color: '#ffffff', fontSize: 7, paddingHorizontal: 5, paddingVertical: 1, marginLeft: 8 },
   // ── Dividers ──
   dblLine: { borderTopWidth: 2, borderTopColor: BLUE, marginHorizontal: 27 },
-  singleLine: { borderTopWidth: 1, borderTopColor: '#555555', marginHorizontal: 27, marginTop: 3, marginBottom: 8 },
-  solidLine: { borderTopWidth: 2, borderTopColor: BLUE, marginBottom: 8 },
-  saffronLine: { borderTopWidth: 3, borderTopColor: SAFFRON, marginBottom: 8 },
-  thinLine: { borderTopWidth: 1, borderTopColor: '#444444', marginHorizontal: 27, marginTop: 2, marginBottom: 8 },
+  // Paper dividers carry NO bottom margin — the meta row / body
+  // padding below supplies the gap. The old 8pt bottom margins
+  // here pushed every PDF header block 8pt further from the meta
+  // row than the preview shows.
+  singleLine: { borderTopWidth: 1, borderTopColor: '#555555', marginHorizontal: 27, marginTop: 3 },
+  solidLine: { borderTopWidth: 2, borderTopColor: BLUE },
+  saffronLine: { borderTopWidth: 3, borderTopColor: SAFFRON },
+  thinLine: { borderTopWidth: 1, borderTopColor: '#444444', marginHorizontal: 27, marginTop: 2 },
   triStrip: { flexDirection: 'row', height: 3, marginBottom: 0 },
   tri1: { flex: 1, backgroundColor: '#FF9933' },
   tri2: { flex: 1, backgroundColor: '#ffffff', borderTopWidth: 1, borderTopColor: '#eeeeee', borderBottomWidth: 1, borderBottomColor: '#eeeeee' },
@@ -323,7 +352,13 @@ const styles = StyleSheet.create({
   para: { textAlign: 'justify', marginBottom: 8 },
   closingWrap: { alignSelf: 'flex-end', width: 200, alignItems: 'center', marginTop: 12 },
   closingBlock: { fontSize: 10.5, fontWeight: 700, textAlign: 'center', marginBottom: 4 },
-  sigImg: { width: 150, height: 42, objectFit: 'contain', marginBottom: 2 },
+  // Paper reserves a fixed 60px (45pt) signature space whether or
+  // not a signature image exists — the PDF used to collapse it to
+  // nothing when no image was set, leaving no room to sign the
+  // printed letter. This reserves the same space; an image sits
+  // bottom-aligned inside it, like the paper's sigSpace.
+  sigSpacePdf: { height: 45, justifyContent: 'flex-end', alignItems: 'center', marginBottom: 2 },
+  sigImg: { width: 150, height: 42, objectFit: 'contain' },
   sigName: { fontSize: 11, fontWeight: 700, textAlign: 'center', marginTop: 2 },
   sigLine: { fontSize: 9.5, color: '#333333', textAlign: 'center', marginTop: 1 },
   sigDept: { fontSize: 9, color: '#444444', textAlign: 'center', marginTop: 1 },
@@ -439,7 +474,10 @@ function Header({ state, fonts }: { state: AppState; fonts: { latin: string; dev
     const deptDiffers = Boolean(form.dept?.trim())
       && form.dept.trim().toLowerCase() !== (form.sd?.trim().toLowerCase() || '');
     return (
-      <View style={{ position: 'relative', marginBottom: 6 }}>
+      // Paper Type-B header has min-height 115px (86pt) — without
+      // it a short PDF header collapsed and the divider/meta row
+      // sat higher than in the preview.
+      <View style={{ position: 'relative', marginBottom: 6, minHeight: 86 }}>
         <View style={{ position: 'absolute', top: 0, right: 0, width: 170 }}>
           <View style={styles.headerAddrB}>
             {form.ofc?.trim() ? <SegText fonts={fonts} text={form.ofc.trim()} /> : null}
@@ -470,8 +508,16 @@ function Header({ state, fonts }: { state: AppState; fonts: { latin: string; dev
       </View>
     );
   }
-  // Type-A / E / F: centred header (F adds the CIRCULAR badge).
+  // Type-A / E / F: top File-No. row (like the paper's hATop)
+  // then the centred header (F adds the CIRCULAR badge).
   return (
+    <View>
+      {form.fno?.trim() ? (
+        <View style={styles.headerTopRow}>
+          <SegText fonts={fonts} text={form.fno.trim()} style={styles.headerTopFno} latinOverride="Courier" />
+          <View />
+        </View>
+      ) : null}
     <View style={styles.headerCenter}>
       {logo ? <Image src={logo} style={styles.headerLogoCenter} /> : null}
       {hiLine ? <SegText fonts={fonts} text={hiLine} style={styles.headerHi} /> : null}
@@ -488,6 +534,7 @@ function Header({ state, fonts }: { state: AppState; fonts: { latin: string; dev
       {addr || contact ? (
         <SegText fonts={fonts} text={`${addr}${addr && contact ? '\n' : ''}${contact}`} style={styles.headerAddrRight} />
       ) : null}
+    </View>
     </View>
   );
 }
@@ -597,7 +644,12 @@ export function LetterPdfDocument({ state }: { state: AppState }) {
 
   return (
     <Document>
-      <Page size="A4" style={[styles.page, { fontFamily }]}>
+      {/* Page top padding now matches the paper: the paper's
+          headers start 10–14px (8–11pt) from the sheet edge, while
+          the old 40pt PDF top padding pushed every header ~30pt
+          lower than the preview. Personal letters keep the
+          paperPersonal 40px (30pt) top. */}
+      <Page size="A4" style={[styles.page, { fontFamily, paddingTop: isPersonal ? 30 : 12 }]}>
         {!isPersonal && (
           <>
             <Header state={state} fonts={scriptFonts} />
@@ -692,7 +744,9 @@ export function LetterPdfDocument({ state }: { state: AppState }) {
               <SegText fonts={scriptFonts} text={`${form.cls.trim()},`} />
             </View>
           ) : null}
-          {sig ? <Image src={sig} style={styles.sigImg} /> : null}
+          <View style={styles.sigSpacePdf}>
+            {sig ? <Image src={sig} style={styles.sigImg} /> : null}
+          </View>
           {form.sn?.trim() ? <SegText fonts={scriptFonts} text={form.sn.trim()} style={styles.sigName} /> : null}
           {!isPersonal && form.sd?.trim() ? <SegText fonts={scriptFonts} text={form.sd.trim()} style={styles.sigLine} /> : null}
           {!isPersonal && form.dept?.trim() ? <SegText fonts={scriptFonts} text={form.dept.trim()} style={styles.sigDept} /> : null}

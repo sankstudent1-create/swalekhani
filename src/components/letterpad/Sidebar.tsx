@@ -11,6 +11,7 @@ import {
 } from '@/lib/letterpad/constants';
 import { buildPrompt, generateLetterWithAI } from '@/lib/letterpad/aiService';
 import { MISSING_FIELD_LABELS } from '@/lib/letterpad/typeProtocols';
+import { liveMissing } from '@/lib/letterpad/generationGuards';
 import SignaturePad from './SignaturePad';
 import styles from './Sidebar.module.css';
 
@@ -31,7 +32,7 @@ interface SidebarProps {
  onOffice: (type: string) => void;
  onLogo: (side: LogoSide, src: string | null) => void;
  onSigApply: (url: string) => void;
- onFillAI: (data: AILetterData, isFull: boolean, model?: string) => void;
+ onFillAI: (data: AILetterData, isFull: boolean, model?: string, brief?: string) => void;
  onAiMode?: (mode: 'content' | 'full') => void;
  onAiType?: (t: string) => void;
  onAiLang?: (l: string) => void;
@@ -92,12 +93,21 @@ export default function Sidebar({
  const upSigRef = useRef<HTMLInputElement>(null);
 
  // ── Logo upload ──────────────────────────────
- function handleLogoUpload(e: React.ChangeEvent<HTMLInputElement>, side: LogoSide) {
+ // Uploaded logos are converted to PNG before they reach state:
+ // the vector PDF can only draw PNG/JPEG, so an SVG/WebP/GIF
+ // upload used to show on the paper and vanish from the download.
+ async function handleLogoUpload(e: React.ChangeEvent<HTMLInputElement>, side: LogoSide) {
  const file = e.target.files?.[0];
  if (!file) return;
  const reader = new FileReader();
- reader.onload = (ev) => onLogo(side, ev.target?.result as string);
+ const dataUrl = await new Promise<string | null>((resolve) => {
+ reader.onload = () => resolve(reader.result as string);
+ reader.onerror = () => resolve(null);
  reader.readAsDataURL(file);
+ });
+ if (!dataUrl) return;
+ const { toPngDataUrl } = await import('@/lib/letterpad/imageConvert');
+ onLogo(side, await toPngDataUrl(dataUrl));
  }
 
  // ── AI generate (uses Groq server-side) ──────
@@ -133,7 +143,11 @@ export default function Sidebar({
  contextForm,
  state.officeType
  );
- onFillAI(result.data, aiMode === 'full', result.model);
+ // The brief travels with the fill so fillFromAI can run its
+ // client-side final-state scrub (a generated value identical to
+ // the previous letter's is dropped unless typed/preset/named in
+ // the brief) — the route guards alone did not hold live.
+ onFillAI(result.data, aiMode === 'full', result.model, briefText);
  // Show the exact model the server returned — no lossy shortening
  // (the old code turned e.g. llama-3.3-70b-versatile into "L-3.3-70b").
  // Surface missing fields as a warning, not a silent partial letter.
@@ -236,6 +250,21 @@ export default function Sidebar({
  {aiStatus}
  </div>
  )}
+ {/* Live missing-fields line (FAIL 2): the generation-time
+     status above is a frozen snapshot — it can never clear when
+     a field is filled. This line is derived from the CURRENT
+     form on every render, so it clears the moment the named
+     field is filled and reappears if it is emptied. */}
+ {aiStatus && (() => {
+   const live = liveMissing(form);
+   return (
+     <div className={styles.aiStatus}>
+       {live.length
+         ? `Live check — still to fill: ${live.map(f => MISSING_FIELD_LABELS[f] || f).join(', ')}`
+         : 'Live check — all required fields filled ✓'}
+     </div>
+   );
+ })()}
 
  {/* Groq-powered badge — no API key input needed */}
  <div className={styles.groqBadge}>

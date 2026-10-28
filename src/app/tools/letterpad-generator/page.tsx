@@ -11,6 +11,7 @@ import EditToolbar from '@/components/letterpad/EditToolbar';
 import AIChatAssistant from '@/components/letterpad/AIChatAssistant';
 import SoftwareAppSchema from '@/components/seo/SoftwareAppSchema';
 import { useLetterState } from '@/hooks/useLetterState';
+import { loadFontPreference } from '@/lib/letterpad/fontPreference';
 import { PROFESSION_TEMPLATES } from '@/data/profession-templates';
 import type { LetterForm, LogoSide, TemplateType } from '@/types/letterpad';
 import styles from './letterpad-page.module.css';
@@ -99,10 +100,15 @@ function LetterpadGeneratorInner() {
  sd: defaultDesig,
  };
 
+ // A template's theme font applies only when the user has no
+ // stored font preference — a chosen font must survive picking
+ // a template (see fontPreference.ts).
+ if (!loadFontPreference()) {
  if (prof.theme.font === 'serif') {
  setFont('fs');
  } else if (prof.theme.font === 'mono') {
  setFont('fn');
+ }
  }
 
  if (sample) {
@@ -289,7 +295,17 @@ function LetterpadGeneratorInner() {
  setPdfBusy(true);
  try {
  const { buildLetterPdfBlob } = await import('@/components/letterpad/LetterPdfDocument');
- const blob = await buildLetterPdfBlob({ state });
+ const { toPngDataUrl } = await import('@/lib/letterpad/imageConvert');
+ // Safety net for images already in state (e.g. uploaded before
+ // the Sidebar conversion landed): the vector PDF can only draw
+ // PNG/JPEG, so anything else becomes a PNG first. Logos that
+ // used to vanish from the download now render.
+ const [logoL, logoR, sigUrl] = await Promise.all([
+ toPngDataUrl(state.logoL),
+ toPngDataUrl(state.logoR),
+ toPngDataUrl(state.sigUrl),
+ ]);
+ const blob = await buildLetterPdfBlob({ state: { ...state, logoL, logoR, sigUrl } });
  const url = URL.createObjectURL(blob);
  const link = document.createElement('a');
  link.href = url;
@@ -433,6 +449,8 @@ function LetterpadGeneratorInner() {
  lastModel={lastModel}
  pdfBusy={pdfBusy}
  pngBusy={pngBusy}
+ font={state.font}
+ onFont={setFont}
  />
 
  {/* ── Mobile tab bar ── */}
@@ -549,7 +567,7 @@ function LetterpadGeneratorInner() {
  </main>
  </div>
  
- <AIChatAssistant state={state} onSetForm={setForm} onFillAI={fillFromAI} />
+ <AIChatAssistant state={state} onSetForm={setForm} onFillAI={fillFromAI} onAiType={setAiType} />
  <SoftwareAppSchema />
  </div>
  );

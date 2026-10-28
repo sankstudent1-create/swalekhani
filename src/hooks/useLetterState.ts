@@ -6,6 +6,8 @@ import { useState, useCallback, useEffect, useRef } from 'react';
 import type { AppState, LetterForm, TemplateType, FontClass, LogoSide, SigMode, AILetterData } from '@/types/letterpad';
 import { DEFAULT_FORM, DEFAULT_LOGO_POS, OFFICE_PRESETS, svgToDataUri } from '@/lib/letterpad/constants';
 import { isPlaceholderValue } from '@/lib/letterpad/typeProtocols';
+import { scrubFullForm } from '@/lib/letterpad/generationGuards';
+import { loadFontPreference, saveFontPreference } from '@/lib/letterpad/fontPreference';
 
 const DRAFT_KEY = 'swalekhani-studio-draft-v1';
 
@@ -57,6 +59,28 @@ export function useLetterState() {
         setDraftStatus('restored');
       }
     } catch { /* corrupted draft — start fresh */ }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // ── Re-apply the stored font preference on mount ──
+  // Declared after the draft restore so it wins over the draft's
+  // font. With no stored preference and a Devanagari draft, the
+  // Poppins Devanagari default ('fd2') applies instead.
+  useEffect(() => {
+    try {
+      const pref = loadFontPreference();
+      if (pref) {
+        setState(s => ({ ...s, font: pref }));
+        return;
+      }
+      const raw = window.localStorage.getItem(DRAFT_KEY);
+      if (raw) {
+        const draft = JSON.parse(raw);
+        if (draft && (draft.aiLang === 'hi' || draft.aiLang === 'mr')) {
+          setState(s => ({ ...s, font: 'fd2' }));
+        }
+      }
+    } catch { /* no stored preference — keep the default font */ }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -157,11 +181,23 @@ export function useLetterState() {
     setState(s => ({ ...s, aiType }));
   }, []);
   const setAiLang = useCallback((aiLang: string) => {
-    setState(s => ({ ...s, aiLang }));
+    // Switching the AI language to Hindi/Marathi also switches the
+    // letter to the Poppins Devanagari default ('fd2') — unless the
+    // user has a stored font preference, which always wins.
+    setState(s => ({
+      ...s,
+      aiLang,
+      font: (aiLang === 'hi' || aiLang === 'mr') && !loadFontPreference() ? 'fd2' : s.font,
+    }));
   }, []);
 
   // ── Font ─────────────────────────────────────────────
+  // A font pick is a preference, not draft content: it is written
+  // to its own localStorage key (see fontPreference.ts) so it
+  // survives a New letter and template changes, and it is
+  // re-applied on mount below, winning over the draft's font.
   const setFont = useCallback((font: FontClass) => {
+    saveFontPreference(font);
     setState(s => ({ ...s, font }));
   }, []);
 
@@ -181,27 +217,44 @@ export function useLetterState() {
 
     const logoL = preset.ll ? svgToDataUri(preset.ll) : null;
     const logoR = preset.lr ? svgToDataUri(preset.lr) : null;
-    const presetKeys = (['h1', 'h2', 'e1', 'e2', 'dept', 'divn', 'ofc', 'city', 'pin', 'ph', 'em', 'wb'] as const)
+    // Catch (b): clicking an office preset must NEVER overwrite a
+    // value the user typed with a preset placeholder ("Your Company
+    // Name", "Tagline / Pvt. Ltd." …), and must never write a
+    // placeholder value as real form content. A typed non-empty
+    // field is kept; a placeholder preset value becomes blank; only
+    // a real preset value applied to a non-typed field is recorded
+    // as a preset field. (The live case: restoring a header by
+    // clicking Corporate overwrote a typed Hindi Line 1 with
+    // "Your Company Name" while the un-preset regional name survived.)
+    const headerKeys = (['h1', 'h2', 'e1', 'e2', 'dept', 'divn', 'ofc', 'city', 'pin', 'ph', 'em', 'wb'] as const)
       .filter((k) => Boolean(preset[k]));
 
-    setState(s => ({
-      ...s,
-      officeType: type as AppState['officeType'],
-      tpl: preset.t,
-      logoL,
-      logoR,
-      posR: { ...s.posR, placed: false }, // trigger auto-placement
-      showFooter: type !== 'personal',
-      presetFields: presetKeys as unknown as string[],
-      form: {
-        ...s.form,
-        h1: preset.h1, h2: preset.h2,
-        e1: preset.e1, e2: preset.e2,
-        dept: preset.dept, divn: preset.divn,
-        ofc: preset.ofc, city: preset.city, pin: preset.pin,
-        ph: preset.ph, em: preset.em, wb: preset.wb,
-      },
-    }));
+    setState(s => {
+      const nextHeader: Record<string, string> = {};
+      const appliedPresetKeys: string[] = [];
+      for (const k of headerKeys) {
+        const presetVal = preset[k] as string;
+        if ((s.userEditedFields || []).includes(k) && s.form[k]?.trim()) {
+          nextHeader[k] = s.form[k];
+        } else if (isPlaceholderValue(presetVal)) {
+          nextHeader[k] = '';
+        } else {
+          nextHeader[k] = presetVal;
+          appliedPresetKeys.push(k);
+        }
+      }
+      return {
+        ...s,
+        officeType: type as AppState['officeType'],
+        tpl: preset.t,
+        logoL,
+        logoR,
+        posR: { ...s.posR, placed: false }, // trigger auto-placement
+        showFooter: type !== 'personal',
+        presetFields: appliedPresetKeys,
+        form: { ...s.form, ...nextHeader },
+      };
+    });
   }, []);
 
   // ── Logos ─────────────────────────────────────────────
@@ -244,7 +297,12 @@ export function useLetterState() {
   // explicitly supplies a non-blank value; otherwise the existing
   // non-empty value survives, in both Body-Only and Full modes.
   // Personal letters still clear masthead fields on purpose.
-  const fillFromAI = useCallback((data: AILetterData, isFull: boolean = false, model?: string) => {
+  // brief is the prompt that produced this generation (sidebar
+  // prompt or modal text). It powers the client-side final-state
+  // scrub below; fills without a brief (e.g. the modal edit path,
+  // which deliberately re-applies the current letter's own values)
+  // are never scrubbed.
+  const fillFromAI = useCallback((data: AILetterData, isFull: boolean = false, model?: string, brief?: string) => {
     if (model) setLastModel(model);
 
     const has = (v?: string | null) => Boolean(v?.trim());
@@ -312,6 +370,18 @@ export function useLetterState() {
       const preset = (k: string) => (s.presetFields || []).includes(k);
       const fullVal = (key: string, ai: string | undefined, cur: string) =>
         !isFull ? keep(ai, cur) : edited(key) ? cur : (has(ai) ? (ai as string) : (preset(key) && cur && !isPlaceholderValue(cur) ? cur : ''));
+      // Personal-type detection must not blank a value the user
+      // explicitly typed. The 48cfd0b live failure's second half is
+      // this: a Fully-AI regeneration run while Letter Type was
+      // still Student Application resolved to a personal type, and
+      // fillFromAI blanked every header field — including an
+      // English Line 1 the user had just typed — while the body
+      // and recipient (which the model had just written from that
+      // typed value) survived, so the typed value looked "moved"
+      // into the body. Typed header values now survive personal
+      // detection exactly as they survive Full mode.
+      const personalVal = (key: string, ai: string | undefined, cur: string) =>
+        isPersonal ? (edited(key) ? cur : '') : fullVal(key, ai, cur);
       // The user's chosen salutation survives unless the AI supplies one.
       const salVal = fullVal('sal', data.sal ?? data.salutation, s.form.sal);
       const bodyVal = stripLeadingSalutation(keep(data.body, s.form.body), salVal);
@@ -326,33 +396,32 @@ export function useLetterState() {
       // body is excluded: it uses keep(), not the replace rule.
       const CONSUMED_KEYS = ['h1', 'h2', 'e1', 'e2', 'dept', 'divn', 'ofc', 'city', 'pin', 'ph', 'em', 'wb', 'fno', 'ref', 'toD', 'toA', 'sub', 'sal', 'cls', 'sn', 'sh', 'sd', 'sp', 'sc', 'encl', 'copyTo'];
 
-      return {
-        ...s,
-        tpl: targetTpl,
-        userEditedFields: isFull
-          ? (s.userEditedFields || []).filter((k) => !CONSUMED_KEYS.includes(k))
-          : s.userEditedFields,
-        officeType: isPersonal ? 'personal' : (isFull ? 'corporate' : s.officeType),
-        logoL: newLogoL,
-        logoR: newLogoR,
-        showEncl: isPersonal ? false : (enclVal.trim().length > 0 || s.showEncl),
-        showCopy: isPersonal ? false : (copyVal.length > 0 || s.showCopy),
-        showEndorse: false,
-        showFooter: !isPersonal,
-        form: {
+      // Client-side final-state scrub (the 48cfd0b lesson): the
+      // route guards alone did not hold live — a model value equal
+      // to the previous letter's value, a reworded copy, or stale
+      // state could still land on the paper. So after the fill
+      // values are computed, every AI-owned identity field is
+      // scrubbed against the PREVIOUS form: an applied value
+      // identical to the previous letter's is dropped unless the
+      // user typed it, a preset set it, or the new brief names it.
+      // Salutations/closings are excluded by the scrub key list
+      // (they legitimately repeat), as are date and body. The
+      // scrub uses the PRE-consumption edited/preset marks, and
+      // only runs when a brief is supplied (generation paths).
+      const rawForm = {
           ...s.form,
-          h1: isPersonal ? '' : fullVal('h1', data.h1 ?? data.dept_hindi_1, s.form.h1),
-          h2: isPersonal ? '' : fullVal('h2', data.h2 ?? data.dept_hindi_2, s.form.h2),
-          e1: isPersonal ? '' : fullVal('e1', data.e1 ?? data.dept_english_1, s.form.e1),
-          e2: isPersonal ? '' : fullVal('e2', data.e2 ?? data.dept_english_2, s.form.e2),
-          dept: isPersonal ? '' : fullVal('dept', data.dept ?? data.department, s.form.dept),
-          divn: isPersonal ? '' : fullVal('divn', data.divn ?? data.division, s.form.divn),
-          ofc:  isPersonal ? '' : fullVal('ofc', data.ofc ?? data.office, s.form.ofc),
-          city: isPersonal ? '' : fullVal('city', data.city, s.form.city),
-          pin:  isPersonal ? '' : fullVal('pin', data.pin, s.form.pin),
-          ph:   isPersonal ? '' : fullVal('ph', data.ph ?? data.phone, s.form.ph),
-          em:   isPersonal ? '' : fullVal('em', data.em ?? data.email, s.form.em),
-          wb:   isPersonal ? '' : fullVal('wb', data.wb ?? data.website, s.form.wb),
+          h1: personalVal('h1', data.h1 ?? data.dept_hindi_1, s.form.h1),
+          h2: personalVal('h2', data.h2 ?? data.dept_hindi_2, s.form.h2),
+          e1: personalVal('e1', data.e1 ?? data.dept_english_1, s.form.e1),
+          e2: personalVal('e2', data.e2 ?? data.dept_english_2, s.form.e2),
+          dept: personalVal('dept', data.dept ?? data.department, s.form.dept),
+          divn: personalVal('divn', data.divn ?? data.division, s.form.divn),
+          ofc:  personalVal('ofc', data.ofc ?? data.office, s.form.ofc),
+          city: personalVal('city', data.city, s.form.city),
+          pin:  personalVal('pin', data.pin, s.form.pin),
+          ph:   personalVal('ph', data.ph ?? data.phone, s.form.ph),
+          em:   personalVal('em', data.em ?? data.email, s.form.em),
+          wb:   personalVal('wb', data.wb ?? data.website, s.form.wb),
           fno:  isPersonal ? '' : fullVal('fno', data.fno ?? data.file_no, s.form.fno),
           // Date (Defect 5): the route returns dt already localised
           // for Hindi/Marathi, but fillFromAI never applied it, so
@@ -369,14 +438,44 @@ export function useLetterState() {
           sal:  salVal,
           cls:  fullVal('cls', data.cls ?? data.closing, s.form.cls),
           sn:   fullVal('sn', data.sn ?? data.signatory_name, s.form.sn),
-          sh:   isPersonal ? '' : fullVal('sh', data.sh ?? data.signatory_hindi, s.form.sh),
-          sd:   isPersonal ? '' : fullVal('sd', data.sd ?? data.signatory_designation, s.form.sd),
-          sp:   isPersonal ? '' : fullVal('sp', data.sp ?? data.signatory_phone, s.form.sp),
-          sc:   isPersonal ? '' : fullVal('sc', data.sc ?? data.constituency, s.form.sc),
+          sh:   personalVal('sh', data.sh ?? data.signatory_hindi, s.form.sh),
+          sd:   personalVal('sd', data.sd ?? data.signatory_designation, s.form.sd),
+          sp:   personalVal('sp', data.sp ?? data.signatory_phone, s.form.sp),
+          sc:   personalVal('sc', data.sc ?? data.constituency, s.form.sc),
           body: bodyVal,
           encl: enclVal,
           copyTo: copyVal,
-        },
+      };
+      // Catch (a): a generation must not silently flip visibility
+      // flags. Previously fillFromAI forced showFooter off for
+      // personal-type generations (and showEndorse off always), so
+      // a Fully-AI generation could remove the footer the user had
+      // on — the live footer had to be re-enabled by hand. Flags
+      // now survive every generation; only an explicit user toggle
+      // (or an office-preset click) changes them.
+      const finalForm = isFull
+        ? scrubFullForm(
+            rawForm as unknown as Record<string, string>,
+            s.form as unknown as Record<string, string>,
+            s.userEditedFields || [],
+            s.presetFields || [],
+            brief || '',
+          )
+        : rawForm;
+      return {
+        ...s,
+        tpl: targetTpl,
+        userEditedFields: isFull
+          ? (s.userEditedFields || []).filter((k) => !CONSUMED_KEYS.includes(k))
+          : s.userEditedFields,
+        officeType: isPersonal ? 'personal' : (isFull ? 'corporate' : s.officeType),
+        logoL: newLogoL,
+        logoR: newLogoR,
+        showEncl: isPersonal ? false : (enclVal.trim().length > 0 || s.showEncl),
+        showCopy: isPersonal ? false : (copyVal.length > 0 || s.showCopy),
+        showEndorse: s.showEndorse,
+        showFooter: s.showFooter,
+        form: { ...rawForm, ...finalForm },
         aiTick: (s.aiTick || 0) + 1,
       };
     });

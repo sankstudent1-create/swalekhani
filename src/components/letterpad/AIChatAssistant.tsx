@@ -2,6 +2,8 @@
 import React, { useState, useRef, useEffect } from 'react';
 import type { AppState, LetterForm, AILetterData } from '@/types/letterpad';
 import { MISSING_FIELD_LABELS } from '@/lib/letterpad/typeProtocols';
+import { AI_LETTER_TYPES } from '@/lib/letterpad/constants';
+import { liveMissing } from '@/lib/letterpad/generationGuards';
 import styles from './AIChatAssistant.module.css';
 
 interface Message {
@@ -12,7 +14,8 @@ interface Message {
 interface AIChatAssistantProps {
  state: AppState;
  onSetForm: (form: Partial<LetterForm>, bumpTick?: boolean) => void;
- onFillAI: (data: AILetterData, isFull: boolean, model?: string) => void;
+ onFillAI: (data: AILetterData, isFull: boolean, model?: string, brief?: string) => void;
+ onAiType?: (t: string) => void;
 }
 
 const QUICK_CHIPS = [
@@ -33,7 +36,7 @@ const QUICK_CHIPS = [
  { label: '🎓 Student Application', text: 'Format as respectful student application to Principal with Class, Roll No., and "Yours obediently"' },
 ];
 
-export default function AIChatAssistant({ state, onSetForm, onFillAI }: AIChatAssistantProps) {
+export default function AIChatAssistant({ state, onSetForm, onFillAI, onAiType }: AIChatAssistantProps) {
  const [isOpen, setIsOpen] = useState(false);
  const [messages, setMessages] = useState<Message[]>([
  { role: 'assistant', text: 'Hi! I can help you edit this letter or write a completely new one in English, मराठी (Marathi), or हिन्दी (Hindi). Type your request below.' }
@@ -41,6 +44,10 @@ export default function AIChatAssistant({ state, onSetForm, onFillAI }: AIChatAs
  const [input, setInput] = useState('');
  const [selectedLang, setSelectedLang] = useState<'auto' | 'mr' | 'hi' | 'en'>('auto');
  const [isLoading, setIsLoading] = useState(false);
+ // Set once a modal generation succeeds: gates the live missing
+ // line below (before any generation there is nothing to warn
+ // about yet — a fresh blank letter is not "missing" anything).
+ const [hasGenerated, setHasGenerated] = useState(false);
  const endRef = useRef<HTMLDivElement>(null);
 
  useEffect(() => {
@@ -158,7 +165,17 @@ export default function AIChatAssistant({ state, onSetForm, onFillAI }: AIChatAs
  }
 
  if (json.data) {
- onFillAI(json.data, true, json.model);
+ // Brief travels with the fill for the client-side scrub (see
+ // Sidebar), and the detected type syncs the sidebar Letter
+ // Type dropdown (Catch (c)) when it is a real sidebar option —
+ // 'citizen_app' has no sidebar option, so it is left alone
+ // rather than faked into another type.
+ onFillAI(json.data, true, json.model, userText);
+ setHasGenerated(true);
+ const _detectedForSync = json.detected_type || json.data.detected_type;
+ if (onAiType && AI_LETTER_TYPES.some(t => t.value === _detectedForSync)) {
+   onAiType(_detectedForSync);
+ }
  const typeNameMap: Record<string, string> = {
  citizen_app: 'Citizen Application to Authority (Formal Request)',
  noc: 'No Objection Certificate (NOC)',
@@ -265,6 +282,23 @@ export default function AIChatAssistant({ state, onSetForm, onFillAI }: AIChatAs
  </div>
  </div>
  )}
+ {/* Live missing-fields line (FAIL 2): the generation message
+     above is history — its "please fill" text is frozen at
+     generation time and can never clear when you fill the
+     field, which is exactly the stale badge the live retest
+     caught. This line is derived from the CURRENT paper on
+     every render: it clears the moment the named field is
+     filled and reappears if it is emptied. */}
+ {hasGenerated && (() => {
+   const live = liveMissing(state.form);
+   return (
+     <div className={`${styles.message} ${styles.assistantMsg}`}>
+       {live.length
+         ? `Live check — still to fill: ${live.map((f: string) => MISSING_FIELD_LABELS[f] || f).join(', ')}.`
+         : 'Live check — all required fields filled ✓'}
+     </div>
+   );
+ })()}
  <div ref={endRef} />
  </div>
 

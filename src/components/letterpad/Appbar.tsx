@@ -5,6 +5,8 @@ import React from 'react';
 import Link from 'next/link';
 import { PenTool } from 'lucide-react';
 import ThemeToggle from '@/components/ThemeToggle';
+import { FONT_OPTIONS } from '@/lib/letterpad/constants';
+import type { FontClass } from '@/types/letterpad';
 import styles from './Appbar.module.css';
 
 interface AppbarProps {
@@ -16,9 +18,14 @@ interface AppbarProps {
  lastModel?: string;
  pdfBusy?: boolean;
  pngBusy?: boolean;
+ // Letter font, picked in the top bar (same choice as the
+ // sidebar's Body Font picker — both call the same setFont, and
+ // the pick is remembered locally, see fontPreference.ts).
+ font?: FontClass;
+ onFont?: (f: FontClass) => void;
 }
 
-export default function Appbar({ onPrint, onPDF, onPNG, onToggleEndorse, onToggleCopy, lastModel, pdfBusy, pngBusy }: AppbarProps) {
+export default function Appbar({ onPrint, onPDF, onPNG, onToggleEndorse, onToggleCopy, lastModel, pdfBusy, pngBusy, font = '', onFont }: AppbarProps) {
  // Shorten the model name for display — e.g. "llama-3.3-70b"
  const modelShort = lastModel
  ? lastModel.replace(/-versatile|-instant|-it|-preview/gi, '').replace('llama-', 'L').replace('gemma', 'G')
@@ -43,6 +50,21 @@ export default function Appbar({ onPrint, onPDF, onPNG, onToggleEndorse, onToggl
  </div>
 
  <div className={styles.right}>
+ {onFont && (
+ <label className={styles.fontPick} title="Letter font — remembered on this device">
+ <span className={styles.fontLabel}>Font</span>
+ <select
+ className={styles.fontSelect}
+ value={font}
+ onChange={e => onFont(e.target.value as FontClass)}
+ aria-label="Letter font"
+ >
+ {FONT_OPTIONS.map(f => (
+ <option key={f.key} value={f.key}>{f.label}</option>
+ ))}
+ </select>
+ </label>
+ )}
  <div style={{ display: 'flex', alignItems: 'center', marginRight: 2 }}>
  <ThemeToggle />
  </div>

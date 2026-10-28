@@ -25,6 +25,11 @@ import {
   type AILang,
   type KnownLetterType,
 } from '@/lib/letterpad/typeProtocols';
+import {
+  valuesIdentical,
+  groundedInBrief as guardsGroundedInBrief,
+  pickFullValue,
+} from '@/lib/letterpad/generationGuards';
 
 interface GroqMessage {
   role: 'user' | 'system' | 'assistant';
@@ -542,16 +547,26 @@ ${generationMode === 'full' ? '- ENTIRE LETTERHEAD MODE: Fill header fields (e1,
       ? extractSenderFromBrief(description)
       : {};
     const pickHeader = (field: string, aiVal: unknown, gtVal: string, isContact: boolean, senderVal?: string): string => {
-      const ai = str(aiVal).trim();
+      let ai = str(aiVal).trim();
       if (generationMode === 'full') {
-        if (userEdited.has(field)) return gtVal;
-        if (ai && !isPlaceholderValue(ai)) return ai;
-        if (!isContact && senderVal) return senderVal;
-        // Preset fallback (Defect 6): gt is placeholder-stripped, so
-        // a preset placeholder ("Advocate Name", "Chamber Address")
-        // is already '' here and cannot survive as literal text.
-        if (presetFields.has(field) && gtVal) return gtVal;
-        return '';
+        // Copy guard for headers (48cfd0b live failure): the old
+        // code returned ANY non-placeholder model value, so a model
+        // value identical to the previous letter's value sailed
+        // through — the guard only covered To/address. pickFullValue
+        // drops such a copy unless typed, preset, or named in the
+        // brief, and falls through to sender/preset/blank. A
+        // placeholder model value still never wins (but a typed
+        // value always wins first, even over a placeholder model
+        // value — the edited check inside pickFullValue handles
+        // that, so route placeholder values through it too by
+        // passing '' as the model value).
+        if (ai && isPlaceholderValue(ai)) ai = '';
+        return pickFullValue({
+          ai, gt: gtVal,
+          edited: userEdited.has(field),
+          preset: presetFields.has(field),
+          sender: senderVal, isContact, brief: description,
+        });
       }
       if (isContact && gtVal) return gtVal;
       if (ai && !isPlaceholderValue(ai)) return ai;
@@ -668,7 +683,18 @@ ${generationMode === 'full' ? '- ENTIRE LETTERHEAD MODE: Fill header fields (e1,
     // different topic is never carried over. Office/header fields keep
     // the preserve rule; subject (and recipient below) are the
     // documented exception because they are topic-dependent.
-    const subVal = str(letterData.sub).trim() || synthesizeSubject(resolved, description, gt.sub);
+    // Subject copy guard (48cfd0b live failure): the old code took
+    // ANY model subject, so a model subject identical to the
+    // previous letter's survived even though the topic changed.
+    // A copied subject for an unrelated brief is dropped and the
+    // subject is synthesised fresh from the new brief instead. A
+    // typed subject still wins downstream (client fullVal), and a
+    // subject the new brief actually matches is kept.
+    const modelSub = str(letterData.sub).trim();
+    const subVal = (modelSub && valuesIdentical(modelSub, gt.sub)
+      && !userEdited.has('sub') && !briefMatchesSubject(description, gt.sub))
+      ? synthesizeSubject(resolved, description, '')
+      : (modelSub || synthesizeSubject(resolved, description, gt.sub));
     // Recipient: same topic rule. If the topic changed and the model
     // merely copied the previous recipient, use the type fallback
     // instead of the stale recipient.
@@ -697,7 +723,9 @@ ${generationMode === 'full' ? '- ENTIRE LETTERHEAD MODE: Fill header fields (e1,
       return tokensOf(value).filter((t) => t.length >= 3 && !GROUND_STOPWORDS.has(t)).some((t) => briefToks.has(t));
     };
     const aiToDRaw = str(letterData.toD).trim();
-    const aiToD = (generationMode === 'full' && aiToDRaw && aiToDRaw === gt.toD
+    // Normalised (not byte) equality: a case/punctuation/whitespace
+    // variant of the previous recipient is the same copy.
+    const aiToD = (generationMode === 'full' && aiToDRaw && valuesIdentical(aiToDRaw, gt.toD)
       && !userEdited.has('toD') && !presetFields.has('toD') && !groundedInBrief(aiToDRaw, description))
       ? '' : aiToDRaw;
     const topicChanged = Boolean(gt.sub) && !briefMatchesSubject(description, gt.sub);
@@ -713,7 +741,7 @@ ${generationMode === 'full' ? '- ENTIRE LETTERHEAD MODE: Fill header fields (e1,
     // Recipient address follows the same topic rule as the recipient:
     // a changed topic never inherits the previous letter's address.
     const aiToARaw = str(letterData.toA).trim();
-    const aiToA = (generationMode === 'full' && aiToARaw && aiToARaw === gt.toA
+    const aiToA = (generationMode === 'full' && aiToARaw && valuesIdentical(aiToARaw, gt.toA)
       && !userEdited.has('toA') && !presetFields.has('toA') && !groundedInBrief(aiToARaw, description))
       ? '' : aiToARaw;
     const toAVal = generationMode === 'full'
@@ -775,9 +803,15 @@ ${generationMode === 'full' ? '- ENTIRE LETTERHEAD MODE: Fill header fields (e1,
     // a typed designation wins, otherwise the model, otherwise the
     // brief sender, otherwise a preset value — never the previous
     // letter's designation.
+    // Designation copy guard (same live failure): a model
+    // designation identical to the previous letter's is dropped
+    // unless typed, preset, or named in the brief.
+    const modelSd = str(letterData.sd).trim();
+    const sdCopy = generationMode === 'full' && modelSd && valuesIdentical(modelSd, gt.sd)
+      && !userEdited.has('sd') && !presetFields.has('sd') && !guardsGroundedInBrief(modelSd, description);
     let sdVal = generationMode === 'full'
-      ? (userEdited.has('sd') ? gt.sd : (str(letterData.sd) || briefSender.sd || (presetFields.has('sd') ? gt.sd : '')))
-      : (gt.sd ? gt.sd : str(letterData.sd));
+      ? (userEdited.has('sd') ? gt.sd : (sdCopy ? (briefSender.sd || (presetFields.has('sd') ? gt.sd : '')) : (modelSd || briefSender.sd || (presetFields.has('sd') ? gt.sd : ''))))
+      : (gt.sd ? gt.sd : modelSd);
     const e1Val = pickHeader('e1', letterData.e1, gt.e1, false, briefSender.e1);
     const e2Val = pickHeader('e2', letterData.e2, gt.e2, false);
     const h1Val = pickHeader('h1', letterData.h1, gt.h1, false);
@@ -806,9 +840,20 @@ ${generationMode === 'full' ? '- ENTIRE LETTERHEAD MODE: Fill header fields (e1,
     // replace rule too (a previous letter's file number must not leak
     // into a new letter); the date is system-seeded today, so it is
     // always model-or-current, then localised for Hindi/Marathi.
+    // Signatory copy guard (the live failure's core: the previous
+    // letter's student signatory survived, and sn previously had
+    // NO guard at all — any model value was taken). A model
+    // signatory identical to the previous letter's is dropped
+    // unless typed, preset, or named in the brief; a preset
+    // signatory still survives as the lowest tier.
+    const modelSn = str(letterData.sn).trim();
+    const snCopy = generationMode === 'full' && modelSn && valuesIdentical(modelSn, gt.sn)
+      && !userEdited.has('sn') && !presetFields.has('sn') && !guardsGroundedInBrief(modelSn, description);
     const snVal = generationMode === 'full'
-      ? (userEdited.has('sn') ? gt.sn : (str(letterData.sn) && !isPlaceholderValue(str(letterData.sn)) ? str(letterData.sn) : ''))
-      : (gt.sn ? gt.sn : str(letterData.sn));
+      ? (userEdited.has('sn') ? gt.sn
+        : (snCopy ? (presetFields.has('sn') ? gt.sn : '')
+          : (modelSn && !isPlaceholderValue(modelSn) ? modelSn : (presetFields.has('sn') ? gt.sn : ''))))
+      : (gt.sn ? gt.sn : modelSn);
     const shVal = generationMode === 'full'
       ? (userEdited.has('sh') ? gt.sh : str(letterData.sh))
       : (str(letterData.sh) || gt.sh);

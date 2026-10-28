@@ -88,6 +88,13 @@ export interface AppState {
   footerDesign?: FooterDesign;
   form: LetterForm;
   aiTick?: number;
+  // Sidebar AI Generation Mode ('content' = Body-Only, 'full' =
+  // Entire Letterhead). Stored here — not in Sidebar local state —
+  // so the draft autosave/restore keeps it across a page reload,
+  // exactly like Letter Type, Language, Salutation and Closing.
+  // (Those three are still Sidebar-local and are out of scope here;
+  // only the mode was reported resetting to Body-Only on reload.)
+  aiMode?: 'content' | 'full';
   // Fields the user explicitly typed in the sidebar or on the paper
   // this session. Fully-AI generation preserves exactly these fields
   // and replaces everything else AI-owned.

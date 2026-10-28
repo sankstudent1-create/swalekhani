@@ -311,6 +311,37 @@ export default function LetterPaper({
  const isHindiLetter = /भवदीय|भवदीया|सेवा में/.test(letterText);
  const isMarathiLetter = /आपला नम्र|आपली नम्र|विनंती/.test(letterText);
  const dateLabel = (isHindiLetter || isMarathiLetter) ? 'दिनांक: ' : 'Dated: ';
+ // Job A1/A2: paper labels localised to the letter's own language.
+ // Marathi takes priority when both markers match (same order as
+ // snPlaceholder above); English letters are untouched, real names
+ // are never translated — only fixed UI labels/placeholders move.
+ // Job A1 root cause: the A/E/F and C/D meta rows suppressed the
+ // date label entirely for personal letters, so a Marathi student
+ // application (officeType 'personal') showed a bare Devanagari
+ // date with no दिनांक: label, while a Hindi complaint (non-
+ // personal) got label+value together. The label now renders for
+ // personal letters too when the letter itself is Hindi/Marathi;
+ // English personal letters keep the old bare-date behaviour.
+ const isDevLetter = isHindiLetter || isMarathiLetter;
+ const L = isMarathiLetter ? {
+   to: 'प्रति', sub: 'विषय:', ref: 'संदर्भ:', fno: 'पत्र क्र.', date: 'दिनांक',
+   toDPh: 'प्राप्तकर्त्याचे पदनाम / नाव', toDPhPersonal: 'प्राप्तकर्ता (उदा. पोस्टमास्तर)',
+   toAPh: 'प्राप्तकर्ता कार्यालय / चेंबर पत्ता', subPh: 'विषय',
+   sdPh: 'पदनाम / नोंदणी', deptPh: 'विभाग / क्लिनिक', titlePh: 'शीर्षक / कंपनीचे नाव',
+   footer: 'पादलेख:', salPh: 'महोदय', clsPh: 'आपला नम्र',
+ } : isHindiLetter ? {
+   to: 'प्रति', sub: 'विषय:', ref: 'संदर्भ:', fno: 'पत्रांक', date: 'दिनांक',
+   toDPh: 'प्राप्तकर्ता का पदनाम / नाम', toDPhPersonal: 'प्राप्तकर्ता (उदा. पोस्टमास्टर)',
+   toAPh: 'प्राप्तकर्ता कार्यालय / चैंबर पता', subPh: 'विषय',
+   sdPh: 'पदनाम / पंजीकरण', deptPh: 'विभाग / क्लिनिक', titlePh: 'शीर्षक / कंपनी का नाम',
+   footer: 'पादलेख:', salPh: 'महोदय', clsPh: 'भवदीय',
+ } : {
+   to: 'To', sub: 'Sub:', ref: 'Ref:', fno: 'F.No.', date: 'Date',
+   toDPh: 'Recipient Designation / Name', toDPhPersonal: 'Recipient (e.g. The Postmaster)',
+   toAPh: 'Recipient Office / Chamber Address', subPh: 'Subject',
+   sdPh: 'Designation / Registration', deptPh: 'Department / Clinic', titlePh: 'Title / Company Name',
+   footer: 'Footer:', salPh: 'Sir/Madam', clsPh: 'Yours faithfully',
+ };
  const snPlaceholder = state.officeType === 'personal'
    ? (isMarathiLetter ? 'तुमचे नाव' : isHindiLetter ? 'आपका नाम' : 'Your Name')
    : (isMarathiLetter ? '(स्वाक्षरीकर्त्याचे नाव)' : isHindiLetter ? '(हस्ताक्षरकर्ता का नाम)' : '(Signatory Name)');
@@ -357,7 +388,7 @@ export default function LetterPaper({
  case 'A': case 'E': case 'F': return (
  <div className={styles.hA}>
  <div className={styles.hATop}>
- {E('fno', styles.hAFno, 'div', 'F.No.')}
+ {E('fno', styles.hAFno, 'div', L.fno)}
  <div className={styles.hARslot} />
  </div>
  <div className={styles.hACenter}>
@@ -380,7 +411,7 @@ export default function LetterPaper({
      sidebar Department / Division fields still edit them. */}
  {(form.dept?.trim() || !(form.e1?.trim() || form.e2?.trim())) && (
  <div className={styles.hADept}>
- {E('dept', '', 'span', 'Title / Company Name')}
+ {E('dept', '', 'span', L.titlePh)}
  {tpl === 'F' && <span className={styles.circularBadge}>CIRCULAR</span>}
  </div>
  )}
@@ -438,7 +469,7 @@ export default function LetterPaper({
  </>
  )}
  {(!showOrgHeaderB || form.sn?.trim()) && !snSameAsE1 && E('sn', styles.hBEn, 'div', 'Name')}
- {E('sd', styles.hBDg, 'div', 'Designation / Specialty')}
+ {E('sd', styles.hBDg, 'div', L.sdPh)}
  {form.enrolmentNo && (
  <div className={styles.advocateEnrolment}>
  {E('enrolmentNo', '', 'span', 'Reg / Enrolment No.')}
@@ -450,7 +481,7 @@ export default function LetterPaper({
  {E('city', '', 'span', 'City')}<span className={(!form.city?.trim() || !form.pin?.trim()) ? styles.hideIfEmptyPrint : ''}>{form.city?.trim() && form.pin?.trim() ? ' – ' : ''}</span>{E('pin', '', 'span', 'PIN')}<br/>
  <span className={!form.ph?.trim() ? styles.hideIfEmptyPrint : ''}>Tel: {E('ph', '', 'span', 'Phone')}<br/></span>
  <span className={!form.em?.trim() ? styles.hideIfEmptyPrint : ''}>{E('em', '', 'span', 'Email')}<br/></span>
- {E('dt', '', 'span', 'Date')}
+ {E('dt', '', 'span', L.date)}
  </div>
  </div>
  );
@@ -598,7 +629,7 @@ export default function LetterPaper({
  {state.officeType !== 'personal' && (
  <>
  <span className={!form.fno?.trim() ? styles.hideIfEmptyPrint : ''}>
- {E('fno', '', 'span', 'F.No.')}
+ {E('fno', '', 'span', L.fno)}
  </span>
  <span className={!addr?.trim() ? styles.hideIfEmptyPrint : ''}>{addr}</span>
  </>
@@ -608,8 +639,8 @@ export default function LetterPaper({
      same row already shows the city, so "Mumbai, Dated:" repeated
      it. The Place line survives where the header has no city
      (Type-C below); Type-D drops it for the same reason. */}
- {state.officeType === 'personal' ? '' : dateLabel}
- {E('dt', '', 'span', 'Date')}
+ {state.officeType === 'personal' && !isDevLetter ? '' : dateLabel}
+ {E('dt', '', 'span', L.date)}
  </span>
  </div>
  )}
@@ -623,14 +654,14 @@ export default function LetterPaper({
  <div className={`${styles.meta} ${state.officeType === 'personal' ? styles.metaPersonal : ''}`}>
  {state.officeType !== 'personal' && (
  <span className={!form.fno?.trim() ? styles.hideIfEmptyPrint : ''}>
- {E('fno', '', 'span', 'F.No.')}
+ {E('fno', '', 'span', L.fno)}
  </span>
  )}
  <span className={!station && !(tpl !== 'B' && form.dt?.trim()) && !(tpl === 'B' && state.officeType === 'personal' && form.dt?.trim()) ? styles.hideIfEmptyPrint : ''}>
  {tpl === 'B' ? (state.officeType === 'personal' ? (form.dt?.trim() ? dateLabel : '') : station) : (tpl === 'D' ? '' : (station && form.dt?.trim() ? `${station}, ` : station))}
- {tpl === 'B' && state.officeType === 'personal' && E('dt', '', 'span', 'Date')}
- {tpl !== 'B' && (state.officeType === 'personal' ? '' : (form.dt?.trim() ? dateLabel : ''))}
- {tpl !== 'B' && E('dt', '', 'span', 'Date')}
+ {tpl === 'B' && state.officeType === 'personal' && E('dt', '', 'span', L.date)}
+ {tpl !== 'B' && (state.officeType === 'personal' ? (isDevLetter && form.dt?.trim() ? dateLabel : '') : (form.dt?.trim() ? dateLabel : ''))}
+ {tpl !== 'B' && E('dt', '', 'span', L.date)}
  </span>
  </div>
  )}
@@ -645,7 +676,7 @@ export default function LetterPaper({
  {!isDoctor && (
  <div className={`${styles.toBlock} ${(!form.toD?.trim() && !form.toA?.trim()) ? styles.hideIfEmptyPrint : ''}`}>
  {!(state.officeType === 'personal' && (form.sal.toLowerCase().includes('dearest') || form.sal.toLowerCase().includes('darling') || form.sal.toLowerCase().includes('प्रियतम') || form.cls.toLowerCase().includes('forever') || form.sub.toLowerCase().includes('love') || form.sub.toLowerCase().includes('heart') || form.toD.toLowerCase().includes('love'))) && (
- <span className={styles.toLabel}>To</span>
+ <span className={styles.toLabel}>{L.to}</span>
  )}
  <div className={styles.toInner}>
  <div className={`${styles.toName} ${!form.toD?.trim() ? styles.hideIfEmptyPrint : ''}`}>
@@ -653,7 +684,7 @@ export default function LetterPaper({
  value={form.toD}
  onChange={v => onFormChange('toD', v)}
  tag="span"
- placeholder={state.officeType === 'personal' ? "Recipient (e.g. The Postmaster)" : "Recipient Designation / Name"}
+ placeholder={state.officeType === 'personal' ? L.toDPhPersonal : L.toDPh}
  aiTick={tick}
  />
  </div>
@@ -667,7 +698,7 @@ export default function LetterPaper({
  value={form.toA}
  onChange={v => onFormChange('toA', v)}
  tag="span"
- placeholder="Recipient Office / Chamber Address"
+ placeholder={L.toAPh}
  aiTick={tick}
  multiline
  />
@@ -683,16 +714,16 @@ export default function LetterPaper({
  <div className={styles.rxBadge}>℞</div>
  ) : (
  !(state.officeType === 'personal' && (form.sal.toLowerCase().includes('dearest') || form.sal.toLowerCase().includes('darling') || form.sal.toLowerCase().includes('प्रियतम') || form.cls.toLowerCase().includes('forever') || form.sub.toLowerCase().includes('love') || form.sub.toLowerCase().includes('heart') || form.toD.toLowerCase().includes('love'))) && (
- <span className={styles.subLabel}>Sub:</span>
+ <span className={styles.subLabel}>{L.sub}</span>
  )
  )}
- {E('sub', styles.subText, 'span', isDoctor ? 'Diagnosis / Clinical Advice' : 'Subject')}
+ {E('sub', styles.subText, 'span', isDoctor ? 'Diagnosis / Clinical Advice' : L.subPh)}
  </div>
 
  {/* Reference — only show if there IS a ref value */}
  {form.ref?.trim() && !isDoctor && (
  <div className={styles.refBlock}>
- <strong>Ref:</strong>{' '}
+ <strong>{L.ref}</strong>{' '}
  <Editable
  value={form.ref}
  onChange={v => onFormChange('ref', v)}
@@ -710,7 +741,7 @@ export default function LetterPaper({
  {/* Comma joined with no intervening whitespace (Defect 10): a
      space between the salutation and its comma rendered as
      "Respected Sir ,". Same fix in the closing block below. */}
- {E('sal', '', 'span', isDoctor ? 'Patient Advice:' : state.officeType === 'personal' ? 'My Dearest' : 'Sir/Madam')}{form.sal?.trim() ? ',' : ''}
+ {E('sal', '', 'span', isDoctor ? 'Patient Advice:' : state.officeType === 'personal' ? 'My Dearest' : L.salPh)}{form.sal?.trim() ? ',' : ''}
  </div>
  )}
 
@@ -733,7 +764,7 @@ export default function LetterPaper({
  value={form.cls}
  onChange={v => onFormChange('cls', v)}
  tag="span"
- placeholder={isDoctor ? "Consulting Physician" : state.officeType === 'personal' ? "Forever yours" : "Yours faithfully"}
+ placeholder={isDoctor ? "Consulting Physician" : state.officeType === 'personal' ? "Forever yours" : L.clsPh}
  aiTick={tick}
  />{form.cls?.trim() ? ',' : ''}
  </div>
@@ -744,8 +775,8 @@ export default function LetterPaper({
  <Editable value={form.sn} onChange={v => onFormChange('sn', v)} tag="div" className={`${styles.sigName} ${!form.sn?.trim() ? styles.hideIfEmptyPrint : ''}`} placeholder={snPlaceholder} aiTick={tick} />
  {state.officeType !== 'personal' && (
  <>
- <Editable value={form.sd} onChange={v => onFormChange('sd', v)} tag="div" className={`${styles.sigDesig} ${!form.sd?.trim() ? styles.hideIfEmptyPrint : ''}`} placeholder="Designation / Registration" aiTick={tick} />
- <Editable value={form.dept} onChange={v => onFormChange('dept', v)} tag="div" className={`${styles.sigDept} ${!form.dept?.trim() ? styles.hideIfEmptyPrint : ''}`} placeholder="Department / Clinic" aiTick={tick} />
+ <Editable value={form.sd} onChange={v => onFormChange('sd', v)} tag="div" className={`${styles.sigDesig} ${!form.sd?.trim() ? styles.hideIfEmptyPrint : ''}`} placeholder={L.sdPh} aiTick={tick} />
+ <Editable value={form.dept} onChange={v => onFormChange('dept', v)} tag="div" className={`${styles.sigDept} ${!form.dept?.trim() ? styles.hideIfEmptyPrint : ''}`} placeholder={L.deptPh} aiTick={tick} />
  </>
  )}
  {(form.sp?.trim() || form.em?.trim()) && state.officeType !== 'personal' && (
@@ -835,7 +866,7 @@ export default function LetterPaper({
  <div className={footerClass} style={{ fontFamily }}>
  {/* Quick action bar on hover (screen only) */}
  <div className={styles.footerHoverBar}>
- <span style={{ fontSize: 10, opacity: 0.85 }}>Footer:</span>
+ <span style={{ fontSize: 10, opacity: 0.85 }}>{L.footer}</span>
  {onToggleFooter && (
  <button 
  type="button"

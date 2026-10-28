@@ -23,6 +23,7 @@ function LetterpadGeneratorInner() {
  setForm,
  setTemplate,
  setFont,
+ setAiMode,
  applyOfficePreset,
  setLogo,
  setLogoPos,
@@ -271,12 +272,41 @@ function LetterpadGeneratorInner() {
  }
  }
 
- // ── PDF Generation — html2canvas + jsPDF ──────
+ // ── PDF Generation — TRUE-VECTOR first (Srot-quality), raster fallback ──
+ // Vector path: @react-pdf/renderer via dynamic import (code-split,
+ // like Srot's index.jsx) renders the CURRENT letter form as real
+ // vector text on true A4 pages — selectable, sharp at any zoom.
+ // If vector generation throws for any reason, fall back to the
+ // existing raster html2canvas+jsPDF implementation below, so the
+ // user always gets a PDF. PNG export is untouched (a PNG is an
+ // image by nature).
  const [pdfBusy, setPdfBusy] = useState(false);
 
  async function generatePDF() {
  if (pdfBusy) return;
  setPdfBusy(true);
+ try {
+ const { buildLetterPdfBlob } = await import('@/components/letterpad/LetterPdfDocument');
+ const blob = await buildLetterPdfBlob({ state });
+ const url = URL.createObjectURL(blob);
+ const link = document.createElement('a');
+ link.href = url;
+ link.download = 'letter.pdf';
+ link.click();
+ setTimeout(() => URL.revokeObjectURL(url), 1000);
+ } catch (err) {
+ console.error('Vector PDF failed, falling back to raster PDF:', err);
+ await generatePDFRaster();
+ } finally {
+ setPdfBusy(false);
+ }
+ }
+
+ // ── Raster PDF fallback — html2canvas + jsPDF (kept verbatim) ──
+ // Used ONLY when vector generation throws. Rasterises the paper
+ // and embeds PNG slices: text pixelates on zoom, which is exactly
+ // what the vector path above fixes — but a raster PDF beats no PDF.
+ async function generatePDFRaster() {
  try {
  const html2canvas = (await import('html2canvas')).default;
  const { jsPDF } = await import('jspdf');
@@ -358,7 +388,6 @@ function LetterpadGeneratorInner() {
  document.body.removeAttribute('data-generating-pdf');
  const leftovers = document.querySelectorAll('[data-empty="true"]');
  leftovers.forEach(el => el.removeAttribute('data-empty'));
- setPdfBusy(false);
  }
  }
 
@@ -434,6 +463,7 @@ function LetterpadGeneratorInner() {
  onLogo={setLogo}
  onSigApply={setSigUrl}
  onFillAI={fillFromAI}
+ onAiMode={setAiMode}
  onToggleEncl={toggleEncl}
  onToggleCopy={toggleCopy}
  onToggleEndorse={toggleEndorse}
@@ -462,15 +492,22 @@ function LetterpadGeneratorInner() {
  >
  {newConfirmArmed ? `⚠ Click again to clear (${newConfirmSeconds}s)` : '✦ New'}
  </button>
- {newConfirmArmed && (
+ {/* Job A6: Cancel is ALWAYS mounted and only hidden when disarmed
+     (never conditionally rendered), and the New button above is
+     always the same element with only its text changing on each
+     countdown tick — no key change, no remount. Previously the
+     Cancel button mounted/unmounted with the armed state, which
+     is what made automation element references go stale mid-
+     countdown and first confirm attempts expire. */}
  <button
  className={styles.clearBtn}
  onClick={cancelNewLetter}
  title="Keep this letter"
+ hidden={!newConfirmArmed}
+ disabled={!newConfirmArmed}
  >
  Cancel
  </button>
- )}
  <EditToolbar
  showEncl={state.showEncl}
  showCopy={state.showCopy}

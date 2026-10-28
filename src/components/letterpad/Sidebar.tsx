@@ -32,6 +32,7 @@ interface SidebarProps {
  onLogo: (side: LogoSide, src: string | null) => void;
  onSigApply: (url: string) => void;
  onFillAI: (data: AILetterData, isFull: boolean, model?: string) => void;
+ onAiMode?: (mode: 'content' | 'full') => void;
  onToggleEncl: () => void;
  onToggleCopy: () => void;
  onToggleEndorse: () => void;
@@ -52,7 +53,7 @@ const Field: React.FC<{ label: string; children: React.ReactNode; half?: boolean
 
 export default function Sidebar({
  state, onUpdateForm, onTemplate, onFont, onOffice, onLogo, onSigApply,
- onFillAI, onToggleEncl, onToggleCopy, onToggleEndorse, onToggleFooter, onFooterDesign,
+ onFillAI, onAiMode, onToggleEncl, onToggleCopy, onToggleEndorse, onToggleFooter, onFooterDesign,
 }: SidebarProps) {
  const { form, tpl, font, officeType, logoL, logoR } = state;
 
@@ -60,7 +61,12 @@ export default function Sidebar({
  const [aiType, setAiType] = useState('corporate');
  const [aiLang, setAiLang] = useState('en');
  const [aiPrompt, setAiPrompt] = useState('');
- const [aiMode, setAiMode] = useState<'content' | 'full'>('content');
+ // Job A4: the generation mode lives in AppState (state.aiMode),
+ // not in local state, so the draft autosave/restore keeps it across
+ // a reload instead of resetting to Body-Only. Letter Type and
+ // Language remain local (unchanged behaviour).
+ const aiMode: 'content' | 'full' = state.aiMode || 'content';
+ const setAiMode = (m: 'content' | 'full') => { if (onAiMode) onAiMode(m); };
  const [aiLoading, setAiLoading] = useState(false);
  const [aiStatus, setAiStatus] = useState('');
 

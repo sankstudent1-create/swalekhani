@@ -28,6 +28,7 @@ const INITIAL_STATE: AppState = {
   userEditedFields: [],
   presetFields: [],
   promptClearTick: 0,
+  aiMode: 'content',
 };
 
 export function useLetterState() {
@@ -132,6 +133,16 @@ export function useLetterState() {
   // ── Template ─────────────────────────────────────────
   const setTemplate = useCallback((tpl: TemplateType) => {
     setState(s => ({ ...s, tpl }));
+  }, []);
+
+  // ── AI Generation Mode (Job A4) ──────────────────────
+  // Persisted in AppState so the draft autosave (which stores the
+  // whole state minus logos/signatures) restores it on reload. A
+  // confirmed New-clear resets it to the 'content' default along
+  // with everything else (INITIAL_STATE), which is the fresh-letter
+  // behaviour; a plain reload restores the last saved mode.
+  const setAiMode = useCallback((aiMode: 'content' | 'full') => {
+    setState(s => ({ ...s, aiMode }));
   }, []);
 
   // ── Font ─────────────────────────────────────────────
@@ -345,6 +356,7 @@ export function useLetterState() {
     setForm,
     setTemplate,
     setFont,
+    setAiMode,
     applyOfficePreset,
     setLogo,
     setLogoPos,

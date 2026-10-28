@@ -659,21 +659,38 @@ ${generationMode === 'full' ? '- ENTIRE LETTERHEAD MODE: Fill header fields (e1,
     // Recipient: same topic rule. If the topic changed and the model
     // merely copied the previous recipient, use the type fallback
     // instead of the stale recipient.
+    // Job A3: in Full mode To follows the SAME replace rule as every
+    // other AI-owned field (typed > model > preset > blank/fallback),
+    // never a previous letter's value. The old code fell back to
+    // gt.toD / gt.toA whenever the model returned nothing and the
+    // topic had not changed — that is how "Branch Manager" from one
+    // letter carried into the next Fully-AI letter. In Full mode a
+    // missing model recipient becomes the type fallback (toD) or
+    // blank (toA), unless the user typed it or a preset set it.
+    // Body-Only mode keeps the old preserve rule exactly.
     const aiToD = str(letterData.toD).trim();
     const topicChanged = Boolean(gt.sub) && !briefMatchesSubject(description, gt.sub);
-    const toDVal = aiToD && !(topicChanged && aiToD === gt.toD)
-      ? aiToD
-      : topicChanged
-        ? recipientFallback
-        : aiToD || gt.toD || recipientFallback;
+    const toDVal = generationMode === 'full'
+      ? (userEdited.has('toD') ? gt.toD
+        : (aiToD && !(topicChanged && aiToD === gt.toD) ? aiToD
+          : (presetFields.has('toD') && gt.toD ? gt.toD : recipientFallback)))
+      : (aiToD && !(topicChanged && aiToD === gt.toD)
+        ? aiToD
+        : topicChanged
+          ? recipientFallback
+          : aiToD || gt.toD || recipientFallback);
     // Recipient address follows the same topic rule as the recipient:
     // a changed topic never inherits the previous letter's address.
     const aiToA = str(letterData.toA).trim();
-    const toAVal = aiToA && !(topicChanged && aiToA === gt.toA)
-      ? aiToA
-      : topicChanged
-        ? ''
-        : aiToA || gt.toA;
+    const toAVal = generationMode === 'full'
+      ? (userEdited.has('toA') ? gt.toA
+        : (aiToA && !(topicChanged && aiToA === gt.toA) ? aiToA
+          : (presetFields.has('toA') && gt.toA ? gt.toA : '')))
+      : (aiToA && !(topicChanged && aiToA === gt.toA)
+        ? aiToA
+        : topicChanged
+          ? ''
+          : aiToA || gt.toA);
     // Whether the recipient is a specific person/office (legal-notice
     // branch of salutation enforcement) as opposed to a group address.
     const GENERIC_RECIPIENTS = new Set([

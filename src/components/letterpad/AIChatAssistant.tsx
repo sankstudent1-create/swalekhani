@@ -176,7 +176,26 @@ export default function AIChatAssistant({ state, onSetForm, onFillAI }: AIChatAs
  };
  const detected = json.detected_type || json.data.detected_type;
  const label = typeNameMap[detected] || 'complete letter';
- const missing = Array.isArray(json.missing_fields) ? json.missing_fields as string[] : [];
+ // Job A5: align the modal warning with the sidebar's post-fill
+ // warning. The route's missing_fields list is computed from the
+ // generation, but the modal previously showed it verbatim — so a
+ // run could list "signatory designation" even though the filled
+ // letter on the paper HAS a designation (the sidebar path, which
+ // re-derives its warning from the filled result, listed name
+ // only for the same prompt). Filter the route list against the
+ // values that actually landed (json.data): a field that is
+ // filled in the generated letter can never be listed as missing.
+ const _d = json.data as Record<string, unknown>;
+ const _filled = (v: unknown) => Boolean(String(v ?? '').trim());
+ const missing = (Array.isArray(json.missing_fields) ? json.missing_fields as string[] : []).filter((f: string) => {
+   if (f === 'sn') return !_filled(_d.sn ?? _d.signatory_name);
+   if (f === 'sd') return !_filled(_d.sd ?? _d.signatory_designation);
+   if (f === 'toD') return !_filled(_d.toD ?? _d.to_designation) || String(_d.toD ?? _d.to_designation ?? '').includes('______');
+   if (f === 'sal') return !_filled(_d.sal ?? _d.salutation) || String(_d.sal ?? _d.salutation ?? '').includes('______');
+   if (f === 'body') return !_filled(_d.body) || String(_d.body ?? '').trim().length < 150;
+   if (f === 'details') return String(_d.body ?? '').includes('______');
+   return true;
+ });
  // Belt-and-braces, as in the Sidebar: blanks in the body warn even
  // if missing_fields came back empty for this model.
  if (String(json.data.body || '').includes('______') && !missing.includes('details')) {

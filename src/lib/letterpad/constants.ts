@@ -85,7 +85,7 @@ export const FONT_OPTIONS: Array<{ key: string; label: string; style: CSSPropert
 ];
 
 export const SALUTATION_OPTIONS = [
-  'Sir', 'Madam', 'Sir/Madam', 'Dear Sir', 'Dear Shri',
+  'Sir', 'Madam', 'Sir/Madam', 'Dear Sir', 'Dear Sir/Madam', 'Dear Shri',
   // English "Respected Sir" was missing even though the appreciation
   // protocol generates it: after an appreciation generation the
   // form held "Respected Sir" but the <select> had no matching

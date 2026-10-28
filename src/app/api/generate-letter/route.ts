@@ -14,6 +14,9 @@ import {
   stripPlaceholders,
   extractSenderFromBrief,
   isPlaceholderValue,
+  looksLikeDateFragment,
+  localiseRecipient,
+  localiseDate,
   type AILang,
   type KnownLetterType,
 } from '@/lib/letterpad/typeProtocols';
@@ -30,6 +33,7 @@ interface LetterGenerationRequest {
   templatePreset?: string;
   generationMode?: 'content' | 'full';
   currentForm?: Record<string, unknown>;
+  userEditedFields?: string[];
   currentContext?: {
     department?: string;
     office?: string;
@@ -39,6 +43,7 @@ interface LetterGenerationRequest {
     tpl?: string;
     mode?: 'content' | 'full';
     form?: Record<string, unknown>;
+    userEditedFields?: string[];
   };
 }
 
@@ -215,6 +220,18 @@ export async function POST(request: NextRequest) {
       ? currentContext.form
       : modeForm;
     const gt = stripPlaceholders(originalForm);
+    // Fields the user explicitly typed in this session (sidebar/paper
+    // inputs), sent by the client. This is what resolves the old
+    // preserve-vs-replace conflict: a typed header is ground truth and
+    // is never overwritten, while every other AI-owned field in Full
+    // mode is replaced (model value, brief sender, or blank) instead
+    // of silently keeping a previous letter's value. Office presets
+    // and previous AI output are NOT user-edited — they are samples
+    // and stale values, so Fully-AI correctly replaces them.
+    const userEdited = new Set<string>([
+      ...(Array.isArray(body.userEditedFields) ? body.userEditedFields : []),
+      ...(Array.isArray(currentContext.userEditedFields) ? currentContext.userEditedFields : []),
+    ].map((f) => String(f)));
     const officeType = currentContext.officeType || templatePreset || '';
     const template = currentContext.template || currentContext.tpl || '';
     const targetPreset = templatePreset || (currentContext as { template?: string }).template || '';
@@ -268,6 +285,8 @@ CRITICAL GROUND TRUTH & ANTI-HALLUCINATION RULES:
    - NEVER overwrite or invent fake government officials (e.g. NEVER generate invented officials or bureaucrats).
    - NEVER invent fictional ministries, departments, or fake government email addresses (@nic.in, @gov.in). Empty contact fields MUST remain empty — DO NOT hallucinate phone numbers or emails.
    - NEVER invent a person, company, ministry, phone number, email, date, amount, or page count to fill a gap. Use ______ blanks for genuinely unknown details.
+   - NEVER derive an office, department, or designation from a date, month, or ordinal in the brief ("from 1st November" is a DATE, not an office — it must never become "Office of the St November" or any designation).
+   - NEVER state a diagnosis, medical condition, treatment, legal ground, allegation, date, amount, or deadline the brief does not give. A medical certificate is flowing prose unless the brief asks for numbered points, and must never state a diagnosis the brief does not give. Office timings in a circular are stated exactly as given in the brief, or as ______ if not given — never vague prose in place of timings.
 2. PROFESSION-AUTHENTIC VOICE:
    - Advocate / Legal: Write in rigorous legal tone (statutory notices, Section 138 NI Act, demand notices, caveat intimations, counsel representations).
    - Clinic / Doctor: Write in authentic medical clinical tone (patient clinical history, diagnosis, treatment recommendation, medical fitness / leave certificates).
@@ -338,36 +357,57 @@ JSON SCHEMA (return header/contact fields when the ground truth gives them; in B
   "copyList": ["Copy recipient 1"] or []
 }`;
 
+    // Context hygiene for Full mode: the context lines below are
+    // presented to the model as ground truth, so showing it a previous
+    // letter's header invites it to copy stale values (the other half
+    // of Defect 2). In Full mode the model is therefore shown only
+    // fields the user explicitly typed; every other AI-owned field
+    // is shown blank, and the model must derive it fresh from the
+    // brief or leave it blank. Body-Only mode shows full ground
+    // truth, as its promise requires. (dt is system-seeded today, not
+    // a previous letter's value, so it is always shown.)
+    const AI_OWNED_CTX_FIELDS = [
+      'h1', 'h2', 'e1', 'e2', 'dept', 'divn', 'ofc', 'city', 'pin',
+      'ph', 'em', 'wb', 'enrolmentNo', 'sn', 'sd', 'sp', 'sh', 'sc',
+      'fno', 'ref',
+    ];
+    const ctx: Record<string, string> = { ...gt };
+    if (generationMode === 'full') {
+      for (const f of AI_OWNED_CTX_FIELDS) {
+        if (!userEdited.has(f)) ctx[f] = '';
+      }
+    }
+
     const fullContextLines = [
       `Active Template / Profession: ${targetPreset || officeType || 'General Letter'}`,
       `Office Type: ${officeType || '(not set)'}`,
       `Letter Layout Template: ${template || '(not set)'}`,
       `Generation Mode: ${generationMode === 'full' ? 'Entire Letterhead (headers may be completed from context)' : 'Body & Content Only (header/contact fields are ground truth — return them unchanged, never invented)'}`,
       `Target Language: ${targetLang} (${targetLang === 'mr' ? 'मराठी' : targetLang === 'hi' ? 'हिंदी' : targetLang === 'bi' ? `Bilingual English + ${secondLang === 'mr' ? 'मराठी' : 'हिन्दी'}` : 'English'})`,
-      `Hindi Line 1 (h1): "${gt.h1 || ''}"`,
-      `Hindi Line 2 (h2): "${gt.h2 || ''}"`,
-      `English Line 1 (e1): "${gt.e1 || ''}"`,
-      `English Line 2 (e2): "${gt.e2 || ''}"`,
-      `Department (dept): "${gt.dept || ''}"`,
-      `Division / Section (divn): "${gt.divn || ''}"`,
-      `Office / Building (ofc): "${gt.ofc || ''}"`,
-      `City: "${gt.city || ''}"`,
-      `PIN: "${gt.pin || ''}"`,
-      `Phone (ph): "${gt.ph || ''}"`,
-      `Email (em): "${gt.em || ''}"`,
-      `Website / Reg (wb): "${gt.wb || ''}"`,
-      `Enrolment / Statutory No.: "${gt.enrolmentNo || ''}"`,
-      `Signatory Name (sn): "${gt.sn || ''}"`,
-      `Signatory Designation (sd): "${gt.sd || ''}"`,
-      `Signatory Phone / Extn (sp): "${gt.sp || ''}"`,
-      `Signatory Hindi Name (sh): "${gt.sh || ''}"`,
-      `Constituency / Circle (sc): "${gt.sc || ''}"`,
-      `File No. (fno): "${gt.fno || ''}"`,
+      `Hindi Line 1 (h1): "${ctx.h1 || ''}"`,
+      `Hindi Line 2 (h2): "${ctx.h2 || ''}"`,
+      `English Line 1 (e1): "${ctx.e1 || ''}"`,
+      `English Line 2 (e2): "${ctx.e2 || ''}"`,
+      `Department (dept): "${ctx.dept || ''}"`,
+      `Division / Section (divn): "${ctx.divn || ''}"`,
+      `Office / Building (ofc): "${ctx.ofc || ''}"`,
+      `City: "${ctx.city || ''}"`,
+      `PIN: "${ctx.pin || ''}"`,
+      `Phone (ph): "${ctx.ph || ''}"`,
+      `Email (em): "${ctx.em || ''}"`,
+      `Website / Reg (wb): "${ctx.wb || ''}"`,
+      `Enrolment / Statutory No.: "${ctx.enrolmentNo || ''}"`,
+      `Signatory Name (sn): "${ctx.sn || ''}"`,
+      `Signatory Designation (sd): "${ctx.sd || ''}"`,
+      `Signatory Phone / Extn (sp): "${ctx.sp || ''}"`,
+      `Signatory Hindi Name (sh): "${ctx.sh || ''}"`,
+      `Constituency / Circle (sc): "${ctx.sc || ''}"`,
+      `File No. (fno): "${ctx.fno || ''}"`,
       `Date (dt): "${gt.dt || ''}"`,
       `Previous recipient from an earlier letter (NOT ground truth for this generation — do NOT copy it unless the new brief names the same recipient; generate a fresh recipient from the new brief): "${gt.toD || ''}"`,
       `Recipient Address (toA): "${gt.toA || ''}"`,
       `Previous subject from an earlier letter (NOT ground truth for this generation — do NOT copy it unless the new brief is about the same topic; generate a fresh subject from the new brief): "${gt.sub || ''}"`,
-      `Reference (ref): "${gt.ref || ''}"`,
+      `Reference (ref): "${ctx.ref || ''}"`,
       `Salutation (sal): "${gt.sal || ''}"`,
       `Closing (cls): "${gt.cls || ''}"`,
       `Recipient fallback if the brief does not name one: "${recipientFallback}"`,
@@ -382,7 +422,7 @@ CONTEXT & GROUND TRUTH FIELDS:
 INSTRUCTIONS:
 - Draft a complete, realistic letter body tailored strictly to this context.
 ${generationMode === 'full' ? '- ENTIRE LETTERHEAD MODE: Fill header fields (e1, dept) and signatory designation (sd) from the SENDER named in the brief itself, even if the form fields are empty. Do not leave sd/e1/dept blank when the brief names a sender office/designation (for example, a brief saying "from Deputy Chief Minister, Government of Maharashtra" must produce that designation and that government as the letterhead). dept must be the OFFICE (e.g. "Office of the Deputy Chief Minister") — never the government name alone (that is e1) and never the bare designation alone (that is sd). Leave phone, email, city, PIN, and street address blank if not given — never invent them, and never add an emblem/seal.' : ''}
-- Use the typed name "${gt.sn || ''}" directly without hallucinating different officials.
+- Use the typed name "${ctx.sn || ''}" directly without hallucinating different officials.
 - Do NOT copy the previous subject or previous recipient above into this letter unless the new brief is about the same topic and names the same recipient. Generate a fresh subject and a fresh recipient from the new brief.
 - Do NOT generate fake @nic.in or @gov.in emails.
 - Return ONLY the JSON object.`;
@@ -432,29 +472,37 @@ ${generationMode === 'full' ? '- ENTIRE LETTERHEAD MODE: Fill header fields (e1,
       throw lastParseError ?? new Error('Model returned an invalid JSON response after a retry');
     }
 
-    // Header/contact pick: Body-Only mode keeps ground truth exactly;
-    // Full mode may complete organisation fields from the model, but
-    // a real phone/email from ground truth always wins over a model
-    // invention, and placeholder values are never accepted.
+    // Header/contact pick — Full mode now REPLACES instead of
+    // patching (Defect 2). The old rule fell back to the original
+    // form whenever the model returned nothing, so a previous
+    // letter's Deputy Chief Minister, doctor's name, or city (Pune)
+    // survived into the next, unrelated letter — even though Entire
+    // Letterhead mode promises to replace headers. New order in Full
+    // mode, per field: a field the user explicitly typed this session
+    // (userEdited) is ground truth and always wins; otherwise the
+    // model value wins; otherwise the brief-derived sender (header
+    // fields only); otherwise BLANK — never the previous letter's
+    // value. Body-Only mode is unchanged: ground truth wins exactly,
+    // because its promise is "keep my headers".
     // Brief-derived sender (Full mode only, see extractSenderFromBrief):
-    // if neither the model nor the user-filled form gives a header or
+    // if neither the model nor a typed form value gives a header or
     // designation, the sender named in the brief itself fills it —
     // that is how Entire Letterhead mode keeps its promise without
-    // inventing anything. Order: model > user-filled form > brief
-    // sender. Phone/email/address/city/PIN are never brief-derived.
+    // inventing anything. Phone/email/address/city/PIN are never
+    // brief-derived.
     const briefSender = generationMode === 'full'
       ? extractSenderFromBrief(description)
       : {};
-    const pickHeader = (aiVal: unknown, gtVal: string, isContact: boolean, senderVal?: string): string => {
+    const pickHeader = (field: string, aiVal: unknown, gtVal: string, isContact: boolean, senderVal?: string): string => {
       const ai = str(aiVal).trim();
-      if (generationMode === 'full' && !isContact) {
+      if (generationMode === 'full') {
+        if (userEdited.has(field)) return gtVal;
         if (ai && !isPlaceholderValue(ai)) return ai;
-        if (gtVal) return gtVal;
-        if (senderVal) return senderVal;
-        return gtVal;
+        if (!isContact && senderVal) return senderVal;
+        return '';
       }
       if (isContact && gtVal) return gtVal;
-      if (generationMode === 'full' && ai && !isPlaceholderValue(ai)) return ai;
+      if (ai && !isPlaceholderValue(ai)) return ai;
       return gtVal;
     };
 
@@ -472,47 +520,76 @@ ${generationMode === 'full' ? '- ENTIRE LETTERHEAD MODE: Fill header fields (e1,
     const isNonEnglishGen = targetLang === 'mr' || targetLang === 'hi';
     const langSal = salutationFor(resolved, targetLang);
     const langCls = closingFor(resolved, targetLang);
+    // Route-level salutation/closing enforcement (Defect 5). The old
+    // English fallback was `ai || gt.sal || langSal`, so a previous
+    // letter's salutation/closing leaked into the next letter
+    // (a legal notice inherited "Respected Sir / With warm regards"
+    // from an appreciation letter; a circular to "All Staff" kept
+    // "Sir / Yours faithfully"). Salutation and closing are
+    // per-letter, type-dependent values — not identity — so the
+    // previous letter's values never win: only a value the user
+    // explicitly picked (userEdited) survives; otherwise the type
+    // protocol wins where it defines one, else the model value
+    // (with the warm pair normalised away for non-appreciation
+    // types), else the language default.
+    const protocolSalOverride = TYPE_PROTOCOLS[resolved].salutation[targetLang] !== undefined;
+    const protocolClsOverride = TYPE_PROTOCOLS[resolved].closing[targetLang] !== undefined;
+    const WARM_CLOSINGS = ['with warm regards', 'warm regards', 'with warmest regards'];
     const enforceSal = (ai: string): string => {
       if (isNonEnglishGen) {
         if (ai && isDevanagari(ai)) return ai;
-        if (gt.sal && isDevanagari(gt.sal)) return gt.sal.replace(/,+\s*$/, '');
+        if (userEdited.has('sal') && gt.sal && isDevanagari(gt.sal)) return gt.sal.replace(/,+\s*$/, '');
         return langSal;
       }
-      // Appreciation / congratulatory letters prefer the warmer
-      // protocol salutation. The generic defaults 'Sir' / 'Sir/Madam'
-      // (the form's untouched defaults) do not count as an explicit
-      // user choice, and a generic model salutation does not either:
-      // a non-generic model value, or a non-generic form value the
-      // user actually picked, still wins over the protocol default.
+      if (userEdited.has('sal') && gt.sal) return gt.sal.replace(/,+\s*$/, '');
+      // Legal notice to a specific recipient: the formal pair, never
+      // the warm appreciation pair. (Announcement notices, whose
+      // recipient is generic, take the protocol "All Concerned".)
+      if (resolved === 'notice' && recipientIsSpecific) return 'Dear Sir/Madam';
+      if (protocolSalOverride) return langSal;
       if (resolved === 'appreciation') {
-        const gtSal = gt.sal.replace(/,+\s*$/, '');
         if (ai && ai !== 'Sir' && ai !== 'Sir/Madam') return ai;
-        if (gtSal && gtSal !== 'Sir' && gtSal !== 'Sir/Madam') return gtSal;
         return langSal;
       }
-      return ai || gt.sal.replace(/,+\s*$/, '') || langSal;
+      return ai || langSal;
     };
     const enforceCls = (ai: string): string => {
       if (targetLang === 'mr' && (ai === 'भवदीय' || ai === 'भवदीया')) return langCls;
       if (isNonEnglishGen) {
         if (ai && isDevanagari(ai)) return ai;
-        if (gt.cls && isDevanagari(gt.cls)) return gt.cls.replace(/,+\s*$/, '');
+        if (userEdited.has('cls') && gt.cls && isDevanagari(gt.cls)) return gt.cls.replace(/,+\s*$/, '');
         return langCls;
       }
+      if (userEdited.has('cls') && gt.cls) return gt.cls.replace(/,+\s*$/, '');
+      if (resolved === 'notice' && recipientIsSpecific) return 'Yours faithfully';
+      if (protocolClsOverride) return langCls;
       if (resolved === 'appreciation') {
-        const gtCls = gt.cls.replace(/,+\s*$/, '');
         if (ai && ai !== 'Yours faithfully') return ai;
-        if (gtCls && gtCls !== 'Yours faithfully') return gtCls;
         return langCls;
       }
-      return ai || gt.cls.replace(/,+\s*$/, '') || langCls;
+      // The warm pair is reserved for appreciation/congratulatory
+      // letters: a formal letter carrying it (stale value or model
+      // drift) falls back to the standard formal closing.
+      if (ai && WARM_CLOSINGS.includes(ai.toLowerCase())) return langCls;
+      return ai || langCls;
     };
-    const salVal = enforceSal(cleanSal);
-    const clsVal = enforceCls(cleanCls);
     const rawBody = str(letterData.body).trim();
     let bodyVal = rawBody.length >= 150
       ? rawBody
       : buildFallbackBody(resolved, description, targetLang, secondLang);
+    // Numbering consistency (Defect 9): appreciation/congratulatory
+    // letters are flowing prose per the type protocol, but the model
+    // nondeterministically numbered them in one path and not the
+    // other (same birthday prompt: prose in the modal, numbered in
+    // the sidebar). Both paths go through this route, so stripping
+    // paragraph-leading numbers here makes the two paths agree.
+    // Numbered structure is kept for every other type.
+    if (resolved === 'appreciation') {
+      bodyVal = bodyVal
+        .split('\n\n')
+        .map((para) => para.replace(/^\s*\d+[.)]\s+/, ''))
+        .join('\n\n');
+    }
     // RTI-reply guarantee (Defect 4a): the appeal paragraph MUST cite
     // "Section 19(1)" by number, whatever model generated the body
     // (including a fallback model that paraphrased it away). Append a
@@ -540,6 +617,25 @@ ${generationMode === 'full' ? '- ENTIRE LETTERHEAD MODE: Fill header fields (e1,
       : topicChanged
         ? recipientFallback
         : aiToD || gt.toD || recipientFallback;
+    // Recipient address follows the same topic rule as the recipient:
+    // a changed topic never inherits the previous letter's address.
+    const aiToA = str(letterData.toA).trim();
+    const toAVal = aiToA && !(topicChanged && aiToA === gt.toA)
+      ? aiToA
+      : topicChanged
+        ? ''
+        : aiToA || gt.toA;
+    // Whether the recipient is a specific person/office (legal-notice
+    // branch of salutation enforcement) as opposed to a group address.
+    const GENERIC_RECIPIENTS = new Set([
+      'all concerned', 'all department heads', 'all staff',
+      'all readers', 'to whom it may concern',
+    ]);
+    const recipientIsSpecific = Boolean(toDVal)
+      && !GENERIC_RECIPIENTS.has(toDVal.trim().toLowerCase())
+      && !toDVal.includes('______');
+    const salVal = enforceSal(cleanSal);
+    const clsVal = enforceCls(cleanCls);
     // Enclosure contradiction (Defect 4, minor): an RTI reply that
     // withholds an item must not also list that same item as an
     // enclosure. Drop enclosure entries matching the withheld phrase
@@ -575,12 +671,17 @@ ${generationMode === 'full' ? '- ENTIRE LETTERHEAD MODE: Fill header fields (e1,
     // brief-derived office ("Office of the …") when one exists,
     // otherwise dropped — never left duplicating another line.
     const normDup = (s: string) => s.toLowerCase().replace(/[^a-z0-9]/g, '');
-    const sdVal = gt.sd ? gt.sd : (str(letterData.sd) || briefSender.sd || '');
-    const e1Val = pickHeader(letterData.e1, gt.e1, false, briefSender.e1);
-    const e2Val = pickHeader(letterData.e2, gt.e2, false);
-    const h1Val = pickHeader(letterData.h1, gt.h1, false);
-    const h2Val = pickHeader(letterData.h2, gt.h2, false);
-    const deptRaw = pickHeader(letterData.dept, gt.dept, false, briefSender.dept);
+    // Designation follows the same Full-mode replace rule as headers:
+    // a typed designation wins, otherwise the model, otherwise the
+    // brief sender — never the previous letter's designation.
+    let sdVal = generationMode === 'full'
+      ? (userEdited.has('sd') ? gt.sd : (str(letterData.sd) || briefSender.sd || ''))
+      : (gt.sd ? gt.sd : str(letterData.sd));
+    const e1Val = pickHeader('e1', letterData.e1, gt.e1, false, briefSender.e1);
+    const e2Val = pickHeader('e2', letterData.e2, gt.e2, false);
+    const h1Val = pickHeader('h1', letterData.h1, gt.h1, false);
+    const h2Val = pickHeader('h2', letterData.h2, gt.h2, false);
+    const deptRaw = pickHeader('dept', letterData.dept, gt.dept, false, briefSender.dept);
     let deptVal = deptRaw;
     if (generationMode === 'full' && deptRaw) {
       const designationOnly = sdVal.split(',')[0].trim();
@@ -594,6 +695,29 @@ ${generationMode === 'full' ? '- ENTIRE LETTERHEAD MODE: Fill header fields (e1,
           : '';
       }
     }
+    // Date-fragment guard, backstop to the extractSender guard: a dept
+    // or designation that looks like a date is dropped, never
+    // rendered as an official office. A value the user literally
+    // typed is exempt — the guard targets model/brief-derived values.
+    if (!userEdited.has('dept') && looksLikeDateFragment(deptVal)) deptVal = '';
+    if (!userEdited.has('sd') && looksLikeDateFragment(sdVal)) sdVal = '';
+    // Signatory name, file number, and reference follow the Full-mode
+    // replace rule too (a previous letter's file number must not leak
+    // into a new letter); the date is system-seeded today, so it is
+    // always model-or-current, then localised for Hindi/Marathi.
+    const snVal = generationMode === 'full'
+      ? (userEdited.has('sn') ? gt.sn : (str(letterData.sn) && !isPlaceholderValue(str(letterData.sn)) ? str(letterData.sn) : ''))
+      : (gt.sn ? gt.sn : str(letterData.sn));
+    const shVal = generationMode === 'full'
+      ? (userEdited.has('sh') ? gt.sh : str(letterData.sh))
+      : (str(letterData.sh) || gt.sh);
+    const fnoVal = generationMode === 'full'
+      ? (userEdited.has('fno') ? gt.fno : str(letterData.fno))
+      : (str(letterData.fno) || gt.fno);
+    const refVal = generationMode === 'full'
+      ? (userEdited.has('ref') ? gt.ref : str(letterData.ref))
+      : (str(letterData.ref) || gt.ref);
+    const dtVal = localiseDate(str(letterData.dt) || gt.dt, targetLang);
 
     const finalData = {
       ...letterData,
@@ -605,33 +729,34 @@ ${generationMode === 'full' ? '- ENTIRE LETTERHEAD MODE: Fill header fields (e1,
       e1: e1Val,
       e2: e2Val,
       dept: deptVal,
-      divn: pickHeader(letterData.divn, gt.divn, false),
-      ofc: pickHeader(letterData.ofc, gt.ofc, false),
-      city: pickHeader(letterData.city, gt.city, false),
-      pin: pickHeader(letterData.pin, gt.pin, false),
-      ph: pickHeader(letterData.ph, gt.ph, true),
-      em: pickHeader(letterData.em, gt.em, true),
-      wb: pickHeader(letterData.wb, gt.wb, false),
-      sp: pickHeader(letterData.sp, gt.sp, true),
-      sc: pickHeader(letterData.sc, gt.sc, false),
-      dt: pickHeader(letterData.dt, gt.dt, false),
-      enrolmentNo: pickHeader(letterData.enrolmentNo, gt.enrolmentNo, false),
+      divn: pickHeader('divn', letterData.divn, gt.divn, false),
+      ofc: pickHeader('ofc', letterData.ofc, gt.ofc, false),
+      city: pickHeader('city', letterData.city, gt.city, false),
+      pin: pickHeader('pin', letterData.pin, gt.pin, false),
+      ph: pickHeader('ph', letterData.ph, gt.ph, true),
+      em: pickHeader('em', letterData.em, gt.em, true),
+      wb: pickHeader('wb', letterData.wb, gt.wb, false),
+      sp: pickHeader('sp', letterData.sp, gt.sp, true),
+      sc: pickHeader('sc', letterData.sc, gt.sc, false),
+      dt: dtVal,
+      enrolmentNo: pickHeader('enrolmentNo', letterData.enrolmentNo, gt.enrolmentNo, false),
       sub: subVal,
       sal: salVal,
       cls: clsVal,
-      sn: gt.sn ? gt.sn : str(letterData.sn),
-      // Designation: user-filled form wins, then the model, then the
-      // brief-derived sender (Full mode only) — so the sidebar Full
-      // path and the chat-modal Full path now agree, instead of the
-      // modal filling a designation the sidebar left blank.
-      // (sdVal is computed above, before dept normalisation, which
-      // compares dept against it.)
+      sn: snVal,
+      // Designation (sdVal, computed above): in Full mode a typed
+      // designation wins, otherwise the model, otherwise the brief
+      // sender — so the sidebar Full path and the chat-modal Full
+      // path agree, instead of the modal filling a designation the
+      // sidebar left blank. Dept normalisation above compares dept
+      // against sdVal, and the date-fragment guard has already
+      // dropped any date-like designation.
       sd: sdVal,
-      sh: str(letterData.sh) || gt.sh,
-      toD: toDVal,
-      toA: str(letterData.toA) || gt.toA,
-      fno: str(letterData.fno) || gt.fno,
-      ref: str(letterData.ref) || gt.ref,
+      sh: shVal,
+      toD: localiseRecipient(toDVal, targetLang),
+      toA: toAVal,
+      fno: fnoVal,
+      ref: refVal,
       body: bodyVal,
       encl: enclListVal.length
         ? enclListVal.join(', ')

@@ -37,6 +37,12 @@ export interface TypeProtocol {
 const COMMON_MUST_NOT = [
   'ministries, departments, officials, phone numbers, emails, dates, amounts, or page counts the user did not give',
   'a fake @nic.in / @gov.in email or a government seal/emblem',
+  // Material facts are brief-only: a diagnosis, medical condition,
+  // legal ground, or allegation the brief does not state must never
+  // appear (live QA: a medical certificate invented "mild viral
+  // infection", a legal notice invented rent-default grounds, a Hindi
+  // complaint invented a bill date and a deadline).
+  'a diagnosis, medical condition, legal ground, allegation, date, amount, or deadline the brief does not give',
 ];
 
 export const TYPE_PROTOCOLS: Record<KnownLetterType, TypeProtocol> = {
@@ -54,9 +60,9 @@ export const TYPE_PROTOCOLS: Record<KnownLetterType, TypeProtocol> = {
     label: 'Complaint Letter',
     isPersonal: false,
     recipientFallback: 'The Customer Service Manager',
-    structure: ['Grievance with dates and facts', 'Reference / ticket / order details given in the brief (______ if not given)', 'Resolution sought (replacement, refund, repair)', 'Deadline for resolution', 'Courteous but firm close'],
+    structure: ['Grievance with dates and facts', 'Reference / ticket / order details given in the brief (______ if not given)', 'Resolution sought (replacement, refund, repair)', 'Deadline for resolution (______ if not given)', 'Courteous but firm close'],
     required: ['grievance', 'resolution sought'],
-    mustNot: [...COMMON_MUST_NOT, 'an order number, ticket number, or purchase date not in the brief'],
+    mustNot: [...COMMON_MUST_NOT, 'an order number, ticket number, purchase date, bill date, or deadline not in the brief'],
     subjectPrefix: 'Complaint Regarding',
     salutation: {}, closing: {},
   },
@@ -86,7 +92,12 @@ export const TYPE_PROTOCOLS: Record<KnownLetterType, TypeProtocol> = {
     recipientFallback: 'All Concerned',
     structure: ['Announcement / decision', 'Effective date (______ if not given)', 'Who it applies to', 'Action required, if any'],
     required: ['announcement', 'audience'],
-    mustNot: COMMON_MUST_NOT,
+    // A legal notice to a named recipient is generated under this
+    // type when the brief says "legal notice": its grounds must come
+    // only from the brief, and the route enforces the formal
+    // Dear Sir/Madam + Yours faithfully pair for a specific
+    // recipient (never the warm appreciation pair).
+    mustNot: [...COMMON_MUST_NOT, 'legal grounds, allegations, or rent-default claims not in the brief'],
     subjectPrefix: 'Notice',
     salutation: { en: 'All Concerned', mr: 'सर्व संबंधित', hi: 'सभी संबंधित', bi: 'All Concerned' },
     closing: {},
@@ -95,12 +106,20 @@ export const TYPE_PROTOCOLS: Record<KnownLetterType, TypeProtocol> = {
     label: 'Circular / Internal Directive',
     isPersonal: false,
     recipientFallback: 'All Department Heads',
-    structure: ['Directive / policy', 'Who it applies to', 'Effective date (______ if not given)', 'Compliance required and consequence of non-compliance, if stated'],
-    required: ['directive', 'audience'],
-    mustNot: COMMON_MUST_NOT,
+    // Timings are the point of an office-timings circular: state them
+    // exactly as given, or as a ______ blank — never vague prose in
+    // place of timings, and never derive an office or designation
+    // from a date in the brief (live QA: "from 1st November" became
+    // the fake office "Office of the St November").
+    structure: ['Directive / policy', 'Who it applies to', 'Effective date and timings exactly as given in the brief (______ if not given)', 'Compliance required and consequence of non-compliance, if stated'],
+    required: ['directive', 'audience', 'timings exactly as given in the brief, or ______ if not given'],
+    mustNot: [...COMMON_MUST_NOT, 'an office, department, or designation derived from a date, month, or ordinal in the brief'],
     subjectPrefix: 'Circular',
     salutation: { en: 'All Concerned', mr: 'सर्व संबंधित', hi: 'सभी संबंधित', bi: 'All Concerned' },
-    closing: {},
+    // A circular to a group never takes "Sir / Yours faithfully":
+    // the salutation is the group address and the closing is the
+    // distinct formal "Yours sincerely", enforced at route level.
+    closing: { en: 'Yours sincerely', mr: 'आपला नम्र', hi: 'भवदीय', bi: 'Yours sincerely' },
   },
   reminder: {
     label: 'Reminder Letter (Urgent / Pending)',
@@ -351,6 +370,34 @@ function titleCaseDesignation(raw: string): string {
     .trim();
 }
 
+// ── Date-fragment guard (Defect 1) ───────────────────────
+// A department or designation must never be a date. The live circular
+// case proves why: "new office timings from 1st November" was parsed
+// as a sender segment, title-cased ("1st" → "St") into the fake office
+// "Office of the St November" and designation "St November", which
+// then rendered in the header, signature, and footer. Any value whose
+// tokens contain a month name, or which starts with an ordinal
+// (1st/2nd/3rd…), or which is just an ordinal + one word ("St
+// November"), is a date fragment, not an office. Token-exact month
+// matching keeps real names safe: "St. Mary's Hospital" has no month
+// token, and "Mayfair" is one token, not the month "May".
+const MONTH_TOKENS = [
+  'january', 'february', 'march', 'april', 'may', 'june', 'july',
+  'august', 'september', 'october', 'november', 'december',
+  'jan', 'feb', 'mar', 'apr', 'jun', 'jul', 'aug', 'sep', 'sept',
+  'oct', 'nov', 'dec',
+];
+
+export function looksLikeDateFragment(v?: string | null): boolean {
+  const t = (v || '').toLowerCase().trim();
+  if (!t) return false;
+  const tokens = t.replace(/[^a-z0-9\s]/g, ' ').split(/\s+/).filter(Boolean);
+  if (tokens.some((tok) => MONTH_TOKENS.includes(tok))) return true;
+  if (/^\d{1,2}\s*(st|nd|rd|th)\b/.test(t)) return true;
+  if (tokens.length <= 2 && /^(st|nd|rd|th)$/.test(tokens[0] || '')) return true;
+  return false;
+}
+
 export interface BriefSender {
   sd?: string;
   dept?: string;
@@ -367,6 +414,10 @@ export function extractSenderFromBrief(brief: string): BriefSender {
   const fromEnd = text.match(/from\s+(.+?)\s*$/i);
   const segmentRaw = (fromTo?.[1] || fromFor?.[1] || fromEnd?.[1] || '').trim();
   if (!segmentRaw || segmentRaw.length > 80) return {};
+  // Date-fragment guard: a "from <date>" phrase ("from 1st November")
+  // is a date, never a sender office. Without this, title-casing
+  // turns "1st November" into the fake designation "St November".
+  if (looksLikeDateFragment(segmentRaw)) return {};
   // Split off "Government of X" / "gov of X" / "of X" at the end.
   const govMatch = segmentRaw.match(/^(.*?)[,\s]+(?:gov(?:ernment)?|govt)\s+of\s+(.+)$/i)
     || segmentRaw.match(/^(.*?)[,\s]+government\s+of\s+(.+)$/i);
@@ -476,6 +527,65 @@ export function briefMatchesSubject(brief: string, subject?: string): boolean {
 
 export function isDevanagari(v?: string | null): boolean {
   return /[\u0900-\u097F]/.test(v || '');
+}
+
+// ── Localisation for Hindi/Marathi letters (Defect 8) ─────
+// The model is told to write everything in the target language, but
+// it still returns English generic recipients ("The Customer Service
+// Manager", "The Principal") and the client seeds the date in English
+// ("27 October 2026"). Exact-match translation of GENERIC designations
+// only — a real name or a specific organisation is never translated,
+// and nothing is ever crossed between Marathi and Hindi.
+const RECIPIENT_LOCALISATION: Record<string, { mr: string; hi: string }> = {
+  'the customer service manager': { mr: 'ग्राहक सेवा व्यवस्थापक', hi: 'ग्राहक सेवा प्रबंधक' },
+  'the principal': { mr: 'प्राचार्य', hi: 'प्राचार्य' },
+  'the manager': { mr: 'व्यवस्थापक', hi: 'प्रबंधक' },
+  'the public information officer': { mr: 'जन माहिती अधिकारी', hi: 'लोक सूचना अधिकारी' },
+  'the applicant': { mr: 'अर्जदार', hi: 'आवेदक' },
+  'all concerned': { mr: 'सर्व संबंधित', hi: 'सभी संबंधित' },
+  'all department heads': { mr: 'सर्व विभाग प्रमुख', hi: 'सभी विभाग प्रमुख' },
+  'all staff': { mr: 'सर्व कर्मचारी', hi: 'सभी कर्मचारी' },
+  'to whom it may concern': { mr: 'ज्यांना लागू आहे त्यांना', hi: 'जिसे भी संबंधित हो' },
+};
+
+export function localiseRecipient(toD: string, lang: AILang): string {
+  if (lang !== 'mr' && lang !== 'hi') return toD;
+  const key = (toD || '').trim().replace(/,+\s*$/, '').toLowerCase();
+  const hit = RECIPIENT_LOCALISATION[key];
+  return hit ? hit[lang] : toD;
+}
+
+const DEVANAGARI_DIGITS = ['०', '१', '२', '३', '४', '५', '६', '७', '८', '९'];
+const toDevanagariDigits = (s: string) => s.replace(/[0-9]/g, (d) => DEVANAGARI_DIGITS[Number(d)]);
+const MONTH_NAMES: Record<string, { mr: string; hi: string }> = {
+  january: { mr: 'जानेवारी', hi: 'जनवरी' },
+  february: { mr: 'फेब्रुवारी', hi: 'फ़रवरी' },
+  march: { mr: 'मार्च', hi: 'मार्च' },
+  april: { mr: 'एप्रिल', hi: 'अप्रैल' },
+  may: { mr: 'मे', hi: 'मई' },
+  june: { mr: 'जून', hi: 'जून' },
+  july: { mr: 'जुलै', hi: 'जुलाई' },
+  august: { mr: 'ऑगस्ट', hi: 'अगस्त' },
+  september: { mr: 'सप्टेंबर', hi: 'सितंबर' },
+  october: { mr: 'ऑक्टोबर', hi: 'अक्टूबर' },
+  november: { mr: 'नोव्हेंबर', hi: 'नवंबर' },
+  december: { mr: 'डिसेंबर', hi: 'दिसंबर' },
+};
+const MONTH_ABBREV: Record<string, string> = {
+  jan: 'january', feb: 'february', mar: 'march', apr: 'april',
+  jun: 'june', jul: 'july', aug: 'august', sep: 'september',
+  sept: 'september', oct: 'october', nov: 'november', dec: 'december',
+};
+
+/** "27 October 2026" → "२७ ऑक्टोबर २०२६" (mr) / "२७ अक्टूबर २०२६" (hi). Unmatched values pass through untouched. */
+export function localiseDate(dt: string, lang: AILang): string {
+  if (lang !== 'mr' && lang !== 'hi') return dt;
+  const m = (dt || '').trim().match(/^(\d{1,2})\s+([A-Za-z]+)\s+(\d{4})$/);
+  if (!m) return dt;
+  const monthKey = MONTH_ABBREV[m[2].toLowerCase()] || m[2].toLowerCase();
+  const month = MONTH_NAMES[monthKey];
+  if (!month) return dt;
+  return `${toDevanagariDigits(m[1])} ${month[lang]} ${toDevanagariDigits(m[3])}`;
 }
 
 // ── Subject fallback (server-side, model output is primary) ──
@@ -642,5 +752,6 @@ PREFERRED CLOSING (use this unless the brief or the user explicitly chose anothe
 BODY STRUCTURE (follow in order): ${p.structure.join(' → ')}.
 REQUIRED IN THIS LETTER: ${p.required.length ? p.required.join('; ') : 'none beyond a complete body'}.
 NEVER INVENT: ${p.mustNot.join('; ')}.
-SHORT-PROMPT RULE: The brief may be only 2–5 words. Expand it into a COMPLETE letter anyway — subject, recipient, salutation, closing, and a body of several numbered paragraphs. Use ______ blanks ONLY for details the brief genuinely does not give (dates, amounts, reference numbers, names); never invent a person, company, ministry, phone number, email, date, amount, or page count to fill a gap. If the recipient cannot be determined from the brief or the sender context, return toD as a clearly fillable placeholder (see recipient fallback), not a fake name.`;
+SHORT-PROMPT RULE: The brief may be only 2–5 words. Expand it into a COMPLETE letter anyway — subject, recipient, salutation, closing, and a body of several paragraphs. Number paragraphs ONLY where the type protocol calls for numbered structure (formal office letters, RTI points, notices); appreciation/congratulatory letters and medical certificates use FLOWING PROSE, never numbered paragraphs, unless the brief explicitly asks for numbering. Use ______ blanks ONLY for details the brief genuinely does not give (dates, amounts, reference numbers, names); never invent a person, company, ministry, phone number, email, date, amount, or page count to fill a gap. If the recipient cannot be determined from the brief or the sender context, return toD as a clearly fillable placeholder (see recipient fallback), not a fake name.
+ANTI-HALLUCINATION (MATERIAL FACTS): Diagnosis, medical conditions, treatments, legal grounds, allegations, dates, amounts, and deadlines come ONLY from the brief — otherwise use ______ blanks. A medical certificate is flowing prose unless the brief asks otherwise, and must NEVER state a diagnosis the brief does not give. An office, department, or designation must come from a NAMED sender in the brief or a user-filled field — NEVER derive one from a date, month, or ordinal in the brief (e.g. "1st November" is a date, not an office).`;
 }

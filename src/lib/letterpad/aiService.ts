@@ -100,6 +100,10 @@ export async function generateLetterWithAI(
     department?: string; office?: string; city?: string;
     officeType?: string; template?: string; tpl?: string;
     mode?: 'content' | 'full'; form?: LetterForm;
+    // Forwarded whole to /api/generate-letter: fields the user
+    // explicitly typed, which Full mode preserves while replacing
+    // everything else AI-owned.
+    userEditedFields?: string[];
   },
   onStatus: (msg: string) => void,
   currentForm?: LetterForm,

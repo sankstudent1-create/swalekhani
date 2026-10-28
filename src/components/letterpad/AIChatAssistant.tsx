@@ -138,6 +138,7 @@ export default function AIChatAssistant({ state, onSetForm, onFillAI }: AIChatAs
  // truth; the route's preserve rule keeps filled fields intact.
  currentContext: {
    officeType: state.officeType, template: state.tpl, mode: 'full', form: state.form,
+   userEditedFields: state.userEditedFields || [],
  },
  currentForm: state.form,
  generationMode: 'full',

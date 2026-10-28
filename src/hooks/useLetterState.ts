@@ -24,6 +24,7 @@ const INITIAL_STATE: AppState = {
   showFooter: true,
   footerDesign: 'classic',
   form: { ...DEFAULT_FORM },
+  userEditedFields: [],
 };
 
 export function useLetterState() {
@@ -82,21 +83,44 @@ export function useLetterState() {
   const resetLetter = useCallback(() => {
     try { window.localStorage.removeItem(DRAFT_KEY); } catch { /* noop */ }
     if (saveTimer.current) { clearTimeout(saveTimer.current); saveTimer.current = null; }
+    // Belt-and-braces against rehydration: skip the autosave effect's
+    // next run, so the cleared state cannot rewrite a draft before a
+    // reload, and the removed draft stays removed. The previous
+    // failure mode was the 4-second confirm window expiring (a second
+    // click after expiry only re-armed the button, so the old draft
+    // was still there on reload); the window is now 10 seconds in
+    // page.tsx, and this flag covers the save race as well.
+    skipNextSave.current = true;
     const dt = new Date().toLocaleDateString('en-IN', { day: '2-digit', month: 'long', year: 'numeric' });
-    setState(s => ({ ...INITIAL_STATE, form: { ...DEFAULT_FORM, dt }, aiTick: (s.aiTick || 0) + 1 }));
+    setState(s => ({ ...INITIAL_STATE, form: { ...DEFAULT_FORM, dt }, userEditedFields: [], aiTick: (s.aiTick || 0) + 1 }));
     setLastModel(undefined);
     setDraftStatus('fresh');
   }, []);
 
   // ── Form field update ────────────────────────────────
+  // Any value typed through updateForm/setForm (sidebar input, paper
+  // inline edit, or an explicit edit instruction) counts as
+  // user-edited: Fully-AI generation will preserve it, while previous
+  // AI output and office presets (applied via setState in
+  // applyOfficePreset, deliberately NOT marked here) are replaced.
   const updateForm = useCallback(<K extends keyof LetterForm>(key: K, value: LetterForm[K]) => {
-    setState(s => ({ ...s, form: { ...s.form, [key]: value } }));
+    setState(s => ({
+      ...s,
+      form: { ...s.form, [key]: value },
+      userEditedFields: (s.userEditedFields || []).includes(key as string)
+        ? (s.userEditedFields || [])
+        : [...(s.userEditedFields || []), key as string],
+    }));
   }, []);
 
   const setForm = useCallback((form: Partial<LetterForm>, bumpTick: boolean = false) => {
-    setState(s => ({ 
-      ...s, 
+    setState(s => ({
+      ...s,
       form: { ...s.form, ...form },
+      userEditedFields: Array.from(new Set([
+        ...(s.userEditedFields || []),
+        ...Object.keys(form),
+      ])),
       ...(bumpTick ? { aiTick: (s.aiTick || 0) + 1 } : {})
     }));
   }, []);
@@ -215,11 +239,27 @@ export function useLetterState() {
 
       const aiEncl = data.encl ?? (Array.isArray(data.enclList) ? data.enclList.join(', ') : '');
       const aiCopy = (data.copyList && data.copyList.length ? data.copyList : (data.copy_to && data.copy_to.length ? data.copy_to : []));
+      // Full-mode replace rule (Defect 2), client half: the route
+      // already blanks stale AI-owned values for a Full generation,
+      // but the old keep() here resurrected them — an AI value of ''
+      // fell back to the previous letter's value, so stale names,
+      // designations, and cities survived "Entire Letterhead"
+      // generations. In Full mode a field the user explicitly typed
+      // (userEditedFields) keeps its value; every other field takes
+      // the AI value even when blank. Body-Only mode keeps the old
+      // preserve rule exactly. User-edited marks are never cleared
+      // here: a value the user typed stays theirs across later
+      // generations, while a value AI set stays replaceable.
+      const edited = (k: string) => (s.userEditedFields || []).includes(k);
+      const fullVal = (key: string, ai: string | undefined, cur: string) =>
+        !isFull ? keep(ai, cur) : edited(key) ? cur : (has(ai) ? (ai as string) : '');
       // The user's chosen salutation survives unless the AI supplies one.
-      const salVal = keep(data.sal ?? data.salutation, s.form.sal);
+      const salVal = fullVal('sal', data.sal ?? data.salutation, s.form.sal);
       const bodyVal = stripLeadingSalutation(keep(data.body, s.form.body), salVal);
-      const enclVal = isPersonal ? '' : keep(aiEncl, s.form.encl);
-      const copyVal = isPersonal ? [] : (aiCopy.length > 0 ? aiCopy : s.form.copyTo);
+      const enclVal = isPersonal ? '' : fullVal('encl', aiEncl, s.form.encl);
+      const copyVal = isPersonal ? [] : (!isFull
+        ? (aiCopy.length > 0 ? aiCopy : s.form.copyTo)
+        : edited('copyTo') ? s.form.copyTo : aiCopy);
 
       return {
         ...s,
@@ -233,30 +273,30 @@ export function useLetterState() {
         showFooter: !isPersonal,
         form: {
           ...s.form,
-          h1: isPersonal ? '' : keep(data.h1 ?? data.dept_hindi_1, s.form.h1),
-          h2: isPersonal ? '' : keep(data.h2 ?? data.dept_hindi_2, s.form.h2),
-          e1: isPersonal ? '' : keep(data.e1 ?? data.dept_english_1, s.form.e1),
-          e2: isPersonal ? '' : keep(data.e2 ?? data.dept_english_2, s.form.e2),
-          dept: isPersonal ? '' : keep(data.dept ?? data.department, s.form.dept),
-          divn: isPersonal ? '' : keep(data.divn ?? data.division, s.form.divn),
-          ofc:  isPersonal ? '' : keep(data.ofc ?? data.office, s.form.ofc),
-          city: isPersonal ? '' : keep(data.city, s.form.city),
-          pin:  isPersonal ? '' : keep(data.pin, s.form.pin),
-          ph:   isPersonal ? '' : keep(data.ph ?? data.phone, s.form.ph),
-          em:   isPersonal ? '' : keep(data.em ?? data.email, s.form.em),
-          wb:   isPersonal ? '' : keep(data.wb ?? data.website, s.form.wb),
-          fno:  isPersonal ? '' : keep(data.fno ?? data.file_no, s.form.fno),
-          toD:  keep(data.toD ?? data.to_designation, s.form.toD),
-          toA:  keep(data.toA ?? data.to_address, s.form.toA),
-          sub:  keep(data.sub ?? data.subject, s.form.sub),
-          ref:  isPersonal ? '' : keep(data.ref ?? data.reference, s.form.ref),
+          h1: isPersonal ? '' : fullVal('h1', data.h1 ?? data.dept_hindi_1, s.form.h1),
+          h2: isPersonal ? '' : fullVal('h2', data.h2 ?? data.dept_hindi_2, s.form.h2),
+          e1: isPersonal ? '' : fullVal('e1', data.e1 ?? data.dept_english_1, s.form.e1),
+          e2: isPersonal ? '' : fullVal('e2', data.e2 ?? data.dept_english_2, s.form.e2),
+          dept: isPersonal ? '' : fullVal('dept', data.dept ?? data.department, s.form.dept),
+          divn: isPersonal ? '' : fullVal('divn', data.divn ?? data.division, s.form.divn),
+          ofc:  isPersonal ? '' : fullVal('ofc', data.ofc ?? data.office, s.form.ofc),
+          city: isPersonal ? '' : fullVal('city', data.city, s.form.city),
+          pin:  isPersonal ? '' : fullVal('pin', data.pin, s.form.pin),
+          ph:   isPersonal ? '' : fullVal('ph', data.ph ?? data.phone, s.form.ph),
+          em:   isPersonal ? '' : fullVal('em', data.em ?? data.email, s.form.em),
+          wb:   isPersonal ? '' : fullVal('wb', data.wb ?? data.website, s.form.wb),
+          fno:  isPersonal ? '' : fullVal('fno', data.fno ?? data.file_no, s.form.fno),
+          toD:  fullVal('toD', data.toD ?? data.to_designation, s.form.toD),
+          toA:  fullVal('toA', data.toA ?? data.to_address, s.form.toA),
+          sub:  fullVal('sub', data.sub ?? data.subject, s.form.sub),
+          ref:  isPersonal ? '' : fullVal('ref', data.ref ?? data.reference, s.form.ref),
           sal:  salVal,
-          cls:  keep(data.cls ?? data.closing, s.form.cls),
-          sn:   keep(data.sn ?? data.signatory_name, s.form.sn),
-          sh:   isPersonal ? '' : keep(data.sh ?? data.signatory_hindi, s.form.sh),
-          sd:   isPersonal ? '' : keep(data.sd ?? data.signatory_designation, s.form.sd),
-          sp:   isPersonal ? '' : keep(data.sp ?? data.signatory_phone, s.form.sp),
-          sc:   isPersonal ? '' : keep(data.sc ?? data.constituency, s.form.sc),
+          cls:  fullVal('cls', data.cls ?? data.closing, s.form.cls),
+          sn:   fullVal('sn', data.sn ?? data.signatory_name, s.form.sn),
+          sh:   isPersonal ? '' : fullVal('sh', data.sh ?? data.signatory_hindi, s.form.sh),
+          sd:   isPersonal ? '' : fullVal('sd', data.sd ?? data.signatory_designation, s.form.sd),
+          sp:   isPersonal ? '' : fullVal('sp', data.sp ?? data.signatory_phone, s.form.sp),
+          sc:   isPersonal ? '' : fullVal('sc', data.sc ?? data.constituency, s.form.sc),
           body: bodyVal,
           encl: enclVal,
           copyTo: copyVal,

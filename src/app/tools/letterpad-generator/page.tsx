@@ -136,21 +136,25 @@ function LetterpadGeneratorInner() {
  // auto-dismiss/cancel — so the click looked dead and no state ever
  // changed, while real-user impact was unestablished. This flow uses
  // no native dialog at all: first click arms the button ("Click again
- // to clear", with a Cancel affordance), second click within 4 seconds
- // calls resetLetter(); otherwise it reverts. It is a plain <button>,
- // so it is keyboard- and automation-clickable, and a single
- // accidental click can never wipe a draft. resetLetter() itself
- // (draft deletion + DEFAULT_FORM reset) is unchanged.
+ // to clear", with a Cancel affordance), second click within the
+ // window calls resetLetter(); otherwise it reverts. It is a plain
+ // <button>, so it is keyboard- and automation-clickable, and a
+ // single accidental click can never wipe a draft. resetLetter()
+ // itself (draft deletion + DEFAULT_FORM reset) is unchanged.
+ // Window lengthened 4s → 10s (Defect 3): 4 seconds was too short for
+ // real use — a second click after expiry only re-armed the button,
+ // so the old letter (and its autosaved draft) was still there on
+ // reload and the clear looked like it "did not stick". The visible
+ // countdown is kept, and resetLetter() now also suppresses the next
+ // autosave run so a cleared draft cannot be rewritten.
  const [newConfirmArmed, setNewConfirmArmed] = useState(false);
  // Visible countdown so the armed state never expires silently: the
  // button shows how many seconds are left to confirm, and its title
- // says the confirmation expires. (The live test noted the confirm
- // state expiring with no hint; the window itself is still 4 seconds
- // — only the visibility of it changes here.)
+ // says the confirmation expires.
  const [newConfirmSeconds, setNewConfirmSeconds] = useState(0);
  useEffect(() => {
    if (!newConfirmArmed) { setNewConfirmSeconds(0); return; }
-   setNewConfirmSeconds(4);
+   setNewConfirmSeconds(10);
    const id = setInterval(() => setNewConfirmSeconds((s) => Math.max(0, s - 1)), 1000);
    return () => clearInterval(id);
  }, [newConfirmArmed]);
@@ -162,7 +166,7 @@ function LetterpadGeneratorInner() {
    if (!newConfirmArmed) {
      setNewConfirmArmed(true);
      if (newConfirmTimer.current) clearTimeout(newConfirmTimer.current);
-     newConfirmTimer.current = setTimeout(() => setNewConfirmArmed(false), 4000);
+     newConfirmTimer.current = setTimeout(() => setNewConfirmArmed(false), 10000);
      return;
    }
    if (newConfirmTimer.current) clearTimeout(newConfirmTimer.current);
@@ -453,7 +457,7 @@ function LetterpadGeneratorInner() {
  <button
  className={styles.clearBtn}
  onClick={handleNewLetter}
- title={newConfirmArmed ? 'Click again to confirm clearing this letter — this confirmation expires in a few seconds, then the button returns to New' : 'Start a new letter'}
+ title={newConfirmArmed ? 'Click again to confirm clearing this letter — this confirmation expires in 10 seconds, then the button returns to New' : 'Start a new letter'}
  aria-pressed={newConfirmArmed}
  >
  {newConfirmArmed ? `⚠ Click again to clear (${newConfirmSeconds}s)` : '✦ New'}

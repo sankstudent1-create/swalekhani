@@ -88,6 +88,11 @@ export interface AppState {
   footerDesign?: FooterDesign;
   form: LetterForm;
   aiTick?: number;
+  // Fields the user explicitly typed in the sidebar or on the paper
+  // this session. Fully-AI generation preserves exactly these fields
+  // and replaces everything else AI-owned; office presets and previous
+  // AI output are NOT in this list, so they are correctly replaced.
+  userEditedFields: string[];
 }
 
 // ── AI response JSON shape ──────────────────────────────

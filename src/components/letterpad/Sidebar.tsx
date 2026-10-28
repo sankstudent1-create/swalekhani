@@ -98,6 +98,10 @@ export default function Sidebar({
  {
    department: form.dept, office: form.ofc, city: form.city,
    officeType: state.officeType, template: tpl, mode: aiMode, form,
+   // Fields the user explicitly typed: the route preserves exactly
+   // these in Full mode and replaces everything else AI-owned, so a
+   // previous letter's header cannot leak into this one.
+   userEditedFields: state.userEditedFields || [],
  },
  setAiStatus,
  contextForm,

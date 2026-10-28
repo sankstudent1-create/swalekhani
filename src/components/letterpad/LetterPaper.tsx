@@ -302,6 +302,36 @@ export default function LetterPaper({
  // no separate place was entered. Nothing is invented — an empty city
  // simply yields no Place line.
  const station = form.city?.trim() || '';
+ // Language of the letter, guessed from its own text (the generation
+ // language is not stored on the form): Hindi markers are Hindi-only
+ // (भवदीय), Marathi markers are Marathi-only (आपला नम्र). Used for
+ // the date label and the signatory placeholder, so a Hindi/Marathi
+ // letter does not carry English "Dated:" / "Your Name" leftovers.
+ const letterText = `${form.sal} ${form.cls} ${form.body} ${form.sub}`;
+ const isHindiLetter = /भवदीय|भवदीया|सेवा में/.test(letterText);
+ const isMarathiLetter = /आपला नम्र|आपली नम्र|विनंती/.test(letterText);
+ const dateLabel = (isHindiLetter || isMarathiLetter) ? 'दिनांक: ' : 'Dated: ';
+ const snPlaceholder = state.officeType === 'personal'
+   ? (isMarathiLetter ? 'तुमचे नाव' : isHindiLetter ? 'आपका नाम' : 'Your Name')
+   : (isMarathiLetter ? '(स्वाक्षरीकर्त्याचे नाव)' : isHindiLetter ? '(हस्ताक्षरकर्ता का नाम)' : '(Signatory Name)');
+ // Type-B organisation header (Defect 6): Type-B previously rendered
+ // ONLY the personal name block (sh/sn/sd), so a company letter on
+ // Type-B lost its organisation header entirely. When an organisation
+ // header is filled, render it above the name block; when the name
+ // and the organisation line are the same person (doctor/advocate
+ // presets put the person's name in e1), render it once, not twice.
+ const normNameTokens = (s: string) => s.toLowerCase().replace(/[^a-z\u0900-\u097f0-9\s]/g, ' ').split(/\s+/).filter(Boolean)
+   .filter((w) => !['dr', 'adv', 'advocate', 'mr', 'mrs', 'ms', 'shri', 'smt'].includes(w));
+ const snSameAsE1 = Boolean(form.sn?.trim() && form.e1?.trim()) && (() => {
+   const a = new Set(normNameTokens(form.sn));
+   const b = new Set(normNameTokens(form.e1));
+   if (!a.size || !b.size) return false;
+   const [small, big] = a.size <= b.size ? [a, b] : [b, a];
+   return [...small].every((t) => big.has(t));
+ })();
+ const showOrgHeaderB = Boolean(form.e1?.trim() || form.e2?.trim() || form.dept?.trim());
+ const deptDiffersFromSdB = Boolean(form.dept?.trim())
+   && form.dept.trim().toLowerCase() !== (form.sd?.trim().toLowerCase() || '');
  const headerCityDuplicatesOffice = Boolean(form.ofc?.trim() && form.city?.trim() && form.ofc.trim().toLowerCase() === form.city.trim().toLowerCase());
  const fontFamily = FONT_MAP[font] || FONT_MAP[''];
 
@@ -360,8 +390,20 @@ export default function LetterPaper({
  {E('enrolmentNo', '', 'span', 'Reg / Enrolment No.')}
  </div>
  )}
+ {/* Stars are decoration for a real header, not a placeholder: they
+     only render when some header line is actually filled (Defect 7). */}
+ {(form.h1?.trim() || form.h2?.trim() || form.e1?.trim() || form.e2?.trim() || form.dept?.trim()) && (
  <div className={styles.hAStars}>★&nbsp;&nbsp;★&nbsp;&nbsp;★&nbsp;&nbsp;★</div>
+ )}
  </div>
+ {/* Address/contact block: omitted entirely when every field is
+     empty, so a letter with no address never shows "Office City PIN"
+     or "Phone: Phone email" as if they were real text (Defect 7).
+     Phone/email spans render only when filled — the old spans used
+     an unconditional hide-in-print class, which also suppressed
+     FILLED phone/email from print. Sidebar fields still edit these
+     values when the block is hidden. */}
+ {(form.ofc?.trim() || form.city?.trim() || form.pin?.trim() || form.ph?.trim() || form.em?.trim()) && (
  <div className={styles.hAAddr}>
  {E('ofc', '', 'span', 'Office')}
  {/* Separators are print-hidden when a neighbour is empty, so print
@@ -370,9 +412,10 @@ export default function LetterPaper({
  {!headerCityDuplicatesOffice && E('city', '', 'span', 'City')}
  <span className={!(form.ofc?.trim() || form.city?.trim()) || !form.pin?.trim() ? styles.hideIfEmptyPrint : ''}>{(form.ofc?.trim() || form.city?.trim()) && form.pin?.trim() ? ' – ' : ''}</span>
  {E('pin', '', 'span', 'PIN')}<br/>
- <span className={styles.hideIfEmptyPrint}>{'Phone: '}{E('ph', '', 'span', 'Phone')}&emsp;</span>
- <span className={styles.hideIfEmptyPrint}>{E('em', '', 'span', 'email')}</span>
+ {form.ph?.trim() && (<span>{'Phone: '}{E('ph', '', 'span', 'Phone')}&emsp;</span>)}
+ {form.em?.trim() && (<span>{E('em', '', 'span', 'email')}</span>)}
  </div>
+ )}
  </div>
  );
  case 'B': return (
@@ -382,7 +425,20 @@ export default function LetterPaper({
  {isAdvocate && <AdvocateScalesEmblem />}
  </div>
  <div className={!form.sh?.trim() ? styles.hideIfEmptyPrint : ''}>{E('sh', styles.hBHi, 'div', 'हिन्दी / मराठी नाव')}</div>
- {E('sn', styles.hBEn, 'div', 'Name')}
+ {/* Organisation header first when one is filled (Defect 6): the
+     company name/department that Type-B used to drop. The personal
+     name line is skipped only when it duplicates the organisation
+     line (same person), and only rendered when filled once an
+     organisation header exists — otherwise it stays the classic
+     personal-name header. */}
+ {showOrgHeaderB && (
+ <>
+ {form.e1?.trim() && (<div className={styles.hBEn}>{E('e1', '', 'div', 'Organisation')}</div>)}
+ {form.e2?.trim() && (<div className={styles.hBDg}>{E('e2', '', 'div', 'Organisation Line 2')}</div>)}
+ {deptDiffersFromSdB && (<div className={styles.hBDg}>{E('dept', '', 'div', 'Department')}</div>)}
+ </>
+ )}
+ {(!showOrgHeaderB || form.sn?.trim()) && !snSameAsE1 && E('sn', styles.hBEn, 'div', 'Name')}
  {E('sd', styles.hBDg, 'div', 'Designation / Specialty')}
  {form.enrolmentNo && (
  <div className={styles.advocateEnrolment}>
@@ -549,7 +605,11 @@ export default function LetterPaper({
  </>
  )}
  <span className={!form.dt?.trim() ? styles.hideIfEmptyPrint : ''}>
- {state.officeType === 'personal' ? '' : (form.dt?.trim() && station ? `${station}, Dated: ` : 'Dated: ')}
+ {/* No station prefix here (Defect 10): the address span in this
+     same row already shows the city, so "Mumbai, Dated:" repeated
+     it. The Place line survives where the header has no city
+     (Type-C below); Type-D drops it for the same reason. */}
+ {state.officeType === 'personal' ? '' : dateLabel}
  {E('dt', '', 'span', 'Date')}
  </span>
  </div>
@@ -568,9 +628,9 @@ export default function LetterPaper({
  </span>
  )}
  <span className={!station && !(tpl !== 'B' && form.dt?.trim()) && !(tpl === 'B' && state.officeType === 'personal' && form.dt?.trim()) ? styles.hideIfEmptyPrint : ''}>
- {tpl === 'B' ? (state.officeType === 'personal' ? (form.dt?.trim() ? 'Dated: ' : '') : station) : (station && form.dt?.trim() ? `${station}, ` : station)}
+ {tpl === 'B' ? (state.officeType === 'personal' ? (form.dt?.trim() ? dateLabel : '') : station) : (tpl === 'D' ? '' : (station && form.dt?.trim() ? `${station}, ` : station))}
  {tpl === 'B' && state.officeType === 'personal' && E('dt', '', 'span', 'Date')}
- {tpl !== 'B' && (state.officeType === 'personal' ? '' : (form.dt?.trim() ? 'Dated: ' : ''))}
+ {tpl !== 'B' && (state.officeType === 'personal' ? '' : (form.dt?.trim() ? dateLabel : ''))}
  {tpl !== 'B' && E('dt', '', 'span', 'Date')}
  </span>
  </div>
@@ -598,7 +658,12 @@ export default function LetterPaper({
  aiTick={tick}
  />
  </div>
- <div className={`${styles.toAddr} ${!form.toA?.trim() ? styles.hideIfEmptyPrint : ''}`}>
+ {/* Recipient address line omitted when empty and a recipient is
+     filled (Defect 7): its placeholder used to read as a real
+     address line. On a blank letter it stays as the editing
+     affordance; the sidebar To-Address field always edits it. */}
+ {(form.toA?.trim() || !form.toD?.trim()) && (
+ <div className={styles.toAddr}>
  <Editable
  value={form.toA}
  onChange={v => onFormChange('toA', v)}
@@ -608,6 +673,7 @@ export default function LetterPaper({
  multiline
  />
  </div>
+ )}
  </div>
  </div>
  )}
@@ -642,8 +708,10 @@ export default function LetterPaper({
      on Type-E even when the user had chosen one. */}
  {(
  <div className={`${styles.salBlock} ${!form.sal?.trim() ? styles.hideIfEmptyPrint : ''}`}>
- {E('sal', '', 'span', isDoctor ? 'Patient Advice:' : state.officeType === 'personal' ? 'My Dearest' : 'Sir/Madam')}
- {form.sal?.trim() ? ',' : ''}
+ {/* Comma joined with no intervening whitespace (Defect 10): a
+     space between the salutation and its comma rendered as
+     "Respected Sir ,". Same fix in the closing block below. */}
+ {E('sal', '', 'span', isDoctor ? 'Patient Advice:' : state.officeType === 'personal' ? 'My Dearest' : 'Sir/Madam')}{form.sal?.trim() ? ',' : ''}
  </div>
  )}
 
@@ -668,14 +736,13 @@ export default function LetterPaper({
  tag="span"
  placeholder={isDoctor ? "Consulting Physician" : state.officeType === 'personal' ? "Forever yours" : "Yours faithfully"}
  aiTick={tick}
- />
- {form.cls?.trim() ? ',' : ''}
+ />{form.cls?.trim() ? ',' : ''}
  </div>
  <div className={styles.sigWrap}>
  <div className={styles.sigSpace}>
  {sigUrl && <img src={sigUrl} className={styles.sigImg} alt="signature" />}
  </div>
- <Editable value={form.sn} onChange={v => onFormChange('sn', v)} tag="div" className={`${styles.sigName} ${!form.sn?.trim() ? styles.hideIfEmptyPrint : ''}`} placeholder={state.officeType === 'personal' ? "Your Name" : "(Signatory Name)"} aiTick={tick} />
+ <Editable value={form.sn} onChange={v => onFormChange('sn', v)} tag="div" className={`${styles.sigName} ${!form.sn?.trim() ? styles.hideIfEmptyPrint : ''}`} placeholder={snPlaceholder} aiTick={tick} />
  {state.officeType !== 'personal' && (
  <>
  <Editable value={form.sd} onChange={v => onFormChange('sd', v)} tag="div" className={`${styles.sigDesig} ${!form.sd?.trim() ? styles.hideIfEmptyPrint : ''}`} placeholder="Designation / Registration" aiTick={tick} />
